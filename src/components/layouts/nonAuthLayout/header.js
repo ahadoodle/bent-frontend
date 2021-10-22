@@ -16,13 +16,13 @@ const Header = () => {
             </NavbarBrand>
             <ul className="primaryMenu">
               <li>
-                <Link to="/">Stake</Link>
+                <Link to="/stake">Stake</Link>
               </li>
               <li>
-                <Link to="/">Claim</Link>
+                <Link to="/claim">Claim</Link>
               </li>
               <li>
-                <Link to="/">Lock CVX</Link>
+                <Link to="/lock-cvx">Lock CVX</Link>
               </li>
               <li>
                 <Link to="/">More</Link>

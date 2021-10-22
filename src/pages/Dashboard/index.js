@@ -16,7 +16,9 @@ import CvxIcon from "../../assets/images/cvxIcon.png";
 import BitcoinCombo from "../../assets/images/bitCoinCombo.png";
 import SolIcon from "../../assets/images/SolIcon.png";
 import BitcoinTwice from "../../assets/images/bitCoinTwice.png";
+import Tiles from "../../components/layouts/nonAuthLayout/tiles";
 import 'font-awesome/css/font-awesome.min.css';
+
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('1');
@@ -26,7 +28,13 @@ const Dashboard = () => {
   return (
       <React.Fragment>
          {/* Content part Start*/}
+         <div className="banner">
+         <Tiles />
+          
+        </div>
+        
           <div className="contentSection">
+          
             <Container>
               <Row>
                 <Col md="12">
