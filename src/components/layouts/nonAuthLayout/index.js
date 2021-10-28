@@ -3,13 +3,12 @@ import { withRouter } from "react-router-dom";
 import Header from "./header";
 import Footer from "./footer";
 
-
 const NonAuthLayout = (props) => {
   return (
     <React.Fragment>
       <div className="Wrapper">
-      <Header />
-        
+        <Header />
+
         {props.children}
         <Footer />
       </div>

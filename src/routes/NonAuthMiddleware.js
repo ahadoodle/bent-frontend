@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, Redirect, withRouter } from 'react-router-dom';
+import React from "react";
+import { Route, Redirect, withRouter } from "react-router-dom";
 
 const NonAuthMiddleware = ({ component: Component, layout: Layout }) => (
   <Route

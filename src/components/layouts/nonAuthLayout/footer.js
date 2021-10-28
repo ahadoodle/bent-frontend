@@ -64,10 +64,16 @@ const Footer = () => {
                 <h3>Contact</h3>
                 <ul>
                   <li>
-                    <Link to="/"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp; +1 - 732 872 123</Link>
+                    <Link to="/">
+                      <i class="fa fa-phone" aria-hidden="true"></i>&nbsp; +1 -
+                      732 872 123
+                    </Link>
                   </li>
                   <li>
-                    <Link to="/"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp; contact@bent.markets</Link>
+                    <Link to="/">
+                      <i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;
+                      contact@bent.markets
+                    </Link>
                   </li>
                 </ul>
               </div>
