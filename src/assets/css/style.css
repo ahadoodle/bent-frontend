@@ -10,6 +10,15 @@ a,button {
     right: 0;
     top: 15px;
 }
+.mobileHeader {
+    display: none;
+}
+.sidenavmenu{
+    width:100%;
+}
+.removesidenavmenu{
+    width:0;
+}
 nav.navbar.navbar-expand-md.navbar-light.bg-light {
     display: flex;
 }
@@ -30,6 +39,17 @@ ul.primaryMenu {
     display: flex;
     margin-bottom: 0;
     padding: 0px;
+    list-style: none; 
+}
+.tokentable .fa-info-circle {
+    position: absolute;
+    right: 50px;
+    top: 30px;
+    opacity: 0;
+}
+.tokentable.table tr:hover .fa-info-circle,
+.tokentable.table tr:hover .tvlText i.fa.fa-caret-down {
+    opacity: 1;
 }
 ul.primaryMenu li a {
     color: #8D99AB;
@@ -50,6 +70,7 @@ button.btn.btn-secondary.wallet {
     background: transparent;
     width: 170px;
     height: 44px;
+    box-shadow: 2px 2px 0 0 #c1ffd7;
 }
 a.navbar-brand:hover {
     opacity: 0.5;
@@ -134,7 +155,7 @@ ul.primaryMenu li a:hover {
 }
 .contentSection {
     background: #cab8ff;
-    padding-bottom: 70px;
+    padding-bottom: 90px;
 }
 .tableTitle p {
     margin-bottom: 0px;
@@ -225,6 +246,19 @@ h2.white {
 .stakebent-token {
     margin-top: 120px;
 }
+.infoWrap p {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.24px;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+}
+.infoWrap p a {
+    color: #703FFF;
+    text-decoration: none;
+    font-style: italic;
+}
 h2.black {
     font-style: normal;
     font-weight: bold;
@@ -295,6 +329,12 @@ tr:hover {
 table.tokentable.table thead tr:hover {
     background: #B5DEFF;
 }    
+.tvlText i.fa.fa-caret-down {
+    position: absolute;
+    right: 30px;
+    font-size: 30px;  
+    opacity: 0;
+}
 table.tokentable.table td {
     border: none;
     padding: .75rem 1.5rem;
@@ -304,6 +344,7 @@ table.tokentable.table td {
     letter-spacing: -0.24px;
     font-feature-settings: 'ss01' on;
     color: #10151D;
+    position: relative;
 }
 table.tokentable.table thead th:first-child {
     border-top-left-radius: 8px;
@@ -349,14 +390,23 @@ footer {
     opacity: 0.7;
     text-decoration: none;
 }
-.footerlogo a:hover {
-    opacity: 0.5;
-}
-.footer-inner-block ul li a:hover {
+.footer-inner-block ul li a i.fa {
+    font-size: 18px;
     color: #C1FFD7;
     opacity: 1;
 }
-
+.footer-inner-block ul li a:hover {
+    opacity: 0.5;
+}
+p.copyright {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 20px;
+    color: #FAFAFA;
+    opacity: 0.4;
+    margin-bottom: 0;
+}
 .advance-btn .switch {
     position: relative;
     display: inline-block;
@@ -459,6 +509,18 @@ span.textadvance {
     border: 3px solid #10151D;
     border-radius: 4px;
 }
+table.tokentable.table tbody tr:first-child td:first-child {
+    border-top-left-radius: 8px;
+}
+table.tokentable.table tbody tr:first-child td:last-child {
+    border-top-right-radius: 8px;
+}
+table.tokentable.table tbody tr:first-child td {
+    border-top: 3px solid #10151D;
+}
+.stakebent-token table.tokentable.table th {
+    border-bottom: none;
+}
 button.maxbtn {
     position: absolute;
     right: 15px;
@@ -512,7 +574,7 @@ button.approvebtn.btn.btn-secondary {
 .lineup::before {
     content: '1';
     background: #9BA2AC;
-    top: -9px;
+    top: -8px;
     position: absolute;
     width: 18px;
     height: 18px;
@@ -529,7 +591,7 @@ button.approvebtn.btn.btn-secondary {
 .lineup::after {
     content: '2';
     background: #9BA2AC;
-    top: -11px;
+    top: -8px;
     position: absolute;
     width: 18px;
     height: 18px;
@@ -779,10 +841,940 @@ span.count {
 .bannerBtns button.greyBtn.btn.btn-secondary {
     margin-left: 22px;
 }
+button.bentPool {
+    width: 100%;
+    background: #B5DEFF;
+    border: none;
+    text-align: left;
+    color: #10151D;
+    padding: 13px 15px;
+    margin-bottom: 0px !important;
+}
+.cliamBlockOne {
+    background: #B5DEFF;
+}
+.imgText h2 {
+    display: inline-block;
+    margin-bottom: 0px !important;
+    vertical-align: middle;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.24px;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+    padding-left: 10px;
+}
+.cliamBlockOne {
+    border: 3px solid #10151D;
+    box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: 10px 15px 0px 0px #10151d;
+    margin-bottom: 40px;
+}
+button.bentPool:hover, button.bentPool:focus {
+    background: #B5DEFF;
+    box-shadow: none;
+    color: #10151D;
+}
+button.bentPool p {
+    margin-bottom: 0px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+}
+.bentPool b {
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.24px;
+}
+.bentPool b span {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 2px;
+}
+.earnValue .fa-caret-down {
+    position: absolute;
+    right: 50px;
+}
+.earnValue {
+    position: relative;
+}
+.cliamBlockOne .card {
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: #FAFAFA;
+}
+button.bentInner {
+    width: 100%;
+    background: rgba(202, 184, 255, 0.1);
+    border: none;
+    text-align: left;
+    color: #10151D;
+    margin-bottom: 0 !important;
+    padding: 15px 12px;
+}
+button.bentInner:hover, button.bentInner:focus {
+    background: rgba(202, 184, 255, 0.1);
+    border: none;
+    color: #10151D;
+    box-shadow: none;
+}
+.cliamBlockOne .card-body {
+    padding: 0px;
+}
+.imgText h4 {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+    display: inline-block;
+    padding-left: 15px;
+}
+.earnValue p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 0;
+}
+.bentPool h3 {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.24px;
+    margin-bottom: 0;
+}
+button.claimbtn.btn.btn-secondary {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    letter-spacing: -0.24px;
+    background-color: #C1FFD7;
+    color: #10151D;
+    box-shadow: 4px 4px 0px 0px #10151d;
+    border: 2px solid #10151d;
+    padding: 8.5px 20px;
+    width: 101px;
+}
+.climBtn i.fa.fa-caret-down {
+    text-align: right;
+    position: absolute;
+    right: 20px;
+    top: 16px;
+    font-size: 26px;
+}
+.climBtn i.fa.fa-caret-down {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 26px;
+}
+.climBtn {
+    position: relative;
+}
+.bentInner .fa-info-circle {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+.clmBtn {
+    position: relative;
+}
+.clmBtn .fa-caret-down {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 26px;
+}
+.innerAccordian .card {
+    background: rgba(202, 184, 255, 0.1);
+    padding: 16px 12px;
+}
+.depositText {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+}
+.innerWrap {
+    background: rgba(202, 184, 255, 0.6);
+}
+.innerWrap .card {
+    border-top: none;
+}
+.innerWrap .card-body {
+    border-top: 1px solid #10151D;
+    padding: 10px 0;
+}
+.claimText {
+    background: #cab8ff;
+    display: inline-block;
+    width: 100%;
+}
+.cliamBox {
+    position: relative;
+    margin-top: -120px;
+    margin-bottom: 80px;
+}
+.innerAccordian p {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 14px;
+}
+.innerWrapother {
+    background-color: #fafafa;
+    padding: 16px 12px;
+}
+.bentpoolText {
+    border: 3px solid #10151D;
+    border-right: none;
+    border-left: none;
+    border-radius: 8px;
+}
+.cliamBox .cliamBlockOne:last-child {
+    margin-bottom: 0px;
+}
+#togglerFifth .clmBtn .fa-caret-down {
+    position: absolute;
+    right: 20px;
+    top: -10px;
+    font-size: 26px;
+}
+.textlayer {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+.textlayer h4 {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    letter-spacing: -0.24px;
+    color: #FAFAFA;
+}
+.textlayer h6 {
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    text-align: center;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #E5E7EA;
+}
+.imgOverText {
+    background: #9BA2AC;
+    border-radius: 12px;
+    padding: 31px 0;
+    margin-bottom: 24px;
+    position: relative;
+}
+.imgOverText img.starIcon {
+    position: absolute;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+}
+.imgOverText.Active h4, .imgOverText.Active h6 {
+    color: #10151D;
+}
+button#togglerFifth {
+    padding: 19px 15px;
+}
+.imgOverText.Active {
+    background: #C1FFD7;
+    border: 2px solid #10151D;
+    box-shadow: 4px 4px 0 #10151d;
+}
+.imgOverText.Active img.starIcon {
+    position: absolute;
+    left: 45%;
+    transform: translate(-5%, -50%);
+    top: 50%;
+}
+p.epsText {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #10151D;
+}
+.cliamBlockOne.LastBlock .innerWrapother {
+    padding-bottom: 0px;
+}
+
 /* Claim page css End */
+/* Lock Page Css start */
+
+.tabInner {
+    display: flex;
+    background: #242B37;
+    border: 1.5px solid #252A38;
+    box-shadow: inset 2px 4px 13px #10151d;
+    border-radius: 8px;
+    padding: 2px 2px 4px;
+}
+.lockContent .nav-tabs a.active.nav-link {
+    background: #C1FFD7;
+    border: 3px solid #C1FFD7;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    letter-spacing: -0.005em;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+    box-shadow: 2px 2px 0px #98a2b4;
+    padding: .5rem 1.85rem;
+}
+.lockContent .nav-tabs a.nav-link {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    letter-spacing: -0.005em;
+    font-feature-settings: 'ss01' on;
+    color: #8D99AB;
+    cursor: pointer;
+    border: 3px solid transparent;
+    padding: .5rem 1.85rem;
+    margin: 0 3px;
+}
+.lockContent .nav-tabs .nav-link:focus, .lockContent .nav-tabs .nav-link:hover {
+    background: #C1FFD7;
+    border: 3px solid #C1FFD7;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    letter-spacing: -0.005em;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+    box-shadow: 2px 2px 0px #98a2b4;   
+}
+.lockContent .converttabs a.active.nav-link {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: #10151D;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    box-shadow: none;
+    padding: .5rem 1rem;
+}
+.lockContent .converttabs a.nav-link {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    color: #9BA2AC;
+    cursor: pointer;
+    padding: .5rem 1rem;
+    border: none;
+}
+.lockContent .converttabs a.nav-link:hover {
+    background: transparent;
+    color: #10151D;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    box-shadow: none;
+    border: none;
+    padding: .5rem 1rem;
+}
+.lockContent .converttabs .divider-left {
+    padding-right: 15px;
+}
+.lockContent button.approvebtn.btn.btn-secondary {
+    width: 148px;
+    height: 41px;
+}
+.votePage p {
+    margin-bottom: 0;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #8D99AB;
+}
+.votePage button.btn.btn-secondary {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    color: #C1FFD7;
+    border: 3px solid #C1FFD7;
+}
+.votePage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+.votePage button.btn.btn-secondary {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    color: #C1FFD7;
+    border: 3px solid #C1FFD7;
+    box-shadow: 4px 4px 0 #c1ffd7;
+    background: transparent;
+    padding: .60rem 1.55rem;
+}
+.InnerLock {
+    margin-top: -120px;
+}
+.lockContent ul.nav.nav-tabs {
+    border-bottom: none;
+    margin-bottom: 40px;
+}
+.lockContent.contentSection {
+    padding-bottom: 110px;
+}
+.currentLock {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 3px solid #10150D;
+    box-shadow: 10px 15px 0px 0px #10151d;
+    margin-bottom: 30px;
+}
+.currentText p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #10151D;
+    opacity: 0.7;
+}
+.currentText h3 {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.24px;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+}
+.currentText {
+    padding-left: 15px;
+}
+.currentImage img {
+    margin-top: 12px;
+}
+li.addreesAdd {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    color: #10151D;
+    margin-right: 25px;
+}
+li.bentTeam {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    color: #9BA2AC;
+}
+.converttabs ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    margin-bottom: 25px;
+}
+.delegateWrap {
+    display: flex;
+    justify-content: space-between;
+}
+.delegateWrap button.btn.btn-secondary {
+    background: #C1FFD7;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    color: #10151D;
+    border: 2px solid #10151D;
+    box-shadow: 4px 4px 0 #10151d;
+    padding: .6rem .75rem;
+}
+.delegateWrap input.form-control {
+    width: calc(100% - 100px);
+    border: 2px solid #10151D;
+}
+.converttabs label {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 13px;
+    letter-spacing: -0.24px;
+    color: #10151D;
+}
+.delegateBox .converttabs {
+    padding:  20px 20px 37px;
+}
+.lockContent .convert-table ul.nav.nav-tabs {
+    margin-bottom: 0px;
+}
+.tableText {
+    margin: 20px 0;
+}
+.tableText h4 {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+    margin: 0px;
+}
+.tableText h4 img {
+    margin-right: 10px;
+}
+.tableText b span {
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 2px;
+    font-feature-settings: 'ss01';
+}
+.tableText b {
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+}
+.processWrap {
+    background: #10151D;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    font-feature-settings: 'ss01' on;
+    color: #10151D;
+}
+.processWrap span {
+    background: #CAB8FF;
+    border-radius: 4px;
+    padding: 4px 5px;
+    width: 100%;
+    display: inline-block;
+}
+span.eightySeven {
+    width: 87%;
+}
+span.nintynine {
+    width: 99%;
+}
+.InnerLock .convert-tableTitle {
+    padding: 14px 15px;
+}
+/* Lock Page Css End */
 
 @media (min-width: 1400px) {
 .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
     max-width: 1170px !important;
 }
 }
+@media only screen and (max-width: 1199px) {
+    .imgOverText.Active img.starIcon {
+        left: 30%;
+    }
+    .votePage button.btn.btn-secondary {
+        font-size: 14px;
+        line-height: 19px;
+        padding: 0.6rem  0.6rem;
+    }
+    li.addreesAdd {
+        font-size: 14px;
+        margin-right: 9px;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+.imgOverText.Active img.starIcon {
+    left: 0;
+}
+.imgText {
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+.votePage {
+    margin-bottom: 30px;
+    margin-top: 60px;
+}
+.votePage button.btn.btn-secondary {
+    color: #10150D;
+    border: 3px solid #10150D;
+    box-shadow: 4px 4px 0 #10150d;
+    padding: 0.85rem 1.55rem;
+    font-size: 16px;
+}
+.votePage p {
+    color: #10150D;
+}
+.currentLock {
+    justify-content: flex-start;
+}
+}
+@media only screen and (max-width: 800px) {
+.clmBtn .fa-caret-down, .climBtn i.fa.fa-caret-down {
+    right: -10px;
+}
+.imgText h2 {
+    font-size: 16px;
+    line-height: 18px;
+}
+}
+@media only screen and (max-width: 767px) {
+ul.primaryMenu {
+    display: none;
+}
+.mobileHeader {
+    display: inline-block;
+}
+button.btn.btn-secondary.wallet {
+    width: 148px;
+    height: 36px;
+    font-size: 14px;
+    line-height: 17px;
+    padding: 0.275rem 0.75rem 0.375rem;
+}
+.banner {
+    padding-top: 40px;
+}
+table.tokentable.table {
+    max-width: 1050px;
+    margin-right: 0;
+    width: 1050px;
+}
+.table-Wrapper {
+    width: 100%;
+    overflow: auto;
+}
+table.tokentable.table {
+    border: none;
+    box-shadow: none;
+}
+.table-Responsive {
+    box-shadow: 10px 15px 0px 0px #10151d;
+    border: 3px solid #10151D;
+    border-radius: 8px;
+    margin-right: 12px;
+}
+.text-center.btnwrap {
+    text-align: left !important;
+}
+table.tokentable.table {
+    margin-bottom: 0px;
+}
+table.tokentable.table thead th {
+    padding: 1.25rem 1rem;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: -0.24px;
+}
+table.tokentable.table td {
+    padding: .5rem 1rem;
+    font-size: 12px;
+    line-height: 14px;
+}
+h2.black {
+    font-size: 16px;
+    line-height: 19px;
+}
+.convert-table {
+    margin-right: 12px;
+}
+.bannerboxes {
+    padding-right: 12px;
+}
+.stakebent-token, .convert-up.cvxSection {
+    margin-top: 80px;
+}
+.boxwrap h2 b, .bannerBlockWrap .boxwrap h2 b {
+    font-weight: bold;
+    font-size: 26px;
+    line-height: 31px;
+}
+.boxwrap p {
+    font-size: 10px;
+    line-height: 12px;
+    margin: 5px 0;
+}
+.boxwrap {
+    padding: 10px;
+    box-shadow: 5px 5px 0px 0px #b5deff;
+}
+.boxwrap.second {
+    box-shadow: 5px 5px 0px 0px #cab8ff;
+}
+.boxwrap h2, .bannerBlockWrap .boxwrap h2 {
+    font-size: 26px;
+    line-height: 31px;
+    letter-spacing: 0;
+}
+.boxwrap h2 span {
+    letter-spacing: 0;
+    font-size: 14.5339px;
+    line-height: 17px;
+}
+.boxwrap.smallone {
+    box-shadow: 5px 5px 0px 0px #9edab3;
+    padding: 10px;
+}
+.boxwrap.smalltwo {
+    box-shadow: 5px 5px 0px 0px #b9c7dd;
+    padding: 10px;
+}
+h2.white {
+    font-size: 16.1641px;
+    line-height: 27px;
+}
+.tableTitle b {
+    font-size: 12px;
+    line-height: 14px;
+}
+.tableTitle p {
+    font-size: 9px;
+    line-height: 11px;
+    letter-spacing: 0.2px;
+}
+.tableTitle img {
+    width: 18px;
+}
+.convert-tableTitle .col {
+    padding-left: 8px;
+    padding-right: 8px;
+    position: relative;
+    padding-bottom: 25px;
+}
+.boldText {
+    position: absolute;
+    bottom: 0;
+    left: 8px;
+}
+.converttabs a.nav-link, .converttabs a.active.nav-link {
+    font-size: 12px;
+    line-height: 14px;
+}
+.converttabs {
+    padding: 10px 15px 15px;
+}
+.converttabs ul {
+    margin-bottom: 0px;
+}
+.converttabs p.card-text {
+    margin-top: 0;
+    font-size: 12px;
+    line-height: 16px;
+}
+ul.nav.nav-tabs li.nav-item:first-child a.nav-link {
+    padding-left: 0px;
+}
+.converttabs .divider-left {
+    padding-left: 15px;
+    padding-right: 15px;
+    border-left: none;
+}
+span.textadvance {
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: -0.161641px;
+    bottom: 1px;
+}
+.advance-btn {
+    margin-bottom: 10px;
+}
+.converttabs label {
+    font-size: 9px;
+    line-height: 11px;
+}
+button.approvebtn.btn.btn-secondary {
+    width: 123px;
+    height: 36px;
+    padding: 5px 5px 8px;
+    font-size: 12.78px;
+    line-height: 15px;
+}
+button.btn.btnshow {
+    width: 180px;
+    height: 38px;
+    font-size: 14px;
+    line-height: 17px;
+}
+button.btn.btnshow i {
+    padding-left: 8px;
+    position: relative;
+    top: 3px;
+}
+.table-Responsive.LpToken table.tokentable.table {
+    width: 650px;
+}
+p.copyright {
+    text-align: center;
+}
+.footer-inner-block {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(155, 162, 172, 0.2);
+}
+.footer-inner-block.phone, .footer-inner-block.LogoWrp {
+    border-bottom: none;
+}
+.footer-inner-block h3 {
+    margin-bottom: 20px;
+}
+.toggleWrap {
+    width: 1050px;
+}
+.cliamBlockOne {
+    border: 3px solid transparent; 
+    box-shadow: none;
+    background: transparent;
+}
+.clmBtn .fa-caret-down, .climBtn i.fa.fa-caret-down {
+    right: 20px;
+}
+.boxwrap img.dollorCoin {
+    right: -35px;
+    bottom: -35px;
+    width: 110px;
+}
+.boxwrap img.cardCoin {
+    right: -27px;
+    bottom: -20px;
+    width: 90px;
+}
+.contain {
+    padding-left: 24px;
+    margin-right: 10px;
+}
+.autoText span.textadvance {
+    bottom: 6px;
+}
+button.greyBtn.btn.btn-secondary {
+    font-size: 14px;
+    line-height: 16px;
+    padding: 0.575rem 0.5rem;
+}
+.thisDo {
+    padding: 15px;
+}
+.thisDo ul li {
+    font-size: 14px;
+    line-height: 20px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+}
+.autoText {
+    margin: 50px auto 20px auto;
+}
+.lockContent .nav-tabs a.active.nav-link, .lockContent .nav-tabs a.nav-link {
+    font-size: 16px;
+    line-height: 18px;
+    padding: 0.5rem 0.55rem !important;
+}
+.currentLock {
+    margin-right: 12px;
+}
+.delegateBox .convert-tableTitle .col {
+        padding-bottom: 0px;
+}
+.InnerLock .tab-pane .convert-tableTitle {
+    padding: 5px 15px;
+}
+}
+@media only screen and (max-width: 479px) {
+table.tokentable.table {
+    max-width: 750px;
+    width: 720px;
+}
+.votePage button.btn.btn-secondary {
+    padding: 0.5rem 0.5rem;
+    font-size: 14px;
+}
+}
+@media only screen and (max-width: 360px) {
+button.approvebtn.btn.btn-secondary, .lockContent button.approvebtn.btn.btn-secondary {
+    width: 115px;
+}
+}
+
+
+/**rishav**/
+.sidenav {
+    height: 100%;
+    
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 10px;
+  }
+  
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s;
+    font-size: 22px;
+    line-height: 26px;
+    letter-spacing: -0.24px;
+    color: #8D99AB;
+}
+  .mobileHeader span {
+    color: #fff;
+}
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+  
+.sidenav button.closebtn.btn.btn-secondary {
+    background: transparent;
+    border: none;
+    right: auto;
+    left: 0;
+    margin-left: 20px;
+    font-size: 36px;
+}
+  
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+/***end**/

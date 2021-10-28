@@ -1,0 +1,11 @@
+.homeMenu ul {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    align-content: center;
+    margin: 0;
+    list-style: none;
+}
+.homeMenu ul li {
+    margin: 0 10px;
+}

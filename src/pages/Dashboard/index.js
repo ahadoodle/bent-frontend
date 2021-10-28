@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import {
   Container,
   Button,
   Row,
   Col,
-  TabContent, TabPane, Nav, NavItem, NavLink, Card,  CardTitle, CardText, Table, Input, Label
+  TabContent, TabPane, Nav, NavItem, NavLink, Card,  CardTitle, CardText, Table, Input, Label, 
 } from 'reactstrap';
 import classnames from 'classnames';
 import CrvIcon from "../../assets/images/crvIcon.png";
@@ -42,7 +42,7 @@ const Dashboard = () => {
                     <h2 className="white">Convert CRV</h2>
                      <div className="convert-table">
                         <div className="convert-tableTitle">
-                          <Row className="align-items-center">
+                          <Row className="">
                               <Col>
                                 <div className="tableTitle">
                                   <img src={CrvIcon} alt="Icon" /> <b> CRV </b>
@@ -51,25 +51,25 @@ const Dashboard = () => {
                               <Col>
                                 <div className="tableTitle">
                                   <p>Earned (USD value)</p>
-                                  <b><span>$</span>0</b>
+                                  <div className="boldText"><b><span>$</span>0</b></div>
                                 </div>
                               </Col>
                               <Col>
                                 <div className="tableTitle">
                                   <p>APR</p>
-                                  <b>60.5660.56<span>%</span></b>
+                                  <div className="boldText"><b>60.56<span>%</span></b></div>
                                 </div>
                               </Col>
                               <Col>
                                 <div className="tableTitle">
                                   <p>My cvxCRV Staked</p>
-                                  <b>-cvxCRV</b>
+                                  <div className="boldText"><b>-cvxCRV</b></div>
                                  </div>
                               </Col>
                               <Col>
                                 <div className="tableTitle">
                                   <p>TVL</p>
-                                  <b><span>$</span>220.70m</b>
+                                  <div className="boldText"><b><span>$</span>220.70m</b></div>
                                 </div>
                               </Col>
                         </Row>
@@ -105,7 +105,7 @@ const Dashboard = () => {
                         <TabContent activeTab={activeTab}>
                           <TabPane tabId="1">
                           <Row>
-                              <Col sm="6" className="inverse">
+                              <Col md="6" className="inverse">
                                 <Card body>
                                   <CardText>Convert CRV to cvxCRV. By staking cvxCRV, you're earning the usual rewards from veCRV
                                     (3crv governani fae distribution from Curve+am airdrop), plus a share of 10% of the Convex LPs
@@ -115,7 +115,7 @@ const Dashboard = () => {
                                   tokens but not convert them back to CRV Secondary markets may however exist to allow the exchange
                                     of eviCRV for CRV </i></CardText>      
                               </Col>
-                              <Col sm="6" className="divider-left">
+                              <Col md="6" className="divider-left">
                                 <Card body>
                                   <CardTitle>
                                     <div className="advance-btn">
@@ -152,8 +152,8 @@ const Dashboard = () => {
                             <Row>
                               <Col sm="6">
                                 <Card body>
-                                  <CardTitle>Special Title Treatment</CardTitle>
-                                  <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                                  
+                                  <CardText></CardText>
                                   <Button>Go somewhere</Button>
                                 </Card>
                               </Col>
@@ -168,18 +168,16 @@ const Dashboard = () => {
                           </TabPane>
                           <TabPane tabId="3">
                             <Row>
-                              <Col sm="6">
+                              <Col sm="12">
                                 <Card body>
-                                  <CardTitle>Special Title Treatment</CardTitle>
-                                  <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                  <Button>Go somewhere</Button>
-                                </Card>
-                              </Col>
-                              <Col sm="6">
-                                <Card body>
-                                  <CardTitle>Special Title Treatment</CardTitle>
-                                  <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                  <Button>Go somewhere</Button>
+                                
+                                  <CardText className="infoWrap">
+                                    <p>CRV token address: <Link to="/stake">0xd533a949740bb3306d119cc777fa900ba034cd52</Link></p>
+                                    <p>cvxCRV token address: <Link to="/stake">0xd533a949740bb3306d119cc777fa900ba034cd52</Link></p>
+                                    <p>Deposit contract address: <Link to="/stake">0xd533a949740bb3306d119cc777fa900ba034cd52</Link></p>
+                                    <p>Rewards contract address: <Link to="/stake">0xd533a949740bb3306d119cc777fa900ba034cd52</Link></p>
+      
+                                  </CardText>
                                 </Card>
                               </Col>
                             </Row>
@@ -197,6 +195,8 @@ const Dashboard = () => {
                 <Col md="12">
                   <div className="convert-up">
                     <h2 className="black">Stake Bent LP Tokens</h2>
+                    <div className="table-Responsive LpToken">
+                    <div className="table-Wrapper">
                     <Table className="tokentable">
                           <thead>
                             <tr>
@@ -213,36 +213,48 @@ const Dashboard = () => {
                               <td><span>$</span>0</td>
                               <td>6.56% <span>(proj.6.74%)</span>
                                 <p>CRV boost: 1.7x</p>
+                                <i className="fa fa-info-circle" aria-hidden="true"></i>
                               </td>
                               <td>-cCRV</td>
-                              <td><span>$</span>220.70m</td>
+                              <td className="tvlText"><span>$</span>220.70m
+                              <i className="fa fa-caret-down" aria-hidden="true"></i>
+                              </td>
                             </tr>
                             <tr>
                               <td><img src={UsdIcon} alt="" /> Bitcoin</td>
                               <td><span>$</span>0</td>
-                              <td>6.56% <span>(proj.6.74%)</span>
+                              <td className="tvlText">6.56% <span>(proj.6.74%)</span>
                                 <p>CRV boost: 1.7x</p>
+                                <i className="fa fa-info-circle" aria-hidden="true"></i>
                               </td>
                               <td>-cCRV</td>
-                              <td><span>$</span>220.70m</td>
+                              <td className="tvlText"><span>$</span>220.70m
+                              <i className="fa fa-caret-down" aria-hidden="true"></i>
+                              </td>
                             </tr>
                             <tr>
                               <td><img src={EthereumIcon} alt="" /> Ethereum</td>
                               <td><span>$</span>0</td>
                               <td>6.56% <span>(proj.6.74%)</span>
                                 <p>CRV boost: 1.7x</p>
+                                <i className="fa fa-info-circle" aria-hidden="true"></i>
                               </td>
                               <td>-cCRV</td>
-                              <td><span>$</span>220.70m</td>
+                              <td className="tvlText"><span>$</span>220.70m
+                              <i className="fa fa-caret-down" aria-hidden="true"></i>
+                              </td>
                             </tr>
                             <tr>
                               <td><img src={BitCoin} alt="" /> Bitcoin</td>
                               <td><span>$</span>0</td>
                               <td>6.56% <span>(proj.6.74%)</span>
                                 <p>CRV boost: 1.7x</p>
+                                <i className="fa fa-info-circle" aria-hidden="true"></i>
                               </td>
                               <td>-cCRV</td>
-                              <td><span>$</span>220.70m</td>
+                              <td className="tvlText"><span>$</span>220.70m
+                              <i className="fa fa-caret-down" aria-hidden="true"></i>
+                              </td>
                             </tr> 
                             <tr>
                               <td colSpan="5">
@@ -253,6 +265,8 @@ const Dashboard = () => {
                             </tr>
                           </tbody>
                     </Table>
+                    </div>
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -263,7 +277,7 @@ const Dashboard = () => {
               <h2 className="black">Stake your CVX to earn cvxCRV</h2>
                   <div className="convert-table">
                         <div className="convert-tableTitle">
-                            <Row className="align-items-center">
+                            <Row className="">
                                 <Col>
                                   <div className="tableTitle">
                                     <img src={CvxIcon} alt="Icon" /> <b> CVX </b>
@@ -272,25 +286,25 @@ const Dashboard = () => {
                                 <Col>
                                   <div className="tableTitle">
                                       <p>Earned (USD value)</p>
-                                      <b><span>$</span>0</b>
+                                      <div className="boldText"> <b><span>$</span>0</b></div>
                                   </div>
                                 </Col>
                                 <Col>
                                       <div className="tableTitle">
                                           <p>APR</p>
-                                          <b>60.5660.56<span>%</span></b>
+                                          <div className="boldText"> <b>60.56<span>%</span></b></div>
                                       </div>
                                 </Col>
                                 <Col>
                                 <div className="tableTitle">
                                           <p>My cvxCRV Staked</p>
-                                          <b>-cvxCRV</b>
+                                          <div className="boldText"><b>-cvxCRV</b></div>
                                       </div>
                                 </Col>
                                 <Col>
                                       <div className="tableTitle">
                                           <p>TVL</p>
-                                          <b><span>$</span>220.70m</b>
+                                          <div className="boldText"><b><span>$</span>220.70m</b></div>
                                       </div>
                                 </Col>
                             </Row>
@@ -409,6 +423,8 @@ const Dashboard = () => {
                       <Col md="12">
                         <div className="convert-up">
                           <h2 className="black">Provide liquidity on SushiSwap</h2>
+                          <div className="table-Responsive">
+                            <div className="table-Wrapper">
                           <Table className="tokentable">
                                 <thead>
                                   <tr>
@@ -449,6 +465,8 @@ const Dashboard = () => {
                                   </tr>
                                  </tbody>
                           </Table>
+                          </div>
+                          </div>
                         </div>
                       </Col>
                     </Row>

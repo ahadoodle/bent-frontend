@@ -9,7 +9,7 @@ const Footer = () => {
         <Container>
           <Row>
             <Col md="3">
-              <div className="footer-inner-block">
+              <div className="footer-inner-block LogoWrp">
                 <div className="footerlogo">
                   <Link to="/">
                     <img src={LogoIcon} alt="" />
@@ -60,17 +60,20 @@ const Footer = () => {
               </div>
             </Col>
             <Col md="3">
-              <div className="footer-inner-block">
+              <div className="footer-inner-block phone">
                 <h3>Contact</h3>
                 <ul>
                   <li>
-                    <Link to="/">+1 - 732 872 123</Link>
+                    <Link to="/"><i class="fa fa-phone" aria-hidden="true"></i>&nbsp; +1 - 732 872 123</Link>
                   </li>
                   <li>
-                    <Link to="/">contact@bent.markets</Link>
+                    <Link to="/"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp; contact@bent.markets</Link>
                   </li>
                 </ul>
               </div>
+            </Col>
+            <Col sm="12">
+              <p className="copyright">Copyright © Bent Finance 2021</p>
             </Col>
           </Row>
         </Container>

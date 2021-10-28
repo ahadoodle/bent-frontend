@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 // Dashboard
 import Dashboard from '../pages/Dashboard';
+import Home from '../pages/Home';
 import Claim from '../pages/Claim';
 import LockCvx from '../pages/LockCvx';
 
@@ -16,7 +17,7 @@ const authRoutes = [
     { path: '/claim', component: Claim },
     { path: '/lock-cvx', component: LockCvx },
     { path: '/pages-404', component: Pages404 },
-    { path: '/', component: Dashboard },
+    { path: '/', component: Dashboard },  `1`
 ];
 
 export { userRoutes, authRoutes };

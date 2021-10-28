@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import ClaimIcon from "../../../assets/images/claimIcon.png";
-import DepositIcon from "../../../assets/images/depositIcon.png";
-import LockIcon from "../../../assets/images/lockIcon.png";
-import DbIcon from "../../../assets/images/dbIcon.png";
+import ClaimIcon from "../../../assets/images/claimIcon.svg";
+import DepositIcon from "../../../assets/images/depositIcon.svg";
+import LockIcon from "../../../assets/images/lockIcon.svg";
+import DbIcon from "../../../assets/images/dbIcon.svg";
 
 const Tiles = () => {
   return (
@@ -11,7 +11,7 @@ const Tiles = () => {
       <Container>
         <div className="bannerboxes">
           <Row>
-            <Col md="4">
+            <Col md="4" xs="6">
               <div className="boxwrap">
                 <img src={ClaimIcon} alt="Icon" />
                 <p>Total Claimable</p>
@@ -21,7 +21,7 @@ const Tiles = () => {
                 </h2>
               </div>
             </Col>
-            <Col md="4">
+            <Col md="4" xs="6">
               <div className="boxwrap second">
                 <img src={DepositIcon} alt="Icon" />
                 <p>Total Deposit</p>
