@@ -1777,4 +1777,9 @@ button.approvebtn.btn.btn-secondary, .lockContent button.approvebtn.btn.btn-seco
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
   }
+
+  .custom-modal-style {
+    width: 897px !important;
+    height: 802px !important;
+    }
 /***end**/

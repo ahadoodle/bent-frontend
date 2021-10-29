@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import {
   Navbar,
@@ -10,10 +10,12 @@ import {
   Nav,
   NavLink,
   NavbarToggler,
+  Modal, ModalBody
 } from "reactstrap";
 import LogoIcon from "../../../assets/images/logo.png";
 import MenuIcon from "../../../assets/images/menu.svg";
 import MoonIcon from "../../../assets/images/moonIcon.svg";
+import {ethers} from 'ethers'
 
 const Header = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -26,6 +28,52 @@ const Header = () => {
   const openNav = () => {
     setCustomClass("sidenavmenu");
   };
+  const [errorMessage, setErrorMessage] = useState(null);
+	const [defaultAccount, setDefaultAccount] = useState(null);
+	const [userBalance, setUserBalance] = useState(null);
+	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
+	const [provider, setProvider] = useState(null);
+
+  // Modal open state
+  const [modal, setModal] = React.useState(false);
+  
+  // Toggle for Modal
+  const toggle = () => setModal(!modal);
+
+	const connectWalletHandler = () => {
+    console.log('yes cominh');
+		if (window.ethereum && defaultAccount == null) {
+			// set ethers provider
+			setProvider(new ethers.providers.Web3Provider(window.ethereum));
+
+			// connect to metamask
+			window.ethereum.request({ method: 'eth_requestAccounts'})
+			.then(result => {
+				setConnButtonText('Wallet Connected');
+				setDefaultAccount(result[0]);
+        console.log('testinggg connected');
+        setModal(true);
+			})
+			.catch(error => {
+				setErrorMessage(error.message);
+        setModal(true);
+			});
+
+		} else if (!window.ethereum){
+			console.log('Need to install MetaMask');
+			setErrorMessage('Please install MetaMask browser extension to interact');
+      setModal(true);
+		}
+	}
+
+useEffect(() => {
+	if(defaultAccount){
+	provider.getBalance(defaultAccount)
+	.then(balanceResult => {
+		setUserBalance(ethers.utils.formatEther(balanceResult));
+	})
+	};
+}, [defaultAccount]);
   return (
     <React.Fragment>
       <div className="header">
@@ -54,7 +102,7 @@ const Header = () => {
               <span class="ImgIcon">
                 <img src={MoonIcon} alt="" />
               </span>
-              <Button className="wallet">Connect Wallet</Button>
+              <Button className="wallet" onClick={connectWalletHandler} >Connect Wallet</Button>
               <div className="mobileHeader">
                 <div id="mySidenav" className={"sidenav" + " " + customClass}>
                   <Button className="closebtn" onClick={closeNav}>
@@ -73,6 +121,25 @@ const Header = () => {
           </div>
         </Container>
       </div>
+  <Modal isOpen={modal}
+        toggle={toggle}
+        modalTransition={{ timeout: 2000 }} className="custom-modal-style">
+          
+        <ModalBody>
+        {errorMessage != null ? (<h6>Error: {errorMessage} </h6>) :
+        (<>
+        <h6>MetaTask connected successfully</h6><br/>
+        <div className='accountDisplay'>
+          <h6>Address: {defaultAccount}</h6>
+        </div>
+        <div className='balanceDisplay' >
+          <h6>Balance: {userBalance}</h6>
+        </div>
+        </>)
+        }
+        
+        </ModalBody>
+    </Modal>
     </React.Fragment>
   );
 };
