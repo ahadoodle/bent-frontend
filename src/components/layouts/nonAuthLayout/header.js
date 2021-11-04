@@ -15,6 +15,7 @@ import LogoIcon from "../../../assets/images/logo.png";
 import MenuIcon from "../../../assets/images/menu.svg";
 import MoonIcon from "../../../assets/images/moonIcon.svg";
 import {ethers} from 'ethers'
+import ConnectWallet from "components/ConnectWallet";
 
 const Header = (props) => {
   const {handleTheme} = props;
@@ -124,7 +125,7 @@ const Header = (props) => {
               <span class="ImgIcon">
                 <img src={MoonIcon} alt="" />
               </span>
-              <Button className="wallet" onClick={connectWalletHandler} >Connect Wallet</Button>
+              <ConnectWallet />
               <div className="mobileHeader">
                 <div id="mySidenav" className={"sidenav " + customClass}>
                   <Button className="closebtn" onClick={closeNav}>
