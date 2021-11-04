@@ -27,4 +27,10 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
+# Development workflow
 
+We try to apply best practices of gitflow https://nvie.com/posts/a-successful-git-branching-model/
+
+Our `main` branch should always reflect the latest deployment state on https://bent-protocol.herokuapp.com/
+
+`development` branch will be target of features implemented, updated by pull requests
