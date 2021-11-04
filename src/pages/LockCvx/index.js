@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   TabContent,
   TabPane,
@@ -22,8 +22,6 @@ import BitCoin from "../../assets/images/bitCoin.png";
 import UsdIcon from "../../assets/images/usdIcon.png";
 import EthereumIcon from "../../assets/images/EthereumIcon.png";
 import BusdIcon from "../../assets/images/busdIcon.png";
-import BitcoinCombo from "../../assets/images/bitCoinCombo.png";
-import SolIcon from "../../assets/images/SolIcon.png";
 import LockIcon from "../../assets/images/purpleLock.png";
 import BannerBlocks from "../../components/BannerBlocks";
 import "font-awesome/css/font-awesome.min.css";

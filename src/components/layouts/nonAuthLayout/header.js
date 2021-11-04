@@ -5,22 +5,19 @@ import {
   Container,
   NavbarBrand,
   Button,
-  Collapse,
-  NavItem,
-  Nav,
-  NavLink,
-  NavbarToggler,
-  Modal, ModalBody
+  Modal, ModalBody,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from "reactstrap";
 import LogoIcon from "../../../assets/images/logo.png";
 import MenuIcon from "../../../assets/images/menu.svg";
 import MoonIcon from "../../../assets/images/moonIcon.svg";
 import {ethers} from 'ethers'
 
-const Header = () => {
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleNavbar = () => setCollapsed(!collapsed);
+const Header = (props) => {
+  const {handleTheme} = props;
   const [customClass, setCustomClass] = useState("removesidenavmenu");
   const closeNav = () => {
     setCustomClass("removesidenavmenu");
@@ -30,8 +27,9 @@ const Header = () => {
   };
   const [errorMessage, setErrorMessage] = useState(null);
 	const [defaultAccount, setDefaultAccount] = useState(null);
+  const [defaultTheme, setDefaultTheme] = useState('Dark');
 	const [userBalance, setUserBalance] = useState(null);
-	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
+  const [dropdownOpen,setDropdownOpen] = useState(false);
 	const [provider, setProvider] = useState(null);
 
   // Modal open state
@@ -45,35 +43,46 @@ const Header = () => {
 		if (window.ethereum && defaultAccount == null) {
 			// set ethers provider
 			setProvider(new ethers.providers.Web3Provider(window.ethereum));
-
-			// connect to metamask
+      // connect to metamask
 			window.ethereum.request({ method: 'eth_requestAccounts'})
 			.then(result => {
-				setConnButtonText('Wallet Connected');
+        console.log('result[0]',result[0]);
 				setDefaultAccount(result[0]);
-        console.log('testinggg connected');
         setModal(true);
 			})
 			.catch(error => {
 				setErrorMessage(error.message);
         setModal(true);
 			});
-
-		} else if (!window.ethereum){
+    } else if (!window.ethereum){
 			console.log('Need to install MetaMask');
 			setErrorMessage('Please install MetaMask browser extension to interact');
       setModal(true);
 		}
 	}
 
-useEffect(() => {
-	if(defaultAccount){
-	provider.getBalance(defaultAccount)
-	.then(balanceResult => {
-		setUserBalance(ethers.utils.formatEther(balanceResult));
-	})
-	};
-}, [defaultAccount]);
+  const toggleDropDown = () => { setDropdownOpen(!dropdownOpen)}
+  const onMouseEnter = () => { setDropdownOpen(true) }
+  const onMouseLeave = () => {setDropdownOpen(false) }
+  const selectTheme = (e) => {
+    console.log('testing,,,,,,,,');
+    if (e.target.value === "Light") {
+      setDefaultTheme('Dark');
+      handleTheme('Light');
+    } else {
+      setDefaultTheme('Light');
+      handleTheme('Dark');
+    }
+  }
+
+  useEffect(() => {
+    if(defaultAccount){
+      provider.getBalance(defaultAccount)
+      .then(balanceResult => {
+        setUserBalance(ethers.utils.formatEther(balanceResult));
+      })
+    };
+  }, [defaultAccount, provider]);
   return (
     <React.Fragment>
       <div className="header">
@@ -96,7 +105,20 @@ useEffect(() => {
                   <Link to="/lock-cvx">Lock CVX</Link>
                 </li>
                 <li>
-                  <Link to="/">More</Link>
+                <Dropdown
+                  className=""
+                  onMouseOver={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                  isOpen={dropdownOpen}
+                  toggle={toggleDropDown}
+                >
+                  <DropdownToggle caret>More</DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={(e) => selectTheme(e)} value={defaultTheme}>{defaultTheme} Theme</DropdownItem>
+                  </DropdownMenu>
+                
+                  
+                </Dropdown>
                 </li>
               </ul>
               <span class="ImgIcon">
@@ -104,14 +126,27 @@ useEffect(() => {
               </span>
               <Button className="wallet" onClick={connectWalletHandler} >Connect Wallet</Button>
               <div className="mobileHeader">
-                <div id="mySidenav" className={"sidenav" + " " + customClass}>
+                <div id="mySidenav" className={"sidenav " + customClass}>
                   <Button className="closebtn" onClick={closeNav}>
                     &times;
                   </Button>
-                  <Link>Stake</Link>
-                  <Link>Claim</Link>
-                  <Link>Lock CVX</Link>
-                  <Link>More</Link>
+                  <Link  to="/stake">Stake</Link>
+                  <Link to="/claim">Claim</Link>
+                  <Link to="/lock-cvx">Lock CVX</Link>
+                  <Link to="/stake">More</Link>
+                  
+                  {/*<Dropdown
+                  className=""
+                  onMouseOver={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                  isOpen={dropdownOpen}
+                  toggle={toggleDropDown}
+                >
+                  <DropdownToggle caret>More</DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={(e) => selectTheme(e)} value={defaultTheme}>{defaultTheme} Theme</DropdownItem>
+                  </DropdownMenu>
+                  </Dropdown>*/}
                 </div>
                 <span className="Menu" onClick={openNav}>
                   <img src={MenuIcon} alt="Menu" />
