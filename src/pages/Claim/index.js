@@ -5,29 +5,16 @@ import {
   Button,
   Row,
   Col,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
   Card,
-  CardTitle,
-  CardText,
-  Table,
   Input,
   Label,
   CardBody,
   UncontrolledCollapse,
 } from "reactstrap";
-import classnames from "classnames";
 import CrvIcon from "../../assets/images/crvIcon.png";
 import BitCoin from "../../assets/images/bitCoin.png";
 import UsdIcon from "../../assets/images/usdIcon.png";
 import EthereumIcon from "../../assets/images/EthereumIcon.png";
-import CvxIcon from "../../assets/images/cvxIcon.png";
-import BitcoinCombo from "../../assets/images/bitCoinCombo.png";
-import SolIcon from "../../assets/images/SolIcon.png";
-import BitcoinTwice from "../../assets/images/bitCoinTwice.png";
 import BannerBlocks from "../../components/BannerBlocks";
 import chainIcon from "../../assets/images/chainLink.png";
 import busdIcon from "../../assets/images/busdIcon.png";
@@ -39,12 +26,8 @@ import starActive from "../../assets/images/starActive.png";
 import "font-awesome/css/font-awesome.min.css";
 
 const Claim = () => {
-  const [activeTab, setActiveTab] = useState("1");
   const [autoClaimStatus, setAutoClaimStatus] = useState(false);
   const [autoText, setAutoText] = useState(0);
-  const toggle = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab);
-  };
   const [stakeStatus, setStakeStatus] = useState("none");
   const handleStakeStus = (value) => {
     setStakeStatus(value);
@@ -53,7 +36,7 @@ const Claim = () => {
     console.log("value", e.target.value);
     const { value } = e.target;
     console.log("value", value);
-    if (value == 0) {
+    if (value === 0) {
       setAutoClaimStatus(true);
       setAutoText(1);
     } else {
@@ -82,7 +65,7 @@ const Claim = () => {
               </span>
             </div>
           </div>
-          {autoClaimStatus == true ? (
+          {autoClaimStatus === true ? (
             <div className="aproveCheckbox">
               <Container>
                 <Row>

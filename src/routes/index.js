@@ -1,8 +1,5 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
 // Dashboard
 import Dashboard from "../pages/Dashboard";
-import Home from "../pages/Home";
 import Claim from "../pages/Claim";
 import LockCvx from "../pages/LockCvx";
 
