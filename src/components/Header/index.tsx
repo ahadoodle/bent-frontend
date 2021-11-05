@@ -59,12 +59,12 @@ const Header = (props: Props) => {
   }
 
   useEffect(() => {
-    if(account && library){
+    if(account && library) {
       library.getBalance(account)
       .then(balanceResult => {
         setUserBalance(ethers.utils.formatEther(balanceResult));
       })
-    };
+    }
   }, [library, account]);
   return (
     <React.Fragment>

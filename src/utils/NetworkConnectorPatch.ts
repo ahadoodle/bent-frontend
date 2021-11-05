@@ -1,5 +1,3 @@
-//TODO Replace with one from web3-react after this PR is merged
-
 import { ConnectorUpdate } from '@web3-react/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import invariant from 'tiny-invariant'
@@ -29,8 +27,8 @@ class MiniRpcProvider implements AsyncSendable {
   public readonly url: string
   public readonly host: string
   public readonly path: string
-  private blockNumber: string = ''
-  private lastBlockNumberUpdate: number = 0
+  private blockNumber = ''
+  private lastBlockNumberUpdate = 0
 
   constructor(chainId: number, url: string) {
     this.chainId = chainId

@@ -177,7 +177,7 @@ export function WalletProvider({ children }: Props) {
 
   // load MM connector
   // if not installed open tab for MM download
-  function handleMetaMaskConnect(web3Wallet: string = 'metamask') {
+  function handleMetaMaskConnect(web3Wallet = 'metamask') {
     setUnsupportedChain(false)
     // check if installed
     const hasInstalledMetaMask = (() => {

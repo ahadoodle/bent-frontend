@@ -26,7 +26,6 @@ export const useActiveWeb3React = (): Web3ReactContextInterface<Web3Provider> =>
   useEffect(() => {
     if(library === undefined) {
       const { ethereum } = window as any;
-      console.log(ethereum);
       if(!ethereum) setProvider(simpleRpcProvider);
       else setProvider(new ethers.providers.Web3Provider(ethereum) || simpleRpcProvider);
     } else {
