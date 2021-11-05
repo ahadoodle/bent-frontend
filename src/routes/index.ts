@@ -12,7 +12,6 @@ const authRoutes = [
   { path: "/lock-cvx", component: LockCvx },
   { path: "/pages-404", component: Pages404 },
   { path: "/", component: Dashboard },
-  `1`,
 ];
 
 export { userRoutes, authRoutes };
