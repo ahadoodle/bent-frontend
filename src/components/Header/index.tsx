@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {
   Navbar,
   Container,
-  NavbarBrand,
   Button,
   Modal, ModalBody,
   Dropdown,
@@ -73,11 +72,9 @@ const Header = (props: Props) => {
         <Container>
           <div className="DesktopHeader" id="mySidenav">
             <Navbar light expand="md">
-              <NavbarBrand>
-                <Link to="/">
-                  <img src={LogoIcon} alt="" />
-                </Link>
-              </NavbarBrand>
+              <Link to="/">
+                <img src={LogoIcon} alt="" />
+              </Link>
               <ul className="primaryMenu">
                 <li>
                   <Link to="/stake">Stake</Link>

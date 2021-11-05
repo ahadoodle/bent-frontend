@@ -165,7 +165,7 @@ const Dashboard = () => {
                                   <span className="textadvance">Advanced</span>
                                 </div>
                               </CardTitle>
-                              <CardText>
+                              <div className="card-text mt-4">
                                 <div className="amount-crv">
                                   <p className="labeltext">
                                     <Label>
@@ -189,7 +189,7 @@ const Dashboard = () => {
                                     </div>
                                   </div>
                                 </div>
-                              </CardText>
+                              </div>
                             </Card>
                           </Col>
                         </Row>
@@ -218,7 +218,7 @@ const Dashboard = () => {
                         <Row>
                           <Col sm="12">
                             <Card body>
-                              <CardText className="infoWrap">
+                              <div className="infoWrap card-text mt-4">
                                 <p>
                                   CRV token address:{" "}
                                   <Link to="/stake">
@@ -243,7 +243,7 @@ const Dashboard = () => {
                                     0xd533a949740bb3306d119cc777fa900ba034cd52
                                   </Link>
                                 </p>
-                              </CardText>
+                              </div>
                             </Card>
                           </Col>
                         </Row>
@@ -530,7 +530,7 @@ const Dashboard = () => {
                       </Col>
                       <Col sm="6" className="divider-left">
                         <Card body>
-                          <CardText>
+                          <div className="card-text mt-4">
                             <div className="amount-crv">
                               <p className="labeltext">
                                 <Label>
@@ -554,7 +554,7 @@ const Dashboard = () => {
                                 </div>
                               </div>
                             </div>
-                          </CardText>
+                          </div>
                         </Card>
                       </Col>
                     </Row>
