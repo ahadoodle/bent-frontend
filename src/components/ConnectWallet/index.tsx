@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { formatAddress } from 'utils';
-import { useEthers, useModal } from 'hooks';
+import { useEthers } from 'hooks';
 import { useWallet } from 'providers';
 // import { ConnectWalletModal } from 'components/Modals/ConnectWallet';
 // import { AccountDetailsModal } from 'components/Modals/AccountDetails';
@@ -11,25 +11,25 @@ interface AccountButtonProps {
 
 const ConnectWallet = (props: AccountButtonProps) => {
 	const { account } = useEthers();
-	const { isShown, toggle } = useModal();
+	// const { isShown, toggle } = useModal();
 	const { 
 		handleMetaMaskConnect,
-		handleWalletConnect,
-		activeConnector,
-		unsupportedChain,
-		handleDisconnect,
+		// handleWalletConnect,
+		// activeConnector,
+		// unsupportedChain,
+		// handleDisconnect,
 	} = useWallet()
 	const [ activeAccountAddress, setActiveAccountAddress ] = React.useState<any>('');
-	const [willChangeConnector, setWillChangeConnector] = useState(false)
+	// const [willChangeConnector, setWillChangeConnector] = useState(false)
 
-	useEffect(() => {
-    if (account || !isShown) setWillChangeConnector(false)
-  }, [account, isShown])
+	// useEffect(() => {
+  //   if (account || !isShown) setWillChangeConnector(false)
+  // }, [account, isShown])
 
-  function handleChangeConnector(willChange: boolean) {
-		handleDisconnect();
-    setWillChangeConnector(willChange)
-  }
+  // function handleChangeConnector(willChange: boolean) {
+	// 	handleDisconnect();
+  //   setWillChangeConnector(willChange)
+  // }
   
 	useEffect(() => {
 		setActiveAccountAddress(account);

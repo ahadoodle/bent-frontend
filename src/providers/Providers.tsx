@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Web3ReactProvider } from '@web3-react/core';
 import { HelmetProvider } from 'react-helmet-async';
-import { Provider } from 'react-redux';
+// import { Provider } from 'react-redux';
 // import theme from 'theme';
 import { WalletProvider } from './wallet/provider';
 // import Updaters from 'state/Updater';

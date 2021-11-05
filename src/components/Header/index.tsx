@@ -11,14 +11,18 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import LogoIcon from "../../../assets/images/logo.png";
-import MenuIcon from "../../../assets/images/menu.svg";
-import MoonIcon from "../../../assets/images/moonIcon.svg";
-import {ethers} from 'ethers'
+import LogoIcon from "assets/images/logo.png";
+import MenuIcon from "assets/images/menu.svg";
+import MoonIcon from "assets/images/moonIcon.svg";
+import { ethers } from 'ethers'
 import ConnectWallet from "components/ConnectWallet";
+import { useActiveWeb3React, useLocalStorage } from "hooks";
 
-const Header = (props) => {
-  const {handleTheme} = props;
+interface Props {
+	handleTheme: (theme) => void
+}
+
+const Header = (props: Props) => {
   const [customClass, setCustomClass] = useState("removesidenavmenu");
   const closeNav = () => {
     setCustomClass("removesidenavmenu");
@@ -26,12 +30,11 @@ const Header = (props) => {
   const openNav = () => {
     setCustomClass("sidenavmenu");
   };
-  const [errorMessage, setErrorMessage] = useState(null);
-	const [defaultAccount, setDefaultAccount] = useState(null);
-  const [defaultTheme, setDefaultTheme] = useState('Dark');
-	const [userBalance, setUserBalance] = useState(null);
+	const [theme, setTheme] = useLocalStorage('theme');
+  // const [errorMessage, setErrorMessage] = useState(null);
+	const [userBalance, setUserBalance] = useState<any>(null);
   const [dropdownOpen,setDropdownOpen] = useState(false);
-	const [provider, setProvider] = useState(null);
+  const { library, account } = useActiveWeb3React();
 
   // Modal open state
   const [modal, setModal] = React.useState(false);
@@ -39,51 +42,31 @@ const Header = (props) => {
   // Toggle for Modal
   const toggle = () => setModal(!modal);
 
-	const connectWalletHandler = () => {
-    console.log('yes cominh');
-		if (window.ethereum && defaultAccount == null) {
-			// set ethers provider
-			setProvider(new ethers.providers.Web3Provider(window.ethereum));
-      // connect to metamask
-			window.ethereum.request({ method: 'eth_requestAccounts'})
-			.then(result => {
-        console.log('result[0]',result[0]);
-				setDefaultAccount(result[0]);
-        setModal(true);
-			})
-			.catch(error => {
-				setErrorMessage(error.message);
-        setModal(true);
-			});
-    } else if (!window.ethereum){
-			console.log('Need to install MetaMask');
-			setErrorMessage('Please install MetaMask browser extension to interact');
-      setModal(true);
-		}
-	}
-
   const toggleDropDown = () => { setDropdownOpen(!dropdownOpen)}
   const onMouseEnter = () => { setDropdownOpen(true) }
   const onMouseLeave = () => {setDropdownOpen(false) }
+	useEffect(() => {
+		if(!theme) setTheme('Dark');
+	}, [theme, setTheme]);
+
   const selectTheme = (e) => {
-    console.log('testing,,,,,,,,');
     if (e.target.value === "Light") {
-      setDefaultTheme('Dark');
-      handleTheme('Light');
+			setTheme('Dark');
+			props.handleTheme('Dark');
     } else {
-      setDefaultTheme('Light');
-      handleTheme('Dark');
+      setTheme('Light');
+			props.handleTheme('Light');
     }
   }
 
   useEffect(() => {
-    if(defaultAccount){
-      provider.getBalance(defaultAccount)
+    if(account && library){
+      library.getBalance(account)
       .then(balanceResult => {
         setUserBalance(ethers.utils.formatEther(balanceResult));
       })
     };
-  }, [defaultAccount, provider]);
+  }, [library, account]);
   return (
     <React.Fragment>
       <div className="header">
@@ -115,14 +98,12 @@ const Header = (props) => {
                 >
                   <DropdownToggle caret>More</DropdownToggle>
                   <DropdownMenu>
-                    <DropdownItem onClick={(e) => selectTheme(e)} value={defaultTheme}>{defaultTheme} Theme</DropdownItem>
+                    <DropdownItem onClick={(e) => selectTheme(e)} value={theme}>{theme === 'Dark' ? 'Light' : 'Dark'} Theme</DropdownItem>
                   </DropdownMenu>
-                
-                  
                 </Dropdown>
                 </li>
               </ul>
-              <span class="ImgIcon">
+              <span className="ImgIcon">
                 <img src={MoonIcon} alt="" />
               </span>
               <ConnectWallet />
@@ -157,25 +138,23 @@ const Header = (props) => {
           </div>
         </Container>
       </div>
-  <Modal isOpen={modal}
+      <Modal isOpen={modal}
         toggle={toggle}
         modalTransition={{ timeout: 2000 }} className="custom-modal-style">
-          
         <ModalBody>
-        {errorMessage != null ? (<h6>Error: {errorMessage} </h6>) :
+        {/* {errorMessage != null ? (<h6>Error: {errorMessage} </h6>) : */}
         (<>
         <h6>MetaTask connected successfully</h6><br/>
         <div className='accountDisplay'>
-          <h6>Address: {defaultAccount}</h6>
+          <h6>Address: {account}</h6>
         </div>
         <div className='balanceDisplay' >
           <h6>Balance: {userBalance}</h6>
         </div>
         </>)
-        }
-        
+        {/* } */}
         </ModalBody>
-    </Modal>
+      </Modal>
     </React.Fragment>
   );
 };

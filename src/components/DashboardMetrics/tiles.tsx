@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import ClaimIcon from "../../../assets/images/claimIcon.svg";
-import DepositIcon from "../../../assets/images/depositIcon.svg";
-import LockIcon from "../../../assets/images/lockIcon.svg";
-import DbIcon from "../../../assets/images/dbIcon.svg";
+import ClaimIcon from "assets/images/claimIcon.svg";
+import DepositIcon from "assets/images/depositIcon.svg";
+import LockIcon from "assets/images/lockIcon.svg";
+import DbIcon from "assets/images/dbIcon.svg";
 
 const Tiles = () => {
   return (

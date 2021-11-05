@@ -441,7 +441,7 @@ const LockCvx = () => {
                     <Col lg="4">
                       <div className="votePage">
                         <Button>
-                          <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                          <i className="fa fa-thumbs-up" aria-hidden="true"></i>
                           &nbsp; Go to vote page
                         </Button>
                         <p>Current vote weight: 0</p>
@@ -459,16 +459,16 @@ const LockCvx = () => {
                         </div>
                       </div>
                       <div className="delegateBox">
-                        <div class="convert-table">
-                          <div class="convert-tableTitle">
-                            <div class="align-items-center row">
-                              <div class="col">
-                                <div class="tableTitle">
+                        <div className="convert-table">
+                          <div className="convert-tableTitle">
+                            <div className="align-items-center row">
+                              <div className="col">
+                                <div className="tableTitle">
                                   <b>
                                     {" "}
                                     Delegate vote weight &nbsp;{" "}
                                     <i
-                                      class="fa fa-info-circle"
+                                      className="fa fa-info-circle"
                                       aria-hidden="true"
                                     ></i>{" "}
                                   </b>
@@ -476,19 +476,19 @@ const LockCvx = () => {
                               </div>
                             </div>
                           </div>
-                          <div class="converttabs">
+                          <div className="converttabs">
                             <ul>
                               <li className="addreesAdd">
                                 Specific address &nbsp;{" "}
                                 <i
-                                  class="fa fa-info-circle"
+                                  className="fa fa-info-circle"
                                   aria-hidden="true"
                                 ></i>
                               </li>
                               <li className="bentTeam">
                                 Bent team &nbsp;{" "}
                                 <i
-                                  class="fa fa-info-circle"
+                                  className="fa fa-info-circle"
                                   aria-hidden="true"
                                 ></i>
                               </li>

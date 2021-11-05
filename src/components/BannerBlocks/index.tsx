@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import CardCoin from "../../assets/images/cardCoin.png";
-import DollorIcon from "../../assets/images/dollorIcon.png";
+import CardCoin from "assets/images/cardCoin.png";
+import DollorIcon from "assets/images/dollorIcon.png";
 
 const BannerBlocks = () => {
   return (

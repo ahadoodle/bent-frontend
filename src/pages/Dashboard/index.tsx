@@ -18,15 +18,15 @@ import {
   Label,
 } from "reactstrap";
 import classnames from "classnames";
-import CrvIcon from "../../assets/images/crvIcon.png";
-import BitCoin from "../../assets/images/bitCoin.png";
-import UsdIcon from "../../assets/images/usdIcon.png";
-import EthereumIcon from "../../assets/images/EthereumIcon.png";
-import CvxIcon from "../../assets/images/cvxIcon.png";
-import BitcoinCombo from "../../assets/images/bitCoinCombo.png";
-import SolIcon from "../../assets/images/SolIcon.png";
-import BitcoinTwice from "../../assets/images/bitCoinTwice.png";
-import Tiles from "../../components/layouts/nonAuthLayout/tiles";
+import CrvIcon from "assets/images/crvIcon.png";
+import BitCoin from "assets/images/bitCoin.png";
+import UsdIcon from "assets/images/usdIcon.png";
+import EthereumIcon from "assets/images/EthereumIcon.png";
+import CvxIcon from "assets/images/cvxIcon.png";
+import BitcoinCombo from "assets/images/bitCoinCombo.png";
+import SolIcon from "assets/images/SolIcon.png";
+import BitcoinTwice from "assets/images/bitCoinTwice.png";
+import Tiles from "components/DashboardMetrics/tiles";
 import "font-awesome/css/font-awesome.min.css";
 
 const Dashboard = () => {
@@ -401,7 +401,7 @@ const Dashboard = () => {
                             </td>
                           </tr>
                           <tr>
-                            <td colSpan="5">
+                            <td colSpan={5}>
                               <div className="text-center btnwrap">
                                 <button className="btn btnshow">
                                   Show all Bent pools{" "}

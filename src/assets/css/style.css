@@ -621,111 +621,111 @@ button.btn.btnshow i {
 .cvxSection .amutinput input {
     background-image: url(../images/cvxIcon.png);
 }
-.DarkTheme .contentSection {
+.Dark .contentSection {
     background: #253143;
 }
-.DarkTheme .boxwrap h2, .DarkTheme .boxwrap p, .DarkTheme .converttabs a.active.nav-link,
-.DarkTheme .converttabs p.card-text, .DarkTheme .converttabs label, .DarkTheme  h2.black,
-.DarkTheme table.tokentable.table td, .DarkTheme .currentText h3, .DarkTheme .currentText p, 
-.DarkTheme li.addreesAdd, .DarkTheme .tableText h4, .DarkTheme .tableText b,
-.DarkTheme .infoWrap p, .DarkTheme .innerWrapother .imgText h4, .DarkTheme .innerWrapother, 
-.DarkTheme p.epsText, .DarkTheme .innerAccordian p, .DarkTheme .innerAccordian .imgText h4,
-.DarkTheme .innerAccordian {
+.Dark .boxwrap h2, .Dark .boxwrap p, .Dark .converttabs a.active.nav-link,
+.Dark .converttabs p.card-text, .Dark .converttabs label, .Dark  h2.black,
+.Dark table.tokentable.table td, .Dark .currentText h3, .Dark .currentText p, 
+.Dark li.addreesAdd, .Dark .tableText h4, .Dark .tableText b,
+.Dark .infoWrap p, .Dark .innerWrapother .imgText h4, .Dark .innerWrapother, 
+.Dark p.epsText, .Dark .innerAccordian p, .Dark .innerAccordian .imgText h4,
+.Dark .innerAccordian {
 	color: #fff;
 }
-.DarkTheme .boxwrap,.DarkTheme .converttabs,.DarkTheme .card, .DarkTheme .convert-table {
+.Dark .boxwrap,.Dark .converttabs,.Dark .card, .Dark .convert-table {
     background: #374559;
 }
-.DarkTheme table.tokentable.table tr:hover td {
+.Dark table.tokentable.table tr:hover td {
 	color: #10151D;
 }
-.DarkTheme .converttabs {
+.Dark .converttabs {
 	
 }
-.DarkTheme .amutinput input {
+.Dark .amutinput input {
     border: 3px solid #fff;
     background-color: transparent;
 }
-.DarkTheme span.textadvance {
+.Dark span.textadvance {
     bottom: 0px;
 }
-.DarkTheme button.maxbtn {
+.Dark button.maxbtn {
     box-shadow: 2px 2px 0px 0px #c1ffd7;
     background: transparent;
     border: 2px solid #C1FFD7;
     color: #C1FFD7;
 }
-.DarkTheme table.tokentable.table tbody tr:first-child td {
+.Dark table.tokentable.table tbody tr:first-child td {
     border-top: 3px solid #414c5c;
 }
-.DarkTheme table.tokentable.table tbody {
+.Dark table.tokentable.table tbody {
     background: #18202C;
 	color:#fff;
 }
-.DarkTheme table.tokentable.table {
+.Dark table.tokentable.table {
     border: 3px solid #607390;
     box-shadow: 10px 15px 0px 0px #607390;
 }
-.DarkTheme .converttabs {
+.Dark .converttabs {
     border: 3px solid #607390;	
 	box-shadow: 10px 15px 0px 0px #607390;
 }
-.DarkTheme .convert-table {
+.Dark .convert-table {
 	box-shadow: 10px 15px 0px 0px #607390;
 }
-.DarkTheme .convert-table {
+.Dark .convert-table {
 	border: none;	
 }
-.DarkTheme .delegateBox {
+.Dark .delegateBox {
     background: #B5DEFF;
     border-radius: 8px;
 }
-.DarkTheme .currentLock {
+.Dark .currentLock {
 	background: #374559;
 	border: 3px solid #607390;
     box-shadow: 10px 15px 0px 0px #607390;
 }
-.DarkTheme .delegateBox .convert-table,
-.DarkTheme .lockInner .convert-table {
+.Dark .delegateBox .convert-table,
+.Dark .lockInner .convert-table {
 	background: #B5DEFF;
 }
-.DarkTheme button.btn.btnshow {
+.Dark button.btn.btnshow {
 	background: transparent;
     border: 3px solid #C1FFD7;
     box-shadow: 4px 4px 0px #C1FFD7;
 	color: #C1FFD7;
 }
-.DarkTheme .convert-up .convert-table {
+.Dark .convert-up .convert-table {
 	background: #B5DEFF;
 }
-.DarkTheme .convert-tableTitle {
+.Dark .convert-tableTitle {
     background: #B5DEFF;
     border-radius: 8px 8px 0 0;
 }
-.DarkTheme .delegateWrap input {
+.Dark .delegateWrap input {
 	background: transparent;
 	border-color: #fff;	
 }
-.DarkTheme .delegateWrap button.btn.btn-secondary, .DarkTheme button.claimbtn.btn.btn-secondary {
+.Dark .delegateWrap button.btn.btn-secondary, .Dark button.claimbtn.btn.btn-secondary {
 	background: transparent;
     color: #C1FFD7;
     border: 2px solid #C1FFD7;
     box-shadow: 4px 4px 0 #C1FFD7;
 }
-.DarkTheme .claimText {
+.Dark .claimText {
 	background: #253143;
 }
-.DarkTheme .innerWrapother {
+.Dark .innerWrapother {
     background-color: #18202C;
 }
-.DarkTheme .cliamBlockOne {
+.Dark .cliamBlockOne {
     border: 3px solid #607390;
     box-shadow: 10px 15px 0px 0px #607390;
 }
-.DarkTheme .bentpoolText {
+.Dark .bentpoolText {
     border: 3px solid #607390;
 }
-.DarkTheme .innerWrap .card-body {
+.Dark .innerWrap .card-body {
 	    border-top: 1px solid #fff;
 }
 .primaryMenu .dropdown-toggle {
