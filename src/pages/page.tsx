@@ -5,9 +5,7 @@ import Header from "components/Header";
 
 const Page = (props) => {
   const [theme, setTheme] = useLocalStorage('theme');
-	const handleTheme = (theme) => {
-		setTheme(theme);
-	}
+	const handleTheme = (theme) => setTheme(theme)
 
   return (
     <React.Fragment>

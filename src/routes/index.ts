@@ -3,7 +3,7 @@ import Dashboard from "../pages/Dashboard";
 import Claim from "../pages/Claim";
 import LockCvx from "../pages/LockCvx";
 
-//Pages
+// Pages
 import Pages404 from "../pages/Utility/pages-404";
 const userRoutes = [{ path: "/pages-404", component: Pages404 }];
 const authRoutes = [

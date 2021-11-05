@@ -21,7 +21,7 @@ function setItem(key: string, value: any) {
   }
 }
 
-export function useLocalStorage(key: string) {
+export const useLocalStorage = (key: string) => {
   const [value, setValue] = useState(() => getItem(key))
 
   useEffect(() => {

@@ -6,10 +6,7 @@ import { useWallet } from 'providers';
 // import { AccountDetailsModal } from 'components/Modals/AccountDetails';
 import { Button } from "reactstrap";
 
-interface AccountButtonProps {
-}
-
-const ConnectWallet = (props: AccountButtonProps) => {
+const ConnectWallet = () => {
 	const { account } = useEthers();
 	// const { isShown, toggle } = useModal();
 	const { 

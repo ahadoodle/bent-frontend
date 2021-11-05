@@ -11,7 +11,7 @@ export const WalletContext = createContext<{
   networkName: '',
   activeConnector: null,
   unsupportedChain: false,
-  handleMetaMaskConnect: (web3Wallet: string) => {},
+  handleMetaMaskConnect: () => {},
   handleWalletConnect: () => {},
   handleDisconnect: () => {}
 })
