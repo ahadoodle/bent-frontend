@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, BrowserRouter as Router,Route } from "react-router-dom";
+import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import { authRoutes } from 'routes'
 //import {Layout} from "./components/layout"
 import './assets/css/style.css';
@@ -13,7 +13,7 @@ const App = () => {
         <Page>
           <Switch>
             {authRoutes.map((route) => (
-              <Route path={route.path} component={route.component} />
+              <Route path={route.path} component={route.component} key={route.path}/>
             ))}
           </Switch>
         </Page>
