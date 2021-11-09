@@ -329,7 +329,7 @@ const Claim = () => {
                             <Col>
                               <div className="imgText">
                                 <img src={EthereumIcon} alt="" />
-                                <h4>Ethereum</h4>
+                                <h4>Ethereum hello</h4>
                               </div>
                             </Col>
                             <Col>

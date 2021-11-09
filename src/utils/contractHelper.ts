@@ -10,5 +10,9 @@ const getWeb3Contract = (address: string, abi: any, web3?: Web3): Contract => {
 }
 
 export const getBentPool = (poolName: string, web3?: Web3) => {
-	return getWeb3Contract(POOLS.BentPool[poolName].POOL, ABIS.BentBasePool, web3);
+	return getWeb3Contract(POOLS.BentPools[poolName].POOL, ABIS.BentBasePool, web3);
+}
+
+export const getERC20 = (address: string, web3?: Web3) => {
+	return getWeb3Contract(address, ABIS.ERC20, web3);
 }
