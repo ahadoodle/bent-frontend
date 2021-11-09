@@ -17,13 +17,13 @@ import {
   Input,
 } from "reactstrap";
 import classnames from "classnames";
-import CrvIcon from "../../assets/images/crvIcon.png";
-import BitCoin from "../../assets/images/bitCoin.png";
-import UsdIcon from "../../assets/images/usdIcon.png";
-import EthereumIcon from "../../assets/images/EthereumIcon.png";
-import BusdIcon from "../../assets/images/busdIcon.png";
-import LockIcon from "../../assets/images/purpleLock.png";
-import BannerBlocks from "../../components/BannerBlocks";
+import CrvIcon from "assets/images/token/CRV.png";
+import BitCoin from "assets/images/token/BTC.png";
+import UsdIcon from "assets/images/token/USDT.png";
+import EthereumIcon from "assets/images/token/ETH.png";
+import BusdIcon from "assets/images/token/BUSD.png";
+import LockIcon from "assets/images/purpleLock.png";
+import BannerBlocks from "components/BannerBlocks";
 import "font-awesome/css/font-awesome.min.css";
 
 const LockCvx = () => {

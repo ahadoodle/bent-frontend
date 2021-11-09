@@ -11,18 +11,17 @@ import {
   CardBody,
   UncontrolledCollapse,
 } from "reactstrap";
-import CrvIcon from "../../assets/images/crvIcon.png";
-import BitCoin from "../../assets/images/bitCoin.png";
-import UsdIcon from "../../assets/images/usdIcon.png";
-import EthereumIcon from "../../assets/images/EthereumIcon.png";
-import BannerBlocks from "../../components/BannerBlocks";
-import chainIcon from "../../assets/images/chainLink.png";
-import busdIcon from "../../assets/images/busdIcon.png";
-import sushiIcon from "../../assets/images/sushiIcon.png";
-import podsIcon from "../../assets/images/airPods.png";
-import starIcon from "../../assets/images/starIcon.png";
-import starActive from "../../assets/images/starActive.png";
-
+import BannerBlocks from "components/BannerBlocks";
+import podsIcon from "assets/images/airPods.png";
+import starIcon from "assets/images/starIcon.png";
+import starActive from "assets/images/starActive.png";
+import CrvIcon from "assets/images/token/CRV.png";
+import BitCoin from "assets/images/token/BTC.png";
+import UsdIcon from "assets/images/token/USDT.png";
+import EthereumIcon from "assets/images/token/ETH.png";
+import chainIcon from "assets/images/token/LINK.png";
+import busdIcon from "assets/images/token/BUSD.png";
+import sushiIcon from "assets/images/token/SUSHI.png";
 import "font-awesome/css/font-awesome.min.css";
 
 const Claim = () => {

@@ -18,14 +18,14 @@ import {
   Label,
 } from "reactstrap";
 import classnames from "classnames";
-import CrvIcon from "assets/images/crvIcon.png";
-import BitCoin from "assets/images/bitCoin.png";
-import UsdIcon from "assets/images/usdIcon.png";
-import EthereumIcon from "assets/images/EthereumIcon.png";
-import CvxIcon from "assets/images/cvxIcon.png";
-import BitcoinCombo from "assets/images/bitCoinCombo.png";
-import SolIcon from "assets/images/SolIcon.png";
-import BitcoinTwice from "assets/images/bitCoinTwice.png";
+import CrvIcon from "assets/images/token/CRV.png";
+import BitCoin from "assets/images/token/BTC.png";
+import UsdIcon from "assets/images/token/USDT.png";
+import EthereumIcon from "assets/images/token/ETH.png";
+import CvxIcon from "assets/images/token/CVX.png";
+import BitcoinCombo from "assets/images/token/BTC-ETH.png";
+import SolIcon from "assets/images/token/SOL.png";
+import BitcoinTwice from "assets/images/token/LUNA-BTC.png";
 import Tiles from "components/DashboardMetrics/tiles";
 import "font-awesome/css/font-awesome.min.css";
 

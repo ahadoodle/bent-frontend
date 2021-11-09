@@ -12,7 +12,8 @@ import {
 } from "reactstrap";
 import LogoIcon from "assets/images/logo.png";
 import MenuIcon from "assets/images/menu.svg";
-import MoonIcon from "assets/images/moonIcon.svg";
+import ThemeDarkIcon from "assets/images/theme-dark.png";
+import ThemeLightIcon from "assets/images/theme-light.png";
 import { ethers } from 'ethers'
 import ConnectWallet from "components/ConnectWallet";
 import { useActiveWeb3React, useLocalStorage } from "hooks";
@@ -48,8 +49,8 @@ const Header = (props: Props) => {
 		if(!theme) setTheme('Dark');
 	}, [theme, setTheme]);
 
-  const selectTheme = (e) => {
-    if (e.target.value === "Light") {
+  const selectTheme = () => {
+    if (theme === "Light") {
 			setTheme('Dark');
 			props.handleTheme('Dark');
     } else {
@@ -94,14 +95,11 @@ const Header = (props: Props) => {
                   toggle={toggleDropDown}
                 >
                   <DropdownToggle caret>More</DropdownToggle>
-                  <DropdownMenu>
-                    <DropdownItem onClick={(e) => selectTheme(e)} value={theme}>{theme === 'Dark' ? 'Light' : 'Dark'} Theme</DropdownItem>
-                  </DropdownMenu>
                 </Dropdown>
                 </li>
               </ul>
-              <span className="ImgIcon">
-                <img src={MoonIcon} alt="" />
+              <span className="theme-icon" onClick={selectTheme}>
+                <img src={theme === 'Dark' ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
               </span>
               <ConnectWallet />
               <div className="mobileHeader">

@@ -41,6 +41,13 @@ ul.primaryMenu {
     padding: 0px;
     list-style: none; 
 }
+.theme-icon {
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: 28px;
+    cursor: pointer;
+}
 .tokentable .fa-info-circle {
     position: absolute;
     right: 50px;
@@ -503,7 +510,7 @@ span.textadvance {
 }
 .amutinput input {
     padding-left: 50px;
-    background-image: url(../images/crvIcon.png);
+    background-image: url(../images/token/CRV.png);
     background-repeat: no-repeat;
     background-position: 6px center;
     border: 3px solid #10151D;
@@ -619,7 +626,7 @@ button.btn.btnshow i {
     margin-top: 120px;
 }
 .cvxSection .amutinput input {
-    background-image: url(../images/cvxIcon.png);
+    background-image: url(../images/token/CVX.png);
 }
 .Dark .contentSection {
     background: #253143;

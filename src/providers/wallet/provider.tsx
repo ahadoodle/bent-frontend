@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ReactNode, useCallback } from 'react'
+import React, { useEffect, useState, ReactNode } from 'react'
 import { UnsupportedChainIdError } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -72,7 +72,7 @@ export function WalletProvider({ children }: Props) {
       const connectToChainId = JSON.parse(storedWalletConnect).chainId
 
       if (
-        (connectToChainId !== ChainId.Mainnet)
+        (connectToChainId !== ChainId.Mainnet && connectToChainId !== ChainId.LocalHost)
       ) {
         // if terms not agreed or chain not supported, do not connect wallet
         return setCompletedInitialLoad(true)
@@ -88,7 +88,7 @@ export function WalletProvider({ children }: Props) {
           setCompletedInitialLoad(true)
       })
     }
-  }, [activate])
+  }, [])
 
   // initial connection success,
   // wait for confirmation of active status
@@ -99,37 +99,8 @@ export function WalletProvider({ children }: Props) {
   // connection inactive,
   // fallback to defaultConnector (only after we've run initial load sequence)
   useEffect(() => {
-    if (!active && completedInitialLoad) {
-      setUnsupportedChain(false)
-      activate(defaultConnector)
-    }
-  }, [active, completedInitialLoad, activate])
-
-  // load WC connector
-  const handleWalletConnect = useCallback((connectToChainId: number = ChainId.Mainnet) => {
-    setUnsupportedChain(false)
-
-    if (
-      connector instanceof WalletConnectConnector &&
-      connector.walletConnectProvider?.wc?.uri
-    ) {
-      connector.walletConnectProvider = undefined
-    }
-
-    // activate wc connection
-    const wc = walletConnectConnector(connectToChainId)
-    activate(wc)
-  }, [activate, connector])
-
-  // disconnect connector
-  // cleanup wc if necessary
-  const handleDisconnect = useCallback(() => {
-    if (connector instanceof WalletConnectConnector) {
-      (connector as any).close()
-    }
-    localStorage.removeItem('walletconnect')
-    deactivate()
-  }, [connector, deactivate])
+    if (!active && completedInitialLoad) handleDefaultConnect()
+  }, [active, completedInitialLoad])
 
   // watch for unsupported chain connection
   useEffect(() => {
@@ -145,7 +116,7 @@ export function WalletProvider({ children }: Props) {
       (
         async () => {
           const chain = await connector.getChainId()
-          if (chain === ChainId.Mainnet) {
+          if (chain === ChainId.Mainnet || chain === ChainId.LocalHost) {
             handleWalletConnect(chain)
           } else {
             handleDisconnect()
@@ -173,7 +144,13 @@ export function WalletProvider({ children }: Props) {
     ) {
       setUnsupportedChain(false)
     }
-  }, [error, chainId, unsupportedChain, connector, handleDisconnect, handleWalletConnect])
+  }, [error, chainId, unsupportedChain, connector])
+
+  // load default connector
+  function handleDefaultConnect() {
+    setUnsupportedChain(false)
+    activate(defaultConnector)
+  }
 
   // load MM connector
   // if not installed open tab for MM download
@@ -192,6 +169,32 @@ export function WalletProvider({ children }: Props) {
     }
     // activate injected MM
     activate(injected)
+  }
+
+  // load WC connector
+  function handleWalletConnect(connectToChainId: number = ChainId.Mainnet) {
+    setUnsupportedChain(false)
+
+    if (
+      connector instanceof WalletConnectConnector &&
+      connector.walletConnectProvider?.wc?.uri
+    ) {
+      connector.walletConnectProvider = undefined
+    }
+
+    // activate wc connection
+    const wc = walletConnectConnector(connectToChainId)
+    activate(wc)
+  }
+
+  // disconnect connector
+  // cleanup wc if necessary
+  function handleDisconnect() {
+    if (connector instanceof WalletConnectConnector) {
+      (connector as any).close()
+    }
+    localStorage.removeItem('walletconnect')
+    deactivate()
   }
 
   const wallet = {
