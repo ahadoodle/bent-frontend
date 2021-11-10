@@ -51,7 +51,7 @@ export const StakeCurveLpTable = () => {
 						<Card>
 							<CardBody>
 								{ Object.keys(POOLS.BentPools).map(poolName =>
-									<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]}/>)
+									<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} />)
 								}
 							</CardBody>
 						</Card>

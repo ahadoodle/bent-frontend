@@ -1,4 +1,3 @@
-import { useActiveWeb3React, useERC20Contract } from "hooks";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -8,11 +7,13 @@ import {
 import classnames from "classnames";
 import styled from "styled-components";
 import CrvLogo from 'assets/images/token/CRV.png';
-import { formatBigNumber, ERC20 } from "utils";
+import { formatBigNumber, ERC20, BentPasePool } from "utils";
 import { BigNumber, utils } from 'ethers';
+import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
 
 interface Props {
 	poolInfo: any
+	poolKey: string
 }
 
 export const StakeCurveLpItem = (props: Props) => {
@@ -21,26 +22,53 @@ export const StakeCurveLpItem = (props: Props) => {
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [lpBalance, setLpBalance] = useState(0);
+	const [allowance, setAllowance] = useState(0);
 	const [stakeAmount, setStakeAmount] = useState('');
+	const [deposit, setDeposit] = useState(0);
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
+	const bentPool = useBentPoolContract(props.poolKey);
+	const gasPrice = useGasPrice();
+	const blockNumber = useBlockNumber();
 
 	useEffect(() => {
 		Promise.all([
 			ERC20.getSymbol(depositTokenContract),
-			ERC20.getBalanceOf(depositTokenContract, account)
-		]).then(([depositSymbol, availableLp]) => {
+			ERC20.getBalanceOf(depositTokenContract, account),
+			ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL),
+			BentPasePool.getDepositedAmount(bentPool, account)
+		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
+			setAllowance(allowance);
+			setDeposit(depositedLp);
 		})
-	}, [depositTokenContract])
+	}, [depositTokenContract, account, blockNumber])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
+
+	const onStakeAmountChange = (value) => {
+		setStakeAmount(value);
+		if(isNaN(parseFloat(value))) return;
+		const amountBN = utils.parseUnits(value, 18);
+		setIsApproved(BigNumber.from(allowance).gte(amountBN) && !amountBN.isZero());
+	}
 	
 	const approve = async () => {
-		await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount);
+		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount);
+		if(res) {
+			setIsApproved(true);
+		}
+	}
+
+	const stake = async () => {
+		const res = await BentPasePool.stake(bentPool, account, stakeAmount, gasPrice);
+		if(res) {
+			setStakeAmount('')
+			setIsApproved(false);
+		}
 	}
 
 	return (
@@ -76,7 +104,7 @@ export const StakeCurveLpItem = (props: Props) => {
 						</div>
 					</Col>
 					<Col>
-						<div className="depositText">-{symbol}</div>
+						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
 					</Col>
 					<Col>
 						<div className="tvlText">
@@ -142,10 +170,14 @@ export const StakeCurveLpItem = (props: Props) => {
 													<Label>
 														Amount of {symbol} to stake
 													</Label>
-													<Label>Available:{formatBigNumber(BigNumber.from(lpBalance), 18, 8)}</Label>
+													<Label>Available:{formatBigNumber(BigNumber.from(lpBalance))}</Label>
 												</p>
 												<div className="amutinput">
-													<Input type="number" placeholder="0" onChange={(e) => setStakeAmount(e.target.value)} />
+													<Input
+														type="number" placeholder="0"
+														onChange={(e) => onStakeAmountChange(e.target.value)}
+														value={stakeAmount}
+													/>
 													<Button className="maxbtn">Max</Button>
 												</div>
 												<div className="btnouter">
@@ -154,7 +186,7 @@ export const StakeCurveLpItem = (props: Props) => {
 														<Button
 															className="approvebtn"
 															disabled={
-																BigNumber.from(lpBalance).isZero() || 
+																BigNumber.from(lpBalance).isZero() || isApproved ||
 																parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
 																utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
 															}
@@ -167,6 +199,7 @@ export const StakeCurveLpItem = (props: Props) => {
 																parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
 																utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
 															}
+															onClick={stake}
 														>Stake</Button>
 													</div>
 												</div>

@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 import { Web3ReactProvider } from '@web3-react/core';
 import { HelmetProvider } from 'react-helmet-async';
-// import { Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 // import theme from 'theme';
 import { WalletProvider } from './wallet/provider';
-// import Updaters from 'state/Updater';
-// import store from 'state';
+import Updaters from 'state/Updater';
+import store from 'state';
 import Web3 from 'web3'
 
 interface Props {
@@ -19,12 +19,12 @@ const Providers = ({ children }: Props) => {
 	return (
 			<Web3ReactProvider getLibrary={getLibrary}>
 				<WalletProvider>
-					{/* // <Provider store={store}> */}
+					<Provider store={store}>
 						<HelmetProvider>
-							{/* // <Updaters /> */}
+							<Updaters />
 							{children}
 						</HelmetProvider>
-					{/* // </Provider> */}
+					</Provider>
 				</WalletProvider>
 			</Web3ReactProvider>
 	);
