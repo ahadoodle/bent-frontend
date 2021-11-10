@@ -24,6 +24,7 @@ export const StakeCurveLpItem = (props: Props) => {
 	const [lpBalance, setLpBalance] = useState(0);
 	const [allowance, setAllowance] = useState(0);
 	const [stakeAmount, setStakeAmount] = useState('');
+	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [deposit, setDeposit] = useState(0);
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
@@ -55,6 +56,10 @@ export const StakeCurveLpItem = (props: Props) => {
 		const amountBN = utils.parseUnits(value, 18);
 		setIsApproved(BigNumber.from(allowance).gte(amountBN) && !amountBN.isZero());
 	}
+
+	const onWithdrawAmountChange = (value) => {
+		setWithdrawAmount(value);
+	}
 	
 	const approve = async () => {
 		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount);
@@ -68,6 +73,13 @@ export const StakeCurveLpItem = (props: Props) => {
 		if(res) {
 			setStakeAmount('')
 			setIsApproved(false);
+		}
+	}
+
+	const withdraw = async () => {
+		const res = await BentPasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
+		if(res) {
+			setWithdrawAmount('')
 		}
 	}
 
@@ -211,20 +223,51 @@ export const StakeCurveLpItem = (props: Props) => {
 						</TabPane>
 						<TabPane tabId="2">
 							<Row>
-								<Col sm="6">
+							<Col md="12" className="inverse">
 									<Card body>
-										<CardText></CardText>
-										<Button>Go somewhere</Button>
-									</Card>
-								</Col>
-								<Col sm="6">
-									<Card body>
-										<CardTitle>Special Title Treatment</CardTitle>
-										<CardText>
-											With supporting text below as a natural lead-in
-											to additional content.
-										</CardText>
-										<Button>Go somewhere</Button>
+										<CardTitle>
+											<div className="advance-btn">
+												<Label className="switch">
+													<Input type="checkbox" />
+													<span className="slider"></span>
+												</Label>
+												<span className="textadvance">Advanced</span>
+											</div>
+										</CardTitle>
+										<div className="card-text mt-4 d-flex">
+											<div className="amount-crv col-md-5">
+												<p className="labeltext">
+													<Label>
+														Amount of {symbol} to withdraw
+													</Label>
+													<Label>Deposited:{formatBigNumber(BigNumber.from(deposit))}</Label>
+												</p>
+												<div className="amutinput">
+													<Input
+														type="number" placeholder="0"
+														onChange={(e) => onWithdrawAmountChange(e.target.value)}
+														value={withdrawAmount}
+													/>
+													<Button className="maxbtn">Max</Button>
+												</div>
+											</div>
+											<div className="amount-crv" style={{marginLeft: 20}}>
+												<p className="labeltext">
+													<Label>
+														&nbsp;
+													</Label>
+												</p>
+												<Button
+													className="approvebtn"
+													disabled={
+														BigNumber.from(deposit).isZero() ||
+														parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
+														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(deposit))
+													}
+													onClick={withdraw}
+												>Unstake & Withdraw</Button>
+											</div>
+										</div>
 									</Card>
 								</Col>
 							</Row>

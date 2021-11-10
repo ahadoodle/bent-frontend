@@ -16,6 +16,22 @@ const stake = async (contract, account, amount, gasPrice) => {
 	}
 }
 
+const withdraw = async (contract, account, amount, gasPrice) => {
+	try {
+		if(!account || !contract.options.address) return false;
+		amount = utils.parseUnits(amount, 18);
+		const gas = await contract.methods.withdraw(amount).estimateGas();
+		await contract.methods.withdraw(amount).send({
+			from: account,
+			gas,
+			gasPrice,
+		});
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+}
+
 const getDepositedAmount = async (contract, account) => {
 	try {
 		if(!account || !contract.options.address) return 0;
@@ -28,5 +44,6 @@ const getDepositedAmount = async (contract, account) => {
 
 export const BentPasePool = {
 	stake,
+	withdraw,
 	getDepositedAmount
 }
