@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Table, Row, Col, UncontrolledCollapse, Card, Button, CardBody } from "reactstrap";
+import { Row, Col, UncontrolledCollapse, Card, Button, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 // import { StakeCurveLpItem } from "./item";
-import CrvLogo from 'assets/images/token/BENT.png';
+import BentLogo from 'assets/images/token/BENT.png';
 import { ClaimCurveLpItem } from "./item";
 
 export const ClaimCurveLpTable = () => {
@@ -25,7 +25,7 @@ export const ClaimCurveLpTable = () => {
 							<Row className="align-items-center">
 								<Col>
 									<div className="imgText">
-										<img src={CrvLogo} alt="" width="28"/>
+										<img src={BentLogo} alt="" width="28"/>
 										<h2>Bent Pools</h2>
 									</div>
 								</Col>

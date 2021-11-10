@@ -1,15 +1,9 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import {
-  Container,
-  Button,
-  Row,
-  Col,
-  Card,
-  Input,
-  Label,
-  CardBody,
-  UncontrolledCollapse,
+  Container, Button, Row, Col, Card, Input, Label,
+  CardBody, UncontrolledCollapse,
 } from "reactstrap";
 import BannerBlocks from "components/BannerBlocks";
 import podsIcon from "assets/images/airPods.png";
@@ -46,6 +40,9 @@ const Claim = () => {
   };
   return (
     <React.Fragment>
+      <Helmet>
+        <title>Bent Protocol | Claim</title>
+      </Helmet>
       <div className="banner">
         <div className="bannerboxes">
           <BannerBlocks />

@@ -7,8 +7,6 @@ import {
   Modal, ModalBody,
   Dropdown,
   DropdownToggle,
-  DropdownMenu,
-  DropdownItem
 } from "reactstrap";
 import LogoIcon from "assets/images/logo.png";
 import MenuIcon from "assets/images/menu.svg";

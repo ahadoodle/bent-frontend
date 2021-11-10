@@ -1,27 +1,12 @@
 import React, { useState } from "react";
 import { withRouter, Link } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import {
-  Container,
-  Button,
-  Row,
-  Col,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
-  Card,
-  CardTitle,
-  CardText,
-  Table,
-  Input,
-  Label,
+  Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
+  Card, CardTitle, CardText, Table, Input, Label,
 } from "reactstrap";
 import classnames from "classnames";
 import CrvIcon from "assets/images/token/CRV.png";
-import BitCoin from "assets/images/token/BTC.png";
-import UsdIcon from "assets/images/token/USDT.png";
-import EthereumIcon from "assets/images/token/ETH.png";
 import CvxIcon from "assets/images/token/CVX.png";
 import BitcoinCombo from "assets/images/token/BTC-ETH.png";
 import SolIcon from "assets/images/token/SOL.png";
@@ -37,7 +22,9 @@ const Dashboard = () => {
   };
   return (
     <React.Fragment>
-      {/* Content part Start*/}
+      <Helmet>
+        <title>Bent Protocol | Dashboard</title>
+      </Helmet>
       <div className="banner">
         <Tiles />
       </div>
@@ -493,7 +480,7 @@ const Dashboard = () => {
                           </tr>
                           <tr>
                             <td>
-                              <img src={SolIcon} alt="" /> SOL/USDT
+                              <img src={SolIcon} alt="" height="28"/> SOL/USDT
                             </td>
                             <td>
                               <span>$</span>0

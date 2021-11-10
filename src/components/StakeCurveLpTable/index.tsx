@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Table, Row, Col, UncontrolledCollapse, Card, CardBody } from "reactstrap";
+import React from "react";
+import { Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
 
