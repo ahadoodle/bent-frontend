@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-	Row, Col, Card, CardBody, CardTitle, UncontrolledCollapse, CardText,
+	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import CrvLogo from 'assets/images/token/CRV.png';
 import { formatBigNumber, ERC20, BentPasePool } from "utils";
 import { BigNumber, utils } from 'ethers';
 import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
@@ -90,7 +89,7 @@ export const StakeCurveLpItem = (props: Props) => {
 				collapsed={collapsed}
 				className="bentInner"
 				color="primary"
-				id={`toggleInner-stake-curve-lp${props.poolInfo.Name}`}
+				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 				style={{ marginBottom: "1rem" }}
 			>
 				<Row className="align-items-center">
@@ -131,7 +130,7 @@ export const StakeCurveLpItem = (props: Props) => {
 			</Wrapper>
 			<InnerWrapper
 				className="innerAccordian"
-				toggler={`#toggleInner-stake-curve-lp${props.poolInfo.Name}`}
+				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 			>
 				<div className="converttabs" style={{background: 'unset', borderTop: '1px solid black', borderRadius: 0 }}>
 					<Nav tabs>

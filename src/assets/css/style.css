@@ -1178,8 +1178,8 @@ button.claimbtn.btn.btn-secondary {
     font-size: 16px;
     line-height: 19px;
 }
-.innerWrap {
-    background: rgba(202, 184, 255, 0.6);
+.innerWrap:hover {
+    background: #CAB8FF;
 }
 .innerWrap .card {
     border-top: none;
