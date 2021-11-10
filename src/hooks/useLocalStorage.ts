@@ -6,7 +6,9 @@ function getItem(key: string) {
   if (item !== null) {
     try {
       result = JSON.parse(item)
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   }
   return result
 }

@@ -11,9 +11,15 @@ export const WalletContext = createContext<{
   networkName: '',
   activeConnector: null,
   unsupportedChain: false,
-  handleMetaMaskConnect: () => {},
-  handleWalletConnect: () => {},
-  handleDisconnect: () => {}
+  handleMetaMaskConnect: () => {
+    // do nothing
+  },
+  handleWalletConnect: () => {
+    // do nothing
+  },
+  handleDisconnect: () => {
+    // do nothing
+  }
 })
 
 export function useWallet() {
