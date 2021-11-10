@@ -41,6 +41,13 @@ ul.primaryMenu {
     padding: 0px;
     list-style: none; 
 }
+.theme-icon {
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: 28px;
+    cursor: pointer;
+}
 .tokentable .fa-info-circle {
     position: absolute;
     right: 50px;
@@ -273,22 +280,55 @@ table.tokentable.table thead th {
     line-height: 50px;
     padding: .5rem 1.5rem;
 }
-table.tokentable.table thead {
-    background: #B5DEFF;
-    border-radius: 8px;
-    padding: 10px 15px;
-    overflow: hidden;
-}
 table.tokentable.table tbody {
     background: #fff;
 }
-table.tokentable.table {
+.tokentable.table {
     vertical-align: middle;
     border: 3px solid #10151D;
     border-radius: 8px;
     border-collapse: separate;
     border-spacing: 0;
     box-shadow: 10px 15px 0px 0px #10151d;
+}
+.tokentable.table .thead {
+    margin: 0;
+    background: #B5DEFF;
+    border-radius: 8px;
+    padding: 10px 15px;
+    overflow: hidden;
+}
+.tokentable.table .card-body {
+    padding: 0;
+}
+.tokentable.table .card-body .bentInner {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: #10151D;
+    margin-bottom: 0 !important;
+    padding: 15px 12px;
+}
+.tokentable.table .card-body .bentInner:hover,
+.tokentable.table .card-body .bentInner:focus {
+    background: #CAB8FF;
+    border: none;
+    color: #10151D;
+    box-shadow: none;
+}
+.tokentable.table .card-body .nav-link {
+    cursor: pointer;
+    color: #6E7889;
+    background: unset;
+    border: unset;
+    padding: 30px 15px;
+}
+.tokentable.table .card-body .nav-link.active {
+    font-weight: bold;
+    color: black;
+    background: unset;
+    border: unset;
 }
 button.btn.btnshow {
     margin: auto;
@@ -332,8 +372,7 @@ table.tokentable.table thead tr:hover {
 .tvlText i.fa.fa-caret-down {
     position: absolute;
     right: 30px;
-    font-size: 30px;  
-    opacity: 0;
+    font-size: 30px;
 }
 table.tokentable.table td {
     border: none;
@@ -503,7 +542,7 @@ span.textadvance {
 }
 .amutinput input {
     padding-left: 50px;
-    background-image: url(../images/crvIcon.png);
+    background-image: url(../images/token/CRV.png);
     background-repeat: no-repeat;
     background-position: 6px center;
     border: 3px solid #10151D;
@@ -552,13 +591,18 @@ button.approvebtn.btn.btn-secondary {
     line-height: 19px;
     text-align: center;
     letter-spacing: -0.24px;
-    color: #9BA2AC;
-    background: transparent;
+    background-color: #C1FFD7;
+    color: #10151D;
     border-radius: 4px;
     border: 2px solid #9BA2AC;
     width: 185px;
     height: 42px;
     padding: 5px 5px 8px;
+}
+button.approvebtn.btn.btn-secondary.disabled {
+    color: #9BA2AC;
+    background: transparent;
+    border: 2px solid #9BA2AC;
 }
 .lineup {
     width: 65%;
@@ -619,7 +663,7 @@ button.btn.btnshow i {
     margin-top: 120px;
 }
 .cvxSection .amutinput input {
-    background-image: url(../images/cvxIcon.png);
+    background-image: url(../images/token/CVX.png);
 }
 .Dark .contentSection {
     background: #253143;
@@ -1134,8 +1178,8 @@ button.claimbtn.btn.btn-secondary {
     font-size: 16px;
     line-height: 19px;
 }
-.innerWrap {
-    background: rgba(202, 184, 255, 0.6);
+.innerWrap:hover {
+    background: #CAB8FF;
 }
 .innerWrap .card {
     border-top: none;

@@ -1,29 +1,23 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import {
-  Container,
-  Button,
-  Row,
-  Col,
-  Card,
-  Input,
-  Label,
-  CardBody,
-  UncontrolledCollapse,
+  Container, Button, Row, Col, Card, Input, Label,
+  CardBody, UncontrolledCollapse,
 } from "reactstrap";
-import CrvIcon from "../../assets/images/crvIcon.png";
-import BitCoin from "../../assets/images/bitCoin.png";
-import UsdIcon from "../../assets/images/usdIcon.png";
-import EthereumIcon from "../../assets/images/EthereumIcon.png";
-import BannerBlocks from "../../components/BannerBlocks";
-import chainIcon from "../../assets/images/chainLink.png";
-import busdIcon from "../../assets/images/busdIcon.png";
-import sushiIcon from "../../assets/images/sushiIcon.png";
-import podsIcon from "../../assets/images/airPods.png";
-import starIcon from "../../assets/images/starIcon.png";
-import starActive from "../../assets/images/starActive.png";
-
+import BannerBlocks from "components/BannerBlocks";
+import podsIcon from "assets/images/airPods.png";
+import starIcon from "assets/images/starIcon.png";
+import starActive from "assets/images/starActive.png";
+import CrvIcon from "assets/images/token/CRV.png";
+import BitCoin from "assets/images/token/BTC.png";
+import UsdIcon from "assets/images/token/USDT.png";
+import EthereumIcon from "assets/images/token/ETH.png";
+import chainIcon from "assets/images/token/LINK.png";
+import busdIcon from "assets/images/token/BUSD.png";
+import sushiIcon from "assets/images/token/SUSHI.png";
 import "font-awesome/css/font-awesome.min.css";
+import { ClaimCurveLpTable } from "components/ClaimCurveLpTable";
 
 const Claim = () => {
   const [autoClaimStatus, setAutoClaimStatus] = useState(false);
@@ -46,6 +40,9 @@ const Claim = () => {
   };
   return (
     <React.Fragment>
+      <Helmet>
+        <title>Bent Protocol | Claim</title>
+      </Helmet>
       <div className="banner">
         <div className="bannerboxes">
           <BannerBlocks />
@@ -158,264 +155,7 @@ const Claim = () => {
         <Container>
           <div className="cliamBox">
             <h2 className="white">Claim Earnings</h2>
-            <div className="cliamBlockOne">
-              <div className="table-Responsive">
-                <div className="table-Wrapper">
-                  <div className="toggleWrap">
-                    <Button
-                      className="bentPool"
-                      color="primary"
-                      id="toggler"
-                      style={{ marginBottom: "1rem" }}
-                    >
-                      <Row className="align-items-center">
-                        <Col>
-                          <div className="imgText">
-                            <img src={CrvIcon} alt="" />
-                            <h2>Bent Pool</h2>
-                          </div>
-                        </Col>
-                        <Col>
-                          <div className="earnValue">
-                            <p>Earned (USD value)</p>
-                            <b>
-                              <span>$</span>0
-                            </b>
-                            <i
-                              className="fa fa-caret-down"
-                              aria-hidden="true"
-                            ></i>
-                          </div>
-                        </Col>
-                        <Col>
-                          <div className="earnValue">
-                            <p>Average APR</p>
-                            <b>
-                              -<span>%</span>
-                            </b>
-                          </div>
-                        </Col>
-                        <Col>
-                          <h3>Deposits</h3>
-                        </Col>
-                        <Col>
-                          <div className="clmBtn">
-                            <Button className="claimbtn">Claim All</Button>
-                            <i
-                              className="fa fa-caret-down"
-                              aria-hidden="true"
-                            ></i>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Button>
-
-                    <UncontrolledCollapse
-                      toggler="#toggler"
-                      className="bentpoolText"
-                    >
-                      <Card>
-                        <CardBody>
-                          <div className="innerWrapother">
-                            <div className="bentInnertext" color="primary">
-                              <Row className="align-items-center">
-                                <Col>
-                                  <div className="imgText">
-                                    <img src={BitCoin} alt="" />
-                                    <h4>Bitcoin</h4>
-                                  </div>
-                                </Col>
-                                <Col>
-                                  <b>
-                                    <span>$</span>0
-                                  </b>
-                                </Col>
-                                <Col>
-                                  <div className="earnValue">
-                                    <b>
-                                      6.56% <span>(proj.6.74%)</span>
-                                    </b>
-                                    <p>CRV boost: 1.7x</p>
-                                  </div>
-                                </Col>
-                                <Col>
-                                  <div className="depositText">-cCRV</div>
-                                </Col>
-                                <Col> </Col>
-                              </Row>
-                            </div>
-                          </div>
-
-                          <div className="innerWrap">
-                            <Button
-                              className="bentInner"
-                              color="primary"
-                              id="togglerInner"
-                              style={{ marginBottom: "1rem" }}
-                            >
-                              <Row className="align-items-center">
-                                <Col>
-                                  <div className="imgText">
-                                    <img src={UsdIcon} alt="" />
-                                    <h4>Bitcoin</h4>
-                                  </div>
-                                </Col>
-                                <Col>
-                                  <b>
-                                    <span>$</span>0
-                                  </b>
-                                </Col>
-                                <Col>
-                                  <div className="earnValue">
-                                    <b>
-                                      6.56% <span>(proj.6.74%)</span>
-                                    </b>
-                                    <p>CRV boost: 1.7x</p>
-                                    <i
-                                      className="fa fa-info-circle"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </div>
-                                </Col>
-                                <Col>
-                                  <div className="depositText">-cCRV</div>
-                                </Col>
-                                <Col>
-                                  <div className="climBtn">
-                                    <Button className="claimbtn">Claim </Button>
-                                    <i
-                                      className="fa fa-caret-down"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Button>
-                            <UncontrolledCollapse
-                              className="innerAccordian"
-                              toggler="#togglerInner"
-                            >
-                              <Card>
-                                <CardBody>
-                                  <Row className="align-items-center">
-                                    <Col sm={12}>
-                                      <p>Breakdown of claimable earnings:</p>
-                                    </Col>
-                                  </Row>
-                                  <Row className="align-items-center">
-                                    <Col>
-                                      <div className="imgText">
-                                        <img src={chainIcon} alt="" />
-                                        <h4>Chainlink</h4>
-                                      </div>
-                                    </Col>
-                                    <Col>
-                                      <b>
-                                        <span>$</span>0
-                                      </b>
-                                    </Col>
-                                    <Col> </Col>
-                                    <Col> </Col>
-                                    <Col> </Col>
-                                  </Row>
-                                </CardBody>
-                              </Card>
-                            </UncontrolledCollapse>
-                          </div>
-                        </CardBody>
-                      </Card>
-                      <div className="innerWrapother">
-                        <div className="bentInnertext" color="primary">
-                          <Row className="align-items-center">
-                            <Col>
-                              <div className="imgText">
-                                <img src={EthereumIcon} alt="" />
-                                <h4>Ethereum</h4>
-                              </div>
-                            </Col>
-                            <Col>
-                              <b>
-                                <span>$</span>0
-                              </b>
-                            </Col>
-                            <Col>
-                              <div className="earnValue">
-                                <b>
-                                  6.56% <span>(proj.6.74%)</span>
-                                </b>
-                                <p>CRV boost: 1.7x</p>
-                              </div>
-                            </Col>
-                            <Col>
-                              <div className="depositText">-cCRV</div>
-                            </Col>
-                            <Col> </Col>
-                          </Row>
-                        </div>
-                      </div>
-                      <div className="innerWrapother">
-                        <div className="bentInnertext" color="primary">
-                          <Row className="align-items-center">
-                            <Col>
-                              <div className="imgText">
-                                <img src={busdIcon} alt="" />
-                                <h4>BUSD</h4>
-                              </div>
-                            </Col>
-                            <Col>
-                              <b>
-                                <span>$</span>0
-                              </b>
-                            </Col>
-                            <Col>
-                              <div className="earnValue">
-                                <b>
-                                  6.56% <span>(proj.6.74%)</span>
-                                </b>
-                                <p>CRV boost: 1.7x</p>
-                              </div>
-                            </Col>
-                            <Col>
-                              <div className="depositText">-cCRV</div>
-                            </Col>
-                            <Col> </Col>
-                          </Row>
-                        </div>
-                      </div>
-                      <div className="innerWrapother">
-                        <div className="bentInnertext" color="primary">
-                          <Row className="align-items-center">
-                            <Col>
-                              <div className="imgText">
-                                <img src={chainIcon} alt="" />
-                                <h4>Chainlink</h4>
-                              </div>
-                            </Col>
-                            <Col>
-                              <b>
-                                <span>$</span>0
-                              </b>
-                            </Col>
-                            <Col>
-                              <div className="earnValue">
-                                <b>
-                                  6.56% <span>(proj.6.74%)</span>
-                                </b>
-                                <p>CRV boost: 1.7x</p>
-                              </div>
-                            </Col>
-                            <Col>
-                              <div className="depositText">-cCRV</div>
-                            </Col>
-                            <Col> </Col>
-                          </Row>
-                        </div>
-                      </div>
-                    </UncontrolledCollapse>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ClaimCurveLpTable />
 
             {/* Second BLock Start */}
             <div className="cliamBlockOne">

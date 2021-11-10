@@ -1,33 +1,19 @@
 import React, { useState } from "react";
 import { withRouter, Link } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import {
-  Container,
-  Button,
-  Row,
-  Col,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
-  Card,
-  CardTitle,
-  CardText,
-  Table,
-  Input,
-  Label,
+  Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
+  Card, CardTitle, CardText, Table, Input, Label,
 } from "reactstrap";
 import classnames from "classnames";
-import CrvIcon from "assets/images/crvIcon.png";
-import BitCoin from "assets/images/bitCoin.png";
-import UsdIcon from "assets/images/usdIcon.png";
-import EthereumIcon from "assets/images/EthereumIcon.png";
-import CvxIcon from "assets/images/cvxIcon.png";
-import BitcoinCombo from "assets/images/bitCoinCombo.png";
-import SolIcon from "assets/images/SolIcon.png";
-import BitcoinTwice from "assets/images/bitCoinTwice.png";
+import CrvIcon from "assets/images/token/CRV.png";
+import CvxIcon from "assets/images/token/CVX.png";
+import BitcoinCombo from "assets/images/token/BTC-ETH.png";
+import SolIcon from "assets/images/token/SOL.png";
+import BitcoinTwice from "assets/images/token/LUNA-BTC.png";
 import Tiles from "components/DashboardMetrics/tiles";
 import "font-awesome/css/font-awesome.min.css";
+import { StakeCurveLpTable } from "components/StakeCurveLpTable";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -36,7 +22,9 @@ const Dashboard = () => {
   };
   return (
     <React.Fragment>
-      {/* Content part Start*/}
+      <Helmet>
+        <title>Bent Protocol | Dashboard</title>
+      </Helmet>
       <div className="banner">
         <Tiles />
       </div>
@@ -259,165 +247,7 @@ const Dashboard = () => {
           <Container>
             <Row>
               <Col md="12">
-                <div className="convert-up">
-                  <h2 className="black">Stake Bent LP Tokens</h2>
-                  <div className="table-Responsive LpToken">
-                    <div className="table-Wrapper">
-                      <Table className="tokentable">
-                        <thead>
-                          <tr>
-                            <th>
-                              Pool Name{" "}
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </th>
-                            <th>
-                              Earned (USD){" "}
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </th>
-                            <th>
-                              APR{" "}
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </th>
-                            <th>
-                              Deposits{" "}
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </th>
-                            <th>
-                              TVL{" "}
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <img src={BitCoin} alt="" /> Bitcoin
-                            </td>
-                            <td>
-                              <span>$</span>0
-                            </td>
-                            <td>
-                              6.56% <span>(proj.6.74%)</span>
-                              <p>CRV boost: 1.7x</p>
-                              <i
-                                className="fa fa-info-circle"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                            <td>-cCRV</td>
-                            <td className="tvlText">
-                              <span>$</span>220.70m
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src={UsdIcon} alt="" /> Bitcoin
-                            </td>
-                            <td>
-                              <span>$</span>0
-                            </td>
-                            <td className="tvlText">
-                              6.56% <span>(proj.6.74%)</span>
-                              <p>CRV boost: 1.7x</p>
-                              <i
-                                className="fa fa-info-circle"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                            <td>-cCRV</td>
-                            <td className="tvlText">
-                              <span>$</span>220.70m
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src={EthereumIcon} alt="" /> Ethereum
-                            </td>
-                            <td>
-                              <span>$</span>0
-                            </td>
-                            <td>
-                              6.56% <span>(proj.6.74%)</span>
-                              <p>CRV boost: 1.7x</p>
-                              <i
-                                className="fa fa-info-circle"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                            <td>-cCRV</td>
-                            <td className="tvlText">
-                              <span>$</span>220.70m
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <img src={BitCoin} alt="" /> Bitcoin
-                            </td>
-                            <td>
-                              <span>$</span>0
-                            </td>
-                            <td>
-                              6.56% <span>(proj.6.74%)</span>
-                              <p>CRV boost: 1.7x</p>
-                              <i
-                                className="fa fa-info-circle"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                            <td>-cCRV</td>
-                            <td className="tvlText">
-                              <span>$</span>220.70m
-                              <i
-                                className="fa fa-caret-down"
-                                aria-hidden="true"
-                              ></i>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={5}>
-                              <div className="text-center btnwrap">
-                                <button className="btn btnshow">
-                                  Show all Bent pools{" "}
-                                  <i
-                                    className="fa fa-caret-down"
-                                    aria-hidden="true"
-                                  ></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </div>
-                  </div>
-                </div>
+                <StakeCurveLpTable />
               </Col>
             </Row>
           </Container>
@@ -650,7 +480,7 @@ const Dashboard = () => {
                           </tr>
                           <tr>
                             <td>
-                              <img src={SolIcon} alt="" /> SOL/USDT
+                              <img src={SolIcon} alt="" height="28"/> SOL/USDT
                             </td>
                             <td>
                               <span>$</span>0
