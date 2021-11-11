@@ -1,6 +1,7 @@
-import { utils } from "ethers";
+import { utils, BigNumber } from "ethers";
+import { Contract } from 'web3-eth-contract';
 
-const getBalanceOf = async (contract, account) => {
+const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<number> => {
 	try {
 		if(!account || !contract.options.address) return 0;
 		return await contract.methods.balanceOf(account).call();
@@ -10,7 +11,7 @@ const getBalanceOf = async (contract, account) => {
 	}
 }
 
-const getAllowance = async (contract, account, spender) => {
+const getAllowance = async (contract: Contract, account: string | null | undefined, spender: string): Promise<number> => {
 	try {
 		if(!account || !contract.options.address) return 0;
 		return await contract.methods.allowance(account, spender).call();
@@ -20,7 +21,7 @@ const getAllowance = async (contract, account, spender) => {
 	}
 }
 
-const getSymbol = async (contract) => {
+const getSymbol = async (contract: Contract): Promise<string> => {
 	try {
 		if(!contract.options.address) return '';
 		return await contract.methods.symbol().call();
@@ -30,14 +31,19 @@ const getSymbol = async (contract) => {
 	}
 }
 
-const approve = async (contract, account, spender, amount) => {
+const approve = async (contract: Contract, account: string | null | undefined, spender: string, amount: string, gasPrice: BigNumber): Promise<boolean> => {
 	try {
-		if(!account || !contract.options.address) return 0;
-		amount = utils.parseUnits(amount, 18);
-		return await contract.methods.approve(spender, amount).send({from: account});
+		if(!account || !contract.options.address) return false;
+		const amountBN = utils.parseUnits(amount, 18);
+		const gas = await contract.methods.approve(spender, amountBN).estimateGas();
+		return await contract.methods.approve(spender, amountBN).send({
+			from: account,
+			gas,
+			gasPrice
+		});
 	} catch (error) {
 		console.error(error);
-		return 0;
+		return false;
 	}
 }
 

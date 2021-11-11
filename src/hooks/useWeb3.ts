@@ -8,7 +8,7 @@ import web3NoAccount from 'utils/web3'
  * with a fallback of an httpProver
  * Recreate web3 instance only if the provider change
  */
-export const useWeb3 = () => {
+export const useWeb3 = (): Web3 => {
   const { library } = useWeb3React()
   const refEth = useRef(library)
   const [web3, setweb3] = useState(library ? new Web3(library) : web3NoAccount)

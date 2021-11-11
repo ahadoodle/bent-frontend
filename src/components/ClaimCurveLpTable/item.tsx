@@ -12,13 +12,14 @@ import {
 } from "hooks";
 import { ERC20, BentPasePool, formatBigNumber } from "utils";
 import { BigNumber } from 'ethers';
+import { Pool } from "constant";
 
 interface Props {
-	poolInfo: any
+	poolInfo: Pool
 	poolKey: string
 }
 
-export const ClaimCurveLpItem = (props: Props) => {
+export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [symbol, setSymbol] = useState<string>('');
 	const [deposit, setDeposit] = useState(0);
@@ -36,7 +37,7 @@ export const ClaimCurveLpItem = (props: Props) => {
 			setSymbol(symbol);
 			setDeposit(depositedLp);
 		})
-	}, [depositTokenContract, blockNumber, account])
+	}, [depositTokenContract, bentPool, blockNumber, account])
 
 	const claim = async () => {
 		await BentPasePool.harvest(bentPool, account, gasPrice);

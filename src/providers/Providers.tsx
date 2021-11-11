@@ -12,7 +12,7 @@ interface Props {
 	children: ReactNode
 }
 
-const Providers = ({ children }: Props) => {
+const Providers = ({ children }: Props): React.ReactElement => {
 	const getLibrary = (provider): Web3 => {
 		return provider;
 	}

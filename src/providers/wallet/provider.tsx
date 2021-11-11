@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, ReactNode } from 'react'
 import { UnsupportedChainIdError } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
@@ -38,7 +40,7 @@ interface Props {
   children: ReactNode
 }
 
-export function WalletProvider({ children }: Props) {
+export function WalletProvider({ children }: Props): React.ReactElement {
 
   const {
     activate,
@@ -60,7 +62,7 @@ export function WalletProvider({ children }: Props) {
     if (connector instanceof WalletConnectConnector) return 'WALLETCONNECT'
     if (library?.connection?.url === 'metamask') return 'METAMASK'
     if (library?.connection?.url === 'trustwallet') return 'TRUSTWALLET'
-    return
+    return ''
   })()
 
   // initial load

@@ -1,6 +1,6 @@
 import { BigNumber, utils } from 'ethers'
 
-export const truncateMiddle = (fullStr: string, strLen: number, separator: string) => {
+export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
 	if (!fullStr || fullStr.length <= strLen) return fullStr;
 
 	separator = separator || '...';
@@ -13,11 +13,11 @@ export const truncateMiddle = (fullStr: string, strLen: number, separator: strin
 	return fullStr.substr(0, frontChars) + separator + fullStr.substr(fullStr.length - backChars);
 };
 
-export const formatAddress = (address: string, length = 15) => {
+export const formatAddress = (address: string, length = 15): string => {
 	return truncateMiddle(address, length, '.....');
 }
 
-export function formatNumber(value: string) {
+export function formatNumber(value: string): string {
 	const [floor, decimals] = value.split('.')
 	if (!decimals) {
 		return value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
@@ -25,7 +25,7 @@ export function formatNumber(value: string) {
 	return [floor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'), decimals].join('.')
 }
 
-export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3) => {
+export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): string => {
 	if (!value) {
 		value = BigNumber.from(0)
 	}

@@ -1,21 +1,29 @@
 import { createContext, useContext } from 'react'
 
-export const WalletContext = createContext<{
+interface Props {
   networkName: string
-  activeConnector: any
+  activeConnector: string
   unsupportedChain: boolean
   handleMetaMaskConnect: (web3Wallet: string) => void
   handleWalletConnect: () => void
   handleDisconnect: () => void
-}>({
+}
+
+export const WalletContext = createContext<Props>({
   networkName: '',
-  activeConnector: null,
+  activeConnector: '',
   unsupportedChain: false,
-  handleMetaMaskConnect: () => {},
-  handleWalletConnect: () => {},
-  handleDisconnect: () => {}
+  handleMetaMaskConnect: () => {
+    // do nothing
+  },
+  handleWalletConnect: () => {
+    // do nothing
+  },
+  handleDisconnect: () => {
+    // do nothing
+  }
 })
 
-export function useWallet() {
+export function useWallet(): Props {
   return useContext(WalletContext)
 }

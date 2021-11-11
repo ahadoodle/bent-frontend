@@ -6,7 +6,7 @@ import { POOLS } from "constant";
 import BentLogo from 'assets/images/token/BENT.png';
 import { ClaimCurveLpItem } from "./item";
 
-export const ClaimCurveLpTable = () => {
+export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 
 	return (
@@ -71,7 +71,7 @@ export const ClaimCurveLpTable = () => {
 							<Card>
 								<CardBody>
 									{ Object.keys(POOLS.BentPools).map(poolName =>
-										<ClaimCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} />)
+										<ClaimCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName} />)
 									}
 								</CardBody>
 							</Card>

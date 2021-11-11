@@ -12,7 +12,6 @@ import LogoIcon from "assets/images/logo.png";
 import MenuIcon from "assets/images/menu.svg";
 import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";
-import { ethers } from 'ethers'
 import ConnectWallet from "components/ConnectWallet";
 import { useActiveWeb3React, useLocalStorage } from "hooks";
 
@@ -20,7 +19,7 @@ interface Props {
 	handleTheme: (theme) => void
 }
 
-const Header = (props: Props) => {
+const Header = (props: Props): React.ReactElement => {
   const [customClass, setCustomClass] = useState("removesidenavmenu");
   const closeNav = () => {
     setCustomClass("removesidenavmenu");
@@ -30,7 +29,7 @@ const Header = (props: Props) => {
   };
 	const [theme, setTheme] = useLocalStorage('theme');
   // const [errorMessage, setErrorMessage] = useState(null);
-	const [userBalance, setUserBalance] = useState<any>(null);
+	const [userBalance, setUserBalance] = useState<unknown>(0);
   const [dropdownOpen,setDropdownOpen] = useState(false);
   const { library, account } = useActiveWeb3React();
 
@@ -61,7 +60,7 @@ const Header = (props: Props) => {
     if(account && library) {
       library.getBalance(account)
       .then(balanceResult => {
-        setUserBalance(ethers.utils.formatEther(balanceResult));
+        setUserBalance(balanceResult);
       })
     }
   }, [library, account]);

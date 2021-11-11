@@ -6,12 +6,14 @@ function getItem(key: string) {
   if (item !== null) {
     try {
       result = JSON.parse(item)
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   }
   return result
 }
 
-function setItem(key: string, value: any) {
+function setItem(key: string, value) {
   if (value === undefined) {
     window.localStorage.removeItem(key)
   } else {
@@ -21,7 +23,7 @@ function setItem(key: string, value: any) {
   }
 }
 
-export const useLocalStorage = (key: string) => {
+export const useLocalStorage = (key: string): [unknown, React.Dispatch<unknown>] => {
   const [value, setValue] = useState(() => getItem(key))
 
   useEffect(() => {
@@ -32,5 +34,5 @@ export const useLocalStorage = (key: string) => {
     setItem(key, value)
   }, [value, key])
 
-  return [value, setValue] as const
+  return [value, setValue]
 }
