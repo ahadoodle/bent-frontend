@@ -19,7 +19,7 @@ import sushiIcon from "assets/images/token/SUSHI.png";
 import "font-awesome/css/font-awesome.min.css";
 import { ClaimCurveLpTable } from "components/ClaimCurveLpTable";
 
-const Claim = () => {
+export const Claim = (): React.ReactElement => {
   const [autoClaimStatus, setAutoClaimStatus] = useState(false);
   const [autoText, setAutoText] = useState(0);
   const [stakeStatus, setStakeStatus] = useState("none");

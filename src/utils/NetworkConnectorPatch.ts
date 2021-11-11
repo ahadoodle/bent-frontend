@@ -7,8 +7,8 @@ type AsyncSendable = {
   isMetaMask?: boolean
   host?: string
   path?: string
-  sendAsync?: (request: any, callback: (error: any, response: any) => void) => void
-  send?: (request: any, callback: (error: any, response: any) => void) => void
+  sendAsync?: (request, callback: (error, response) => void) => void
+  send?: (request, callback: (error, response) => void) => void
 }
 
 type Request = { method: string | { method: string; params?: unknown[] | Record<string, unknown> }, params?: unknown[] | Record<string, unknown> }
@@ -40,7 +40,7 @@ class MiniRpcProvider implements AsyncSendable {
 
   public readonly sendAsync = (
     request: { jsonrpc: '2.0'; id: number | string | null; method: string; params?: unknown[] | Record<string, unknown> },
-    callback: (error: any, response: any) => void,
+    callback: (error, response) => void,
   ): void => {
     console.log('sendAsync', request.method, request.params)
     this.request({ method: request.method, params: request.params })
@@ -52,38 +52,42 @@ class MiniRpcProvider implements AsyncSendable {
     method,
     params
   }: Request): Promise<unknown> => {
-    if (method === 'eth_chainId') {
-      return `0x${this.chainId.toString(16)}`
-    }
-    if (method === 'eth_blockNumber' && Date.now() - this.lastBlockNumberUpdate < 10000) {
-      return this.blockNumber
-    }
-    if (typeof method !== 'string') {
-      params = (method as any).params
-      method = method.method
-    }
-
-    const response = await fetch(this.url, {
-      method: 'POST',
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method,
-        params
-      })
-    })
-    if (!response.ok) throw new RequestError(`${response.status}: ${response.statusText}`, -32000)
-    const body = await response.json()
-    if ('error' in body) {
-      throw new RequestError(body?.error?.message, body?.error?.code, body?.error?.data)
-    } else if ('result' in body) {
-      if (method === 'eth_blockNumber') {
-        this.lastBlockNumberUpdate = Date.now()
-        this.blockNumber = body.result
+    try {
+      if (method === 'eth_chainId') {
+        return `0x${this.chainId.toString(16)}`
       }
-      return body.result
-    } else {
-      throw new RequestError(`Received unexpected JSON-RPC response to ${method} request.`, -32000, body)
+      if (method === 'eth_blockNumber' && Date.now() - this.lastBlockNumberUpdate < 10000) {
+        return this.blockNumber
+      }
+      if (typeof method !== 'string') {
+        params = method.params
+        method = method.method
+      }
+      const response = await fetch(this.url, {
+        method: 'POST',
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method,
+          params
+        })
+      })
+      if (!response.ok) throw new RequestError(`${response.status}: ${response.statusText}`, -32000)
+      const body = await response.json()
+      if ('error' in body) {
+        throw new RequestError(body?.error?.message, body?.error?.code, body?.error?.data)
+      } else if ('result' in body) {
+        if (method === 'eth_blockNumber') {
+          this.lastBlockNumberUpdate = Date.now()
+          this.blockNumber = body.result
+        }
+        return body.result
+      } else {
+        throw new RequestError(`Received unexpected JSON-RPC response to ${method} request.`, -32000, body)
+      }
+    } catch (error) {
+      console.error(error);
+      // throw new RequestError(`Invalid RPC`, -32000, 'Invalid RPC')
     }
   }
 }
@@ -124,11 +128,11 @@ export class NetworkConnectorPatched extends AbstractConnector {
     return null
   }
 
-  public deactivate() {
-    return
+  public deactivate(): null {
+    return null
   }
 
-  public changeChainId(chainId: number) {
+  public changeChainId(chainId: number): void {
     invariant(Object.keys(this.providers).includes(chainId.toString()), `No url found for chainId ${chainId}`)
     this.currentChainId = chainId
     this.emitUpdate({ provider: this.providers[this.currentChainId], chainId })

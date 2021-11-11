@@ -6,7 +6,7 @@ import { useWallet } from 'providers';
 // import { AccountDetailsModal } from 'components/Modals/AccountDetails';
 import { Button } from "reactstrap";
 
-const ConnectWallet = () => {
+const ConnectWallet = (): React.ReactElement => {
 	const { account } = useEthers();
 	// const { isShown, toggle } = useModal();
 	const { 
@@ -16,7 +16,7 @@ const ConnectWallet = () => {
 		// unsupportedChain,
 		// handleDisconnect,
 	} = useWallet()
-	const [ activeAccountAddress, setActiveAccountAddress ] = React.useState<any>('');
+	const [ activeAccountAddress, setActiveAccountAddress ] = React.useState<string>('');
 	// const [willChangeConnector, setWillChangeConnector] = useState(false)
 
 	// useEffect(() => {
@@ -29,7 +29,7 @@ const ConnectWallet = () => {
   // }
   
 	useEffect(() => {
-		setActiveAccountAddress(account);
+		setActiveAccountAddress(account || '');
 	}, [account])
   
 	return (

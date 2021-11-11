@@ -3,7 +3,7 @@ import { Container, Row, Col } from "reactstrap";
 import CardCoin from "assets/images/cardCoin.png";
 import DollorIcon from "assets/images/dollorIcon.png";
 
-const BannerBlocks = () => {
+const BannerBlocks = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Container>

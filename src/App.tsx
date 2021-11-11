@@ -6,7 +6,7 @@ import './assets/css/style.css';
 import './App.css';
 import Page from 'pages/page';
 
-const App = () => {
+const App = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Router>

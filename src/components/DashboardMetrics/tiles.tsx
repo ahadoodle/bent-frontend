@@ -5,7 +5,7 @@ import DepositIcon from "assets/images/depositIcon.svg";
 import LockIcon from "assets/images/lockIcon.svg";
 import DbIcon from "assets/images/dbIcon.svg";
 
-const Tiles = () => {
+const Tiles = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Container>

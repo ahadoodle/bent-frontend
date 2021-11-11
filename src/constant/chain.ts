@@ -15,6 +15,6 @@ export const NETWORK_NAMES = {
 	[ChainId.LocalHost]: 'localhost'
 }
 
-export const DEFAULT_CHAIN = ChainId.LocalHost;
+export const DEFAULT_CHAIN = ChainId.Mainnet;
 export const DEFAULT_GAS_LIMIT = 200000
 export const DEFAULT_GAS_PRICE = 5

@@ -3,7 +3,11 @@ import { useLocalStorage } from "hooks";
 import Footer from "components/Footer";
 import Header from "components/Header";
 
-const Page = (props) => {
+interface Props {
+  children: React.ReactElement
+}
+
+const Page = (props: Props): React.ReactElement => {
   const [theme, setTheme] = useLocalStorage('theme');
 	const handleTheme = (theme) => setTheme(theme)
 

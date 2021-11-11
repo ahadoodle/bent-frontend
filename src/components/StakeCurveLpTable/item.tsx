@@ -9,13 +9,14 @@ import styled from "styled-components";
 import { formatBigNumber, ERC20, BentPasePool } from "utils";
 import { BigNumber, utils } from 'ethers';
 import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
+import { Pool } from "constant";
 
 interface Props {
-	poolInfo: any
+	poolInfo: Pool
 	poolKey: string
 }
 
-export const StakeCurveLpItem = (props: Props) => {
+export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [symbol, setSymbol] = useState<string>('');
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
@@ -43,7 +44,7 @@ export const StakeCurveLpItem = (props: Props) => {
 			setAllowance(allowance);
 			setDeposit(depositedLp);
 		})
-	}, [depositTokenContract, account, blockNumber])
+	}, [depositTokenContract, account, blockNumber, bentPool, props.poolInfo.POOL])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -61,7 +62,7 @@ export const StakeCurveLpItem = (props: Props) => {
 	}
 	
 	const approve = async () => {
-		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount);
+		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount, gasPrice);
 		if(res) {
 			setIsApproved(true);
 		}

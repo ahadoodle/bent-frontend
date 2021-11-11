@@ -36,7 +36,7 @@ export default function Updater(): null {
     provider
       .getBlockNumber()
       .then(blockNumberCallback)
-      .catch((error: any) =>
+      .catch((error) =>
         console.error(`Failed to get block number for chainId: ${chainId}`, error),
       );
 
@@ -57,8 +57,8 @@ export default function Updater(): null {
         }),
       );
     }
-    library?.getGasPrice().then(gasPrice => dispatch(updateGasPrice({ gasPrice: gasPrice })));
-  }, [dispatch, debouncedState.blockNumber, debouncedState.chainId]);
+    library && library?.getGasPrice().then(gasPrice => dispatch(updateGasPrice({ gasPrice: gasPrice })));
+  }, [dispatch, debouncedState.blockNumber, debouncedState.chainId, library]);
 
   return null;
 }

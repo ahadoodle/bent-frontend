@@ -3,7 +3,7 @@ import { Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
 
-export const StakeCurveLpTable = () => {
+export const StakeCurveLpTable = (): React.ReactElement => {
 	return (
 		<div className="convert-up">
 			<h2 className="black">Stake Curve LP Tokens</h2>
@@ -50,7 +50,7 @@ export const StakeCurveLpTable = () => {
 						<Card>
 							<CardBody>
 								{ Object.keys(POOLS.BentPools).map(poolName =>
-									<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} />)
+									<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName}/>)
 								}
 							</CardBody>
 						</Card>
