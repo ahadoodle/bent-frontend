@@ -16,3 +16,7 @@ export const getBentPool = (poolName: string, web3?: Web3): Contract => {
 export const getERC20 = (address: string, web3?: Web3): Contract => {
 	return getWeb3Contract(address, ABIS.ERC20, web3);
 }
+
+export const getBentMasterChef = (address: string, web3?: Web3): Contract => {
+	return getWeb3Contract(address, ABIS.BentMasterChef, web3);
+}

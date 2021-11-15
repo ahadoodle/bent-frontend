@@ -1,15 +1,17 @@
 import React from "react";
-import { Container, Row, Col, Card, CardBody } from "reactstrap";
+import {
+  Container, Row, Col, Card, CardBody
+} from "reactstrap";
 import { POOLS } from "constant";
-import { StakeCurveLpItem } from "./item";
+import { StakeSushiLpItem } from "./item";
 
-export const StakeCurveLpTable = (): React.ReactElement => {
+export const StakeSushiLpTable = ():React.ReactElement => {
 	return (
 		<Container>
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
-						<h2 className="black">Stake Curve LP Tokens</h2>
+						<h2 className="black">Provide liquidity on SushiSwap</h2>
 						<div className="table-Responsive LpToken">
 							<div className="table-Wrapper">
 								<div className="toggleWrap tokentable table">
@@ -36,7 +38,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 											></i>
 										</Col> */}
 										<Col>
-											Deposits{" "}
+											My Staked Balances{" "}
 											<i
 												className="fa fa-caret-down"
 												aria-hidden="true"
@@ -52,27 +54,11 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 									</Row>
 									<Card>
 										<CardBody>
-											{ Object.keys(POOLS.BentPools).map(poolName =>
-												<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName}/>)
-											}
+											{ Object.keys(POOLS.SushiPools.Pools).map((poolName, index) =>
+												<StakeSushiLpItem poolInfo={POOLS.SushiPools.Pools[poolName]} poolKey={poolName} key={index} />
+											)}
 										</CardBody>
 									</Card>
-											
-									{/* <tbody>
-										<tr>
-											<td colSpan={5}>
-												<div className="text-center btnwrap">
-													<button className="btn btnshow">
-														Show all Bent pools{" "}
-														<i
-															className="fa fa-caret-down"
-															aria-hidden="true"
-														></i>
-													</button>
-												</div>
-											</td>
-										</tr>
-									</tbody> */}
 								</div>
 							</div>
 						</div>

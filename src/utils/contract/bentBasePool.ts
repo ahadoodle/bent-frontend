@@ -35,7 +35,6 @@ const withdraw = async (contract: Contract, account: string | null | undefined, 
 	}
 }
 
-
 const harvest = async (contract: Contract, account: string | null | undefined, gasPrice: BigNumber): Promise<boolean> => {
 	try {
 		if(!account || !contract.options.address) return false;

@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { Row, Col, UncontrolledCollapse, Card, Button, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 // import { StakeCurveLpItem } from "./item";
-import CrvLogo from 'assets/images/token/CRV.png';
-import { ClaimCurveLpItem } from "./item";
+import SushiLogo from 'assets/images/token/SUSHI.png';
+import { ClaimSushiLpItem } from "./item";
 
-export const ClaimCurveLpTable = (): React.ReactElement => {
+export const ClaimSushiLpTable = (): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 
 	return (
@@ -17,7 +17,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 						<Wrapper
 							className="bentPool mb-0"
 							color="primary"
-							id="togglerClaimBentPool"
+							id="togglerClaimSushiPool"
 							style={{ padding: "13px 15px" }}
 							collapsed={collapsed}
 							onClick={() => setCollapsed(!collapsed)}
@@ -25,8 +25,8 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 							<Row className="align-items-center">
 								<Col>
 									<div className="imgText">
-										<img src={CrvLogo} alt="" width="28"/>
-										<h2>Curve Pools</h2>
+										<img src={SushiLogo} alt="" width="28"/>
+										<h2>Sushi Pools</h2>
 									</div>
 								</Col>
 								<Col>
@@ -63,15 +63,14 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								</Col>
 							</Row>
 						</Wrapper>
-
 						<UncontrolledCollapse
-							toggler="#togglerClaimBentPool"
+							toggler="#togglerClaimSushiPool"
 							className="bentpoolText"
 						>
 							<Card>
 								<CardBody>
-									{ Object.keys(POOLS.BentPools).map(poolName =>
-										<ClaimCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName} />)
+									{ Object.keys(POOLS.SushiPools.Pools).map(poolName =>
+										<ClaimSushiLpItem poolInfo={POOLS.SushiPools.Pools[poolName]} poolKey={poolName} key={poolName} />)
 									}
 								</CardBody>
 							</Card>

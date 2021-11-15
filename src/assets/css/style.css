@@ -36,7 +36,9 @@ ul.primaryMenu li {
     margin: 10px 25px;
 }
 ul.primaryMenu {
+    border-left: 1.5px solid #3A3F45;
     display: flex;
+    margin-left: 50px;
     margin-bottom: 0;
     padding: 0px;
     list-style: none; 
@@ -540,13 +542,24 @@ span.textadvance {
     letter-spacing: -0.24px;
     color: #10151D;
 }
-.amutinput input {
+.amountinput input {
     padding-left: 50px;
-    background-image: url(../images/token/CRV.png);
     background-repeat: no-repeat;
     background-position: 6px center;
     border: 3px solid #10151D;
     border-radius: 4px;
+}
+.amountinput img.inputlogo {
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    width: 28px;
+}
+.amountinput img.inputlogo-second {
+    position: absolute;
+    left: 22px;
+    top: 7px;
+    width: 28px;
 }
 table.tokentable.table tbody tr:first-child td:first-child {
     border-top-left-radius: 8px;
@@ -575,7 +588,7 @@ button.maxbtn {
     letter-spacing: -0.141818px;
     color: #10151D;
 }
-.amutinput {
+.amountinput {
     position: relative;
 }
 .btnwrapper {
@@ -662,9 +675,6 @@ button.btn.btnshow i {
 .convert-up.cvxSection {
     margin-top: 120px;
 }
-.cvxSection .amutinput input {
-    background-image: url(../images/token/CVX.svg);
-}
 .Dark .contentSection {
     background: #253143;
 }
@@ -686,7 +696,7 @@ button.btn.btnshow i {
 .Dark .converttabs {
 	
 }
-.Dark .amutinput input {
+.Dark .amountinput input {
     border: 3px solid #fff;
     background-color: transparent;
 }

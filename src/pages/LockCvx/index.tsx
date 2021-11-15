@@ -186,7 +186,7 @@ const LockCvx = () => {
                                               </Label>
                                               <Label>Available:-</Label>
                                             </p>
-                                            <div className="amutinput">
+                                            <div className="amountinput">
                                               <Input
                                                 type="text"
                                                 placeholder="0"

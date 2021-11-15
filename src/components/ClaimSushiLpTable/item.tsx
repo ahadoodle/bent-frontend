@@ -1,46 +1,49 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-	Row, Col, Card, CardBody, UncontrolledCollapse, Button
+	Row, Col, Button
 } from "reactstrap";
 import { 
 	useActiveWeb3React,
 	useBlockNumber,
 	useERC20Contract,
-	useBentPoolContract,
+	useBentMasterChefContract,
 	useGasPrice
 } from "hooks";
-import { ERC20, BentPasePool, formatBigNumber } from "utils";
+import { ERC20, formatBigNumber, BentMasterChef } from "utils";
 import { BigNumber } from 'ethers';
-import { BentPool } from "constant";
+import { POOLS, SushiPool } from "constant";
 
 interface Props {
-	poolInfo: BentPool
+	poolInfo: SushiPool
 	poolKey: string
 }
 
-export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
+export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [symbol, setSymbol] = useState<string>('');
 	const [deposit, setDeposit] = useState(0);
+	const [pendingRewards, setPendingRewards] = useState(0);
 	const { account } = useActiveWeb3React();
 	const blockNumber = useBlockNumber();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
-	const bentPool = useBentPoolContract(props.poolKey);
+	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
 
 	useEffect(() => {
 		Promise.all([
 			ERC20.getSymbol(depositTokenContract),
-			BentPasePool.getDepositedAmount(bentPool, account)
-		]).then(([symbol, depositedLp]) => {
+			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId),
+			BentMasterChef.getPendingRewards(masterChef, account, props.poolInfo.PoolId)
+		]).then(([symbol, depositedLp, pendingRewards]) => {
 			setSymbol(symbol);
-			setDeposit(depositedLp);
+			setDeposit(depositedLp.amount);
+			setPendingRewards(pendingRewards);
 		})
-	}, [depositTokenContract, bentPool, blockNumber, account])
+	}, [depositTokenContract, masterChef, blockNumber, account, props.poolInfo.PoolId])
 
 	const claim = async () => {
-		await BentPasePool.harvest(bentPool, account, gasPrice);
+		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
 	}
 
 	return (
@@ -55,13 +58,14 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 				<Row className="align-items-center">
 					<Col>
 						<div className="imgText">
-							<PoolLogo src={props.poolInfo.LOGO} alt="" />
+							<PoolLogo src={props.poolInfo.LOGO[0]} alt="" />
+							<PoolLogo src={props.poolInfo.LOGO[1]} alt="" style={{marginLeft: -20}} />
 							<h4>{props.poolInfo.Name}</h4>
 						</div>
 					</Col>
 					<Col>
 						<b>
-							<span>$</span>0
+							{formatBigNumber(BigNumber.from(pendingRewards))} BENT
 						</b>
 					</Col>
 					{/* <Col>
@@ -82,15 +86,15 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<div className="climBtn">
 							<Button className="claimbtn" onClick={claim}>Claim</Button>
-							<i
+							{/* <i
 								className="fa fa-caret-down"
 								aria-hidden="true"
-							></i>
+							></i> */}
 						</div>
 					</Col>
 				</Row>
 			</Wrapper>
-			<InnerWrapper
+			{/* <InnerWrapper
 				className="innerAccordian"
 				toggler={`#toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
 			>
@@ -119,7 +123,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 						</Row>
 					</CardBody>
 				</Card>
-			</InnerWrapper>
+			</InnerWrapper> */}
 		</div>
 	)
 }
@@ -135,7 +139,7 @@ const Wrapper = styled.div<{collapsed : boolean }>`
 	padding: 13px 15px;
 `;
 
-const InnerWrapper = styled(UncontrolledCollapse)`
-	background: #CAB8FF;
-	border: unset;
-`;
+// const InnerWrapper = styled(UncontrolledCollapse)`
+// 	background: #CAB8FF;
+// 	border: unset;
+// `;

@@ -1,22 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import styled from "styled-components";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
-import classnames from "classnames";
-import styled from "styled-components";
-import { formatBigNumber, ERC20, BentPasePool } from "utils";
+import { Link } from "react-router-dom";
 import { BigNumber, utils } from 'ethers';
-import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
-import { BentPool, TOKENS } from "constant";
+import { POOLS, SushiPool, TOKENS } from "constant"
+import classnames from "classnames";
+import {
+	useActiveWeb3React,
+	useBentMasterChefContract,
+	useBlockNumber,
+	useERC20Contract,
+	useGasPrice
+} from "hooks";
+import {
+	formatBigNumber,
+	ERC20,
+	BentMasterChef
+} from "utils";
+
 
 interface Props {
-	poolInfo: BentPool
+	poolInfo: SushiPool
 	poolKey: string
 }
 
-export const StakeCurveLpItem = (props: Props): React.ReactElement => {
+export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [symbol, setSymbol] = useState<string>('');
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
@@ -28,31 +39,31 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [deposit, setDeposit] = useState(0);
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
-	const bentPool = useBentPoolContract(props.poolKey);
+	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
 	const blockNumber = useBlockNumber();
-
-	useEffect(() => {
-		Promise.all([
-			ERC20.getSymbol(depositTokenContract),
-			ERC20.getBalanceOf(depositTokenContract, account),
-			ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL),
-			BentPasePool.getDepositedAmount(bentPool, account)
-		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
-			setSymbol(depositSymbol);
-			setLpBalance(availableLp);
-			setAllowance(allowance);
-			setDeposit(depositedLp);
-		})
-	}, [depositTokenContract, account, blockNumber, bentPool, props.poolInfo.POOL])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
 
+	useEffect(() => {
+		Promise.all([
+			ERC20.getSymbol(depositTokenContract),
+			ERC20.getBalanceOf(depositTokenContract, account),
+			ERC20.getAllowance(depositTokenContract, account, POOLS.SushiPools.MasterChef),
+			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId)
+		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
+			setSymbol(depositSymbol);
+			setLpBalance(availableLp);
+			setAllowance(allowance);
+			setDeposit(depositedLp.amount);
+		})
+	}, [depositTokenContract, account, blockNumber, masterChef, props.poolInfo.PoolId])
+
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
-		if(isNaN(parseFloat(value))) return;
+		if (isNaN(parseFloat(value))) return;
 		const amountBN = utils.parseUnits(value, 18);
 		setIsApproved(BigNumber.from(allowance).gte(amountBN) && !amountBN.isZero());
 	}
@@ -60,25 +71,25 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const onWithdrawAmountChange = (value) => {
 		setWithdrawAmount(value);
 	}
-	
+
 	const approve = async () => {
-		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount, gasPrice);
-		if(res) {
+		const res = await ERC20.approve(depositTokenContract, account, POOLS.SushiPools.MasterChef, stakeAmount, gasPrice);
+		if (res) {
 			setIsApproved(true);
 		}
 	}
 
 	const stake = async () => {
-		const res = await BentPasePool.stake(bentPool, account, stakeAmount, gasPrice);
-		if(res) {
+		const res = await BentMasterChef.stake(masterChef, account, props.poolInfo.PoolId, stakeAmount, gasPrice);
+		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
 		}
 	}
 
 	const withdraw = async () => {
-		const res = await BentPasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
-		if(res) {
+		const res = await BentMasterChef.withdraw(masterChef, account, props.poolInfo.PoolId, withdrawAmount, gasPrice);
+		if (res) {
 			setWithdrawAmount('')
 		}
 	}
@@ -90,13 +101,14 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				collapsed={collapsed}
 				className="bentInner"
 				color="primary"
-				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				id={`toggleInner-stake-sushi-lp-${props.poolKey}`}
 				style={{ marginBottom: "1rem" }}
 			>
 				<Row className="align-items-center">
 					<Col>
 						<div className="imgText">
-							<PoolLogo src={props.poolInfo.LOGO} alt=""/>
+							<PoolLogo src={props.poolInfo.LOGO[0]} alt="" />
+							<PoolLogo src={props.poolInfo.LOGO[1]} alt="" style={{ marginLeft: -20 }} />
 							<h4>{props.poolInfo.Name}</h4>
 						</div>
 					</Col>
@@ -131,9 +143,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			</Wrapper>
 			<InnerWrapper
 				className="innerAccordian"
-				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				toggler={`#toggleInner-stake-sushi-lp-${props.poolKey}`}
 			>
-				<div className="converttabs" style={{background: 'unset', borderTop: '1px solid black', borderRadius: 0 }}>
+				<div className="converttabs" style={{ background: 'unset', borderTop: '1px solid black', borderRadius: 0 }}>
 					<Nav tabs>
 						<NavItem>
 							<NavLink
@@ -160,8 +172,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								<Col md="6" className="inverse">
 									<Card body>
 										<CardText>
-											Deposit liquidity into the {props.poolInfo.Name} pool (without staking in the Curve gauge),
-											and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
+											Deposit liquidity into the {props.poolInfo.Name} pool,
+											and then stake  your {symbol} tokens here to earn Bent.
 										</CardText>
 									</Card>
 								</Col>
@@ -190,7 +202,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														onChange={(e) => onStakeAmountChange(e.target.value)}
 														value={stakeAmount}
 													/>
-													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
+													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo"/>
+													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second"/>
 													<Button className="maxbtn">Max</Button>
 												</div>
 												<div className="btnouter">
@@ -224,7 +237,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</TabPane>
 						<TabPane tabId="2">
 							<Row>
-							<Col md="12" className="inverse">
+								<Col md="12" className="inverse">
 									<Card body>
 										<CardTitle>
 											<div className="advance-btn">
@@ -249,11 +262,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														onChange={(e) => onWithdrawAmountChange(e.target.value)}
 														value={withdrawAmount}
 													/>
-													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
+													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo"/>
+													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second"/>
 													<Button className="maxbtn">Max</Button>
 												</div>
 											</div>
-											<div className="amount-crv" style={{marginLeft: 20}}>
+											<div className="amount-crv" style={{ marginLeft: 20 }}>
 												<p className="labeltext">
 													<Label>
 														&nbsp;
@@ -288,13 +302,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 											<p>
 												Deposit contract address:{" "}
 												<Link to="/stake">
-													{bentPool.options.address}
+													{masterChef.options.address}
 												</Link>
 											</p>
 											<p>
 												Rewards contract address:{" "}
 												<Link to="/stake">
-													{bentPool.options.address}
+													{masterChef.options.address}
 												</Link>
 											</p>
 										</div>
@@ -314,7 +328,7 @@ const PoolLogo = styled.img`
 	width: 28px;
 `
 
-const Wrapper = styled.div<{collapsed : boolean }>`
+const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
 	background: ${props => props.collapsed ? 'transparent' : '#CAB8FF !important'};
 `;
