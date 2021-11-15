@@ -61,9 +61,20 @@ const getDepositedAmount = async (contract: Contract, account: string | null | u
 	}
 }
 
-export const BentPasePool = {
+const getPendingReward = async (contract: Contract, account: string | null | undefined):Promise<number[]> => {
+	try {
+		if(!account || !contract.options.address) return [];
+		return await contract.methods.pendingReward(account).call();
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+}
+
+export const BentBasePool = {
 	stake,
 	withdraw,
 	harvest,
-	getDepositedAmount
+	getDepositedAmount,
+	getPendingReward
 }

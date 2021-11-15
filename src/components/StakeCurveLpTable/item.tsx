@@ -6,7 +6,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentPasePool } from "utils";
+import { formatBigNumber, ERC20, BentBasePool } from "utils";
 import { BigNumber, utils } from 'ethers';
 import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
 import { BentPool, TOKENS } from "constant";
@@ -37,7 +37,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			ERC20.getSymbol(depositTokenContract),
 			ERC20.getBalanceOf(depositTokenContract, account),
 			ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL),
-			BentPasePool.getDepositedAmount(bentPool, account)
+			BentBasePool.getDepositedAmount(bentPool, account)
 		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
@@ -69,7 +69,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const stake = async () => {
-		const res = await BentPasePool.stake(bentPool, account, stakeAmount, gasPrice);
+		const res = await BentBasePool.stake(bentPool, account, stakeAmount, gasPrice);
 		if(res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -77,7 +77,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const withdraw = async () => {
-		const res = await BentPasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
+		const res = await BentBasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
 		if(res) {
 			setWithdrawAmount('')
 		}

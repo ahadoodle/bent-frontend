@@ -10,9 +10,9 @@ import {
 	useBentPoolContract,
 	useGasPrice
 } from "hooks";
-import { ERC20, BentPasePool, formatBigNumber } from "utils";
+import { ERC20, BentBasePool, formatBigNumber } from "utils";
 import { BigNumber } from 'ethers';
-import { BentPool } from "constant";
+import { BentPool, TOKENS } from "constant";
 
 interface Props {
 	poolInfo: BentPool
@@ -23,6 +23,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [symbol, setSymbol] = useState<string>('');
 	const [deposit, setDeposit] = useState(0);
+	const [rewards, setRewards] = useState<number[]>([]);
 	const { account } = useActiveWeb3React();
 	const blockNumber = useBlockNumber();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
@@ -32,15 +33,17 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	useEffect(() => {
 		Promise.all([
 			ERC20.getSymbol(depositTokenContract),
-			BentPasePool.getDepositedAmount(bentPool, account)
-		]).then(([symbol, depositedLp]) => {
+			BentBasePool.getDepositedAmount(bentPool, account),
+			BentBasePool.getPendingReward(bentPool, account),
+		]).then(([symbol, depositedLp, rewards]) => {
 			setSymbol(symbol);
 			setDeposit(depositedLp);
+			setRewards(rewards);
 		})
 	}, [depositTokenContract, bentPool, blockNumber, account])
 
 	const claim = async () => {
-		await BentPasePool.harvest(bentPool, account, gasPrice);
+		await BentBasePool.harvest(bentPool, account, gasPrice);
 	}
 
 	return (
@@ -101,22 +104,24 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 								<p>Breakdown of claimable earnings:</p>
 							</Col>
 						</Row>
-						<Row className="align-items-center">
-							<Col>
-								<div className="imgText">
-									<img src={props.poolInfo.LOGO} alt="" />
-									<h4>Chainlink</h4>
-								</div>
-							</Col>
-							<Col>
-								<b>
-									<span>$</span>0
-								</b>
-							</Col>
-							<Col> </Col>
-							<Col> </Col>
-							<Col> </Col>
-						</Row>
+						{ props.poolInfo.RewardsAssets.map((tokenKey, index) => 
+							<Row className="align-items-center mb-1" key={tokenKey} >
+								<Col>
+									<div className="imgText">
+										<img src={TOKENS[tokenKey].LOGO} alt="" width="28"/>
+										<h4>{tokenKey}</h4>
+									</div>
+								</Col>
+								<Col>
+									<b>
+										{formatBigNumber(BigNumber.from(rewards[index]))}
+									</b>
+								</Col>
+								<Col> </Col>
+								<Col> </Col>
+								<Col> </Col>
+							</Row>
+						)}
 					</CardBody>
 				</Card>
 			</InnerWrapper>

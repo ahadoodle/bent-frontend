@@ -1,8 +1,33 @@
-import BentLogo from 'assets/images/token/BENT.png';
+import { TOKEN_LOGO } from 'constant';
 
-export const TOKENS = {
+interface TokenInfo {
+	LOGO: string;
+	ADDR: string;
+}
+
+export const TOKENS: Record<string, TokenInfo> = {
 	BENT: {
-		LOGO: BentLogo,
+		LOGO: TOKEN_LOGO.BENT,
 		ADDR: '0xdc28c42f65d9f15a7fdadacc4ca78a3b6c894bef'
+	},
+	CRV: {
+		LOGO: TOKEN_LOGO.CRV,
+		ADDR: '0xD533a949740bb3306d119CC777fa900bA034cd52',
+	},
+	CVX: {
+		LOGO: TOKEN_LOGO.CVX,
+		ADDR: '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B',
+	},
+	ALCX: {
+		LOGO: TOKEN_LOGO.ALCX,
+		ADDR: '0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF'
+	},
+	SPELL: {
+		LOGO: TOKEN_LOGO.SPELL,
+		ADDR: '0x090185f2135308BaD17527004364eBcC2D37e5F6',
+	},
+	FXS: {
+		LOGO: TOKEN_LOGO.FXS,
+		ADDR: '0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0'
 	}
 }
