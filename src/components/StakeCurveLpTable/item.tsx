@@ -6,7 +6,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool } from "utils";
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink } from "utils";
 import { BigNumber, utils } from 'ethers';
 import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
 import { BentPool, TOKENS } from "constant";
@@ -60,7 +60,15 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const onWithdrawAmountChange = (value) => {
 		setWithdrawAmount(value);
 	}
-	
+
+	const onStakeMax = () => {
+		setStakeAmount(lpBalance.toString());
+	}
+
+	const onWithdrawMax = () => {
+		setWithdrawAmount(deposit.toString());
+	}
+
 	const approve = async () => {
 		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount, gasPrice);
 		if(res) {
@@ -120,7 +128,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<span>$</span>220.70m
+							<span>$</span>---
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
@@ -160,7 +168,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								<Col md="6" className="inverse">
 									<Card body>
 										<CardText>
-											Deposit liquidity into the {props.poolInfo.Name} pool (without staking in the Curve gauge),
+											Deposit liquidity into the &nbsp;
+											<OutterLink href={getCrvDepositLink(props.poolInfo.Name)} target="_blank">
+												Curve {props.poolInfo.Name} pool
+											</OutterLink>
+											&nbsp;(without staking in the Curve gauge),
 											and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
 										</CardText>
 									</Card>
@@ -191,7 +203,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														value={stakeAmount}
 													/>
 													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
-													<Button className="maxbtn">Max</Button>
+													<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 												</div>
 												<div className="btnouter">
 													<p className="lineup"></p>
@@ -250,7 +262,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														value={withdrawAmount}
 													/>
 													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
-													<Button className="maxbtn">Max</Button>
+													<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 												</div>
 											</div>
 											<div className="amount-crv" style={{marginLeft: 20}}>
@@ -322,4 +334,12 @@ const Wrapper = styled.div<{collapsed : boolean }>`
 const InnerWrapper = styled(UncontrolledCollapse)`
 	background: #CAB8FF;
 	border: unset;
+`;
+
+const OutterLink = styled.a`
+	color: #703FFF;
+	&:hover {
+		color: #703FFF;
+	}
+	text-decoration: unset;
 `;

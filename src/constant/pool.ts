@@ -25,7 +25,7 @@ const BentPools: Record<string, BentPool> = {
 	},
 	CRV: {
 		LOGO: TOKEN_LOGO.CRV,
-		Name: 'crv',
+		Name: 'cvxCrv',
 		POOL: '0xD138Ad715B8F03A15303bF6733A655922652911b',
 		DepositAsset: '0x9D0464996170c6B9e75eED71c68B99dDEDf279e8', // Curve.fi cvxCRV (CRV)
 		RewardsAssets: ['BENT', 'CRV', 'CVX']
@@ -52,6 +52,7 @@ export interface SushiPool {
 	PoolId: number;
 	DepositAsset: string;
 	RewardsAssets: string[];
+	DepositLink: string;
 }
 
 const SushiPools: {
@@ -65,7 +66,9 @@ const SushiPools: {
 			Name: 'BENT/ETH',
 			PoolId: 0,
 			DepositAsset: '0x1c85638e118b37167e9298c2268758e058DdfDA0',
-			RewardsAssets: ['BENT']
+			RewardsAssets: ['BENT'],
+			DepositLink: '',
+			// DepositLink: 'https://app.sushi.com/add/0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B/ETH';
 		}
 	}
 }

@@ -72,6 +72,14 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		setWithdrawAmount(value);
 	}
 
+	const onStakeMax = () => {
+		setStakeAmount(lpBalance.toString());
+	}
+
+	const onWithdrawMax = () => {
+		setWithdrawAmount(deposit.toString());
+	}
+
 	const approve = async () => {
 		const res = await ERC20.approve(depositTokenContract, account, POOLS.SushiPools.MasterChef, stakeAmount, gasPrice);
 		if (res) {
@@ -132,7 +140,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<span>$</span>220.70m
+							<span>$</span>---
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
@@ -172,8 +180,13 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 								<Col md="6" className="inverse">
 									<Card body>
 										<CardText>
-											Deposit liquidity into the {props.poolInfo.Name} pool,
-											and then stake  your {symbol} tokens here to earn Bent.
+											Deposit liquidity into the &nbsp;
+											<OutterLink href={props.poolInfo.DepositLink} target="_blank">
+												SushiSwap {props.poolInfo.Name} pool
+											</OutterLink>
+											&nbsp;
+											and then stake your SushiSwap {props.poolInfo.Name} LP tokens here 
+											to earn BENT and SUSHI on top of SushiSwap trading fees.
 										</CardText>
 									</Card>
 								</Col>
@@ -204,7 +217,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 													/>
 													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo"/>
 													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second"/>
-													<Button className="maxbtn">Max</Button>
+													<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 												</div>
 												<div className="btnouter">
 													<p className="lineup"></p>
@@ -264,7 +277,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 													/>
 													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo"/>
 													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second"/>
-													<Button className="maxbtn">Max</Button>
+													<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 												</div>
 											</div>
 											<div className="amount-crv" style={{ marginLeft: 20 }}>
@@ -336,4 +349,12 @@ const Wrapper = styled.div<{ collapsed: boolean }>`
 const InnerWrapper = styled(UncontrolledCollapse)`
 	background: #CAB8FF;
 	border: unset;
+`;
+
+const OutterLink = styled.a`
+	color: #703FFF;
+	&:hover {
+		color: #703FFF;
+	}
+	text-decoration: unset;
 `;

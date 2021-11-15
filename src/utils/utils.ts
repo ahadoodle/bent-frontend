@@ -48,3 +48,10 @@ export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): 
   
 	return displayNum;
 }
+
+export const getCrvDepositLink = (tokenName: string): string => {
+	if(tokenName === 'cvxCrv')
+		return `https://curve.fi/factory/22/deposit`;
+	else
+		return `https://curve.fi/${tokenName}/deposit`;
+}

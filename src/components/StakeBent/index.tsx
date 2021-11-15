@@ -16,7 +16,10 @@ export const StakeBent = (): React.ReactElement => {
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
-						<h2 className="white">Stake your BENT (coming soon - you'll earn platform fees)</h2>
+						<h2 className="white">
+							Stake your BENT
+							<span className="text-muted"> (coming soon - you'll earn platform fees)</span>
+						</h2>
 						<div className="convert-table">
 							<div className="convert-tableTitle">
 								<Row className="">
@@ -40,9 +43,8 @@ export const StakeBent = (): React.ReactElement => {
 										<div className="tableTitle">
 											<p>APR</p>
 											<div className="boldText">
-												{" "}
 												<b>
-													60.56<span>%</span>
+													---<span>%</span>
 												</b>
 											</div>
 										</div>
@@ -60,7 +62,7 @@ export const StakeBent = (): React.ReactElement => {
 											<p>TVL</p>
 											<div className="boldText">
 												<b>
-													<span>$</span>220.70m
+													<span>$</span>---
 												</b>
 											</div>
 										</div>

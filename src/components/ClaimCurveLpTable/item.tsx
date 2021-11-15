@@ -114,7 +114,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 								</Col>
 								<Col>
 									<b>
-										{formatBigNumber(BigNumber.from(rewards[index]))}
+										{formatBigNumber(BigNumber.from(rewards[index] || 0))}
 									</b>
 								</Col>
 								<Col> </Col>

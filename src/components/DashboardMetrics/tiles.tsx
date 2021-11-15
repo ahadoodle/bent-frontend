@@ -18,7 +18,7 @@ const Tiles = (): React.ReactElement => {
                 <p>Total Claimable</p>
                 <h2>
                   <span>$</span>
-                  <b>467</b>.12
+                  <b>---</b>
                 </h2>
               </div>
             </Col>
@@ -28,7 +28,7 @@ const Tiles = (): React.ReactElement => {
                 <p>Total Deposit</p>
                 <h2>
                   <span>$</span>
-                  <b>511</b>.96
+                  <b>---</b>
                 </h2>
               </div>
             </Col>
