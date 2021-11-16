@@ -4,7 +4,7 @@ import FraxLogo from 'assets/images/token/FRAX.png';
 import TriCrypto2Logo from 'assets/images/token/TRICRYPTO2.png';
 import BentLogo from 'assets/images/token/BENT.png';
 import CrvLogo from 'assets/images/token/CRV.png';
-import CvxLogo from 'assets/images/token/CVX.png';
+import CvxLogo from 'assets/images/token/CVX.svg';
 import EthLogo from 'assets/images/token/ETH.png';
 import AlcxLogo from 'assets/images/token/ALCX.svg';
 import SushiLogo from 'assets/images/token/SUSHI.png';
