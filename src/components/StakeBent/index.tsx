@@ -4,7 +4,7 @@ import {
 	Card, CardTitle, CardText, Input, Label,
 } from "reactstrap";
 import classnames from "classnames";
-import BentLogo from 'assets/images/token/BENT.png';
+import { TOKEN_LOGO } from "constant";
 
 export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -25,7 +25,7 @@ export const StakeBent = (): React.ReactElement => {
 								<Row className="">
 									<Col>
 										<div className="tableTitle mt-1">
-											<img src={BentLogo} alt="Icon" /> <b> BENT </b>
+											<img src={TOKEN_LOGO.BENT} alt="Icon" width="28" /> <b> BENT </b>
 										</div>
 									</Col>
 									<Col>
@@ -126,7 +126,7 @@ export const StakeBent = (): React.ReactElement => {
 															</p>
 															<div className="amountinput">
 																<Input type="text" placeholder="0" />
-																<img src={BentLogo} alt="input-logo" className="inputlogo"/>
+																<img src={TOKEN_LOGO.BENT} alt="input-logo" className="inputlogo"/>
 																<Button className="maxbtn">Max</Button>
 															</div>
 															<div className="btnouter">

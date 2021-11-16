@@ -2,7 +2,7 @@ import MimLogo from 'assets/images/token/MIM.png';
 import AlusdLogo from 'assets/images/token/ALUSD.png';
 import FraxLogo from 'assets/images/token/FRAX.png';
 import TriCrypto2Logo from 'assets/images/token/TRICRYPTO2.png';
-import BentLogo from 'assets/images/token/BENT.png';
+import BentLogo from 'assets/images/token/BENT.svg';
 import CrvLogo from 'assets/images/token/CRV.png';
 import CvxLogo from 'assets/images/token/CVX.svg';
 import EthLogo from 'assets/images/token/ETH.png';

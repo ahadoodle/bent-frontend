@@ -3,10 +3,10 @@ import { withRouter } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import "font-awesome/css/font-awesome.min.css";
 import { StakeCurveLpTable } from "components/StakeCurveLpTable";
-import Tiles from "components/DashboardMetrics/tiles";
 // import { ConvertCrv } from 'components/ConvertCrv';
 import { StakeBent } from 'components/StakeBent';
 import { StakeSushiLpTable } from "components/StakeSushiLpTable";
+import BannerBlocks from "components/BannerBlocks";
 
 const Dashboard = () => {
   return (
@@ -15,7 +15,7 @@ const Dashboard = () => {
         <title>Bent Protocol | Dashboard</title>
       </Helmet>
       <div className="banner">
-        <Tiles />
+        <BannerBlocks />
       </div>
 
       <div className="contentSection">
