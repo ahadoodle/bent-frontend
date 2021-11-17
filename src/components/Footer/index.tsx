@@ -9,7 +9,7 @@ const Footer = (): React.ReactElement => {
       <footer>
         <Container>
           <Row>
-            <Col md="3">
+            <Col md="3" className="d-flex flex-column">
               <div className="footer-inner-block LogoWrp">
                 <div className="footerlogo">
                   <Link to="/">
@@ -17,10 +17,12 @@ const Footer = (): React.ReactElement => {
                   </Link>
                 </div>
                 <p>
-                  Bent is an crypto investing platform with features such as
-                  staking pooling and farming to grow your money effortlessley
+                  Bent is a staking and farming platform to effortlessly grow your crypto
                 </p>
               </div>
+              <Col sm="12 mt-auto mb-3">
+                <p className="copyright">Copyright © Bent Finance 2021</p>
+              </Col>
             </Col>
             <Col md="3">
               <div className="footer-inner-block">
@@ -64,23 +66,20 @@ const Footer = (): React.ReactElement => {
               <div className="footer-inner-block phone">
                 <h3>Contact</h3>
                 <ul>
-                  <li>
+                  {/* <li>
                     <Link to="/">
                       <i className="fa fa-phone" aria-hidden="true"></i>&nbsp; +1 -
                       732 872 123
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
-                    <Link to="/">
+                    <a href="mailto:contact@bentfinance.com">
                       <i className="fa fa-envelope" aria-hidden="true"></i>&nbsp;
-                      contact@bent.markets
-                    </Link>
+                        contact@bentfinance.com
+                    </a>
                   </li>
                 </ul>
               </div>
-            </Col>
-            <Col sm="12">
-              <p className="copyright">Copyright © Bent Finance 2021</p>
             </Col>
           </Row>
         </Container>
