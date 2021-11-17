@@ -260,7 +260,7 @@ const Dashboard = () => {
                 <Row className="">
                   <Col>
                     <div className="tableTitle">
-                      <img src={CvxIcon} alt="Icon" /> <b> CVX </b>
+                      <img src={CvxIcon} alt="Icon" width="28"/> <b> CVX </b>
                     </div>
                   </Col>
                   <Col>
