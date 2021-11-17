@@ -5,10 +5,8 @@ const stake = async (contract: Contract, account: string | null | undefined, poo
 	try {
 		if(!account || !contract.options.address) return false;
 		const amountBN = utils.parseUnits(amount, 18);
-		const gas = await contract.methods.deposit(poolId, amountBN).estimateGas();
 		await contract.methods.deposit(poolId, amountBN).send({
 			from: account,
-			gas,
 			gasPrice,
 		});
 		return true;
@@ -22,10 +20,8 @@ const withdraw = async (contract: Contract, account: string | null | undefined, 
 	try {
 		if(!account || !contract.options.address) return false;
 		const amountBN = utils.parseUnits(amount, 18);
-		const gas = await contract.methods.withdraw(poolId, amountBN).estimateGas();
 		await contract.methods.withdraw(poolId, amountBN).send({
 			from: account,
-			gas,
 			gasPrice,
 		});
 		return true;
@@ -38,10 +34,8 @@ const withdraw = async (contract: Contract, account: string | null | undefined, 
 const claim = async (contract: Contract, account: string | null | undefined, poolId: number, gasPrice: BigNumber): Promise<boolean> => {
 	try {
 		if(!account || !contract.options.address) return false;
-		const gas = await contract.methods.claim(poolId, account).estimateGas();
 		await contract.methods.claim(poolId, account).send({
 			from: account,
-			gas,
 			gasPrice,
 		});
 		return true;

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { BigNumber, utils } from 'ethers'
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
@@ -54,4 +55,28 @@ export const getCrvDepositLink = (tokenName: string): string => {
 		return `https://curve.fi/factory/22/deposit`;
 	else
 		return `https://curve.fi/${tokenName}/deposit`;
+}
+
+export const getPrice = async (contract_address: string, vsCoin: string): Promise<number> => {
+	const url = `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract_address}&vs_currencies=${vsCoin}`;
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		const price = res.data[contract_address.toLowerCase()][vsCoin.toLowerCase()];
+		if(isNaN(price)) {
+			await sleep(3000);
+			return getPrice(contract_address, vsCoin);
+		}
+		return price;
+	} catch (error) {
+		console.error(error);
+		await sleep(3000);
+		return getPrice(contract_address, vsCoin);
+	}
+}
+
+export const sleep = (ms = 0): Promise<unknown> => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
 }
