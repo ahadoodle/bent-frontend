@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -30,17 +31,17 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
 
-	useEffect(() => {
-		Promise.all([
-			ERC20.getSymbol(depositTokenContract),
-			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId),
-			BentMasterChef.getPendingRewards(masterChef, account, props.poolInfo.PoolId)
-		]).then(([symbol, depositedLp, pendingRewards]) => {
-			setSymbol(symbol);
-			setDeposit(depositedLp.amount);
-			setPendingRewards(pendingRewards);
-		})
-	}, [depositTokenContract, masterChef, blockNumber, account, props.poolInfo.PoolId])
+	// useEffect(() => {
+	// 	Promise.all([
+	// 		ERC20.getSymbol(depositTokenContract),
+	// 		BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId),
+	// 		BentMasterChef.getPendingRewards(masterChef, account, props.poolInfo.PoolId)
+	// 	]).then(([symbol, depositedLp, pendingRewards]) => {
+	// 		setSymbol(symbol);
+	// 		setDeposit(depositedLp.amount);
+	// 		setPendingRewards(pendingRewards);
+	// 	})
+	// }, [depositTokenContract, masterChef, blockNumber, account, props.poolInfo.PoolId])
 
 	const claim = async () => {
 		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);

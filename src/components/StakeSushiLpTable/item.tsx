@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react"
 import styled from "styled-components";
 import {
@@ -47,19 +48,19 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
 
-	useEffect(() => {
-		Promise.all([
-			ERC20.getSymbol(depositTokenContract),
-			ERC20.getBalanceOf(depositTokenContract, account),
-			ERC20.getAllowance(depositTokenContract, account, POOLS.SushiPools.MasterChef),
-			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId)
-		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
-			setSymbol(depositSymbol);
-			setLpBalance(availableLp);
-			setAllowance(allowance);
-			setDeposit(depositedLp.amount);
-		})
-	}, [depositTokenContract, account, blockNumber, masterChef, props.poolInfo.PoolId])
+	// useEffect(() => {
+	// 	Promise.all([
+	// 		ERC20.getSymbol(depositTokenContract),
+	// 		ERC20.getBalanceOf(depositTokenContract, account),
+	// 		ERC20.getAllowance(depositTokenContract, account, POOLS.SushiPools.MasterChef),
+	// 		BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId)
+	// 	]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
+	// 		setSymbol(depositSymbol);
+	// 		setLpBalance(availableLp);
+	// 		setAllowance(allowance);
+	// 		setDeposit(depositedLp.amount);
+	// 	})
+	// }, [depositTokenContract, account, blockNumber, masterChef, props.poolInfo.PoolId])
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);

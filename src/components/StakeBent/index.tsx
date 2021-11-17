@@ -89,7 +89,7 @@ export const StakeBent = (): React.ReactElement => {
 											<Col sm="6" className="inverse">
 												<Card body>
 													<CardText className="mt-0">
-														Stake your BENT to additional rewards and earn a portion of the platforms
+														Stake your BENT to earn additional rewards and earn a portion of the platforms
 														revenue distributed as CRV, CVX and cvxCRV.
 													</CardText>
 												</Card>
