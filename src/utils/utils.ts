@@ -57,21 +57,19 @@ export const getCrvDepositLink = (tokenName: string): string => {
 		return `https://curve.fi/${tokenName}/deposit`;
 }
 
-export const getPrice = async (contract_address: string, vsCoin: string): Promise<number> => {
-	const url = `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract_address}&vs_currencies=${vsCoin}`;
+export const getPrice = async (contract_addresses: string[], vsCoin: string): Promise<Record<string, number>> => {
+	const url = `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract_addresses.join(',')}&vs_currencies=${vsCoin}`;
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const res: any = await axios.get(url);
-		const price = res.data[contract_address.toLowerCase()][vsCoin.toLowerCase()];
-		if(isNaN(price)) {
-			await sleep(3000);
-			return getPrice(contract_address, vsCoin);
-		}
-		return price;
+		Object.keys(res.data).forEach(key => {
+			if(isNaN(res.data[key][vsCoin.toLowerCase()])) res.data[key][vsCoin.toLowerCase()] = 0;
+		})
+		return res.data;
 	} catch (error) {
 		console.error(error);
 		await sleep(3000);
-		return getPrice(contract_address, vsCoin);
+		return getPrice(contract_addresses, vsCoin);
 	}
 }
 
