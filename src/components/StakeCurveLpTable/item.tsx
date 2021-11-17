@@ -62,11 +62,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onStakeMax = () => {
-		setStakeAmount(formatBigNumber(BigNumber.from(lpBalance), 18, 18).replaceAll(',', '.'));
+		setStakeAmount(formatBigNumber(BigNumber.from(lpBalance), 18, 18).replaceAll(',', ''));
 	}
 
 	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(BigNumber.from(deposit), 18, 18).replaceAll(',', '.'));
+		setWithdrawAmount(formatBigNumber(BigNumber.from(deposit), 18, 18).replaceAll(',', ''));
 	}
 
 	const approve = async () => {

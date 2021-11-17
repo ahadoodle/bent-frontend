@@ -74,11 +74,11 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onStakeMax = () => {
-		setStakeAmount(formatBigNumber(BigNumber.from(lpBalance), 18, 8).replaceAll(',', '.'));
+		setStakeAmount(formatBigNumber(BigNumber.from(lpBalance), 18, 8).replaceAll(',', ''));
 	}
 
 	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(BigNumber.from(deposit), 18, 8).replaceAll(',', '.'));
+		setWithdrawAmount(formatBigNumber(BigNumber.from(deposit), 18, 8).replaceAll(',', ''));
 	}
 
 	const approve = async () => {
