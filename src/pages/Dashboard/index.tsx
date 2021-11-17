@@ -7,7 +7,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import CrvIcon from "assets/images/token/CRV.png";
-import CvxIcon from "assets/images/token/CVX.png";
+import CvxIcon from "assets/images/token/CVX.svg";
 import BitcoinCombo from "assets/images/token/BTC-ETH.png";
 import SolIcon from "assets/images/token/SOL.png";
 import BitcoinTwice from "assets/images/token/LUNA-BTC.png";
@@ -260,7 +260,7 @@ const Dashboard = () => {
                 <Row className="">
                   <Col>
                     <div className="tableTitle">
-                      <img src={CvxIcon} alt="Icon" /> <b> CVX </b>
+                      <img src={CvxIcon} alt="Icon" width="28"/> <b> CVX </b>
                     </div>
                   </Col>
                   <Col>
