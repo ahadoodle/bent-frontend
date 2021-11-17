@@ -82,26 +82,6 @@ export const StakeBent = (): React.ReactElement => {
 											Stake
 										</NavLink>
 									</NavItem>
-									<NavItem>
-										<NavLink
-											className={classnames({ active: activeTab === "2" })}
-											onClick={() => {
-												toggle("2");
-											}}
-										>
-											Unstake
-										</NavLink>
-									</NavItem>
-									<NavItem>
-										<NavLink
-											className={classnames({ active: activeTab === "3" })}
-											onClick={() => {
-												toggle("3");
-											}}
-										>
-											Info
-										</NavLink>
-									</NavItem>
 								</Nav>
 								<TabContent activeTab={activeTab}>
 									<TabPane tabId="1">
@@ -125,9 +105,9 @@ export const StakeBent = (): React.ReactElement => {
 																<Label>Available:-</Label>
 															</p>
 															<div className="amountinput">
-																<Input type="text" placeholder="0" />
+																<Input type="text" placeholder="0" disabled={true} />
 																<img src={TOKEN_LOGO.BENT} alt="input-logo" className="inputlogo"/>
-																<Button className="maxbtn">Max</Button>
+																<Button className="maxbtn" disabled={true} >Max</Button>
 															</div>
 															<div className="btnouter">
 																<p className="lineup"></p>

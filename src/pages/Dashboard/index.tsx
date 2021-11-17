@@ -15,7 +15,9 @@ const Dashboard = () => {
         <title>Bent Protocol | Dashboard</title>
       </Helmet>
       <div className="banner">
-        <BannerBlocks />
+        <div className="bannerboxes">
+          <BannerBlocks />
+        </div>
       </div>
 
       <div className="contentSection">
