@@ -8,14 +8,14 @@ import { ClaimCurveLpItem } from "./item";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
-	const [totalEarning, setTotalEarning] = useState<number>();
-	const earnings: number[] = [];
-	const onEarningUpdate = (index, value) => {
-		earnings[index] = value;
-		let sum = 0;
-		earnings.forEach(earning => sum += earning);
-		setTotalEarning(sum);
-	}
+	// const [totalEarning, setTotalEarning] = useState<number>();
+	// const earnings: number[] = [];
+	// const onEarningUpdate = (index, value) => {
+	// 	earnings[index] = value;
+	// 	let sum = 0;
+	// 	earnings.forEach(earning => sum += earning);
+	// 	setTotalEarning(sum);
+	// }
 
 	return (
 		<div className="cliamBlockOne">
@@ -41,7 +41,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 									<div className="earnValue">
 										<p>Earned (USD value)</p>
 										<b>
-											<span>$</span>{totalEarning}
+											<span>$</span>{0}
 										</b>
 										<i
 											className="fa fa-caret-down"
