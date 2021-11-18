@@ -186,7 +186,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 											</OutterLink>
 											&nbsp;
 											and then stake your SushiSwap {props.poolInfo.Name} LP tokens here 
-											to earn BENT and SUSHI on top of SushiSwap trading fees.
+											to earn BENT on top of SushiSwap trading fees.
 										</CardText>
 									</Card>
 								</Col>
