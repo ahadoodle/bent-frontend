@@ -31,7 +31,7 @@ export const Claim = (): React.ReactElement => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Bent Protocol | Claim</title>
+        <title>Bent Finance | Claim</title>
       </Helmet>
       <div className="banner">
         <div className="bannerboxes">

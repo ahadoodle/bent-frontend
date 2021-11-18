@@ -12,7 +12,7 @@ const Dashboard = () => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Bent Protocol | Dashboard</title>
+        <title>Bent Finance | Dashboard</title>
       </Helmet>
       <div className="banner">
         <div className="bannerboxes">
