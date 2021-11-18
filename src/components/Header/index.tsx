@@ -5,8 +5,8 @@ import {
   Container,
   Button,
   Modal, ModalBody,
-  Dropdown,
-  DropdownToggle,
+  // Dropdown,
+  // DropdownToggle,
 } from "reactstrap";
 import LogoIcon from "assets/images/logo.png";
 import MenuIcon from "assets/images/menu.svg";
@@ -30,7 +30,7 @@ const Header = (props: Props): React.ReactElement => {
 	const [theme, setTheme] = useLocalStorage('theme');
   // const [errorMessage, setErrorMessage] = useState(null);
 	const [userBalance, setUserBalance] = useState<unknown>(0);
-  const [dropdownOpen,setDropdownOpen] = useState(false);
+  // const [dropdownOpen,setDropdownOpen] = useState(false);
   const { library, account } = useActiveWeb3React();
 
   // Modal open state
@@ -39,9 +39,9 @@ const Header = (props: Props): React.ReactElement => {
   // Toggle for Modal
   const toggle = () => setModal(!modal);
 
-  const toggleDropDown = () => { setDropdownOpen(!dropdownOpen)}
-  const onMouseEnter = () => { setDropdownOpen(true) }
-  const onMouseLeave = () => {setDropdownOpen(false) }
+  // const toggleDropDown = () => { setDropdownOpen(!dropdownOpen)}
+  // const onMouseEnter = () => { setDropdownOpen(true) }
+  // const onMouseLeave = () => {setDropdownOpen(false) }
 	useEffect(() => {
 		if(!theme) setTheme('Dark');
 	}, [theme, setTheme]);
@@ -80,20 +80,20 @@ const Header = (props: Props): React.ReactElement => {
                 <li>
                   <Link to="/claim">Claim</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/lock-cvx">Lock CVX</Link>
                 </li>
                 <li>
-                <Dropdown
-                  className=""
-                  onMouseOver={onMouseEnter}
-                  onMouseLeave={onMouseLeave}
-                  isOpen={dropdownOpen}
-                  toggle={toggleDropDown}
-                >
-                  <DropdownToggle caret>More</DropdownToggle>
-                </Dropdown>
-                </li>
+                  <Dropdown
+                    className=""
+                    onMouseOver={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                    isOpen={dropdownOpen}
+                    toggle={toggleDropDown}
+                  >
+                    <DropdownToggle caret>More</DropdownToggle>
+                  </Dropdown>
+                </li> */}
               </ul>
               <span className="theme-icon" onClick={selectTheme}>
                 <img src={theme === 'Dark' ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
@@ -106,8 +106,8 @@ const Header = (props: Props): React.ReactElement => {
                   </Button>
                   <Link  to="/stake">Stake</Link>
                   <Link to="/claim">Claim</Link>
-                  <Link to="/lock-cvx">Lock CVX</Link>
-                  <Link to="/stake">More</Link>
+                  {/* <Link to="/lock-cvx">Lock CVX</Link>
+                  <Link to="/stake">More</Link> */}
                   
                   {/*<Dropdown
                   className=""

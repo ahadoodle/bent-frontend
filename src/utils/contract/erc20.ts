@@ -35,10 +35,9 @@ const approve = async (contract: Contract, account: string | null | undefined, s
 	try {
 		if(!account || !contract.options.address) return false;
 		const amountBN = utils.parseUnits(amount, 18);
-		const gas = await contract.methods.approve(spender, amountBN).estimateGas();
 		return await contract.methods.approve(spender, amountBN).send({
 			from: account,
-			gas,
+			// gas,
 			gasPrice
 		});
 	} catch (error) {

@@ -2,8 +2,8 @@ import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import ClaimIcon from "assets/images/claimIcon.svg";
 import DepositIcon from "assets/images/depositIcon.svg";
-import LockIcon from "assets/images/lockIcon.svg";
-import DbIcon from "assets/images/dbIcon.svg";
+// import LockIcon from "assets/images/lockIcon.svg";
+// import DbIcon from "assets/images/dbIcon.svg";
 
 const Tiles = (): React.ReactElement => {
   return (
@@ -11,13 +11,14 @@ const Tiles = (): React.ReactElement => {
       <Container>
         <div className="bannerboxes">
           <Row>
+            <Col md="2"></Col>
             <Col md="4" xs="6">
               <div className="boxwrap">
                 <img src={ClaimIcon} alt="Icon" />
                 <p>Total Claimable</p>
                 <h2>
                   <span>$</span>
-                  <b>467</b>.12
+                  <b>---</b>
                 </h2>
               </div>
             </Col>
@@ -27,11 +28,12 @@ const Tiles = (): React.ReactElement => {
                 <p>Total Deposit</p>
                 <h2>
                   <span>$</span>
-                  <b>511</b>.96
+                  <b>---</b>
                 </h2>
               </div>
             </Col>
-            <Col md="4">
+            <Col md="2"></Col>
+            {/* <Col md="4">
               <Row>
                 <Col md="12">
                   <div className="boxwrap smallone">
@@ -68,7 +70,7 @@ const Tiles = (): React.ReactElement => {
                   </div>
                 </Col>
               </Row>
-            </Col>
+            </Col> */}
           </Row>
         </div>
       </Container>

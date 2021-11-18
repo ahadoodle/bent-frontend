@@ -3,11 +3,19 @@ import styled from "styled-components";
 import { Row, Col, UncontrolledCollapse, Card, Button, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 // import { StakeCurveLpItem } from "./item";
-import BentLogo from 'assets/images/token/BENT.png';
+import CrvLogo from 'assets/images/token/CRV.png';
 import { ClaimCurveLpItem } from "./item";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
+	// const [totalEarning, setTotalEarning] = useState<number>();
+	// const earnings: number[] = [];
+	// const onEarningUpdate = (index, value) => {
+	// 	earnings[index] = value;
+	// 	let sum = 0;
+	// 	earnings.forEach(earning => sum += earning);
+	// 	setTotalEarning(sum);
+	// }
 
 	return (
 		<div className="cliamBlockOne">
@@ -25,15 +33,15 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 							<Row className="align-items-center">
 								<Col>
 									<div className="imgText">
-										<img src={BentLogo} alt="" width="28"/>
-										<h2>Bent Pools</h2>
+										<img src={CrvLogo} alt="" width="28"/>
+										<h2>Curve Pools</h2>
 									</div>
 								</Col>
 								<Col>
 									<div className="earnValue">
 										<p>Earned (USD value)</p>
 										<b>
-											<span>$</span>0
+											<span>$</span>{0}
 										</b>
 										<i
 											className="fa fa-caret-down"
@@ -41,14 +49,14 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 										></i>
 									</div>
 								</Col>
-								<Col>
+								{/* <Col>
 									<div className="earnValue">
 										<p>Average APR</p>
 										<b>
 											-<span>%</span>
 										</b>
 									</div>
-								</Col>
+								</Col> */}
 								<Col>
 									<h3>Deposits</h3>
 								</Col>
@@ -70,8 +78,14 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 						>
 							<Card>
 								<CardBody>
-									{ Object.keys(POOLS.BentPools).map(poolName =>
-										<ClaimCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName} />)
+									{ Object.keys(POOLS.BentPools).map((poolName, index) =>
+										<ClaimCurveLpItem
+											poolInfo={POOLS.BentPools[poolName]}
+											poolKey={poolName}
+											key={poolName}
+											// poolIndex={index}
+											// updateEarning={onEarningUpdate}
+										/>)
 									}
 								</CardBody>
 							</Card>

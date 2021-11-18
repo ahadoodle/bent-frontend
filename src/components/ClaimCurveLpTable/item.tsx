@@ -10,37 +10,62 @@ import {
 	useBentPoolContract,
 	useGasPrice
 } from "hooks";
-import { ERC20, BentPasePool, formatBigNumber } from "utils";
-import { BigNumber } from 'ethers';
-import { Pool } from "constant";
+import { ERC20, BentBasePool, formatBigNumber, getPrice } from "utils";
+import { BigNumber, utils } from 'ethers';
+import { BentPool, TOKENS } from "constant";
 
 interface Props {
-	poolInfo: Pool
+	// poolIndex: number
+	poolInfo: BentPool
 	poolKey: string
+	// updateEarning: (i, e) => void
 }
 
 export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [symbol, setSymbol] = useState<string>('');
 	const [deposit, setDeposit] = useState(0);
+	const [rewards, setRewards] = useState<number[]>([]);
+	const [estRewards, setEstRewards] = useState<number[]>([]);
 	const { account } = useActiveWeb3React();
 	const blockNumber = useBlockNumber();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
 
+	const totalEarned = () => {
+		let sum = BigNumber.from(0);
+		estRewards.forEach(reward => {
+			sum = sum.add(utils.parseUnits(reward.toString()).div(BigNumber.from(10).pow(18)))
+		})
+		return sum;
+	}
+
 	useEffect(() => {
 		Promise.all([
 			ERC20.getSymbol(depositTokenContract),
-			BentPasePool.getDepositedAmount(bentPool, account)
-		]).then(([symbol, depositedLp]) => {
+			BentBasePool.getDepositedAmount(bentPool, account),
+			BentBasePool.getPendingReward(bentPool, account),
+			getPrice(props.poolInfo.RewardsAssets.map(key => {
+				return TOKENS[key].ADDR;
+			}), 'usd'),
+		]).then(([symbol, depositedLp, rewards, rTokenPrices]) => {
 			setSymbol(symbol);
 			setDeposit(depositedLp);
+			setRewards(rewards);
+			setEstRewards(props.poolInfo.RewardsAssets.map((key, index) => {
+				const addr = TOKENS[key].ADDR.toLowerCase();
+				if(rTokenPrices[addr] && rewards[index]) {
+					return parseFloat(rewards[index].toString()) * rTokenPrices[addr]['usd'];
+				} else
+					return 0;
+			}));
+			// props.updateEarning(props.poolIndex, totalEarned());
 		})
-	}, [depositTokenContract, bentPool, blockNumber, account])
+	}, [depositTokenContract, bentPool, blockNumber, account, props.poolInfo.RewardsAssets, props])
 
 	const claim = async () => {
-		await BentPasePool.harvest(bentPool, account, gasPrice);
+		await BentBasePool.harvest(bentPool, account, gasPrice);
 	}
 
 	return (
@@ -61,10 +86,11 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							<span>$</span>0
+							<span>$</span>
+							{formatBigNumber(totalEarned())}
 						</b>
 					</Col>
-					<Col>
+					{/* <Col>
 						<div className="earnValue">
 							<b>
 								6.56% <span>(proj.6.74%)</span>
@@ -75,7 +101,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 								aria-hidden="true"
 							></i>
 						</div>
-					</Col>
+					</Col> */}
 					<Col>
 						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
 					</Col>
@@ -101,22 +127,27 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 								<p>Breakdown of claimable earnings:</p>
 							</Col>
 						</Row>
-						<Row className="align-items-center">
-							<Col>
-								<div className="imgText">
-									<img src={props.poolInfo.LOGO} alt="" />
-									<h4>Chainlink</h4>
-								</div>
-							</Col>
-							<Col>
-								<b>
-									<span>$</span>0
-								</b>
-							</Col>
-							<Col> </Col>
-							<Col> </Col>
-							<Col> </Col>
-						</Row>
+						{ props.poolInfo.RewardsAssets.map((tokenKey, index) => 
+							<Row className="align-items-center mb-1" key={tokenKey} >
+								<Col>
+									<div className="imgText">
+										<img src={TOKENS[tokenKey].LOGO} alt="" width="28"/>
+										<h4>{tokenKey}</h4>
+									</div>
+								</Col>
+								<Col>
+									<b>
+										{formatBigNumber(BigNumber.from(rewards[index] || 0))}
+										<span className="small text-bold"> {tokenKey}</span>
+									</b>
+									<span className="small text-muted"> ≈ ${
+										estRewards[index] ? formatBigNumber(utils.parseUnits(estRewards[index].toString()).div(BigNumber.from(10).pow(18))) : 0
+									}</span>
+								</Col>
+								<Col></Col>
+								<Col></Col>
+							</Row>
+						)}
 					</CardBody>
 				</Card>
 			</InnerWrapper>

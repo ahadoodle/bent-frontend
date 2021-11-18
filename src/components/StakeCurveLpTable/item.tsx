@@ -6,13 +6,13 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentPasePool } from "utils";
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink } from "utils";
 import { BigNumber, utils } from 'ethers';
 import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
-import { Pool } from "constant";
+import { BentPool, TOKENS } from "constant";
 
 interface Props {
-	poolInfo: Pool
+	poolInfo: BentPool
 	poolKey: string
 }
 
@@ -37,7 +37,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			ERC20.getSymbol(depositTokenContract),
 			ERC20.getBalanceOf(depositTokenContract, account),
 			ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL),
-			BentPasePool.getDepositedAmount(bentPool, account)
+			BentBasePool.getDepositedAmount(bentPool, account)
 		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
@@ -60,7 +60,15 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const onWithdrawAmountChange = (value) => {
 		setWithdrawAmount(value);
 	}
-	
+
+	const onStakeMax = () => {
+		setStakeAmount(formatBigNumber(BigNumber.from(lpBalance), 18, 18).replaceAll(',', ''));
+	}
+
+	const onWithdrawMax = () => {
+		setWithdrawAmount(formatBigNumber(BigNumber.from(deposit), 18, 18).replaceAll(',', ''));
+	}
+
 	const approve = async () => {
 		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount, gasPrice);
 		if(res) {
@@ -69,7 +77,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const stake = async () => {
-		const res = await BentPasePool.stake(bentPool, account, stakeAmount, gasPrice);
+		const res = await BentBasePool.stake(bentPool, account, stakeAmount, gasPrice);
 		if(res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -77,7 +85,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const withdraw = async () => {
-		const res = await BentPasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
+		const res = await BentBasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
 		if(res) {
 			setWithdrawAmount('')
 		}
@@ -103,7 +111,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<span>$</span>0
 					</Col>
-					<Col>
+					{/* <Col>
 						<div className="earnValue">
 							<b>
 								6.56% <span>(proj.6.74%)</span>
@@ -114,13 +122,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								aria-hidden="true"
 							></i>
 						</div>
-					</Col>
+					</Col> */}
 					<Col>
 						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<span>$</span>220.70m
+							<span>$</span>---
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
@@ -160,7 +168,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								<Col md="6" className="inverse">
 									<Card body>
 										<CardText>
-											Deposit liquidity into the {props.poolInfo.Name} pool (without staking in the Curve gauge),
+											Deposit liquidity into the &nbsp;
+											<OutterLink href={getCrvDepositLink(props.poolInfo.Name)} target="_blank">
+												Curve {props.poolInfo.Name} pool
+											</OutterLink>
+											&nbsp;(without staking in the Curve gauge),
 											and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
 										</CardText>
 									</Card>
@@ -184,13 +196,14 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 													</Label>
 													<Label>Available:{formatBigNumber(BigNumber.from(lpBalance))}</Label>
 												</p>
-												<div className="amutinput">
+												<div className="amountinput">
 													<Input
 														type="number" placeholder="0"
 														onChange={(e) => onStakeAmountChange(e.target.value)}
 														value={stakeAmount}
 													/>
-													<Button className="maxbtn">Max</Button>
+													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
+													<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 												</div>
 												<div className="btnouter">
 													<p className="lineup"></p>
@@ -242,13 +255,14 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 													</Label>
 													<Label>Deposited:{formatBigNumber(BigNumber.from(deposit))}</Label>
 												</p>
-												<div className="amutinput">
+												<div className="amountinput">
 													<Input
 														type="number" placeholder="0"
 														onChange={(e) => onWithdrawAmountChange(e.target.value)}
 														value={withdrawAmount}
 													/>
-													<Button className="maxbtn">Max</Button>
+													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
+													<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 												</div>
 											</div>
 											<div className="amount-crv" style={{marginLeft: 20}}>
@@ -278,27 +292,21 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									<Card body>
 										<div className="infoWrap card-text mt-4">
 											<p>
-												CRV token address:{" "}
+												BENT token address:{" "}
 												<Link to="/stake">
-													0xd533a949740bb3306d119cc777fa900ba034cd52
-												</Link>
-											</p>
-											<p>
-												cvxCRV token address:{" "}
-												<Link to="/stake">
-													0xd533a949740bb3306d119cc777fa900ba034cd52
+													{TOKENS.BENT.ADDR}
 												</Link>
 											</p>
 											<p>
 												Deposit contract address:{" "}
 												<Link to="/stake">
-													0xd533a949740bb3306d119cc777fa900ba034cd52
+													{bentPool.options.address}
 												</Link>
 											</p>
 											<p>
 												Rewards contract address:{" "}
 												<Link to="/stake">
-													0xd533a949740bb3306d119cc777fa900ba034cd52
+													{bentPool.options.address}
 												</Link>
 											</p>
 										</div>
@@ -326,4 +334,12 @@ const Wrapper = styled.div<{collapsed : boolean }>`
 const InnerWrapper = styled(UncontrolledCollapse)`
 	background: #CAB8FF;
 	border: unset;
+`;
+
+const OutterLink = styled.a`
+	color: #703FFF;
+	&:hover {
+		color: #703FFF;
+	}
+	text-decoration: unset;
 `;
