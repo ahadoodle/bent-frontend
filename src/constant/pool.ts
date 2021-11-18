@@ -62,13 +62,12 @@ const SushiPools: {
 	MasterChef: '0x5343068e12E397bc67Bfd2509C703feBAA60b342',
 	Pools: {
 		BENT_ETH: {
-			LOGO: [TOKEN_LOGO.BENT, TOKEN_LOGO.ETH],
-			Name: 'BENT/ETH',
+			LOGO: [TOKEN_LOGO.CRV, TOKEN_LOGO.ETH],
+			Name: 'CRV/ETH',
 			PoolId: 0,
-			DepositAsset: '0x1c85638e118b37167e9298c2268758e058DdfDA0',
+			DepositAsset: '0x58Dc5a51fE44589BEb22E8CE67720B5BC5378009',
 			RewardsAssets: ['BENT'],
-			DepositLink: '',
-			// DepositLink: 'https://app.sushi.com/add/0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B/ETH';
+			DepositLink: 'https://app.sushi.com/add/0xD533a949740bb3306d119CC777fa900bA034cd52/ETH'
 		}
 	}
 }
