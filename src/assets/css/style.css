@@ -36,10 +36,19 @@ ul.primaryMenu li {
     margin: 10px 25px;
 }
 ul.primaryMenu {
+    border-left: 1.5px solid #3A3F45;
     display: flex;
+    margin-left: 50px;
     margin-bottom: 0;
     padding: 0px;
     list-style: none; 
+}
+.theme-icon {
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: 28px;
+    cursor: pointer;
 }
 .tokentable .fa-info-circle {
     position: absolute;
@@ -273,22 +282,55 @@ table.tokentable.table thead th {
     line-height: 50px;
     padding: .5rem 1.5rem;
 }
-table.tokentable.table thead {
-    background: #B5DEFF;
-    border-radius: 8px;
-    padding: 10px 15px;
-    overflow: hidden;
-}
 table.tokentable.table tbody {
     background: #fff;
 }
-table.tokentable.table {
+.tokentable.table {
     vertical-align: middle;
     border: 3px solid #10151D;
     border-radius: 8px;
     border-collapse: separate;
     border-spacing: 0;
     box-shadow: 10px 15px 0px 0px #10151d;
+}
+.tokentable.table .thead {
+    margin: 0;
+    background: #B5DEFF;
+    border-radius: 8px;
+    padding: 10px 15px;
+    overflow: hidden;
+}
+.tokentable.table .card-body {
+    padding: 0;
+}
+.tokentable.table .card-body .bentInner {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: #10151D;
+    margin-bottom: 0 !important;
+    padding: 15px 12px;
+}
+.tokentable.table .card-body .bentInner:hover,
+.tokentable.table .card-body .bentInner:focus {
+    background: #CAB8FF;
+    border: none;
+    color: #10151D;
+    box-shadow: none;
+}
+.tokentable.table .card-body .nav-link {
+    cursor: pointer;
+    color: #6E7889;
+    background: unset;
+    border: unset;
+    padding: 30px 15px;
+}
+.tokentable.table .card-body .nav-link.active {
+    font-weight: bold;
+    color: black;
+    background: unset;
+    border: unset;
 }
 button.btn.btnshow {
     margin: auto;
@@ -332,8 +374,7 @@ table.tokentable.table thead tr:hover {
 .tvlText i.fa.fa-caret-down {
     position: absolute;
     right: 30px;
-    font-size: 30px;  
-    opacity: 0;
+    font-size: 30px;
 }
 table.tokentable.table td {
     border: none;
@@ -501,13 +542,24 @@ span.textadvance {
     letter-spacing: -0.24px;
     color: #10151D;
 }
-.amutinput input {
+.amountinput input {
     padding-left: 50px;
-    background-image: url(../images/crvIcon.png);
     background-repeat: no-repeat;
     background-position: 6px center;
     border: 3px solid #10151D;
     border-radius: 4px;
+}
+.amountinput img.inputlogo {
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    width: 28px;
+}
+.amountinput img.inputlogo-second {
+    position: absolute;
+    left: 22px;
+    top: 7px;
+    width: 28px;
 }
 table.tokentable.table tbody tr:first-child td:first-child {
     border-top-left-radius: 8px;
@@ -536,7 +588,7 @@ button.maxbtn {
     letter-spacing: -0.141818px;
     color: #10151D;
 }
-.amutinput {
+.amountinput {
     position: relative;
 }
 .btnwrapper {
@@ -552,13 +604,18 @@ button.approvebtn.btn.btn-secondary {
     line-height: 19px;
     text-align: center;
     letter-spacing: -0.24px;
-    color: #9BA2AC;
-    background: transparent;
+    background-color: #C1FFD7;
+    color: #10151D;
     border-radius: 4px;
     border: 2px solid #9BA2AC;
     width: 185px;
     height: 42px;
     padding: 5px 5px 8px;
+}
+button.approvebtn.btn.btn-secondary.disabled {
+    color: #9BA2AC;
+    background: transparent;
+    border: 2px solid #9BA2AC;
 }
 .lineup {
     width: 65%;
@@ -618,10 +675,134 @@ button.btn.btnshow i {
 .convert-up.cvxSection {
     margin-top: 120px;
 }
-.cvxSection .amutinput input {
-    background-image: url(../images/cvxIcon.png);
+.Dark .contentSection {
+    background: #253143;
+}
+.Dark .boxwrap h2, .Dark .boxwrap p, .Dark .converttabs a.active.nav-link,
+.Dark .converttabs p.card-text, .Dark .converttabs label, .Dark  h2.black,
+.Dark table.tokentable.table td, .Dark .currentText h3, .Dark .currentText p, 
+.Dark li.addreesAdd, .Dark .tableText h4, .Dark .tableText b,
+.Dark .infoWrap p, .Dark .innerWrapother .imgText h4, .Dark .innerWrapother, 
+.Dark p.epsText, .Dark .innerAccordian p, .Dark .innerAccordian .imgText h4,
+.Dark .innerAccordian {
+	color: #fff;
+}
+.Dark .boxwrap,.Dark .converttabs,.Dark .card, .Dark .convert-table {
+    background: #374559;
+}
+.Dark table.tokentable.table tr:hover td {
+	color: #10151D;
+}
+.Dark .converttabs {
+	
+}
+.Dark .amountinput input {
+    border: 3px solid #fff;
+    background-color: transparent;
+}
+.Dark span.textadvance {
+    bottom: 0px;
+}
+.Dark button.maxbtn {
+    box-shadow: 2px 2px 0px 0px #c1ffd7;
+    background: transparent;
+    border: 2px solid #C1FFD7;
+    color: #C1FFD7;
+}
+.Dark table.tokentable.table tbody tr:first-child td {
+    border-top: 3px solid #414c5c;
+}
+.Dark table.tokentable.table tbody {
+    background: #18202C;
+	color:#fff;
+}
+.Dark table.tokentable.table {
+    border: 3px solid #607390;
+    box-shadow: 10px 15px 0px 0px #607390;
+}
+.Dark .converttabs {
+    border: 3px solid #607390;	
+	box-shadow: 10px 15px 0px 0px #607390;
+}
+.Dark .convert-table {
+	box-shadow: 10px 15px 0px 0px #607390;
+}
+.Dark .convert-table {
+	border: none;	
+}
+.Dark .delegateBox {
+    background: #B5DEFF;
+    border-radius: 8px;
+}
+.Dark .currentLock {
+	background: #374559;
+	border: 3px solid #607390;
+    box-shadow: 10px 15px 0px 0px #607390;
+}
+.Dark .delegateBox .convert-table,
+.Dark .lockInner .convert-table {
+	background: #B5DEFF;
+}
+.Dark button.btn.btnshow {
+	background: transparent;
+    border: 3px solid #C1FFD7;
+    box-shadow: 4px 4px 0px #C1FFD7;
+	color: #C1FFD7;
+}
+.Dark .convert-up .convert-table {
+	background: #B5DEFF;
+}
+.Dark .convert-tableTitle {
+    background: #B5DEFF;
+    border-radius: 8px 8px 0 0;
+}
+.Dark .delegateWrap input {
+	background: transparent;
+	border-color: #fff;	
+}
+.Dark .delegateWrap button.btn.btn-secondary, .Dark button.claimbtn.btn.btn-secondary {
+	background: transparent;
+    color: #C1FFD7;
+    border: 2px solid #C1FFD7;
+    box-shadow: 4px 4px 0 #C1FFD7;
+}
+.Dark .claimText {
+	background: #253143;
+}
+.Dark .innerWrapother {
+    background-color: #18202C;
+}
+.Dark .cliamBlockOne {
+    border: 3px solid #607390;
+    box-shadow: 10px 15px 0px 0px #607390;
+}
+.Dark .bentpoolText {
+    border: 3px solid #607390;
+}
+.Dark .innerWrap .card-body {
+	    border-top: 1px solid #fff;
+}
+.primaryMenu .dropdown-toggle {
+    background-color: transparent!important;
+    border: 0px;
+    padding: 0px;
+    color: #8D99AB!important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-decoration: none;
+    margin-top: -5px;
+}
+.primaryMenu .dropdown-toggle:hover {
+    background-color: transparent!important;
+    border: 0px;
+}
+.primaryMenu .dropdown-item:hover {
+    background-color: transparent!important;
 }
 
+/* Dark Theme Css End */
 /* Claim page css start */
 
 .bannerBlockWrap {
@@ -1007,8 +1188,8 @@ button.claimbtn.btn.btn-secondary {
     font-size: 16px;
     line-height: 19px;
 }
-.innerWrap {
-    background: rgba(202, 184, 255, 0.6);
+.innerWrap:hover {
+    background: #CAB8FF;
 }
 .innerWrap .card {
     border-top: none;
@@ -1463,6 +1644,31 @@ ul.primaryMenu {
 }
 .mobileHeader {
     display: inline-block;
+}
+.mobileHeader .dropdown-toggle {
+    background-color: transparent!important;
+    border: 0px!important;
+    padding: 0px;
+    color: #8D99AB!important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-decoration: none;
+    margin-top: -5px;
+}
+.mobileHeader .dropdown {
+    padding: 8px 8px 8px 32px;
+}
+.mobileHeader .dropdown-toggle:hover {
+    background-color: transparent!important;
+    border: 0px!important;
+}
+.btn-secondary.dropdown-toggle:focus {
+    box-shadow: none!important;
+}
+.mobileHeader .dropdown-item:hover {
+    background-color: transparent!important;
 }
 button.btn.btn-secondary.wallet {
     width: 148px;

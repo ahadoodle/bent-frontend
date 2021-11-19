@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ "**" ]
   pull_request:
     branches: [ main, develop ]
 
@@ -27,5 +27,5 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
       env:
-       CI: false #TODO REMOVE, see #6
-#    - run: npm test #TODO enable, see #5
+       CI: true 
+    - run: npm test 
