@@ -20,7 +20,7 @@ import classnames from "classnames";
 import CrvIcon from "assets/images/token/CRV.png";
 import BitCoin from "assets/images/token/BTC.png";
 import UsdIcon from "assets/images/token/USDT.png";
-import EthereumIcon from "assets/images/token/ETH.png";
+import EthereumIcon from "assets/images/token/ETH.svg";
 import BusdIcon from "assets/images/token/BUSD.png";
 import LockIcon from "assets/images/purpleLock.png";
 import BannerBlocks from "components/BannerBlocks";
