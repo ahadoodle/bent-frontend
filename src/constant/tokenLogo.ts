@@ -10,6 +10,7 @@ import AlcxLogo from 'assets/images/token/ALCX.svg';
 import SushiLogo from 'assets/images/token/SUSHI.png';
 import FxsLogo from 'assets/images/token/FXS.svg';
 import SpellLogo from 'assets/images/token/SPELL.svg';
+import DaiLogo from 'assets/images/token/DAI.svg';
 
 export const TOKEN_LOGO = {
 	ALCX: AlcxLogo,
@@ -24,4 +25,5 @@ export const TOKEN_LOGO = {
 	TRICRYPTO2: TriCrypto2Logo,
 	SPELL: SpellLogo,
 	FXS: FxsLogo,
+	DAI: DaiLogo,
 }
