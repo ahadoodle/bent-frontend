@@ -62,11 +62,11 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								</Col>
 								<Col>
 									<div className="clmBtn">
-										<Button className="claimbtn">Claim All</Button>
+										{/* <Button className="claimbtn">Claim All</Button>
 										<i
 											className="fa fa-caret-down"
 											aria-hidden="true"
-										></i>
+										></i> */}
 									</div>
 								</Col>
 							</Row>

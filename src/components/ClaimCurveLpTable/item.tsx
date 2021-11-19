@@ -41,6 +41,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 		return sum;
 	}
 
+	const haveRewards = () => {
+		let enable = false;
+		rewards.forEach(reward => enable = rewards.toString() === '0');
+		return enable;
+	}
+
 	useEffect(() => {
 		Promise.all([
 			ERC20.getSymbol(depositTokenContract),
@@ -107,7 +113,11 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="climBtn">
-							<Button className="claimbtn" onClick={claim}>Claim</Button>
+							<Button
+								className="claimbtn"
+								onClick={claim}
+								disabled={!haveRewards()}
+							>Claim</Button>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
