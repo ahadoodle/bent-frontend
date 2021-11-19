@@ -1134,6 +1134,11 @@ button.bentInner:hover, button.bentInner:focus {
     letter-spacing: -0.24px;
     margin-bottom: 0;
 }
+.claimbtn:disabled {
+    color: #9BA2AC;
+    background: transparent !important;
+    border: 2px solid #9BA2AC;
+}
 button.claimbtn.btn.btn-secondary {
     font-style: normal;
     font-weight: bold;

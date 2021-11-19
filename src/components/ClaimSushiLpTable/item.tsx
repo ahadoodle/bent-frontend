@@ -46,6 +46,10 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
 	}
 
+	const haveRewards = () => {
+		return !BigNumber.from(pendingRewards).isZero();
+	}
+
 	return (
 		<div className="innerWrap p-0 pt-1 pb-1">
 			<Wrapper
@@ -85,7 +89,11 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="climBtn">
-							<Button className="claimbtn" onClick={claim}>Claim</Button>
+							<Button
+								className="claimbtn"
+								onClick={claim}
+								disabled={!haveRewards()}
+							>Claim</Button>
 							{/* <i
 								className="fa fa-caret-down"
 								aria-hidden="true"

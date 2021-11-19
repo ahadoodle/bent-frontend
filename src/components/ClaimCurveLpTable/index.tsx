@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Row, Col, UncontrolledCollapse, Card, Button, CardBody } from "reactstrap";
+import { Row, Col, UncontrolledCollapse, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 // import { StakeCurveLpItem } from "./item";
 import CrvLogo from 'assets/images/token/CRV.png';
@@ -62,11 +62,11 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								</Col>
 								<Col>
 									<div className="clmBtn">
-										<Button className="claimbtn">Claim All</Button>
+										{/* <Button className="claimbtn">Claim All</Button>
 										<i
 											className="fa fa-caret-down"
 											aria-hidden="true"
-										></i>
+										></i> */}
 									</div>
 								</Col>
 							</Row>
