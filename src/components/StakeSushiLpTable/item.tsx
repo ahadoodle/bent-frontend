@@ -38,6 +38,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [deposit, setDeposit] = useState(0);
+	const [stakedUsd, setStakedUsd] = useState(BigNumber.from(0));
 	const [tvl, setTvl] = useState(BigNumber.from(0));
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
@@ -74,8 +75,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDeposit(depositedLp.amount);
-			const tvl = BigNumber.from(poolReserveBalance).mul(2).mul(poolLpBalance).mul(BigNumber.from(reservePrices[props.poolInfo.ReservePriceAsset]['usd'] * 10000)).div(lpTotalSupply).div(10000)
-			setTvl(tvl);
+			setTvl(BigNumber.from(poolReserveBalance).mul(2).mul(poolLpBalance)
+				.mul(utils.parseEther(reservePrices[props.poolInfo.ReservePriceAsset]['usd'].toString()))
+				.div(lpTotalSupply).div(BigNumber.from(10).pow(18)));
+			setStakedUsd(BigNumber.from(poolReserveBalance).mul(2).mul(depositedLp.amount)
+				.mul(utils.parseEther(reservePrices[props.poolInfo.ReservePriceAsset]['usd'].toString()))
+				.div(lpTotalSupply).div(BigNumber.from(10).pow(18)));
 		})
 	}, [depositTokenContract, account, blockNumber, masterChef, reserveTokenContract, props.poolInfo.PoolId, props.poolInfo.ReservePriceAsset])
 
@@ -154,7 +159,13 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col> */}
 					<Col>
-						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
+						<b>
+							{formatBigNumber(BigNumber.from(deposit))}
+							<span className="small text-bold"> {symbol}</span>
+						</b>
+						<span className="small text-muted"> ≈ ${
+							formatBigNumber(BigNumber.from(stakedUsd))
+						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
