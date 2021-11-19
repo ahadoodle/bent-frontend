@@ -21,6 +21,16 @@ const getAllowance = async (contract: Contract, account: string | null | undefin
 	}
 }
 
+const getTotalSupply = async (contract: Contract): Promise<number> => {
+	try {
+		if(!contract.options.address) return 0;
+		return await contract.methods.totalSupply().call();
+	} catch (error) {
+		console.error(error);
+		return 0;
+	}
+}
+
 const getSymbol = async (contract: Contract): Promise<string> => {
 	try {
 		if(!contract.options.address) return '';
@@ -50,5 +60,6 @@ export const ERC20 = {
 	getSymbol,
 	getBalanceOf,
 	getAllowance,
+	getTotalSupply,
 	approve,
 }
