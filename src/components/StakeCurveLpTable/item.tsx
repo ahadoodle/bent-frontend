@@ -63,7 +63,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 
 	const onStakeMax = () => {
 		const lpBN = BigNumber.from(lpBalance);
-		setStakeAmount(formatBigNumber(lpBN, 18, 18).replaceAll(',', ''));
+		setStakeAmount(formatBigNumber(lpBN, 18, 8).replaceAll(',', ''));
 		setIsApproved(BigNumber.from(allowance).gte(lpBN) && !lpBN.isZero());
 	}
 
