@@ -62,9 +62,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onStakeMax = () => {
-		const lpBN = BigNumber.from(lpBalance);
-		setStakeAmount(formatBigNumber(lpBN, 18, 8).replaceAll(',', ''));
-		setIsApproved(BigNumber.from(allowance).gte(lpBN) && !lpBN.isZero());
+		const lpBalance_display = BigNumber.from(lpBalance);
+		setStakeAmount(formatBigNumber(lpBalance_display, 18, 8).replaceAll(',', ''));
+		setIsApproved(BigNumber.from(allowance).gte(lpBalance_display) && !lpBalance_display.isZero());
 	}
 
 	const onWithdrawMax = () => {
