@@ -43,7 +43,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 
 	const haveRewards = () => {
 		let enable = false;
-		rewards.forEach(reward => enable = rewards.toString() === '0');
+		rewards.forEach(reward => enable = enable || reward.toString() !== '0');
 		return enable;
 	}
 
