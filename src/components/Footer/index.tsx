@@ -17,7 +17,7 @@ const Footer = (): React.ReactElement => {
                   </Link>
                 </div>
                 <p>
-                  Bent is a staking and farming platform to effortlessly grow your crypto
+                  Bent is a staking and farming platform to enhance your curve returns, by the people for teh ppl.
                 </p>
               </div>
               <Col sm="12 mt-auto mb-3">
@@ -54,7 +54,7 @@ const Footer = (): React.ReactElement => {
                     <Link to="/">Discord</Link>
                   </li>
                   <li>
-                    <Link to="/">Telegram announcements</Link>
+                    <Link to="/">Telegram Announcements</Link>
                   </li>
                   <li>
                     <Link to="/">Telegram Chat</Link>
