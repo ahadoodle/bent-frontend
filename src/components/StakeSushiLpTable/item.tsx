@@ -97,7 +97,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 
 	const onStakeMax = () => {
 		const lpBalance_display = BigNumber.from(lpBalance);
-		setStakeAmount(formatBigNumber(lpBalance_display, 18, 8).replaceAll(',', ''));
+		setStakeAmount(formatBigNumber(lpBalance_display, 18, 18).replaceAll(',', ''));
 		setIsApproved(BigNumber.from(allowance).gte(lpBalance_display) && !lpBalance_display.isZero());
 	}
 
