@@ -18,7 +18,8 @@ import {
 import {
 	formatBigNumber,
 	ERC20,
-	BentMasterChef
+	BentMasterChef,
+	getPrice
 } from "utils";
 
 
@@ -37,8 +38,11 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [deposit, setDeposit] = useState(0);
+	const [stakedUsd, setStakedUsd] = useState(BigNumber.from(0));
+	const [tvl, setTvl] = useState(BigNumber.from(0));
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
+	const reserveTokenContract = useERC20Contract(props.poolInfo.ReservePriceAsset);
 	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
 	const blockNumber = useBlockNumber();
@@ -52,14 +56,33 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			ERC20.getSymbol(depositTokenContract),
 			ERC20.getBalanceOf(depositTokenContract, account),
 			ERC20.getAllowance(depositTokenContract, account, POOLS.SushiPools.MasterChef),
-			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId)
-		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
+			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId),
+			ERC20.getBalanceOf(reserveTokenContract, depositTokenContract.options.address),
+			ERC20.getBalanceOf(depositTokenContract, masterChef.options.address),
+			ERC20.getTotalSupply(depositTokenContract),
+			getPrice([props.poolInfo.ReservePriceAsset], 'usd')
+		]).then(([
+			depositSymbol,
+			availableLp,
+			allowance,
+			depositedLp,
+			poolReserveBalance,
+			poolLpBalance,
+			lpTotalSupply,
+			reservePrices
+		]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDeposit(depositedLp.amount);
+			setTvl(BigNumber.from(poolReserveBalance).mul(2).mul(poolLpBalance)
+				.mul(utils.parseEther(reservePrices[props.poolInfo.ReservePriceAsset]['usd'].toString()))
+				.div(lpTotalSupply).div(BigNumber.from(10).pow(18)));
+			setStakedUsd(BigNumber.from(poolReserveBalance).mul(2).mul(depositedLp.amount)
+				.mul(utils.parseEther(reservePrices[props.poolInfo.ReservePriceAsset]['usd'].toString()))
+				.div(lpTotalSupply).div(BigNumber.from(10).pow(18)));
 		})
-	}, [depositTokenContract, account, blockNumber, masterChef, props.poolInfo.PoolId])
+	}, [depositTokenContract, account, blockNumber, masterChef, reserveTokenContract, props.poolInfo.PoolId, props.poolInfo.ReservePriceAsset])
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
@@ -73,7 +96,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onStakeMax = () => {
-		setStakeAmount(formatBigNumber(BigNumber.from(lpBalance), 18, 8).replaceAll(',', ''));
+		const lpBalance_display = BigNumber.from(lpBalance);
+		setStakeAmount(formatBigNumber(lpBalance_display, 18, 18).replaceAll(',', ''));
+		setIsApproved(BigNumber.from(allowance).gte(lpBalance_display) && !lpBalance_display.isZero());
 	}
 
 	const onWithdrawMax = () => {
@@ -136,11 +161,17 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col> */}
 					<Col>
-						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
+						<b>
+							{formatBigNumber(BigNumber.from(deposit))}
+							<span className="small text-bold"> {symbol}</span>
+						</b>
+						<span className="small text-muted"> ≈ ${
+							formatBigNumber(BigNumber.from(stakedUsd))
+						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<span>$</span>---
+							<b><span>$ {formatBigNumber(tvl)}</span></b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

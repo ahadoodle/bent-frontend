@@ -1,4 +1,4 @@
-import { TOKEN_LOGO } from 'constant';
+import { TOKENS, TOKEN_LOGO } from 'constant';
 
 export interface BentPool {
 	LOGO: string;
@@ -53,6 +53,7 @@ export interface SushiPool {
 	DepositAsset: string;
 	RewardsAssets: string[];
 	DepositLink: string;
+	ReservePriceAsset: string;
 }
 
 const SushiPools: {
@@ -67,7 +68,8 @@ const SushiPools: {
 			PoolId: 0,
 			DepositAsset: '0x5fa4370164a2fabeef159b893299d59ff5dc1e6d',
 			RewardsAssets: ['BENT'],
-			DepositLink: 'https://app.sushi.com/add/0x01597E397605Bf280674Bf292623460b4204C375/0x6b175474e89094c44da98b954eedeac495271d0f'
+			DepositLink: 'https://app.sushi.com/add/0x01597E397605Bf280674Bf292623460b4204C375/0x6b175474e89094c44da98b954eedeac495271d0f',
+			ReservePriceAsset: TOKENS.DAI.ADDR
 		}
 	}
 }
