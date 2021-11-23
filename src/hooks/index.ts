@@ -5,3 +5,4 @@ export * from './useWeb3';
 export * from './useContract';
 export * from './useDebounce';
 export * from 'state/application/hooks';
+export * from 'state/price/hooks';

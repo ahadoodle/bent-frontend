@@ -72,10 +72,54 @@ const getPendingRewards = async (contract: Contract, account: string | null | un
 	}
 }
 
+const getRewardPerBlock = async (contract: Contract): Promise<number> => {
+	try {
+		if(!contract.options.address) return 0;
+		return await contract.methods.rewardPerBlock().call();
+	} catch (error) {
+		console.error(error);
+		return 0;
+	}
+}
+
+const getTotalAllocPoint = async (contract: Contract): Promise<number> => {
+	try {
+		if(!contract.options.address) return 0;
+		return await contract.methods.totalAllocPoint().call();
+	} catch (error) {
+		console.error(error);
+		return 0;
+	}
+}
+
+const getPoolInfo = async (contract: Contract, poolId: number): Promise<{
+	lpToken: string;
+	allocPoint: number;
+	lastRewardBlock: number;
+	accRewardPerShare: number;
+}> => {
+	const defaultRes = {
+		lpToken: '',
+		allocPoint: 0,
+		lastRewardBlock: 0,
+		accRewardPerShare: 0
+	}
+	try {
+		if(!contract.options.address) return defaultRes;
+		return await contract.methods.poolInfo(poolId).call();
+	} catch (error) {
+		console.error(error);
+		return defaultRes;
+	}
+}
+
 export const BentMasterChef = {
 	stake,
 	withdraw,
 	claim,
 	getDepositedAmount,
 	getPendingRewards,
+	getRewardPerBlock,
+	getTotalAllocPoint,
+	getPoolInfo,
 }

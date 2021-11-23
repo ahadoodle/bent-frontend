@@ -8,9 +8,10 @@ import {
 	useBlockNumber,
 	useERC20Contract,
 	useBentPoolContract,
-	useGasPrice
+	useGasPrice,
+	useTokenPrices
 } from "hooks";
-import { ERC20, BentBasePool, formatBigNumber, getPrice } from "utils";
+import { ERC20, BentBasePool, formatBigNumber } from "utils";
 import { BigNumber, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
 
@@ -32,6 +33,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
+	const tokenPrices = useTokenPrices();
 
 	const totalEarned = () => {
 		let sum = BigNumber.from(0);
@@ -52,23 +54,20 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 			ERC20.getSymbol(depositTokenContract),
 			BentBasePool.getDepositedAmount(bentPool, account),
 			BentBasePool.getPendingReward(bentPool, account),
-			getPrice(props.poolInfo.RewardsAssets.map(key => {
-				return TOKENS[key].ADDR;
-			}), 'usd'),
-		]).then(([symbol, depositedLp, rewards, rTokenPrices]) => {
+		]).then(([symbol, depositedLp, rewards]) => {
 			setSymbol(symbol);
 			setDeposit(depositedLp);
 			setRewards(rewards);
 			setEstRewards(props.poolInfo.RewardsAssets.map((key, index) => {
 				const addr = TOKENS[key].ADDR.toLowerCase();
-				if(rTokenPrices[addr] && rewards[index]) {
-					return parseFloat(rewards[index].toString()) * rTokenPrices[addr]['usd'];
+				if(tokenPrices[addr] && rewards[index]) {
+					return parseFloat(rewards[index].toString()) * tokenPrices[addr];
 				} else
 					return 0;
 			}));
 			// props.updateEarning(props.poolIndex, totalEarned());
 		})
-	}, [depositTokenContract, bentPool, blockNumber, account, props.poolInfo.RewardsAssets, props])
+	}, [depositTokenContract, bentPool, blockNumber, account, props.poolInfo.RewardsAssets, props, tokenPrices])
 
 	const claim = async () => {
 		await BentBasePool.harvest(bentPool, account, gasPrice);
