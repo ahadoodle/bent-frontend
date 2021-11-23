@@ -8,11 +8,12 @@ import {
 	useBlockNumber,
 	useERC20Contract,
 	useBentMasterChefContract,
-	useGasPrice
+	useGasPrice,
+	useTokenPrice
 } from "hooks";
 import { ERC20, formatBigNumber, BentMasterChef } from "utils";
-import { BigNumber } from 'ethers';
-import { POOLS, SushiPool } from "constant";
+import { BigNumber, utils } from 'ethers';
+import { POOLS, SushiPool, TOKENS } from "constant";
 
 interface Props {
 	poolInfo: SushiPool
@@ -24,11 +25,14 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const [symbol, setSymbol] = useState<string>('');
 	const [deposit, setDeposit] = useState(0);
 	const [pendingRewards, setPendingRewards] = useState(0);
+	const [earned, setEarned] = useState(BigNumber.from(0));
+
 	const { account } = useActiveWeb3React();
 	const blockNumber = useBlockNumber();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
 	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
+	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
 
 	useEffect(() => {
 		Promise.all([
@@ -39,8 +43,10 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 			setSymbol(symbol);
 			setDeposit(depositedLp.amount);
 			setPendingRewards(pendingRewards);
+			setEarned(utils.parseEther(bentPrice.toString()).mul(pendingRewards)
+				.div(BigNumber.from(10).pow(18)));
 		})
-	}, [depositTokenContract, masterChef, blockNumber, account, props.poolInfo.PoolId])
+	}, [depositTokenContract, masterChef, blockNumber, account, props.poolInfo.PoolId, bentPrice])
 
 	const claim = async () => {
 		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
@@ -69,8 +75,10 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(pendingRewards))} BENT
+							{formatBigNumber(BigNumber.from(pendingRewards))}
+							<span className="small text-bold"> BENT</span>
 						</b>
+						<span className="small text-muted"> ≈ ${formatBigNumber(earned)}</span>
 					</Col>
 					{/* <Col>
 						<div className="earnValue">
@@ -85,7 +93,10 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col> */}
 					<Col>
-						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
+						<b>
+							{formatBigNumber(BigNumber.from(deposit))}
+							<span className="small text-bold"> {props.poolInfo.Name} {symbol}</span>
+						</b>
 					</Col>
 					<Col>
 						<div className="climBtn">
