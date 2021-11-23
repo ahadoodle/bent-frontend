@@ -57,7 +57,7 @@ export const getCrvDepositLink = (tokenName: string): string => {
 		return `https://curve.fi/${tokenName}/deposit`;
 }
 
-export const getPrice = async (contract_addresses: string[], vsCoin: string): Promise<Record<string, number>> => {
+export const getPrice = async (contract_addresses: string[], vsCoin = 'usd'): Promise<Record<string, number>> => {
 	const url = `https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${contract_addresses.join(',')}&vs_currencies=${vsCoin}`;
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any

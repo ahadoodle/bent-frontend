@@ -66,7 +66,7 @@ const SushiPools: {
 			LOGO: [TOKEN_LOGO.BENT, TOKEN_LOGO.DAI],
 			Name: 'BENT/DAI',
 			PoolId: 0,
-			DepositAsset: '0x5fa4370164a2fabeef159b893299d59ff5dc1e6d',
+			DepositAsset: '0x5fA4370164a2FaBEef159B893299D59fF5dC1e6d',
 			RewardsAssets: ['BENT'],
 			DepositLink: 'https://app.sushi.com/add/0x01597E397605Bf280674Bf292623460b4204C375/0x6b175474e89094c44da98b954eedeac495271d0f',
 			ReservePriceAsset: TOKENS.DAI.ADDR

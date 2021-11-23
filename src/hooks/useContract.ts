@@ -4,7 +4,8 @@ import { Contract } from 'web3-eth-contract';
 import {
 	getBentPool,
 	getERC20,
-	getBentMasterChef
+	getBentMasterChef,
+	getSushiPairContract
 } from 'utils';
 
 export const useBentPoolContract = (poolName: string): Contract => {
@@ -20,4 +21,9 @@ export const useERC20Contract = (address: string): Contract => {
 export const useBentMasterChefContract = (address: string): Contract => {
 	const web3 = useWeb3();
 	return useMemo(() => getBentMasterChef(address, web3), [web3, address]);
+}
+
+export const useSushiPairContract = (address: string): Contract => {
+	const web3 = useWeb3();
+	return useMemo(() => getSushiPairContract(address, web3), [web3, address]);
 }
