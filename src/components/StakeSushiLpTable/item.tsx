@@ -84,10 +84,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 				.div(BigNumber.from(10).pow(18)));
 			setStakedUsd(utils.parseEther(lpPrice.toString()).mul(depositedLp.amount)
 				.div(BigNumber.from(10).pow(18)));
-			console.log(tokenPrices[TOKENS['BENT'].ADDR], lpPrice, rewardPerBlock, poolInfo.allocPoint, poolLpBalance)
 			setApr((BigNumber.from(poolLpBalance).isZero() || BigNumber.from(totalAllocPoint).isZero() || !lpPrice) ? 0 :
 				utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString())
-				.mul(rewardPerBlock).mul(poolInfo.allocPoint).mul(6400).mul(365)
+				.mul(rewardPerBlock).mul(poolInfo.allocPoint).mul(6400).mul(365).mul(100)
 				.div(utils.parseEther(lpPrice.toString())).div(poolLpBalance)
 				.div(totalAllocPoint).toNumber());
 		})
@@ -160,7 +159,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<div className="earnValue">
 							<b>
-								{apr}%
+								{utils.commify(apr)}%
 							</b>
 						</div>
 					</Col>
