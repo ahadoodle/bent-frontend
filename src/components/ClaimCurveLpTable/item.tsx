@@ -108,7 +108,10 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col> */}
 					<Col>
-						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
+						<b>
+							{formatBigNumber(BigNumber.from(deposit))}
+							<span className="small text-bold"> {symbol}</span>
+						</b>
 					</Col>
 					<Col>
 						<div className="climBtn">
