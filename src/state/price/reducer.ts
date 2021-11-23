@@ -11,7 +11,10 @@ export interface PriceState {
 }
 
 const initialState: PriceState = {
-	tokenPrices: {}
+	tokenPrices: {
+		'0x6b175474e89094c44da98b954eedeac495271d0f': 1,	// DAI
+		'0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490': 1,	// 3Crv
+	}
 };
 
 export default createReducer(initialState, (builder) =>

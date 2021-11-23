@@ -8,7 +8,7 @@ interface TokenInfo {
 export const TOKENS: Record<string, TokenInfo> = {
 	BENT: {
 		LOGO: TOKEN_LOGO.BENT,
-		ADDR: '0x01597E397605Bf280674Bf292623460b4204C375'
+		ADDR: '0x01597e397605bf280674bf292623460b4204c375'
 	},
 	CRV: {
 		LOGO: TOKEN_LOGO.CRV,
@@ -33,5 +33,9 @@ export const TOKENS: Record<string, TokenInfo> = {
 	DAI: {
 		LOGO: TOKEN_LOGO.DAI,
 		ADDR: '0x6b175474e89094c44da98b954eedeac495271d0f'
+	},
+	CURVE3: {
+		LOGO: '',
+		ADDR: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'
 	}
 }
