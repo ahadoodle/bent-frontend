@@ -40,6 +40,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [deposit, setDeposit] = useState(0);
 	const [stakedUsd, setStakedUsd] = useState(BigNumber.from(0));
+	const [earned, setEarned] = useState(BigNumber.from(0));
 	const [tvl, setTvl] = useState(BigNumber.from(0));
 	const [apr, setApr] = useState(0);
 
@@ -66,6 +67,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			BentMasterChef.getTotalAllocPoint(masterChef),
 			BentMasterChef.getPoolInfo(masterChef, props.poolInfo.PoolId),
 			BentMasterChef.getRewardPerBlock(masterChef),
+			BentMasterChef.getPendingRewards(masterChef, account, props.poolInfo.PoolId),
 		]).then(([
 			depositSymbol,
 			availableLp,
@@ -75,6 +77,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			totalAllocPoint,
 			poolInfo,
 			rewardPerBlock,
+			pendingRewards,
 		]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
@@ -89,6 +92,8 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 				.mul(rewardPerBlock).mul(poolInfo.allocPoint).mul(6400).mul(365).mul(100)
 				.div(utils.parseEther(lpPrice.toString())).div(poolLpBalance)
 				.div(totalAllocPoint).toNumber());
+			setEarned(utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString()).mul(pendingRewards)
+				.div(BigNumber.from(10).pow(18)));
 		})
 	}, [depositTokenContract, account, blockNumber, masterChef, reserveTokenContract, props.poolInfo.PoolId, props.poolInfo.ReservePriceAsset, tokenPrices, lpPrice])
 
@@ -154,14 +159,10 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<span>$</span>0
+						<b>$ {formatBigNumber(earned)}</b>
 					</Col>
 					<Col>
-						<div className="earnValue">
-							<b>
-								{utils.commify(apr)}%
-							</b>
-						</div>
+						<b>{utils.commify(apr)}%</b>
 					</Col>
 					<Col>
 						<b>
