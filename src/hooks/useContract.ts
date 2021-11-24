@@ -5,7 +5,9 @@ import {
 	getBentPool,
 	getERC20,
 	getBentMasterChef,
-	getSushiPairContract
+	getSushiPairContract,
+	getCvxBaseRewardPool,
+	getCrvFiLp
 } from 'utils';
 
 export const useBentPoolContract = (poolName: string): Contract => {
@@ -26,4 +28,14 @@ export const useBentMasterChefContract = (address: string): Contract => {
 export const useSushiPairContract = (address: string): Contract => {
 	const web3 = useWeb3();
 	return useMemo(() => getSushiPairContract(address, web3), [web3, address]);
+}
+
+export const useCvxBaseRewardPool = (address: string): Contract => {
+	const web3 = useWeb3();
+	return useMemo(() => getCvxBaseRewardPool(address, web3), [web3, address]);
+}
+
+export const useCrvFiLp = (address: string): Contract => {
+	const web3 = useWeb3();
+	return useMemo(() => getCrvFiLp(address, web3), [web3, address]);
 }

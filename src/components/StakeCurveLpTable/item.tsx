@@ -6,9 +6,17 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink } from "utils";
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp } from "utils";
 import { BigNumber, utils } from 'ethers';
-import { useActiveWeb3React, useBentPoolContract, useBlockNumber, useERC20Contract, useGasPrice } from "hooks";
+import {
+	useActiveWeb3React,
+	useBentPoolContract,
+	useBlockNumber,
+	useCrvFiLp,
+	useCvxBaseRewardPool,
+	useGasPrice,
+	useTokenPrices
+} from "hooks";
 import { BentPool, TOKENS } from "constant";
 
 interface Props {
@@ -26,25 +34,56 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [deposit, setDeposit] = useState(0);
+	const [tvl, setTvl] = useState(BigNumber.from(0));
 	const { account } = useActiveWeb3React();
-	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
+	const depositTokenContract = useCrvFiLp(props.poolInfo.DepositAsset);
+	const crvMinter = useCrvFiLp(props.poolInfo.CrvMinter || '');
+	const cvxRewardPool = useCvxBaseRewardPool(props.poolInfo.CvxRewardsAddr);
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
+	const tokenPrices = useTokenPrices();
 	const blockNumber = useBlockNumber();
 
 	useEffect(() => {
-		Promise.all([
-			ERC20.getSymbol(depositTokenContract),
-			ERC20.getBalanceOf(depositTokenContract, account),
-			ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL),
-			BentBasePool.getDepositedAmount(bentPool, account)
-		]).then(([depositSymbol, availableLp, allowance, depositedLp]) => {
+		/* eslint-disable @typescript-eslint/no-explicit-any*/
+		const contractCalls: any[] = [];
+		contractCalls.push(ERC20.getSymbol(depositTokenContract));
+		contractCalls.push(ERC20.getBalanceOf(depositTokenContract, account));
+		contractCalls.push(ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL));
+		contractCalls.push(BentBasePool.getDepositedAmount(bentPool, account));
+		contractCalls.push(ERC20.getBalanceOf(cvxRewardPool, props.poolInfo.POOL));
+		Promise.all(contractCalls).then(([depositSymbol, availableLp, allowance, depositedLp, poolLpBalance]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDeposit(depositedLp);
+
+			// Calculate Crv Lp Price
+			const lpFiContract = props.poolInfo.CrvMinter ? crvMinter : depositTokenContract;
+			Promise.all([
+				CrvFiLp.getCoins(lpFiContract, 0),
+				CrvFiLp.getCoins(lpFiContract, 1),
+				CrvFiLp.getCoins(lpFiContract, 2),
+				CrvFiLp.getBalances(lpFiContract, 0),
+				CrvFiLp.getBalances(lpFiContract, 1),
+				CrvFiLp.getBalances(lpFiContract, 2),
+				CrvFiLp.getTotalSupply(depositTokenContract)
+			]).then(([coin1Addr, coin2Addr, coin3Addr, coin1Bal, coin2Bal, coin3Bal, lpTotalSupply]) => {
+				if (
+					!tokenPrices[coin1Addr.toLowerCase()] ||
+					!tokenPrices[coin2Addr.toLowerCase()] ||
+					(!tokenPrices[coin3Addr.toLowerCase()] && coin3Addr) ||
+					BigNumber.from(lpTotalSupply).isZero()) {
+					return;
+				}
+				const coin1Usd = utils.parseEther(tokenPrices[coin1Addr.toLowerCase()].toString()).mul(BigNumber.from(coin1Bal))
+				const coin2Usd = utils.parseEther(tokenPrices[coin2Addr.toLowerCase()].toString()).mul(BigNumber.from(coin2Bal))
+				const coin3Usd = coin3Addr ? utils.parseEther(tokenPrices[coin3Addr.toLowerCase()].toString()).mul(BigNumber.from(coin3Bal)) : 0;
+				const lpPrice = coin1Usd.add(coin2Usd).add(coin3Usd).div(lpTotalSupply);
+				setTvl(lpPrice.mul(poolLpBalance).div(BigNumber.from(10).pow(18)));
+			})
 		})
-	}, [depositTokenContract, account, blockNumber, bentPool, props.poolInfo.POOL])
+	}, [depositTokenContract, account, blockNumber, bentPool, cvxRewardPool, crvMinter, tokenPrices, props])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -52,7 +91,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
-		if(isNaN(parseFloat(value))) return;
+		if (isNaN(parseFloat(value))) return;
 		const amountBN = utils.parseUnits(value, 18);
 		setIsApproved(BigNumber.from(allowance).gte(amountBN) && !amountBN.isZero());
 	}
@@ -73,14 +112,14 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 
 	const approve = async () => {
 		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount, gasPrice);
-		if(res) {
+		if (res) {
 			setIsApproved(true);
 		}
 	}
 
 	const stake = async () => {
 		const res = await BentBasePool.stake(bentPool, account, stakeAmount, gasPrice);
-		if(res) {
+		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
 		}
@@ -88,7 +127,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 
 	const withdraw = async () => {
 		const res = await BentBasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
-		if(res) {
+		if (res) {
 			setWithdrawAmount('')
 		}
 	}
@@ -106,7 +145,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				<Row className="align-items-center">
 					<Col>
 						<div className="imgText">
-							<PoolLogo src={props.poolInfo.LOGO} alt=""/>
+							<PoolLogo src={props.poolInfo.LOGO} alt="" />
 							<h4>{props.poolInfo.Name}</h4>
 						</div>
 					</Col>
@@ -130,7 +169,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<span>$</span>---
+							<b>$ {formatBigNumber(tvl)}</b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
@@ -143,7 +182,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				className="innerAccordian"
 				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 			>
-				<div className="converttabs" style={{background: 'unset', borderTop: '1px solid black', borderRadius: 0 }}>
+				<div className="converttabs" style={{ background: 'unset', borderTop: '1px solid black', borderRadius: 0 }}>
 					<Nav tabs>
 						<NavItem>
 							<NavLink
@@ -204,7 +243,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														onChange={(e) => onStakeAmountChange(e.target.value)}
 														value={stakeAmount}
 													/>
-													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
+													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
 													<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 												</div>
 												<div className="btnouter">
@@ -238,7 +277,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</TabPane>
 						<TabPane tabId="2">
 							<Row>
-							<Col md="12" className="inverse">
+								<Col md="12" className="inverse">
 									<Card body>
 										<CardTitle>
 											<div className="advance-btn">
@@ -263,11 +302,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														onChange={(e) => onWithdrawAmountChange(e.target.value)}
 														value={withdrawAmount}
 													/>
-													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo"/>
+													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
 													<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 												</div>
 											</div>
-											<div className="amount-crv" style={{marginLeft: 20}}>
+											<div className="amount-crv" style={{ marginLeft: 20 }}>
 												<p className="labeltext">
 													<Label>
 														&nbsp;
@@ -328,7 +367,7 @@ const PoolLogo = styled.img`
 	width: 28px;
 `
 
-const Wrapper = styled.div<{collapsed : boolean }>`
+const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
 	background: ${props => props.collapsed ? 'transparent' : '#CAB8FF !important'};
 `;
