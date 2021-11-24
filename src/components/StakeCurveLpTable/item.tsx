@@ -60,27 +60,24 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 
 			// Calculate Crv Lp Price
 			const lpFiContract = props.poolInfo.CrvMinter ? crvMinter : depositTokenContract;
-			Promise.all([
-				CrvFiLp.getCoins(lpFiContract, 0),
-				CrvFiLp.getCoins(lpFiContract, 1),
-				CrvFiLp.getCoins(lpFiContract, 2),
-				CrvFiLp.getBalances(lpFiContract, 0),
-				CrvFiLp.getBalances(lpFiContract, 1),
-				CrvFiLp.getBalances(lpFiContract, 2),
-				CrvFiLp.getTotalSupply(depositTokenContract)
-			]).then(([coin1Addr, coin2Addr, coin3Addr, coin1Bal, coin2Bal, coin3Bal, lpTotalSupply]) => {
-				if (
-					!tokenPrices[coin1Addr.toLowerCase()] ||
-					!tokenPrices[coin2Addr.toLowerCase()] ||
-					(!tokenPrices[coin3Addr.toLowerCase()] && coin3Addr) ||
-					BigNumber.from(lpTotalSupply).isZero()) {
+			const lpFiContractCalls: any[] = [];
+			for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
+				lpFiContractCalls.push(CrvFiLp.getCoins(lpFiContract, i));
+				lpFiContractCalls.push(CrvFiLp.getBalances(lpFiContract, i));
+			}
+			lpFiContractCalls.push(CrvFiLp.getTotalSupply(depositTokenContract));
+			Promise.all(lpFiContractCalls).then((results) => {
+				const lpTotalSupply = results[results.length - 1];
+				if (BigNumber.from(lpTotalSupply).isZero()) {
 					return;
 				}
-				const coin1Usd = utils.parseEther(tokenPrices[coin1Addr.toLowerCase()].toString()).mul(BigNumber.from(coin1Bal))
-				const coin2Usd = utils.parseEther(tokenPrices[coin2Addr.toLowerCase()].toString()).mul(BigNumber.from(coin2Bal))
-				const coin3Usd = coin3Addr ? utils.parseEther(tokenPrices[coin3Addr.toLowerCase()].toString()).mul(BigNumber.from(coin3Bal)) : 0;
-				const lpPrice = coin1Usd.add(coin2Usd).add(coin3Usd).div(lpTotalSupply);
-				setTvl(lpPrice.mul(poolLpBalance).div(BigNumber.from(10).pow(18)));
+				let totalUsd = BigNumber.from(0);
+				for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
+					const addr = results[i * 2];
+					const bal = results[i * 2 + 1];
+					totalUsd = utils.parseEther(tokenPrices[addr.toLowerCase()].toString()).mul(BigNumber.from(bal)).add(totalUsd);
+				}
+				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply).div(BigNumber.from(10).pow(18)));
 			})
 		})
 	}, [depositTokenContract, account, blockNumber, bentPool, cvxRewardPool, crvMinter, tokenPrices, props])
