@@ -89,9 +89,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 				.div(BigNumber.from(10).pow(18)));
 			setApr((BigNumber.from(poolLpBalance).isZero() || BigNumber.from(totalAllocPoint).isZero() || !lpPrice) ? 0 :
 				utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString())
-				.mul(rewardPerBlock).mul(poolInfo.allocPoint).mul(6400).mul(365).mul(100)
-				.div(utils.parseEther(lpPrice.toString())).div(poolLpBalance)
-				.div(totalAllocPoint).toNumber());
+					.mul(rewardPerBlock).mul(poolInfo.allocPoint).mul(6400).mul(365).mul(100)
+					.div(utils.parseEther(lpPrice.toString())).div(poolLpBalance)
+					.div(totalAllocPoint).toNumber());
 			setEarned(utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString()).mul(pendingRewards)
 				.div(BigNumber.from(10).pow(18)));
 		})
@@ -170,12 +170,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 							<span className="small text-bold"> {symbol}</span>
 						</b>
 						<span className="small text-muted"> ≈ ${
-							formatBigNumber(BigNumber.from(stakedUsd))
+							formatBigNumber(BigNumber.from(stakedUsd), 18, 1)
 						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b><span>$ {formatBigNumber(tvl)}</span></b>
+							<b><span>$ {formatBigNumber(tvl, 18, 1)}</span></b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
@@ -220,7 +220,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 												SushiSwap {props.poolInfo.Name} pool
 											</OutterLink>
 											&nbsp;
-											and then stake your SushiSwap {props.poolInfo.Name} LP tokens here 
+											and then stake your SushiSwap {props.poolInfo.Name} LP tokens here
 											to earn BENT on top of SushiSwap trading fees.
 										</CardText>
 									</Card>
@@ -250,8 +250,8 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 														onChange={(e) => onStakeAmountChange(e.target.value)}
 														value={stakeAmount}
 													/>
-													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo"/>
-													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second"/>
+													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo" />
+													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second" />
 													<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 												</div>
 												<div className="btnouter">
@@ -310,8 +310,8 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 														onChange={(e) => onWithdrawAmountChange(e.target.value)}
 														value={withdrawAmount}
 													/>
-													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo"/>
-													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second"/>
+													<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo" />
+													<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second" />
 													<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 												</div>
 											</div>
