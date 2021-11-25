@@ -75,10 +75,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
 					const addr = results[i * 2];
 					const bal = results[i * 2 + 1];
-					totalUsd = utils.parseEther(tokenPrices[addr.toLowerCase()].toString())
-						.mul(BigNumber.from(bal))
-						.div(BigNumber.from(10).pow(getTokenDecimals(addr)))
-						.add(totalUsd);
+					if (tokenPrices[addr.toLowerCase()]) {
+						totalUsd = utils.parseEther(tokenPrices[addr.toLowerCase()].toString())
+							.mul(BigNumber.from(bal))
+							.div(BigNumber.from(10).pow(getTokenDecimals(addr)))
+							.add(totalUsd);
+					}
 				}
 				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply));
 			})
@@ -169,7 +171,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b>$ {formatBigNumber(tvl)}</b>
+							<b>$ {formatBigNumber(tvl, 18, 1)}</b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
