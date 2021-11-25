@@ -20,25 +20,16 @@ const Footer = (): React.ReactElement => {
                   Bent is a staking and farming platform to enhance your curve returns, by the people for teh ppl.
                 </p>
               </div>
-              <Col sm="12 mt-auto mb-3">
-                <p className="copyright">Copyright © Bent Finance 2021</p>
-              </Col>
             </Col>
             <Col md="3">
               <div className="footer-inner-block">
                 <h3>Resources</h3>
                 <ul>
                   <li>
-                    <Link to="/">Documentation</Link>
+                    <a href="/BENT_Audit_Report.pdf" target="_blank" download>Audit Results</a>
                   </li>
                   <li>
-                    <Link to="/">Blog</Link>
-                  </li>
-                  <li>
-                    <Link to="/">Privacy Policy</Link>
-                  </li>
-                  <li>
-                    <Link to="/">Terms & Conditions</Link>
+                    <a href="https://bent-finance-1.gitbook.io/product-docs/wd2JscbVOHmPONbxJ6ga/" target="_blank">GitDocs</a>
                   </li>
                 </ul>
               </div>
@@ -48,16 +39,10 @@ const Footer = (): React.ReactElement => {
                 <h3>Community</h3>
                 <ul>
                   <li>
-                    <Link to="/">Twitter</Link>
+                    <a href="https://twitter.com/BENT_Finance" target="_blank">Twitter</a>
                   </li>
                   <li>
-                    <Link to="/">Discord</Link>
-                  </li>
-                  <li>
-                    <Link to="/">Telegram Announcements</Link>
-                  </li>
-                  <li>
-                    <Link to="/">Telegram Chat</Link>
+                    <a href="https://t.me/BentFi" target="_blank">Telegram Group</a>
                   </li>
                 </ul>
               </div>
@@ -75,10 +60,17 @@ const Footer = (): React.ReactElement => {
                   <li>
                     <a href="mailto:contact@bentfinance.com">
                       <i className="fa fa-envelope" aria-hidden="true"></i>&nbsp;
-                        contact@bentfinance.com
+                      contact@bentfinance.com
                     </a>
                   </li>
                 </ul>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm="12 mt-auto mb-3">
+              <div className="footer-inner-block">
+                <a href="https://etherscan.io/token/0x01597e397605bf280674bf292623460b4204c375" target="_blank">BENT Token Contract: 0x01597e397605bf280674bf292623460b4204c375</a>
               </div>
             </Col>
           </Row>
