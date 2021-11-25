@@ -4,7 +4,6 @@ import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
-import { Link } from "react-router-dom";
 import { BigNumber, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant"
 import classnames from "classnames";

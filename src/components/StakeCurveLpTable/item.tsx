@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
@@ -35,6 +34,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [deposit, setDeposit] = useState(0);
 	const [tvl, setTvl] = useState(BigNumber.from(0));
+	const [stakedUsd, setStakedUsd] = useState(BigNumber.from(0));
+	const [estRewards, setEstRewards] = useState<BigNumber>(BigNumber.from(0));
+
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useCrvFiLp(props.poolInfo.DepositAsset);
 	const crvMinter = useCrvFiLp(props.poolInfo.CrvMinter || '');
@@ -52,11 +54,22 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		contractCalls.push(ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL));
 		contractCalls.push(BentBasePool.getDepositedAmount(bentPool, account));
 		contractCalls.push(ERC20.getBalanceOf(cvxRewardPool, props.poolInfo.POOL));
-		Promise.all(contractCalls).then(([depositSymbol, availableLp, allowance, depositedLp, poolLpBalance]) => {
+		contractCalls.push(BentBasePool.getPendingReward(bentPool, account));
+		Promise.all(contractCalls).then(([
+			depositSymbol, availableLp, allowance, depositedLp, poolLpBalance, rewards
+		]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDeposit(depositedLp);
+
+			let totalReward = BigNumber.from(0);
+			props.poolInfo.RewardsAssets.forEach((key, index) => {
+				const addr = TOKENS[key].ADDR.toLowerCase();
+				totalReward = (tokenPrices[addr] && rewards[index]) ?
+					utils.parseUnits(tokenPrices[addr].toString()).mul(rewards[index]).add(totalReward) : totalReward
+			});
+			setEstRewards(totalReward.div(BigNumber.from(10).pow(18)));
 
 			// Calculate Crv Lp Price
 			const lpFiContract = props.poolInfo.CrvMinter ? crvMinter : depositTokenContract;
@@ -83,6 +96,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					}
 				}
 				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply));
+				setStakedUsd(totalUsd.mul(depositedLp).div(lpTotalSupply));
 			})
 		})
 	}, [depositTokenContract, account, blockNumber, bentPool, cvxRewardPool, crvMinter, tokenPrices, props])
@@ -152,7 +166,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<span>$</span>0
+						<b>$ {formatBigNumber(estRewards)}</b>
 					</Col>
 					{/* <Col>
 						<div className="earnValue">
@@ -167,7 +181,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col> */}
 					<Col>
-						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
+						<b>
+							{formatBigNumber(BigNumber.from(deposit))}
+							<span className="small text-bold"> {symbol}</span>
+						</b>
+						<span className="small text-muted"> ≈ ${
+							formatBigNumber(BigNumber.from(stakedUsd), 18, 0)
+						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
