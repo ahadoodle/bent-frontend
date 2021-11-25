@@ -28,6 +28,9 @@ const Footer = (): React.ReactElement => {
                 <h3>Resources</h3>
                 <ul>
                   <li>
+                    <a href="/Bent_Audit_Report.pdf" download >Audit Reports</a>
+                  </li>
+                  <li>
                     <a href="https://docs.bentfinance.com/" target="_blank" rel="noreferrer" >Documentation</a>
                   </li>
                 </ul>

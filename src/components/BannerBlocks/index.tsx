@@ -1,6 +1,5 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-// import styled from "styled-components";
 // import CardCoin from "assets/images/cardCoin.png";
 // import DollorIcon from "assets/images/dollorIcon.png";
 // import ClaimIcon from "assets/images/claimIcon.svg";
@@ -86,9 +85,5 @@ const BannerBlocks = (): React.ReactElement => {
     </React.Fragment>
   );
 };
-
-// const Link = styled.a`
-//   color: white !important;
-// `;
 
 export default BannerBlocks;
