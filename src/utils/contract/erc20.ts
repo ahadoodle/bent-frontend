@@ -1,4 +1,4 @@
-import { utils, BigNumber, ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { Contract } from 'web3-eth-contract';
 
 const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<number> => {
