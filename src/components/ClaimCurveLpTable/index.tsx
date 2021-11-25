@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Row, Col, UncontrolledCollapse, Card, CardBody } from "reactstrap";
+import { Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 // import { StakeCurveLpItem } from "./item";
-import CrvLogo from 'assets/images/token/CRV.png';
+import CrvLogo from 'assets/images/token/CRV.svg';
 import { ClaimCurveLpItem } from "./item";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
@@ -27,13 +27,13 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 							color="primary"
 							id="togglerClaimBentPool"
 							style={{ padding: "13px 15px" }}
-							collapsed={collapsed}
+							collapsed={false}
 							onClick={() => setCollapsed(!collapsed)}
 						>
 							<Row className="align-items-center">
 								<Col>
 									<div className="imgText">
-										<img src={CrvLogo} alt="" width="28"/>
+										<img src={CrvLogo} alt="" width="28" />
 										<h2>Curve Pools</h2>
 									</div>
 								</Col>
@@ -72,24 +72,25 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 							</Row>
 						</Wrapper>
 
-						<UncontrolledCollapse
+						{/* <UncontrolledCollapse
 							toggler="#togglerClaimBentPool"
 							className="bentpoolText"
-						>
+						> */}
+						<div className="bentpoolText">
 							<Card>
 								<CardBody>
-									{ Object.keys(POOLS.BentPools).map((poolName, index) =>
+									{Object.keys(POOLS.BentPools).map((poolName, index) =>
 										<ClaimCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}
 											poolKey={poolName}
 											key={poolName}
-											// poolIndex={index}
-											// updateEarning={onEarningUpdate}
+										// poolIndex={index}
+										// updateEarning={onEarningUpdate}
 										/>)
 									}
 								</CardBody>
 							</Card>
-						</UncontrolledCollapse>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -97,7 +98,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 	)
 }
 
-const Wrapper = styled.div<{collapsed : boolean }>`
+const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
 	background: ${props => props.collapsed ? 'transparent' : '#B5DEFF !important'};
 	border-radius: 8px;
