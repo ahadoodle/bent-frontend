@@ -21,6 +21,7 @@ import {
 	formatBigNumber,
 	ERC20,
 	BentMasterChef,
+	getEtherscanLink,
 } from "utils";
 
 
@@ -342,22 +343,22 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 									<Card body>
 										<div className="infoWrap card-text mt-4">
 											<p>
-												BENT token address:{" "}
-												<Link to="/stake">
+												BENT token address:&nbsp;
+												<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
 													{TOKENS.BENT.ADDR}
-												</Link>
+												</a>
 											</p>
 											<p>
-												Deposit contract address:{" "}
-												<Link to="/stake">
-													{masterChef.options.address}
-												</Link>
+												Deposit contract address:&nbsp;
+												<a href={getEtherscanLink(POOLS.SushiPools.MasterChef)} target="_blank" rel="noreferrer">
+													{POOLS.SushiPools.MasterChef}
+												</a>
 											</p>
 											<p>
-												Rewards contract address:{" "}
-												<Link to="/stake">
-													{masterChef.options.address}
-												</Link>
+												Rewards contract address:&nbsp;
+												<a href={getEtherscanLink(POOLS.SushiPools.MasterChef)} target="_blank" rel="noreferrer">
+													{POOLS.SushiPools.MasterChef}
+												</a>
 											</p>
 										</div>
 									</Card>

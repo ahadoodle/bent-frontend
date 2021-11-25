@@ -6,7 +6,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals } from "utils";
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink } from "utils";
 import { BigNumber, utils } from 'ethers';
 import {
 	useActiveWeb3React,
@@ -335,22 +335,22 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									<Card body>
 										<div className="infoWrap card-text mt-4">
 											<p>
-												BENT token address:{" "}
-												<Link to="/stake">
+												BENT token address:&nbsp;
+												<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
 													{TOKENS.BENT.ADDR}
-												</Link>
+												</a>
 											</p>
 											<p>
-												Deposit contract address:{" "}
-												<Link to="/stake">
+												Deposit contract address:&nbsp;
+												<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
 													{bentPool.options.address}
-												</Link>
+												</a>
 											</p>
 											<p>
-												Rewards contract address:{" "}
-												<Link to="/stake">
+												Rewards contract address:&nbsp;
+												<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
 													{bentPool.options.address}
-												</Link>
+												</a>
 											</p>
 										</div>
 									</Card>

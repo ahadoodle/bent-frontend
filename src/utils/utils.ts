@@ -84,3 +84,7 @@ export const getTokenDecimals = (addr: string): number => {
 	const key = Object.keys(TOKENS).filter(key => TOKENS[key].ADDR.toLowerCase() === addr.toLowerCase())[0];
 	return TOKENS[key].DECIMALS;
 }
+
+export const getEtherscanLink = (addr: string): string => {
+	return `https://etherscan.io/address/${addr}`;
+}
