@@ -6,7 +6,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp } from "utils";
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals } from "utils";
 import { BigNumber, utils } from 'ethers';
 import {
 	useActiveWeb3React,
@@ -75,9 +75,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
 					const addr = results[i * 2];
 					const bal = results[i * 2 + 1];
-					totalUsd = utils.parseEther(tokenPrices[addr.toLowerCase()].toString()).mul(BigNumber.from(bal)).add(totalUsd);
+					totalUsd = utils.parseEther(tokenPrices[addr.toLowerCase()].toString())
+						.mul(BigNumber.from(bal))
+						.div(BigNumber.from(10).pow(getTokenDecimals(addr)))
+						.add(totalUsd);
 				}
-				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply).div(BigNumber.from(10).pow(18)));
+				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply));
 			})
 		})
 	}, [depositTokenContract, account, blockNumber, bentPool, cvxRewardPool, crvMinter, tokenPrices, props])
