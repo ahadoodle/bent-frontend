@@ -17,7 +17,9 @@ const Footer = (): React.ReactElement => {
                   </Link>
                 </div>
                 <p>
-                  Bent is a staking and farming platform to enhance your curve returns, by the people for teh ppl.
+                  Bent is a staking and farming platform<br />
+                  to enhance your curve returns,<br />
+                  by the people for teh ppl.
                 </p>
               </div>
             </Col>
@@ -29,7 +31,7 @@ const Footer = (): React.ReactElement => {
                     <a href="/BENT_Audit_Report.pdf" target="_blank" download rel="noreferrer">Audit Results</a>
                   </li>
                   <li>
-                    <a href="https://bent-finance-1.gitbook.io/product-docs/wd2JscbVOHmPONbxJ6ga/" target="_blank" rel="noreferrer">GitDocs</a>
+                    <a href="/" rel="noreferrer" >GitDocs</a>
                   </li>
                 </ul>
               </div>

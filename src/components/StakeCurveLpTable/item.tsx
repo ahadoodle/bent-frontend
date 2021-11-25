@@ -320,7 +320,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(deposit))
 													}
 													onClick={withdraw}
-												>Unstake & Withdraw</Button>
+												>Withdraw</Button>
 											</div>
 										</div>
 									</Card>

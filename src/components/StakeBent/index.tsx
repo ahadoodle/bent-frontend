@@ -115,7 +115,7 @@ export const StakeBent = (): React.ReactElement => {
 																		Approve
 																	</Button>
 																	<Button className="approvebtn" disabled={true}>
-																		Convert BENT
+																		Stake BENT
 																	</Button>
 																</div>
 															</div>
