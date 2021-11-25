@@ -614,8 +614,8 @@ button.approvebtn.btn.btn-secondary {
     padding: 5px 5px 8px;
 }
 button.approvebtn.btn.btn-secondary.disabled {
-    color: #9BA2AC;
-    background: transparent;
+    color: #FAFAFA;
+    background: #9BA2AC;
     border: 2px solid #9BA2AC;
 }
 .lineup {
