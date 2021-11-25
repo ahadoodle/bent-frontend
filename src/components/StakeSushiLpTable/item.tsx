@@ -119,7 +119,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const approve = async () => {
-		const res = await ERC20.approve(depositTokenContract, account, POOLS.SushiPools.MasterChef, stakeAmount, gasPrice);
+		const res = await ERC20.approve(depositTokenContract, account, POOLS.SushiPools.MasterChef, gasPrice);
 		if (res) {
 			setIsApproved(true);
 		}
@@ -170,12 +170,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 							<span className="small text-bold"> {symbol}</span>
 						</b>
 						<span className="small text-muted"> ≈ ${
-							formatBigNumber(BigNumber.from(stakedUsd), 18, 1)
+							formatBigNumber(BigNumber.from(stakedUsd), 18, 0)
 						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b><span>$ {formatBigNumber(tvl, 18, 1)}</span></b>
+							<b><span>$ {formatBigNumber(tvl, 18, 0)}</span></b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

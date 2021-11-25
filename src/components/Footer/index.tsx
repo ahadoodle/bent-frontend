@@ -28,7 +28,7 @@ const Footer = (): React.ReactElement => {
                 <h3>Resources</h3>
                 <ul>
                   <li>
-                    <a href="/BENT_Audit_Report.pdf" target="_blank" download rel="noreferrer">Audit Results</a>
+                    <a href="/" rel="noreferrer">Audit Results</a>
                   </li>
                   <li>
                     <a href="/" rel="noreferrer" >GitDocs</a>

@@ -113,7 +113,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const approve = async () => {
-		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, stakeAmount, gasPrice);
+		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, gasPrice);
 		if (res) {
 			setIsApproved(true);
 		}
@@ -171,7 +171,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b>$ {formatBigNumber(tvl, 18, 1)}</b>
+							<b>$ {formatBigNumber(tvl, 18, 0)}</b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

@@ -1,9 +1,9 @@
-import { utils, BigNumber } from "ethers";
+import { utils, BigNumber, ethers } from "ethers";
 import { Contract } from 'web3-eth-contract';
 
 const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<number> => {
 	try {
-		if(!account || !contract.options.address) return 0;
+		if (!account || !contract.options.address) return 0;
 		return await contract.methods.balanceOf(account).call();
 	} catch (error) {
 		console.error(error);
@@ -13,7 +13,7 @@ const getBalanceOf = async (contract: Contract, account: string | null | undefin
 
 const getAllowance = async (contract: Contract, account: string | null | undefined, spender: string): Promise<number> => {
 	try {
-		if(!account || !contract.options.address) return 0;
+		if (!account || !contract.options.address) return 0;
 		return await contract.methods.allowance(account, spender).call();
 	} catch (error) {
 		console.error(error);
@@ -23,7 +23,7 @@ const getAllowance = async (contract: Contract, account: string | null | undefin
 
 const getTotalSupply = async (contract: Contract): Promise<number> => {
 	try {
-		if(!contract.options.address) return 0;
+		if (!contract.options.address) return 0;
 		return await contract.methods.totalSupply().call();
 	} catch (error) {
 		console.error(error);
@@ -33,7 +33,7 @@ const getTotalSupply = async (contract: Contract): Promise<number> => {
 
 const getSymbol = async (contract: Contract): Promise<string> => {
 	try {
-		if(!contract.options.address) return '';
+		if (!contract.options.address) return '';
 		return await contract.methods.symbol().call();
 	} catch (error) {
 		console.error(error);
@@ -41,10 +41,10 @@ const getSymbol = async (contract: Contract): Promise<string> => {
 	}
 }
 
-const approve = async (contract: Contract, account: string | null | undefined, spender: string, amount: string, gasPrice: BigNumber): Promise<boolean> => {
+const approve = async (contract: Contract, account: string | null | undefined, spender: string, gasPrice: BigNumber): Promise<boolean> => {
 	try {
-		if(!account || !contract.options.address) return false;
-		const amountBN = utils.parseUnits(amount, 18);
+		if (!account || !contract.options.address) return false;
+		const amountBN = ethers.constants.MaxUint256;
 		return await contract.methods.approve(spender, amountBN).send({
 			from: account,
 			// gas,

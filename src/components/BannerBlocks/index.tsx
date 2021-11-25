@@ -17,7 +17,7 @@ const BannerBlocks = (): React.ReactElement => {
             <Col className="text-light">
               Dear Sers, while the Bent contracts are live and functioning with already quite a bit of TVL, the frontend is still a WIP.
               Expect us to be updating the TVL, APR and other goodies in the coming weeks.
-              We have one audit already <Link href="/BENT_Audit_Report.pdf" download>here</Link> and more scheduled.
+              We have one audit already and more scheduled.
               Please use this protocol at your own risk.
             </Col>
             {/* <Col xs="6">
