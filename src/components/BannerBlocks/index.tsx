@@ -15,9 +15,9 @@ const BannerBlocks = (): React.ReactElement => {
         <div className="bannerBlockWrap">
           <Row>
             <Col className="text-light">
-              Dear Sers, while the Bent contracts are live and functioning with already quite a bit of TVL, the frontend is still a WIP.
+              Dear Sers, whilst the Bent contracts are live and functioning with quite a bit of TVL already;the frontend is still a WIP.
               Expect us to be updating the TVL, APR and other goodies in the coming weeks.
-              We have one audit already and more scheduled.
+              We have successfully completed one audit, more audits are scheduled.
               Please use this protocol at your own risk.
             </Col>
             {/* <Col xs="6">
