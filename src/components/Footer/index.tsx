@@ -26,10 +26,10 @@ const Footer = (): React.ReactElement => {
                 <h3>Resources</h3>
                 <ul>
                   <li>
-                    <a href="/BENT_Audit_Report.pdf" target="_blank" download>Audit Results</a>
+                    <a href="/BENT_Audit_Report.pdf" target="_blank" download rel="noreferrer">Audit Results</a>
                   </li>
                   <li>
-                    <a href="https://bent-finance-1.gitbook.io/product-docs/wd2JscbVOHmPONbxJ6ga/" target="_blank">GitDocs</a>
+                    <a href="https://bent-finance-1.gitbook.io/product-docs/wd2JscbVOHmPONbxJ6ga/" target="_blank" rel="noreferrer">GitDocs</a>
                   </li>
                 </ul>
               </div>
@@ -39,10 +39,10 @@ const Footer = (): React.ReactElement => {
                 <h3>Community</h3>
                 <ul>
                   <li>
-                    <a href="https://twitter.com/BENT_Finance" target="_blank">Twitter</a>
+                    <a href="https://twitter.com/BENT_Finance" target="_blank" rel="noreferrer">Twitter</a>
                   </li>
                   <li>
-                    <a href="https://t.me/BentFi" target="_blank">Telegram Group</a>
+                    <a href="https://t.me/BentFi" target="_blank" rel="noreferrer">Telegram Group</a>
                   </li>
                 </ul>
               </div>
@@ -70,7 +70,7 @@ const Footer = (): React.ReactElement => {
           <Row>
             <Col sm="12 mt-auto mb-3">
               <div className="footer-inner-block">
-                <a href="https://etherscan.io/token/0x01597e397605bf280674bf292623460b4204c375" target="_blank">BENT Token Contract: 0x01597e397605bf280674bf292623460b4204c375</a>
+                <a href="https://etherscan.io/token/0x01597e397605bf280674bf292623460b4204c375" target="_blank" rel="noreferrer">BENT Token Contract: 0x01597e397605bf280674bf292623460b4204c375</a>
               </div>
             </Col>
           </Row>

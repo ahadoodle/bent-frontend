@@ -25,7 +25,7 @@ const BentPools: Record<string, BentPool> = {
 	},
 	CRV: {
 		LOGO: TOKEN_LOGO.CRV,
-		Name: 'cvxCrv',
+		Name: 'cvxcrv',
 		POOL: '0x270B6AFF561284ef380cDD6d8B036f4981049A86',
 		DepositAsset: '0x9D0464996170c6B9e75eED71c68B99dDEDf279e8', // Curve.fi cvxCRV (CRV)
 		RewardsAssets: ['BENT', 'CRV', 'CVX']
