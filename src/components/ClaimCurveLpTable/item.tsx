@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {
 	Row, Col, Card, CardBody, UncontrolledCollapse, Button
 } from "reactstrap";
-import { 
+import {
 	useActiveWeb3React,
 	useBlockNumber,
 	useERC20Contract,
@@ -11,23 +11,21 @@ import {
 	useGasPrice,
 	useTokenPrices
 } from "hooks";
-import { ERC20, BentBasePool, formatBigNumber } from "utils";
-import { BigNumber, utils } from 'ethers';
+import { ERC20, BentBasePool, formatBigNumber, getTokenDecimals } from "utils";
+import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
 
 interface Props {
-	// poolIndex: number
 	poolInfo: BentPool
 	poolKey: string
-	// updateEarning: (i, e) => void
 }
 
 export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [symbol, setSymbol] = useState<string>('');
-	const [deposit, setDeposit] = useState(0);
-	const [rewards, setRewards] = useState<number[]>([]);
-	const [estRewards, setEstRewards] = useState<number[]>([]);
+	const [deposit, setDeposit] = useState<BigNumber>(ethers.constants.Zero);
+	const [rewards, setRewards] = useState<BigNumber[]>([]);
+	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { account } = useActiveWeb3React();
 	const blockNumber = useBlockNumber();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
@@ -35,10 +33,10 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
 
-	const totalEarned = () => {
-		let sum = BigNumber.from(0);
-		estRewards.forEach(reward => {
-			sum = sum.add(utils.parseUnits(reward.toString()).div(BigNumber.from(10).pow(18)))
+	const totalEarned = (): BigNumber => {
+		let sum = ethers.constants.Zero;
+		usdRewards.forEach(reward => {
+			sum = sum.add(reward)
 		})
 		return sum;
 	}
@@ -58,14 +56,14 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 			setSymbol(symbol);
 			setDeposit(depositedLp);
 			setRewards(rewards);
-			setEstRewards(props.poolInfo.RewardsAssets.map((key, index) => {
+			setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
 				const addr = TOKENS[key].ADDR.toLowerCase();
-				if(tokenPrices[addr] && rewards[index]) {
-					return parseFloat(rewards[index].toString()) * tokenPrices[addr];
+				if (tokenPrices[addr] && rewards[index]) {
+					return utils.parseUnits((tokenPrices[addr].toString()))
+						.mul(rewards[index]).div(BigNumber.from(10).pow(getTokenDecimals(addr)));
 				} else
-					return 0;
+					return ethers.constants.Zero;
 			}));
-			// props.updateEarning(props.poolIndex, totalEarned());
 		})
 	}, [depositTokenContract, bentPool, blockNumber, account, props.poolInfo.RewardsAssets, props, tokenPrices])
 
@@ -139,11 +137,11 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 								<p>Breakdown of claimable earnings:</p>
 							</Col>
 						</Row>
-						{ props.poolInfo.RewardsAssets.map((tokenKey, index) => 
+						{props.poolInfo.RewardsAssets.map((tokenKey, index) =>
 							<Row className="align-items-center mb-1" key={tokenKey} >
 								<Col>
 									<div className="imgText">
-										<img src={TOKENS[tokenKey].LOGO} alt="" width="28"/>
+										<img src={TOKENS[tokenKey].LOGO} alt="" width="28" />
 										<h4>{tokenKey}</h4>
 									</div>
 								</Col>
@@ -153,7 +151,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 										<span className="small text-bold"> {tokenKey}</span>
 									</b>
 									<span className="small text-muted"> ≈ ${
-										estRewards[index] ? formatBigNumber(utils.parseUnits(estRewards[index].toString()).div(BigNumber.from(10).pow(18))) : 0
+										usdRewards[index] ? formatBigNumber(usdRewards[index]) : 0
 									}</span>
 								</Col>
 								<Col></Col>
@@ -172,7 +170,7 @@ const PoolLogo = styled.img`
 	width: 28px;
 `
 
-const Wrapper = styled.div<{collapsed : boolean }>`
+const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
 	background: ${props => props.collapsed ? 'transparent' : '#CAB8FF !important'};
 	padding: 13px 15px;

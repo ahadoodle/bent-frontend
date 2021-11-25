@@ -4,7 +4,7 @@ import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant"
 import classnames from "classnames";
 import {
@@ -34,14 +34,14 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
-	const [lpBalance, setLpBalance] = useState(0);
-	const [allowance, setAllowance] = useState(0);
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const [deposit, setDeposit] = useState(0);
-	const [stakedUsd, setStakedUsd] = useState(BigNumber.from(0));
-	const [earned, setEarned] = useState(BigNumber.from(0));
-	const [tvl, setTvl] = useState(BigNumber.from(0));
+	const [lpBalance, setLpBalance] = useState<BigNumber>(ethers.constants.Zero);
+	const [allowance, setAllowance] = useState<BigNumber>(ethers.constants.Zero);
+	const [deposit, setDeposit] = useState<BigNumber>(ethers.constants.Zero);
+	const [stakedUsd, setStakedUsd] = useState<BigNumber>(ethers.constants.Zero);
+	const [earned, setEarned] = useState<BigNumber>(ethers.constants.Zero);
+	const [tvl, setTvl] = useState<BigNumber>(ethers.constants.Zero);
 	const [apr, setApr] = useState(0);
 
 	const { account } = useActiveWeb3React();
@@ -93,7 +93,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					.div(utils.parseEther(lpPrice.toString())).div(poolLpBalance)
 					.div(totalAllocPoint).toNumber());
 			setEarned(utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString()).mul(pendingRewards)
-				.div(BigNumber.from(10).pow(18)));
+				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
 		})
 	}, [depositTokenContract, account, blockNumber, masterChef, reserveTokenContract, props.poolInfo.PoolId, props.poolInfo.ReservePriceAsset, tokenPrices, lpPrice])
 
@@ -329,7 +329,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(deposit))
 													}
 													onClick={withdraw}
-												>Unstake & Withdraw</Button>
+												>Withdraw</Button>
 											</div>
 										</div>
 									</Card>

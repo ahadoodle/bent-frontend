@@ -1,33 +1,33 @@
 import { BigNumber, ethers } from "ethers";
 import { Contract } from 'web3-eth-contract';
 
-const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<number> => {
+const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<BigNumber> => {
 	try {
-		if (!account || !contract.options.address) return 0;
-		return await contract.methods.balanceOf(account).call();
+		if (!account || !contract.options.address) return ethers.constants.Zero;
+		return BigNumber.from(await contract.methods.balanceOf(account).call());
 	} catch (error) {
 		console.error(error);
-		return 0;
+		return ethers.constants.Zero;
 	}
 }
 
-const getAllowance = async (contract: Contract, account: string | null | undefined, spender: string): Promise<number> => {
+const getAllowance = async (contract: Contract, account: string | null | undefined, spender: string): Promise<BigNumber> => {
 	try {
-		if (!account || !contract.options.address) return 0;
-		return await contract.methods.allowance(account, spender).call();
+		if (!account || !contract.options.address) return ethers.constants.Zero;
+		return BigNumber.from(await contract.methods.allowance(account, spender).call());
 	} catch (error) {
 		console.error(error);
-		return 0;
+		return ethers.constants.Zero;
 	}
 }
 
-const getTotalSupply = async (contract: Contract): Promise<number> => {
+const getTotalSupply = async (contract: Contract): Promise<BigNumber> => {
 	try {
-		if (!contract.options.address) return 0;
-		return await contract.methods.totalSupply().call();
+		if (!contract.options.address) return ethers.constants.Zero;
+		return BigNumber.from(await contract.methods.totalSupply().call());
 	} catch (error) {
 		console.error(error);
-		return 0;
+		return ethers.constants.Zero;
 	}
 }
 
