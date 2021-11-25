@@ -1,12 +1,13 @@
+import { BigNumber, ethers } from 'ethers';
 import { Contract } from 'web3-eth-contract';
 
-const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<number> => {
+const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<BigNumber> => {
 	try {
-		if(!account || !contract.options.address) return 0;
-		return await contract.methods.balanceOf(account).call();
+		if (!account || !contract.options.address) return ethers.constants.Zero;
+		return BigNumber.from(await contract.methods.balanceOf(account).call());
 	} catch (error) {
 		console.error(error);
-		return 0;
+		return ethers.constants.Zero;
 	}
 }
 

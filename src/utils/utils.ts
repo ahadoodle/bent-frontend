@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { TOKENS } from 'constant';
-import { BigNumber, utils } from 'ethers'
+import { BigNumber, ethers, utils } from 'ethers'
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
 	if (!fullStr || fullStr.length <= strLen) return fullStr;
@@ -29,7 +29,7 @@ export function formatNumber(value: string): string {
 
 export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): string => {
 	if (!value) {
-		value = BigNumber.from(0)
+		value = ethers.constants.Zero
 	}
 
 	const valString = utils.formatUnits(value, units)
@@ -83,4 +83,8 @@ export const sleep = (ms = 0): Promise<unknown> => {
 export const getTokenDecimals = (addr: string): number => {
 	const key = Object.keys(TOKENS).filter(key => TOKENS[key].ADDR.toLowerCase() === addr.toLowerCase())[0];
 	return TOKENS[key].DECIMALS;
+}
+
+export const getEtherscanLink = (addr: string): string => {
+	return `https://etherscan.io/address/${addr}`;
 }

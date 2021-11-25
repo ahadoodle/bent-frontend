@@ -1,5 +1,5 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import {
   addPopup,
   PopupContent,
@@ -32,7 +32,7 @@ const initialState: ApplicationState = {
   walletModalOpen: false,
   settingsMenuOpen: false,
 
-  gasPrice: BigNumber.from(0),
+  gasPrice: ethers.constants.Zero,
 };
 
 export default createReducer(initialState, (builder) =>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {
 	Row, Col, Button
 } from "reactstrap";
-import { 
+import {
 	useActiveWeb3React,
 	useBlockNumber,
 	useERC20Contract,
@@ -12,7 +12,7 @@ import {
 	useTokenPrice
 } from "hooks";
 import { ERC20, formatBigNumber, BentMasterChef } from "utils";
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant";
 
 interface Props {
@@ -23,9 +23,9 @@ interface Props {
 export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [symbol, setSymbol] = useState<string>('');
-	const [deposit, setDeposit] = useState(0);
-	const [pendingRewards, setPendingRewards] = useState(0);
-	const [earned, setEarned] = useState(BigNumber.from(0));
+	const [depositedLp, setDepositedLp] = useState<BigNumber>(ethers.constants.Zero);
+	const [pendingRewards, setPendingRewards] = useState<BigNumber>(ethers.constants.Zero);
+	const [earnedUsd, setEarnedUsd] = useState<BigNumber>(ethers.constants.Zero);
 
 	const { account } = useActiveWeb3React();
 	const blockNumber = useBlockNumber();
@@ -41,10 +41,10 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 			BentMasterChef.getPendingRewards(masterChef, account, props.poolInfo.PoolId)
 		]).then(([symbol, depositedLp, pendingRewards]) => {
 			setSymbol(symbol);
-			setDeposit(depositedLp.amount);
+			setDepositedLp(depositedLp.amount);
 			setPendingRewards(pendingRewards);
-			setEarned(utils.parseEther(bentPrice.toString()).mul(pendingRewards)
-				.div(BigNumber.from(10).pow(18)));
+			setEarnedUsd(utils.parseEther(bentPrice.toString()).mul(pendingRewards)
+				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
 		})
 	}, [depositTokenContract, masterChef, blockNumber, account, props.poolInfo.PoolId, bentPrice])
 
@@ -69,7 +69,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO[0]} alt="" />
-							<PoolLogo src={props.poolInfo.LOGO[1]} alt="" style={{marginLeft: -20}} />
+							<PoolLogo src={props.poolInfo.LOGO[1]} alt="" style={{ marginLeft: -20 }} />
 							<h4>{props.poolInfo.Name}</h4>
 						</div>
 					</Col>
@@ -78,7 +78,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 							{formatBigNumber(BigNumber.from(pendingRewards))}
 							<span className="small text-bold"> BENT</span>
 						</b>
-						<span className="small text-muted"> ≈ ${formatBigNumber(earned)}</span>
+						<span className="small text-muted"> ≈ ${formatBigNumber(earnedUsd)}</span>
 					</Col>
 					{/* <Col>
 						<div className="earnValue">
@@ -94,7 +94,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 					</Col> */}
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(deposit))}
+							{formatBigNumber(BigNumber.from(depositedLp))}
 							<span className="small text-bold"> {props.poolInfo.Name} {symbol}</span>
 						</b>
 					</Col>
@@ -152,7 +152,7 @@ const PoolLogo = styled.img`
 	width: 28px;
 `
 
-const Wrapper = styled.div<{collapsed : boolean }>`
+const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
 	background: ${props => props.collapsed ? 'transparent' : '#CAB8FF !important'};
 	padding: 13px 15px;

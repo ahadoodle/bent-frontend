@@ -1,11 +1,12 @@
+import { BigNumber, ethers } from "ethers";
 import { Contract } from 'web3-eth-contract';
 
-const getBalances = async (contract: Contract, arg0: number): Promise<number> => {
+const getBalances = async (contract: Contract, arg0: number): Promise<BigNumber> => {
 	try {
-		if (!contract.options.address) return 0;
-		return await contract.methods.balances(arg0).call();
+		if (!contract.options.address) return ethers.constants.Zero;
+		return BigNumber.from(await contract.methods.balances(arg0).call());
 	} catch (error) {
-		return 0;
+		return ethers.constants.Zero;
 	}
 }
 
@@ -18,12 +19,12 @@ const getCoins = async (contract: Contract, arg0: number): Promise<string> => {
 	}
 }
 
-const getTotalSupply = async (contract: Contract): Promise<number> => {
+const getTotalSupply = async (contract: Contract): Promise<BigNumber> => {
 	try {
-		if (!contract.options.address) return 0;
-		return await contract.methods.totalSupply().call();
+		if (!contract.options.address) return ethers.constants.Zero;
+		return BigNumber.from(await contract.methods.totalSupply().call());
 	} catch (error) {
-		return 0;
+		return ethers.constants.Zero;
 	}
 }
 

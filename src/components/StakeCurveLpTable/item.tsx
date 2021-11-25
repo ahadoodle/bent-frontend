@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals } from "utils";
-import { BigNumber, utils } from 'ethers';
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink } from "utils";
+import { BigNumber, ethers, utils } from 'ethers';
 import {
 	useActiveWeb3React,
 	useBentPoolContract,
@@ -29,12 +28,15 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
-	const [lpBalance, setLpBalance] = useState(0);
-	const [allowance, setAllowance] = useState(0);
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const [deposit, setDeposit] = useState(0);
-	const [tvl, setTvl] = useState(BigNumber.from(0));
+	const [lpBalance, setLpBalance] = useState<BigNumber>(ethers.constants.Zero);
+	const [allowance, setAllowance] = useState<BigNumber>(ethers.constants.Zero);
+	const [depositedLp, setDepositedLp] = useState<BigNumber>(ethers.constants.Zero);
+	const [tvl, setTvl] = useState<BigNumber>(ethers.constants.Zero);
+	const [stakedUsd, setStakedUsd] = useState<BigNumber>(ethers.constants.Zero);
+	const [estRewards, setEstRewards] = useState<BigNumber>(ethers.constants.Zero);
+
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useCrvFiLp(props.poolInfo.DepositAsset);
 	const crvMinter = useCrvFiLp(props.poolInfo.CrvMinter || '');
@@ -52,11 +54,22 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		contractCalls.push(ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL));
 		contractCalls.push(BentBasePool.getDepositedAmount(bentPool, account));
 		contractCalls.push(ERC20.getBalanceOf(cvxRewardPool, props.poolInfo.POOL));
-		Promise.all(contractCalls).then(([depositSymbol, availableLp, allowance, depositedLp, poolLpBalance]) => {
+		contractCalls.push(BentBasePool.getPendingReward(bentPool, account));
+		Promise.all(contractCalls).then(([
+			depositSymbol, availableLp, allowance, depositedLp, poolLpBalance, rewards
+		]) => {
 			setSymbol(depositSymbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
-			setDeposit(depositedLp);
+			setDepositedLp(depositedLp);
+
+			let totalReward = ethers.constants.Zero;
+			props.poolInfo.RewardsAssets.forEach((key, index) => {
+				const addr = TOKENS[key].ADDR.toLowerCase();
+				totalReward = (tokenPrices[addr] && rewards[index]) ?
+					utils.parseUnits(tokenPrices[addr].toString()).mul(rewards[index]).add(totalReward) : totalReward
+			});
+			setEstRewards(totalReward.div(BigNumber.from(10).pow(18)));
 
 			// Calculate Crv Lp Price
 			const lpFiContract = props.poolInfo.CrvMinter ? crvMinter : depositTokenContract;
@@ -71,7 +84,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				if (BigNumber.from(lpTotalSupply).isZero()) {
 					return;
 				}
-				let totalUsd = BigNumber.from(0);
+				let totalUsd = ethers.constants.Zero;
 				for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
 					const addr = results[i * 2];
 					const bal = results[i * 2 + 1];
@@ -83,6 +96,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					}
 				}
 				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply));
+				setStakedUsd(totalUsd.mul(depositedLp).div(lpTotalSupply));
 			})
 		})
 	}, [depositTokenContract, account, blockNumber, bentPool, cvxRewardPool, crvMinter, tokenPrices, props])
@@ -95,7 +109,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		setStakeAmount(value);
 		if (isNaN(parseFloat(value))) return;
 		const amountBN = utils.parseUnits(value, 18);
-		setIsApproved(BigNumber.from(allowance).gte(amountBN) && !amountBN.isZero());
+		setIsApproved(allowance.gte(amountBN) && !amountBN.isZero());
 	}
 
 	const onWithdrawAmountChange = (value) => {
@@ -103,13 +117,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onStakeMax = () => {
-		const lpBalance_display = BigNumber.from(lpBalance);
-		setStakeAmount(formatBigNumber(lpBalance_display, 18, 18).replaceAll(',', ''));
-		setIsApproved(BigNumber.from(allowance).gte(lpBalance_display) && !lpBalance_display.isZero());
+		setStakeAmount(formatBigNumber(lpBalance, 18, 18).replaceAll(',', ''));
+		setIsApproved(allowance.gte(lpBalance) && !lpBalance.isZero());
 	}
 
 	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(BigNumber.from(deposit), 18, 18).replaceAll(',', ''));
+		setWithdrawAmount(formatBigNumber(depositedLp, 18, 18).replaceAll(',', ''));
 	}
 
 	const approve = async () => {
@@ -152,7 +165,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<span>$</span>0
+						<b>$ {formatBigNumber(estRewards)}</b>
 					</Col>
 					{/* <Col>
 						<div className="earnValue">
@@ -167,7 +180,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col> */}
 					<Col>
-						<div className="depositText">{formatBigNumber(BigNumber.from(deposit))} {symbol}</div>
+						<b>
+							{formatBigNumber(BigNumber.from(depositedLp))}
+							<span className="small text-bold"> {symbol}</span>
+						</b>
+						<span className="small text-muted"> ≈ ${
+							formatBigNumber(BigNumber.from(stakedUsd), 18, 0)
+						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
@@ -237,7 +256,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 													<Label>
 														Amount of {symbol} to stake
 													</Label>
-													<Label>Available:{formatBigNumber(BigNumber.from(lpBalance))}</Label>
+													<Label>Available:{formatBigNumber(lpBalance)}</Label>
 												</p>
 												<div className="amountinput">
 													<Input
@@ -254,18 +273,18 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														<Button
 															className="approvebtn"
 															disabled={
-																BigNumber.from(lpBalance).isZero() || isApproved ||
+																lpBalance.isZero() || isApproved ||
 																parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
+																utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 															}
 															onClick={approve}
 														>Approve</Button>
 														<Button
 															className="approvebtn"
 															disabled={
-																BigNumber.from(lpBalance).isZero() || !isApproved ||
+																lpBalance.isZero() || !isApproved ||
 																parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
+																utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 															}
 															onClick={stake}
 														>Stake</Button>
@@ -296,7 +315,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 													<Label>
 														Amount of {symbol} to withdraw
 													</Label>
-													<Label>Deposited:{formatBigNumber(BigNumber.from(deposit))}</Label>
+													<Label>Deposited:{formatBigNumber(BigNumber.from(depositedLp))}</Label>
 												</p>
 												<div className="amountinput">
 													<Input
@@ -317,9 +336,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 												<Button
 													className="approvebtn"
 													disabled={
-														BigNumber.from(deposit).isZero() ||
+														BigNumber.from(depositedLp).isZero() ||
 														parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(deposit))
+														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
 													}
 													onClick={withdraw}
 												>Withdraw</Button>
@@ -335,22 +354,22 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									<Card body>
 										<div className="infoWrap card-text mt-4">
 											<p>
-												BENT token address:{" "}
-												<Link to="/stake">
+												BENT token address:&nbsp;
+												<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
 													{TOKENS.BENT.ADDR}
-												</Link>
+												</a>
 											</p>
 											<p>
-												Deposit contract address:{" "}
-												<Link to="/stake">
+												Deposit contract address:&nbsp;
+												<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
 													{bentPool.options.address}
-												</Link>
+												</a>
 											</p>
 											<p>
-												Rewards contract address:{" "}
-												<Link to="/stake">
+												Rewards contract address:&nbsp;
+												<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
 													{bentPool.options.address}
-												</Link>
+												</a>
 											</p>
 										</div>
 									</Card>
