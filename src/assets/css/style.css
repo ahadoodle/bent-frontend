@@ -422,7 +422,7 @@ footer {
 .footer-inner-block ul li {
     margin-bottom: 12px;
 }
-.footer-inner-block ul li a {
+.footer-inner-block a {
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
@@ -436,7 +436,8 @@ footer {
     color: #C1FFD7;
     opacity: 1;
 }
-.footer-inner-block ul li a:hover {
+.footer-inner-block a:hover {
+    color: #FAFAFA;
     opacity: 0.5;
 }
 p.copyright {

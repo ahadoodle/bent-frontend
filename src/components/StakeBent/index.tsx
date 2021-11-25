@@ -90,7 +90,6 @@ export const StakeBent = (): React.ReactElement => {
 												<Card body>
 													<CardText className="mt-0">
 														Stake your BENT to earn additional rewards and earn a portion of the platforms
-														revenue distributed as CRV, CVX and cvxCRV.
 													</CardText>
 												</Card>
 											</Col>
@@ -106,7 +105,7 @@ export const StakeBent = (): React.ReactElement => {
 															</p>
 															<div className="amountinput">
 																<Input type="text" placeholder="0" disabled={true} />
-																<img src={TOKEN_LOGO.BENT} alt="input-logo" className="inputlogo"/>
+																<img src={TOKEN_LOGO.BENT} alt="input-logo" className="inputlogo" />
 																<Button className="maxbtn" disabled={true} >Max</Button>
 															</div>
 															<div className="btnouter">
