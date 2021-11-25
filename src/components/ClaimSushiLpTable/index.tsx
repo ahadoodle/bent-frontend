@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Row, Col, UncontrolledCollapse, Card, CardBody } from "reactstrap";
+import { Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 // import { StakeCurveLpItem } from "./item";
 import SushiLogo from 'assets/images/token/SUSHI.png';
@@ -25,7 +25,7 @@ export const ClaimSushiLpTable = (): React.ReactElement => {
 							<Row className="align-items-center">
 								<Col>
 									<div className="imgText">
-										<img src={SushiLogo} alt="" width="28"/>
+										<img src={SushiLogo} alt="" width="28" />
 										<h2>Sushi Pools</h2>
 									</div>
 								</Col>
@@ -63,18 +63,19 @@ export const ClaimSushiLpTable = (): React.ReactElement => {
 								</Col>
 							</Row>
 						</Wrapper>
-						<UncontrolledCollapse
+						{/* <UncontrolledCollapse
 							toggler="#togglerClaimSushiPool"
 							className="bentpoolText"
-						>
+						> */}
+						<div className="bentpoolText">
 							<Card>
 								<CardBody>
-									{ Object.keys(POOLS.SushiPools.Pools).map(poolName =>
+									{Object.keys(POOLS.SushiPools.Pools).map(poolName =>
 										<ClaimSushiLpItem poolInfo={POOLS.SushiPools.Pools[poolName]} poolKey={poolName} key={poolName} />)
 									}
 								</CardBody>
 							</Card>
-						</UncontrolledCollapse>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -82,7 +83,7 @@ export const ClaimSushiLpTable = (): React.ReactElement => {
 	)
 }
 
-const Wrapper = styled.div<{collapsed : boolean }>`
+const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
 	background: ${props => props.collapsed ? 'transparent' : '#B5DEFF !important'};
 	border-radius: 8px;

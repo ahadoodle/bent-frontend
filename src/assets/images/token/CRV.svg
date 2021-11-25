@@ -1,5 +1,5 @@
 <svg viewBox="0 0 32 32" id="crv" xmlns="http://www.w3.org/2000/svg">
-	<circle style="fill: rgb(255, 255, 255);" cx="16" cy="16" r="16" />
+	<circle style="fill: transparent;" cx="16" cy="16" r="16" />
 	<g id="eosurface1" transform="matrix(0.780773, 0, 0, 0.780773, 3.500009, 3.515258)">
 		<path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,100%);fill-opacity:1;"
 			d="M 13.621094 19.402344 L 11.175781 19.933594 L 10.871094 18.800781 L 13.46875 18.332031 Z M 13.621094 19.402344 " />

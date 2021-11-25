@@ -30,13 +30,13 @@ export const StakeSushiLpTable = ():React.ReactElement => {
 												aria-hidden="true"
 											></i>
 										</Col>
-										{/* <Col>
+										<Col>
 											APR{" "}
 											<i
 												className="fa fa-caret-down"
 												aria-hidden="true"
 											></i>
-										</Col> */}
+										</Col>
 										<Col>
 											My Staked Balances{" "}
 											<i
