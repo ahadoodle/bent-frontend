@@ -52,7 +52,7 @@ export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): 
 }
 
 export const getCrvDepositLink = (tokenName: string): string => {
-	if (tokenName === 'cvxCrv')
+	if (tokenName === 'cvxcrv')
 		return `https://curve.fi/factory/22/deposit`;
 	else
 		return `https://curve.fi/${tokenName}/deposit`;
