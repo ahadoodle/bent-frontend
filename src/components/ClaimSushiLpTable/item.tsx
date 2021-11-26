@@ -8,14 +8,14 @@ import {
 	useBlockNumber,
 	useBentMasterChefContract,
 	useGasPrice,
-	useTokenPrice
+	useTokenPrice,
+	useMulticallProvider
 } from "hooks";
 import {
 	formatBigNumber,
 	BentMasterChef,
 	getMultiERC20Contract,
-	getMultiBentMasterChef,
-	MulticallProvider
+	getMultiBentMasterChef
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant";
@@ -36,12 +36,13 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const blockNumber = useBlockNumber();
 	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
+	const multicall = useMulticallProvider();
 	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
 
 	useEffect(() => {
 		const accAddr = account || ethers.constants.AddressZero
 		const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
-		MulticallProvider.all([
+		multicall.all([
 			getMultiERC20Contract(props.poolInfo.DepositAsset).symbol(),
 			bentMasterChefMC.userInfo(props.poolInfo.PoolId, accAddr),
 			bentMasterChefMC.pendingReward(props.poolInfo.PoolId, accAddr)
@@ -52,7 +53,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 			setEarnedUsd(utils.parseEther(bentPrice.toString()).mul(pendingRewards)
 				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
 		})
-	}, [blockNumber, account, props, bentPrice])
+	}, [multicall, blockNumber, account, props, bentPrice])
 
 	const claim = async () => {
 		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
