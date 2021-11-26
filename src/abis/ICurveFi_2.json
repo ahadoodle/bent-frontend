@@ -1176,7 +1176,7 @@
     ],
     "stateMutability": "view",
     "type": "function",
-    "gas": 2280
+    "gas": "2280"
   },
   {
     "name": "balances",
@@ -1194,7 +1194,7 @@
     ],
     "stateMutability": "view",
     "type": "function",
-    "gas": 2310
+    "gas": "2310"
   },
   {
     "name": "fee",
@@ -1207,7 +1207,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 2231
+    "gas": "2231"
   },
   {
     "name": "block_timestamp_last",
@@ -1220,7 +1220,7 @@
     "inputs": [],
     "stateMutability": "view",
     "type": "function",
-    "gas": 2261
+    "gas": "2261"
   },
   {
     "name": "initial_A",

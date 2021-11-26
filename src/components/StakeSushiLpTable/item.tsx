@@ -13,7 +13,6 @@ import {
 	useBlockNumber,
 	useERC20Contract,
 	useGasPrice,
-	useTokenPrice,
 	useTokenPrices
 } from "hooks";
 import {
@@ -21,6 +20,9 @@ import {
 	ERC20,
 	BentMasterChef,
 	getEtherscanLink,
+	MulticallProvider,
+	getMultiERC20Contract,
+	getMultiBentMasterChef,
 } from "utils";
 
 
@@ -38,7 +40,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [lpBalance, setLpBalance] = useState<BigNumber>(ethers.constants.Zero);
 	const [allowance, setAllowance] = useState<BigNumber>(ethers.constants.Zero);
-	const [deposit, setDeposit] = useState<BigNumber>(ethers.constants.Zero);
+	const [depositedLp, setDepositedLp] = useState<BigNumber>(ethers.constants.Zero);
 	const [stakedUsd, setStakedUsd] = useState<BigNumber>(ethers.constants.Zero);
 	const [earned, setEarned] = useState<BigNumber>(ethers.constants.Zero);
 	const [tvl, setTvl] = useState<BigNumber>(ethers.constants.Zero);
@@ -46,46 +48,38 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
-	const reserveTokenContract = useERC20Contract(props.poolInfo.ReservePriceAsset);
 	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
 	const blockNumber = useBlockNumber();
 	const tokenPrices = useTokenPrices();
-	const lpPrice = useTokenPrice(props.poolInfo.DepositAsset);
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
 
 	useEffect(() => {
-		Promise.all([
-			ERC20.getSymbol(depositTokenContract),
-			ERC20.getBalanceOf(depositTokenContract, account),
-			ERC20.getAllowance(depositTokenContract, account, POOLS.SushiPools.MasterChef),
-			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId),
-			ERC20.getBalanceOf(depositTokenContract, POOLS.SushiPools.MasterChef),
-			BentMasterChef.getTotalAllocPoint(masterChef),
-			BentMasterChef.getPoolInfo(masterChef, props.poolInfo.PoolId),
-			BentMasterChef.getRewardPerBlock(masterChef),
-			BentMasterChef.getPendingRewards(masterChef, account, props.poolInfo.PoolId),
-		]).then(([
-			depositSymbol,
-			availableLp,
-			allowance,
-			depositedLp,
-			poolLpBalance,
-			totalAllocPoint,
-			poolInfo,
-			rewardPerBlock,
-			pendingRewards,
-		]) => {
-			setSymbol(depositSymbol);
+		const accAddr = account || ethers.constants.AddressZero;
+		const lpTokenContract = getMultiERC20Contract(props.poolInfo.DepositAsset);
+		const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
+		MulticallProvider.all([
+			lpTokenContract.symbol(),
+			lpTokenContract.balanceOf(accAddr),
+			lpTokenContract.allowance(accAddr, POOLS.SushiPools.MasterChef),
+			bentMasterChefMC.userInfo(props.poolInfo.PoolId, accAddr),
+			lpTokenContract.balanceOf(POOLS.SushiPools.MasterChef),
+			bentMasterChefMC.totalAllocPoint(),
+			bentMasterChefMC.poolInfo(props.poolInfo.PoolId),
+			bentMasterChefMC.rewardPerBlock(),
+			bentMasterChefMC.pendingReward(props.poolInfo.PoolId, accAddr)
+		]).then(([symbol, availableLp, allowance, userInfo, poolLpBalance, totalAllocPoint, poolInfo, rewardPerBlock, pendingRewards]) => {
+			const lpPrice = tokenPrices[props.poolInfo.DepositAsset];
+			setSymbol(symbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
-			setDeposit(depositedLp.amount);
+			setDepositedLp(userInfo.amount);
 			setTvl(utils.parseEther(lpPrice.toString()).mul(poolLpBalance)
 				.div(BigNumber.from(10).pow(18)));
-			setStakedUsd(utils.parseEther(lpPrice.toString()).mul(depositedLp.amount)
+			setStakedUsd(utils.parseEther(lpPrice.toString()).mul(userInfo.amount)
 				.div(BigNumber.from(10).pow(18)));
 			setApr((BigNumber.from(poolLpBalance).isZero() || BigNumber.from(totalAllocPoint).isZero() || !lpPrice) ? 0 :
 				utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString())
@@ -95,7 +89,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			setEarned(utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString()).mul(pendingRewards)
 				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
 		})
-	}, [depositTokenContract, account, blockNumber, masterChef, reserveTokenContract, props.poolInfo.PoolId, props.poolInfo.ReservePriceAsset, tokenPrices, lpPrice])
+	}, [account, blockNumber, props, tokenPrices])
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
@@ -115,7 +109,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(BigNumber.from(deposit), 18, 8).replaceAll(',', ''));
+		setWithdrawAmount(formatBigNumber(BigNumber.from(depositedLp), 18, 8).replaceAll(',', ''));
 	}
 
 	const approve = async () => {
@@ -166,7 +160,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(deposit))}
+							{formatBigNumber(BigNumber.from(depositedLp))}
 							<span className="small text-bold"> {symbol}</span>
 						</b>
 						<span className="small text-muted"> ≈ ${
@@ -302,7 +296,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 													<Label>
 														Amount of {symbol} to withdraw
 													</Label>
-													<Label>Deposited:{formatBigNumber(BigNumber.from(deposit))}</Label>
+													<Label>Deposited:{formatBigNumber(BigNumber.from(depositedLp))}</Label>
 												</p>
 												<div className="amountinput">
 													<Input
@@ -324,9 +318,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 												<Button
 													className="approvebtn"
 													disabled={
-														BigNumber.from(deposit).isZero() ||
+														BigNumber.from(depositedLp).isZero() ||
 														parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(deposit))
+														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
 													}
 													onClick={withdraw}
 												>Withdraw</Button>

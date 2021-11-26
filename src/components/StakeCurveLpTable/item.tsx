@@ -5,14 +5,13 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink } from "utils";
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink, MulticallProvider, getMultiERC20Contract, getMultiBentPool, getMultiCvxRewardPool } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
 	useActiveWeb3React,
 	useBentPoolContract,
 	useBlockNumber,
 	useCrvFiLp,
-	useCvxBaseRewardPool,
 	useGasPrice,
 	useTokenPrices
 } from "hooks";
@@ -40,29 +39,28 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useCrvFiLp(props.poolInfo.DepositAsset);
 	const crvMinter = useCrvFiLp(props.poolInfo.CrvMinter || '');
-	const cvxRewardPool = useCvxBaseRewardPool(props.poolInfo.CvxRewardsAddr);
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
 	const blockNumber = useBlockNumber();
 
 	useEffect(() => {
-		/* eslint-disable @typescript-eslint/no-explicit-any*/
-		const contractCalls: any[] = [];
-		contractCalls.push(ERC20.getSymbol(depositTokenContract));
-		contractCalls.push(ERC20.getBalanceOf(depositTokenContract, account));
-		contractCalls.push(ERC20.getAllowance(depositTokenContract, account, props.poolInfo.POOL));
-		contractCalls.push(BentBasePool.getDepositedAmount(bentPool, account));
-		contractCalls.push(ERC20.getBalanceOf(cvxRewardPool, props.poolInfo.POOL));
-		contractCalls.push(BentBasePool.getPendingReward(bentPool, account));
-		Promise.all(contractCalls).then(([
-			depositSymbol, availableLp, allowance, depositedLp, poolLpBalance, rewards
-		]) => {
-			setSymbol(depositSymbol);
+		const accAddr = account || ethers.constants.AddressZero;
+		const lpTokenContract = getMultiERC20Contract(props.poolInfo.DepositAsset);
+		const bentPoolMC = getMultiBentPool(props.poolKey);
+		const cvxRewardPool = getMultiCvxRewardPool(props.poolInfo.CvxRewardsAddr);
+		MulticallProvider.all([
+			lpTokenContract.symbol(),
+			lpTokenContract.balanceOf(accAddr),
+			lpTokenContract.allowance(accAddr, props.poolInfo.POOL),
+			bentPoolMC.balanceOf(accAddr),
+			cvxRewardPool.balanceOf(props.poolInfo.POOL),
+			bentPoolMC.pendingReward(accAddr),
+		]).then(([symbol, availableLp, allowance, depositedLp, poolLpBalance, rewards]) => {
+			setSymbol(symbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDepositedLp(depositedLp);
-
 			let totalReward = ethers.constants.Zero;
 			props.poolInfo.RewardsAssets.forEach((key, index) => {
 				const addr = TOKENS[key].ADDR.toLowerCase();
@@ -73,6 +71,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 
 			// Calculate Crv Lp Price
 			const lpFiContract = props.poolInfo.CrvMinter ? crvMinter : depositTokenContract;
+			/* eslint-disable @typescript-eslint/no-explicit-any*/
 			const lpFiContractCalls: any[] = [];
 			for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
 				lpFiContractCalls.push(CrvFiLp.getCoins(lpFiContract, i));
@@ -90,8 +89,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					const bal = results[i * 2 + 1];
 					if (tokenPrices[addr.toLowerCase()]) {
 						totalUsd = utils.parseEther(tokenPrices[addr.toLowerCase()].toString())
-							.mul(BigNumber.from(bal))
-							.div(BigNumber.from(10).pow(getTokenDecimals(addr)))
+							.mul(bal).div(BigNumber.from(10).pow(getTokenDecimals(addr)))
 							.add(totalUsd);
 					}
 				}
@@ -99,7 +97,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				setStakedUsd(totalUsd.mul(depositedLp).div(lpTotalSupply));
 			})
 		})
-	}, [depositTokenContract, account, blockNumber, bentPool, cvxRewardPool, crvMinter, tokenPrices, props])
+	}, [depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
