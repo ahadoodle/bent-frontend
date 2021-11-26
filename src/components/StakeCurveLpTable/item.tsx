@@ -5,7 +5,21 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink, MulticallProvider, getMultiERC20Contract, getMultiBentPool, getMultiCvxRewardPool, formatMillionsBigNumber } from "utils";
+import {
+	ERC20,
+	BentBasePool,
+	CrvFiLp,
+	formatBigNumber,
+	getCrvDepositLink,
+	getTokenDecimals,
+	getEtherscanLink,
+	getMultiERC20Contract,
+	getMultiBentPool,
+	getMultiCvxRewardPool,
+	formatMillionsBigNumber,
+	getAnnualReward,
+	MulticallProvider,
+} from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
 	useActiveWeb3React,
@@ -32,6 +46,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [allowance, setAllowance] = useState<BigNumber>(ethers.constants.Zero);
 	const [depositedLp, setDepositedLp] = useState<BigNumber>(ethers.constants.Zero);
 	const [tvl, setTvl] = useState<BigNumber>(ethers.constants.Zero);
+	const [apr, setApr] = useState<number>(0);
 	const [stakedUsd, setStakedUsd] = useState<BigNumber>(ethers.constants.Zero);
 	const [estRewards, setEstRewards] = useState<BigNumber>(ethers.constants.Zero);
 
@@ -55,7 +70,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			bentPoolMC.balanceOf(accAddr),
 			cvxRewardPool.balanceOf(props.poolInfo.POOL),
 			bentPoolMC.pendingReward(accAddr),
-		]).then(([availableLp, allowance, depositedLp, poolLpBalance, rewards]) => {
+			bentPoolMC.rewardPools(0),
+			bentPoolMC.rewardPools(1),
+			bentPoolMC.rewardPools(2),
+			getMultiERC20Contract(TOKENS['BENT'].ADDR).totalSupply(),
+		]).then(([availableLp, allowance, depositedLp, poolLpBalance, rewards, rewardsInfo1, rewardsInfo2, rewardsInfo3, bentSupply]) => {
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDepositedLp(depositedLp);
@@ -91,8 +110,20 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 							.add(totalUsd);
 					}
 				}
-				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply));
+				const tvl = totalUsd.mul(poolLpBalance).div(lpTotalSupply)
+				setTvl(tvl);
 				setStakedUsd(totalUsd.mul(depositedLp).div(lpTotalSupply));
+
+				// Cvx rewards
+				let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
+				annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+				if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
+					annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+				// Bent Rewards
+				const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
+				const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
+				annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()]);
+				setApr(annualRewardsUsd.mul(10000).div(tvl).toNumber() / 100);
 			})
 		})
 	}, [depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
@@ -165,7 +196,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							TBC
+							{apr ? `${apr}%` : 'TBC'}
 						</b>
 					</Col>
 					<Col>

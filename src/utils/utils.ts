@@ -101,3 +101,9 @@ export const getTokenDecimals = (addr: string): number => {
 export const getEtherscanLink = (addr: string): string => {
 	return `https://etherscan.io/address/${addr}`;
 }
+
+export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenPrice: number): BigNumber => {
+	return rewardRate.mul(6400).mul(365)
+		.mul(utils.parseUnits(tokenPrice.toString()))
+		.div(BigNumber.from(10).pow(36 + getTokenDecimals(tokenAddr)));
+}

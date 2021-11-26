@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Navbar,
@@ -16,7 +16,7 @@ import ConnectWallet from "components/ConnectWallet";
 import { useActiveWeb3React, useLocalStorage } from "hooks";
 
 interface Props {
-	handleTheme: (theme) => void
+  handleTheme: (theme) => void
 }
 
 const Header = (props: Props): React.ReactElement => {
@@ -27,41 +27,41 @@ const Header = (props: Props): React.ReactElement => {
   const openNav = () => {
     setCustomClass("sidenavmenu");
   };
-	const [theme, setTheme] = useLocalStorage('theme');
+  const [theme, setTheme] = useLocalStorage('theme');
   // const [errorMessage, setErrorMessage] = useState(null);
-	const [userBalance, setUserBalance] = useState<unknown>(0);
+  const [userBalance, setUserBalance] = useState<unknown>(0);
   // const [dropdownOpen,setDropdownOpen] = useState(false);
   const { library, account } = useActiveWeb3React();
 
   // Modal open state
   const [modal, setModal] = React.useState(false);
-  
+
   // Toggle for Modal
   const toggle = () => setModal(!modal);
 
   // const toggleDropDown = () => { setDropdownOpen(!dropdownOpen)}
   // const onMouseEnter = () => { setDropdownOpen(true) }
   // const onMouseLeave = () => {setDropdownOpen(false) }
-	useEffect(() => {
-		if(!theme) setTheme('Dark');
-	}, [theme, setTheme]);
+  useEffect(() => {
+    if (!theme) setTheme('Light');
+  }, [theme, setTheme]);
 
   const selectTheme = () => {
     if (theme === "Light") {
-			setTheme('Dark');
-			props.handleTheme('Dark');
+      setTheme('Dark');
+      props.handleTheme('Dark');
     } else {
       setTheme('Light');
-			props.handleTheme('Light');
+      props.handleTheme('Light');
     }
   }
 
   useEffect(() => {
-    if(account && library) {
+    if (account && library) {
       library.getBalance(account)
-      .then(balanceResult => {
-        setUserBalance(balanceResult);
-      })
+        .then(balanceResult => {
+          setUserBalance(balanceResult);
+        })
     }
   }, [library, account]);
   return (
@@ -104,11 +104,11 @@ const Header = (props: Props): React.ReactElement => {
                   <Button className="closebtn" onClick={closeNav}>
                     &times;
                   </Button>
-                  <Link  to="/stake">Stake</Link>
+                  <Link to="/stake">Stake</Link>
                   <Link to="/claim">Claim</Link>
                   {/* <Link to="/lock-cvx">Lock CVX</Link>
                   <Link to="/stake">More</Link> */}
-                  
+
                   {/*<Dropdown
                   className=""
                   onMouseOver={onMouseEnter}
@@ -134,17 +134,17 @@ const Header = (props: Props): React.ReactElement => {
         toggle={toggle}
         modalTransition={{ timeout: 2000 }} className="custom-modal-style">
         <ModalBody>
-        {/* {errorMessage != null ? (<h6>Error: {errorMessage} </h6>) : */}
-        (<>
-        <h6>MetaTask connected successfully</h6><br/>
-        <div className='accountDisplay'>
-          <h6>Address: {account}</h6>
-        </div>
-        <div className='balanceDisplay' >
-          <h6>Balance: {userBalance}</h6>
-        </div>
-        </>)
-        {/* } */}
+          {/* {errorMessage != null ? (<h6>Error: {errorMessage} </h6>) : */}
+          (<>
+            <h6>MetaTask connected successfully</h6><br />
+            <div className='accountDisplay'>
+              <h6>Address: {account}</h6>
+            </div>
+            <div className='balanceDisplay' >
+              <h6>Balance: {userBalance}</h6>
+            </div>
+          </>)
+          {/* } */}
         </ModalBody>
       </Modal>
     </React.Fragment>

@@ -21,9 +21,9 @@ import {
 	ERC20,
 	BentMasterChef,
 	getEtherscanLink,
-	MulticallProvider,
 	getMultiERC20Contract,
 	getMultiBentMasterChef,
+	MulticallProvider,
 } from "utils";
 
 
@@ -73,7 +73,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			bentMasterChefMC.rewardPerBlock(),
 			bentMasterChefMC.pendingReward(props.poolInfo.PoolId, accAddr)
 		]).then(([symbol, availableLp, allowance, userInfo, poolLpBalance, totalAllocPoint, poolInfo, rewardPerBlock, pendingRewards]) => {
-			const lpPrice = tokenPrices[props.poolInfo.DepositAsset];
+			const lpPrice = tokenPrices[props.poolInfo.DepositAsset] || 0;
 			setSymbol(symbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
@@ -154,12 +154,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b>$ {formatBigNumber(earned)}</b>
+						<b><span className="small">$</span>{formatBigNumber(earned)}</b>
 					</Col>
-					<Col>
+					<Col style={{ width: '15%' }}>
 						<b>{utils.commify(apr)}%</b>
 					</Col>
-					<Col>
+					<Col style={{ width: '25%' }}>
 						<b>
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
 							<span className="small text-bold"> {props.poolInfo.Name} {symbol}</span>

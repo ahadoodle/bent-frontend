@@ -10,7 +10,13 @@ import {
 	useGasPrice,
 	useTokenPrice
 } from "hooks";
-import { formatBigNumber, BentMasterChef, MulticallProvider, getMultiERC20Contract, getMultiBentMasterChef } from "utils";
+import {
+	formatBigNumber,
+	BentMasterChef,
+	getMultiERC20Contract,
+	getMultiBentMasterChef,
+	MulticallProvider
+} from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant";
 
