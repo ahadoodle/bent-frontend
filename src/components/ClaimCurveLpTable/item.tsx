@@ -10,7 +10,14 @@ import {
 	useGasPrice,
 	useTokenPrices
 } from "hooks";
-import { BentBasePool, formatBigNumber, getTokenDecimals, MulticallProvider, getMultiERC20Contract, getMultiBentPool } from "utils";
+import {
+	BentBasePool,
+	formatBigNumber,
+	getTokenDecimals,
+	getMultiERC20Contract,
+	getMultiBentPool,
+	MulticallProvider
+} from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
 

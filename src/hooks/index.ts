@@ -4,5 +4,6 @@ export * from './useLocalStorage';
 export * from './useWeb3';
 export * from './useContract';
 export * from './useDebounce';
+export * from './useMulticallProvider';
 export * from 'state/application/hooks';
 export * from 'state/price/hooks';
