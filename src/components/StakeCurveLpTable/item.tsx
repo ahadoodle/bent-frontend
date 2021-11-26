@@ -5,7 +5,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink, MulticallProvider, getMultiERC20Contract, getMultiBentPool, getMultiCvxRewardPool } from "utils";
+import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink, MulticallProvider, getMultiERC20Contract, getMultiBentPool, getMultiCvxRewardPool, formatMillionsBigNumber } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
 	useActiveWeb3React,
@@ -23,7 +23,6 @@ interface Props {
 }
 
 export const StakeCurveLpItem = (props: Props): React.ReactElement => {
-	const [symbol, setSymbol] = useState<string>('');
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
@@ -43,6 +42,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
 	const blockNumber = useBlockNumber();
+	const symbol = props.poolInfo.CrvLpSYMBOL;
 
 	useEffect(() => {
 		const accAddr = account || ethers.constants.AddressZero;
@@ -50,14 +50,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const bentPoolMC = getMultiBentPool(props.poolKey);
 		const cvxRewardPool = getMultiCvxRewardPool(props.poolInfo.CvxRewardsAddr);
 		MulticallProvider.all([
-			lpTokenContract.symbol(),
 			lpTokenContract.balanceOf(accAddr),
 			lpTokenContract.allowance(accAddr, props.poolInfo.POOL),
 			bentPoolMC.balanceOf(accAddr),
 			cvxRewardPool.balanceOf(props.poolInfo.POOL),
 			bentPoolMC.pendingReward(accAddr),
-		]).then(([symbol, availableLp, allowance, depositedLp, poolLpBalance, rewards]) => {
-			setSymbol(symbol);
+		]).then(([availableLp, allowance, depositedLp, poolLpBalance, rewards]) => {
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDepositedLp(depositedLp);
@@ -155,7 +153,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 				style={{ marginBottom: "1rem" }}
 			>
-				<Row className="align-items-center">
+				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO} alt="" />
@@ -163,32 +161,25 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b>$ {formatBigNumber(estRewards)}</b>
+						<b><span className="small">$</span>{formatBigNumber(estRewards)}</b>
 					</Col>
-					{/* <Col>
-						<div className="earnValue">
-							<b>
-								6.56% <span>(proj.6.74%)</span>
-							</b>
-							<p>CRV boost: 1.7x</p>
-							<i
-								className="fa fa-info-circle"
-								aria-hidden="true"
-							></i>
-						</div>
-					</Col> */}
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(depositedLp))}
+							TBC
+						</b>
+					</Col>
+					<Col>
+						<b>
+							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
 							<span className="small text-bold"> {symbol}</span>
 						</b>
-						<span className="small text-muted"> ≈ ${
-							formatBigNumber(BigNumber.from(stakedUsd), 18, 0)
-						}</span>
+						<span className="small text-muted"> ≈ <span className="small">$</span>
+							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+						</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b>$ {formatBigNumber(tvl, 18, 0)}</b>
+							<b><span className="small">$</span>{formatMillionsBigNumber(tvl, 18, 0)}</b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
