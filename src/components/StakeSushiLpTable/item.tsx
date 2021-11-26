@@ -17,6 +17,7 @@ import {
 } from "hooks";
 import {
 	formatBigNumber,
+	formatMillionsBigNumber,
 	ERC20,
 	BentMasterChef,
 	getEtherscanLink,
@@ -144,7 +145,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 				id={`toggleInner-stake-sushi-lp-${props.poolKey}`}
 				style={{ marginBottom: "1rem" }}
 			>
-				<Row className="align-items-center">
+				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO[0]} alt="" />
@@ -160,16 +161,16 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(depositedLp))}
-							<span className="small text-bold"> {symbol}</span>
+							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
+							<span className="small text-bold"> {props.poolInfo.Name} {symbol}</span>
 						</b>
 						<span className="small text-muted"> ≈ ${
-							formatBigNumber(BigNumber.from(stakedUsd), 18, 0)
+							formatBigNumber(BigNumber.from(stakedUsd), 18, 2)
 						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b><span>$ {formatBigNumber(tvl, 18, 0)}</span></b>
+							<b><span className="small">$</span>{formatMillionsBigNumber(tvl, 18, 0)}</b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

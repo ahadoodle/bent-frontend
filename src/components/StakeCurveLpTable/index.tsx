@@ -28,13 +28,13 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 												aria-hidden="true"
 											></i>
 										</Col>
-										{/* <Col>
+										<Col>
 											APR{" "}
 											<i
 												className="fa fa-caret-down"
 												aria-hidden="true"
 											></i>
-										</Col> */}
+										</Col>
 										<Col>
 											Deposits{" "}
 											<i
@@ -52,12 +52,12 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 									</Row>
 									<Card>
 										<CardBody>
-											{ Object.keys(POOLS.BentPools).map(poolName =>
-												<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName}/>)
+											{Object.keys(POOLS.BentPools).map(poolName =>
+												<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName} />)
 											}
 										</CardBody>
 									</Card>
-											
+
 									{/* <tbody>
 										<tr>
 											<td colSpan={5}>

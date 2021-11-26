@@ -51,6 +51,19 @@ export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): 
 	return displayNum;
 }
 
+export const formatMillions = (value: string): string => {
+	const parts = value.split('.');
+	const steps = parts[0].split(',');
+	const first = steps[0];
+	const last = steps.length > 1 ? steps[1][0] : parseFloat(`0.${value.split('.')[1]}`).toFixed(1);
+	const unit = steps.length > 3 ? 'b' : steps.length > 2 ? 'm' : steps.length > 1 ? 'k' : '';
+	return `${first}.${last}${unit}`;
+}
+
+export const formatMillionsBigNumber = (value?: BigNumber, units = 18, displayDec = 3): string => {
+	return formatMillions(formatBigNumber(value, units, displayDec));
+}
+
 export const getCrvDepositLink = (tokenName: string): string => {
 	if (tokenName === 'cvxcrv')
 		return `https://curve.fi/factory/22/deposit`;
