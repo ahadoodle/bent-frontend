@@ -13,6 +13,7 @@ import {
 	useBlockNumber,
 	useERC20Contract,
 	useGasPrice,
+	useMulticallProvider,
 	useTokenPrices
 } from "hooks";
 import {
@@ -22,8 +23,7 @@ import {
 	BentMasterChef,
 	getEtherscanLink,
 	getMultiERC20Contract,
-	getMultiBentMasterChef,
-	MulticallProvider,
+	getMultiBentMasterChef
 } from "utils";
 
 
@@ -53,6 +53,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const gasPrice = useGasPrice();
 	const blockNumber = useBlockNumber();
 	const tokenPrices = useTokenPrices();
+	const multicall = useMulticallProvider();
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -62,7 +63,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		const accAddr = account || ethers.constants.AddressZero;
 		const lpTokenContract = getMultiERC20Contract(props.poolInfo.DepositAsset);
 		const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
-		MulticallProvider.all([
+		multicall.all([
 			lpTokenContract.symbol(),
 			lpTokenContract.balanceOf(accAddr),
 			lpTokenContract.allowance(accAddr, POOLS.SushiPools.MasterChef),
@@ -90,7 +91,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			setEarned(utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString()).mul(pendingRewards)
 				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
 		})
-	}, [account, blockNumber, props, tokenPrices])
+	}, [multicall, account, blockNumber, props, tokenPrices])
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);

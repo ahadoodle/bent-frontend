@@ -17,8 +17,7 @@ import {
 	getMultiBentPool,
 	getMultiCvxRewardPool,
 	formatMillionsBigNumber,
-	getAnnualReward,
-	MulticallProvider,
+	getAnnualReward
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
@@ -27,6 +26,7 @@ import {
 	useBlockNumber,
 	useCrvFiLp,
 	useGasPrice,
+	useMulticallProvider,
 	useTokenPrices
 } from "hooks";
 import { BentPool, TOKENS } from "constant";
@@ -57,6 +57,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
 	const blockNumber = useBlockNumber();
+	const multicall = useMulticallProvider();
 	const symbol = props.poolInfo.CrvLpSYMBOL;
 
 	useEffect(() => {
@@ -64,7 +65,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const lpTokenContract = getMultiERC20Contract(props.poolInfo.DepositAsset);
 		const bentPoolMC = getMultiBentPool(props.poolKey);
 		const cvxRewardPool = getMultiCvxRewardPool(props.poolInfo.CvxRewardsAddr);
-		MulticallProvider.all([
+		multicall.all([
 			lpTokenContract.balanceOf(accAddr),
 			lpTokenContract.allowance(accAddr, props.poolInfo.POOL),
 			bentPoolMC.balanceOf(accAddr),
@@ -126,7 +127,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				setApr(annualRewardsUsd.mul(10000).div(tvl).toNumber() / 100);
 			})
 		})
-	}, [depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
+	}, [multicall, depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);

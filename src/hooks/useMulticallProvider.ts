@@ -7,13 +7,8 @@ import { MulticallProvider } from 'utils';
 export const useMulticallProvider = (): Provider => {
 	const { library } = useActiveWeb3React();
 	const [provider, setProvider] = useState<Provider>(MulticallProvider);
-	if (!library) {
-		setProvider(MulticallProvider);
-	}
 	useEffect(() => {
-		if (!library) {
-			setProvider(MulticallProvider);
-		} else {
+		if (library) {
 			setProvider(new Provider(library, ChainId.Mainnet))
 		}
 	}, [library])
