@@ -15,3 +15,5 @@ export const NETWORK_NAMES = {
 }
 
 export const DEFAULT_CHAIN = ChainId.Mainnet;
+
+export const INFURA_KEY = 'd242d48659e4423d9b2cf581e09774a2';

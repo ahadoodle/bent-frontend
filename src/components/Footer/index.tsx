@@ -28,7 +28,7 @@ const Footer = (): React.ReactElement => {
                 <h3>Resources</h3>
                 <ul>
                   <li>
-                    <a href="https://github.com/bent-protocol/bent-audit/raw/main/Bent_Audit_Report.pdf" download >Audit Reports</a>
+                    <a href="https://github.com/bent-protocol/bent-audit" target="_blank" rel="noreferrer" >Audit</a>
                   </li>
                   <li>
                     <a href="https://docs.bentfinance.com/" target="_blank" rel="noreferrer" >Documentation</a>
@@ -45,6 +45,9 @@ const Footer = (): React.ReactElement => {
                   </li>
                   <li>
                     <a href="https://t.me/BentFi" target="_blank" rel="noreferrer">Telegram Group</a>
+                  </li>
+                  <li>
+                    <a href="https://bentfi.medium.com/" target="_blank" rel="noreferrer">Medium</a>
                   </li>
                 </ul>
               </div>

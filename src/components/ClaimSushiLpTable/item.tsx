@@ -6,12 +6,11 @@ import {
 import {
 	useActiveWeb3React,
 	useBlockNumber,
-	useERC20Contract,
 	useBentMasterChefContract,
 	useGasPrice,
 	useTokenPrice
 } from "hooks";
-import { ERC20, formatBigNumber, BentMasterChef } from "utils";
+import { formatBigNumber, BentMasterChef, MulticallProvider, getMultiERC20Contract, getMultiBentMasterChef } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant";
 
@@ -29,24 +28,25 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 
 	const { account } = useActiveWeb3React();
 	const blockNumber = useBlockNumber();
-	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
 	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
 	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
 
 	useEffect(() => {
-		Promise.all([
-			ERC20.getSymbol(depositTokenContract),
-			BentMasterChef.getDepositedAmount(masterChef, account, props.poolInfo.PoolId),
-			BentMasterChef.getPendingRewards(masterChef, account, props.poolInfo.PoolId)
-		]).then(([symbol, depositedLp, pendingRewards]) => {
+		const accAddr = account || ethers.constants.AddressZero
+		const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
+		MulticallProvider.all([
+			getMultiERC20Contract(props.poolInfo.DepositAsset).symbol(),
+			bentMasterChefMC.userInfo(props.poolInfo.PoolId, accAddr),
+			bentMasterChefMC.pendingReward(props.poolInfo.PoolId, accAddr)
+		]).then(([symbol, userInfo, pendingRewards]) => {
 			setSymbol(symbol);
-			setDepositedLp(depositedLp.amount);
+			setDepositedLp(userInfo.amount);
 			setPendingRewards(pendingRewards);
 			setEarnedUsd(utils.parseEther(bentPrice.toString()).mul(pendingRewards)
 				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
 		})
-	}, [depositTokenContract, masterChef, blockNumber, account, props.poolInfo.PoolId, bentPrice])
+	}, [blockNumber, account, props, bentPrice])
 
 	const claim = async () => {
 		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
