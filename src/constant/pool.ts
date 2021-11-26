@@ -9,6 +9,7 @@ export interface BentPool {
 	CvxRewardsAddr: string;
 	CrvMinter?: string;
 	CrvCoinsLength: number;
+	CrvLpSYMBOL: string;
 }
 
 const BentPools: Record<string, BentPool> = {
@@ -20,6 +21,7 @@ const BentPools: Record<string, BentPool> = {
 		CvxRewardsAddr: '0x02e2151d4f351881017abdf2dd2b51150841d5b3',
 		RewardsAssets: ['BENT', 'CRV', 'CVX', 'ALCX'],
 		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'alusdCrv'
 	},
 	MIM: {
 		LOGO: TOKEN_LOGO.MIM,
@@ -29,6 +31,7 @@ const BentPools: Record<string, BentPool> = {
 		CvxRewardsAddr: '0xfd5abf66b003881b88567eb9ed9c651f14dc4771',
 		RewardsAssets: ['BENT', 'CRV', 'CVX', 'SPELL'],
 		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'mimCrv'
 	},
 	CRV: {
 		LOGO: TOKEN_LOGO.CRV,
@@ -38,6 +41,7 @@ const BentPools: Record<string, BentPool> = {
 		CvxRewardsAddr: '0x0392321e86f42c2f94fbb0c6853052487db521f0',
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'cvxcrvCrv'
 	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
@@ -47,6 +51,7 @@ const BentPools: Record<string, BentPool> = {
 		CvxRewardsAddr: '0xb900ef131301b307db5efcbed9dbb50a3e209b2e',
 		RewardsAssets: ['BENT', 'CRV', 'CVX', 'FXS'],
 		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'fraxCrv'
 	},
 	TRICRYPTO2: {
 		LOGO: TOKEN_LOGO.TRICRYPTO2,
@@ -57,6 +62,7 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvMinter: '0xd51a44d3fae010294c616388b506acda1bfaae46',
 		CrvCoinsLength: 3,
+		CrvLpSYMBOL: '3CrvCrypto2'
 	},
 }
 

@@ -319,6 +319,9 @@ table.tokentable.table tbody {
     color: #10151D;
     box-shadow: none;
 }
+.bentInner .small {
+    font-size: 0.8rem;
+}
 .tokentable.table .card-body .nav-link {
     cursor: pointer;
     color: #6E7889;

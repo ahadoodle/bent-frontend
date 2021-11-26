@@ -8,9 +8,16 @@ import {
 	useBlockNumber,
 	useBentPoolContract,
 	useGasPrice,
-	useTokenPrices
+	useTokenPrices,
+	useMulticallProvider
 } from "hooks";
-import { BentBasePool, formatBigNumber, getTokenDecimals, MulticallProvider, getMultiERC20Contract, getMultiBentPool } from "utils";
+import {
+	BentBasePool,
+	formatBigNumber,
+	getTokenDecimals,
+	getMultiERC20Contract,
+	getMultiBentPool
+} from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
 
@@ -30,6 +37,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
+	const multicall = useMulticallProvider();
 
 	const totalEarned = (): BigNumber => {
 		let sum = ethers.constants.Zero;
@@ -48,7 +56,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	useEffect(() => {
 		const accAddr = account || ethers.constants.AddressZero;
 		const bentPoolMC = getMultiBentPool(props.poolKey);
-		MulticallProvider.all([
+		multicall.all([
 			getMultiERC20Contract(props.poolInfo.DepositAsset).symbol(),
 			bentPoolMC.balanceOf(accAddr),
 			bentPoolMC.pendingReward(accAddr)
@@ -65,7 +73,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					return ethers.constants.Zero;
 			}));
 		});
-	}, [blockNumber, account, props, tokenPrices])
+	}, [multicall, blockNumber, account, props, tokenPrices])
 
 	const claim = async () => {
 		await BentBasePool.harvest(bentPool, account, gasPrice);

@@ -13,16 +13,17 @@ import {
 	useBlockNumber,
 	useERC20Contract,
 	useGasPrice,
+	useMulticallProvider,
 	useTokenPrices
 } from "hooks";
 import {
 	formatBigNumber,
+	formatMillionsBigNumber,
 	ERC20,
 	BentMasterChef,
 	getEtherscanLink,
-	MulticallProvider,
 	getMultiERC20Contract,
-	getMultiBentMasterChef,
+	getMultiBentMasterChef
 } from "utils";
 
 
@@ -52,6 +53,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const gasPrice = useGasPrice();
 	const blockNumber = useBlockNumber();
 	const tokenPrices = useTokenPrices();
+	const multicall = useMulticallProvider();
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -61,7 +63,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		const accAddr = account || ethers.constants.AddressZero;
 		const lpTokenContract = getMultiERC20Contract(props.poolInfo.DepositAsset);
 		const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
-		MulticallProvider.all([
+		multicall.all([
 			lpTokenContract.symbol(),
 			lpTokenContract.balanceOf(accAddr),
 			lpTokenContract.allowance(accAddr, POOLS.SushiPools.MasterChef),
@@ -72,7 +74,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			bentMasterChefMC.rewardPerBlock(),
 			bentMasterChefMC.pendingReward(props.poolInfo.PoolId, accAddr)
 		]).then(([symbol, availableLp, allowance, userInfo, poolLpBalance, totalAllocPoint, poolInfo, rewardPerBlock, pendingRewards]) => {
-			const lpPrice = tokenPrices[props.poolInfo.DepositAsset];
+			const lpPrice = tokenPrices[props.poolInfo.DepositAsset] || 0;
 			setSymbol(symbol);
 			setLpBalance(availableLp);
 			setAllowance(allowance);
@@ -89,7 +91,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			setEarned(utils.parseEther(tokenPrices[TOKENS['BENT'].ADDR].toString()).mul(pendingRewards)
 				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
 		})
-	}, [account, blockNumber, props, tokenPrices])
+	}, [multicall, account, blockNumber, props, tokenPrices])
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
@@ -144,7 +146,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 				id={`toggleInner-stake-sushi-lp-${props.poolKey}`}
 				style={{ marginBottom: "1rem" }}
 			>
-				<Row className="align-items-center">
+				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO[0]} alt="" />
@@ -153,23 +155,23 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b>$ {formatBigNumber(earned)}</b>
+						<b><span className="small">$</span>{formatBigNumber(earned)}</b>
 					</Col>
-					<Col>
+					<Col style={{ width: '15%' }}>
 						<b>{utils.commify(apr)}%</b>
 					</Col>
-					<Col>
+					<Col style={{ width: '25%' }}>
 						<b>
-							{formatBigNumber(BigNumber.from(depositedLp))}
-							<span className="small text-bold"> {symbol}</span>
+							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
+							<span className="small text-bold"> {props.poolInfo.Name} {symbol}</span>
 						</b>
 						<span className="small text-muted"> ≈ ${
-							formatBigNumber(BigNumber.from(stakedUsd), 18, 0)
+							formatBigNumber(BigNumber.from(stakedUsd), 18, 2)
 						}</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b><span>$ {formatBigNumber(tvl, 18, 0)}</span></b>
+							<b><span className="small">$</span>{formatMillionsBigNumber(tvl, 18, 0)}</b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

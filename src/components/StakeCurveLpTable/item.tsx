@@ -5,7 +5,20 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
-import { formatBigNumber, ERC20, BentBasePool, getCrvDepositLink, CrvFiLp, getTokenDecimals, getEtherscanLink, MulticallProvider, getMultiERC20Contract, getMultiBentPool, getMultiCvxRewardPool } from "utils";
+import {
+	ERC20,
+	BentBasePool,
+	CrvFiLp,
+	formatBigNumber,
+	getCrvDepositLink,
+	getTokenDecimals,
+	getEtherscanLink,
+	getMultiERC20Contract,
+	getMultiBentPool,
+	getMultiCvxRewardPool,
+	formatMillionsBigNumber,
+	getAnnualReward
+} from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
 	useActiveWeb3React,
@@ -13,6 +26,7 @@ import {
 	useBlockNumber,
 	useCrvFiLp,
 	useGasPrice,
+	useMulticallProvider,
 	useTokenPrices
 } from "hooks";
 import { BentPool, TOKENS } from "constant";
@@ -23,7 +37,6 @@ interface Props {
 }
 
 export const StakeCurveLpItem = (props: Props): React.ReactElement => {
-	const [symbol, setSymbol] = useState<string>('');
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
@@ -33,6 +46,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [allowance, setAllowance] = useState<BigNumber>(ethers.constants.Zero);
 	const [depositedLp, setDepositedLp] = useState<BigNumber>(ethers.constants.Zero);
 	const [tvl, setTvl] = useState<BigNumber>(ethers.constants.Zero);
+	const [apr, setApr] = useState<number>(0);
 	const [stakedUsd, setStakedUsd] = useState<BigNumber>(ethers.constants.Zero);
 	const [estRewards, setEstRewards] = useState<BigNumber>(ethers.constants.Zero);
 
@@ -43,21 +57,25 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
 	const blockNumber = useBlockNumber();
+	const multicall = useMulticallProvider();
+	const symbol = props.poolInfo.CrvLpSYMBOL;
 
 	useEffect(() => {
 		const accAddr = account || ethers.constants.AddressZero;
 		const lpTokenContract = getMultiERC20Contract(props.poolInfo.DepositAsset);
 		const bentPoolMC = getMultiBentPool(props.poolKey);
 		const cvxRewardPool = getMultiCvxRewardPool(props.poolInfo.CvxRewardsAddr);
-		MulticallProvider.all([
-			lpTokenContract.symbol(),
+		multicall.all([
 			lpTokenContract.balanceOf(accAddr),
 			lpTokenContract.allowance(accAddr, props.poolInfo.POOL),
 			bentPoolMC.balanceOf(accAddr),
 			cvxRewardPool.balanceOf(props.poolInfo.POOL),
 			bentPoolMC.pendingReward(accAddr),
-		]).then(([symbol, availableLp, allowance, depositedLp, poolLpBalance, rewards]) => {
-			setSymbol(symbol);
+			bentPoolMC.rewardPools(0),
+			bentPoolMC.rewardPools(1),
+			bentPoolMC.rewardPools(2),
+			getMultiERC20Contract(TOKENS['BENT'].ADDR).totalSupply(),
+		]).then(([availableLp, allowance, depositedLp, poolLpBalance, rewards, rewardsInfo1, rewardsInfo2, rewardsInfo3, bentSupply]) => {
 			setLpBalance(availableLp);
 			setAllowance(allowance);
 			setDepositedLp(depositedLp);
@@ -93,11 +111,23 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 							.add(totalUsd);
 					}
 				}
-				setTvl(totalUsd.mul(poolLpBalance).div(lpTotalSupply));
+				const tvl = totalUsd.mul(poolLpBalance).div(lpTotalSupply)
+				setTvl(tvl);
 				setStakedUsd(totalUsd.mul(depositedLp).div(lpTotalSupply));
+
+				// Cvx rewards
+				let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
+				annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+				if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
+					annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+				// Bent Rewards
+				const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
+				const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
+				annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()]);
+				setApr(annualRewardsUsd.mul(10000).div(tvl).toNumber() / 100);
 			})
 		})
-	}, [depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
+	}, [multicall, depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -155,7 +185,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 				style={{ marginBottom: "1rem" }}
 			>
-				<Row className="align-items-center">
+				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO} alt="" />
@@ -163,32 +193,25 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b>$ {formatBigNumber(estRewards)}</b>
+						<b><span className="small">$</span>{formatBigNumber(estRewards)}</b>
 					</Col>
-					{/* <Col>
-						<div className="earnValue">
-							<b>
-								6.56% <span>(proj.6.74%)</span>
-							</b>
-							<p>CRV boost: 1.7x</p>
-							<i
-								className="fa fa-info-circle"
-								aria-hidden="true"
-							></i>
-						</div>
-					</Col> */}
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(depositedLp))}
+							{apr ? `${apr}%` : 'TBC'}
+						</b>
+					</Col>
+					<Col>
+						<b>
+							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
 							<span className="small text-bold"> {symbol}</span>
 						</b>
-						<span className="small text-muted"> ≈ ${
-							formatBigNumber(BigNumber.from(stakedUsd), 18, 0)
-						}</span>
+						<span className="small text-muted"> ≈ <span className="small">$</span>
+							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+						</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b>$ {formatBigNumber(tvl, 18, 0)}</b>
+							<b><span className="small">$</span>{formatMillionsBigNumber(tvl, 18, 0)}</b>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
