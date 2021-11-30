@@ -124,7 +124,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
 				const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
 				annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()]);
-				setApr(annualRewardsUsd.mul(10000).div(tvl).toNumber() / 100);
+				setApr((tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100);
 			})
 		})
 	}, [multicall, depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
@@ -176,7 +176,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className="innerWrap p-0 pt-1 pb-1">
+		<div className="innerWrap p-0 pt-1 pb-1 rounded">
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				collapsed={collapsed}

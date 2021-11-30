@@ -137,7 +137,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className="innerWrap p-0 pt-1 pb-1">
+		<div className="innerWrap p-0 pt-1 pb-1 rounded">
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				collapsed={collapsed}

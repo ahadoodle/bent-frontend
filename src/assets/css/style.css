@@ -319,6 +319,9 @@ table.tokentable.table tbody {
     color: #10151D;
     box-shadow: none;
 }
+.Dark .tokentable.table .card-body .bentInner {
+    color: white;
+}
 .bentInner .small {
     font-size: 0.8rem;
 }
@@ -686,13 +689,16 @@ button.btn.btnshow i {
 .Dark .converttabs p.card-text, .Dark .converttabs label, .Dark  h2.black,
 .Dark table.tokentable.table td, .Dark .currentText h3, .Dark .currentText p, 
 .Dark li.addreesAdd, .Dark .tableText h4, .Dark .tableText b,
-.Dark .infoWrap p, .Dark .innerWrapother .imgText h4, .Dark .innerWrapother, 
+.Dark .infoWrap p, .Dark .innerWrap .imgText h4, .Dark .innerWrapother, 
 .Dark p.epsText, .Dark .innerAccordian p, .Dark .innerAccordian .imgText h4,
 .Dark .innerAccordian {
 	color: #fff;
 }
-.Dark .boxwrap,.Dark .converttabs,.Dark .card, .Dark .convert-table {
-    background: #374559;
+.Dark .boxwrap,
+.Dark .converttabs,
+.Dark .card,
+.Dark .convert-table {
+    background: #18202C;
 }
 .Dark table.tokentable.table tr:hover td {
 	color: #10151D;
@@ -1092,7 +1098,6 @@ button.bentPool p {
 .cliamBlockOne .card {
     box-sizing: border-box;
     border-radius: 8px;
-    background: #FAFAFA;
 }
 button.bentInner {
     width: 100%;
