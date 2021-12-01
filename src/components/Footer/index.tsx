@@ -19,7 +19,7 @@ const Footer = (): React.ReactElement => {
                 <p>
                   Bent is a staking and farming platform<br />
                   to enhance your curve returns,<br />
-                  by the people for teh ppl.
+                  by the people for the ppl.
                 </p>
               </div>
             </Col>
