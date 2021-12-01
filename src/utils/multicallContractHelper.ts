@@ -21,3 +21,7 @@ export const getMultiCrvFiLp = (address: string): Contract => {
 export const getMultiCvxRewardPool = (address: string): Contract => {
 	return new Contract(address, ABIS.CvxBaseRewardPool);
 }
+
+export const getMultiSushiPair = (address: string): Contract => {
+	return new Contract(address, ABIS.SushiPair);
+}
