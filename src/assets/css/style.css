@@ -223,9 +223,6 @@ h2.white {
     cursor: pointer;
 }
 .converttabs {
-    background: #fff;
-    border-top: 3px solid #10151D;
-    border-radius: 8px;
     padding: 10px 20px 20px;
 }
 .converttabs .card.card-body {
@@ -286,12 +283,25 @@ table.tokentable.table tbody {
     background: #fff;
 }
 .tokentable.table {
+    background: #B5DEFF;
     vertical-align: middle;
     border: 3px solid #10151D;
     border-radius: 8px;
     border-collapse: separate;
     border-spacing: 0;
     box-shadow: 10px 15px 0px 0px #10151d;
+}
+.Dark .convert-table {
+	box-shadow: 10px 15px 0px 0px #607390;
+	border: none;
+}
+.tokentable {
+    background: #B5DEFF;
+    border: 3px solid #B5DEFF;
+}
+.Dark .tokentable {
+    border: 3px solid #414C5C;
+    box-shadow: 10px 15px 0px 0px #607390;
 }
 .tokentable.table .thead {
     margin: 0;
@@ -312,16 +322,17 @@ table.tokentable.table tbody {
     margin-bottom: 0 !important;
     padding: 10px;
 }
-.tokentable.table .card-body .bentInner:hover,
-.tokentable.table .card-body .bentInner:focus {
-    background: #CAB8FF;
-    border: none;
-    color: #10151D;
-    box-shadow: none;
-}
-.Dark .tokentable.table .card-body .bentInner,
 .Dark .tokentable.table .card-body .bentInner {
     color: white;
+}
+.Dark .tokentable.table .card-body .bentInner:hover,
+.Dark .tokentable.table .card-body .bentInner.open,
+.Dark .tokentable.table .card-body .bentInner:hover .imgText h4,
+.Dark .tokentable.table .card-body .bentInner.open .imgText h4,
+.Dark .tokentable.table .innerWrap.open .card-text,
+.Dark .tokentable.table .innerWrap.open .labeltext label,
+.Dark .tokentable.table .innerWrap.open p {
+    color: #10151D;
 }
 .bentInner .small {
     font-size: 0.8rem;
@@ -375,9 +386,6 @@ table.tokentable.table td span {
 tr:hover {
     background: #CAB8FF;
 }
-table.tokentable.table thead tr:hover {
-    background: #B5DEFF;
-}    
 .tvlText i.fa.fa-caret-down {
     position: absolute;
     right: 30px;
@@ -482,43 +490,43 @@ p.copyright {
     border-radius: 3px;
   }
   
-  .advance-btn .slider:before {
-        position: absolute;
-        content: "";
-        height: 22px;
-        width: 22px;
-        left: -1px;
-        bottom: -5px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-        border: 3px solid #9BA2AC;
-        border-radius: 3px;
-    }
+.advance-btn .slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: -1px;
+    bottom: -5px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border: 3px solid #9BA2AC;
+    border-radius: 3px;
+}
   
-  .advance-btn input:checked + .slider {
+.advance-btn input:checked + .slider {
     background-color: #2196F3;
-  }
+}
   
-  .advance-btn input:focus + .slider {
+.advance-btn input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
-  }
+}
   
-  .advance-btn input:checked + .slider:before {
+.advance-btn input:checked + .slider:before {
     -webkit-transform: translateX(18px);
     -ms-transform: translateX(18px);
     transform: translateX(18px);
-  }
+}
   
   /* Rounded sliders */
-  .advance-btn .slider.round {
+.advance-btn .slider.round {
     border-radius: 34px;
-  }
+}
   
-  .advance-btn .slider.round:before {
+.advance-btn .slider.round:before {
     border-radius: 50%;
-  }
-  .converttabs .divider-left {
+}
+.converttabs .divider-left {
     padding-left: 30px;
     padding-right: 30px;
     border-left: 3px solid rgba(41, 49, 60, 0.2);
@@ -696,16 +704,12 @@ button.btn.btnshow i {
 	color: #fff;
 }
 .Dark .boxwrap,
-.Dark .converttabs,
 .Dark .card,
 .Dark .convert-table {
     background: #18202C;
 }
 .Dark table.tokentable.table tr:hover td {
 	color: #10151D;
-}
-.Dark .converttabs {
-	
 }
 .Dark .amountinput input {
     border: 3px solid #fff;
@@ -726,20 +730,6 @@ button.btn.btnshow i {
 .Dark table.tokentable.table tbody {
     background: #18202C;
 	color:#fff;
-}
-.Dark table.tokentable.table {
-    border: 3px solid #607390;
-    box-shadow: 10px 15px 0px 0px #607390;
-}
-.Dark .converttabs {
-    border: 3px solid #607390;	
-	box-shadow: 10px 15px 0px 0px #607390;
-}
-.Dark .convert-table {
-	box-shadow: 10px 15px 0px 0px #607390;
-}
-.Dark .convert-table {
-	border: none;	
 }
 .Dark .delegateBox {
     background: #B5DEFF;
@@ -789,9 +779,6 @@ button.btn.btnshow i {
 }
 .Dark .bentpoolText {
     border: 3px solid #607390;
-}
-.Dark .innerWrap .card-body {
-	    border-top: 1px solid #fff;
 }
 .primaryMenu .dropdown-toggle {
     background-color: transparent!important;
@@ -1194,7 +1181,7 @@ button.claimbtn.btn.btn-secondary {
     font-size: 26px;
 }
 .innerAccordian .card {
-    background: rgba(202, 184, 255, 0.1);
+    background: unset;
     padding: 16px 12px;
 }
 .depositText {
@@ -1203,7 +1190,8 @@ button.claimbtn.btn.btn-secondary {
     font-size: 16px;
     line-height: 19px;
 }
-.innerWrap:hover {
+.tokentable.table .card .card-body .innerWrap:hover,
+.tokentable.table .card .card-body .innerWrap.open {
     background: #CAB8FF;
 }
 .innerWrap .card {

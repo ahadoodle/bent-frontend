@@ -100,11 +100,10 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className="innerWrap p-0 pt-1 pb-1 rounded">
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'}`} >
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
-				collapsed={collapsed}
-				className="bentInner"
+				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
 				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 				style={{ marginBottom: "1rem" }}
@@ -333,13 +332,11 @@ const PoolLogo = styled.img`
 	width: 28px;
 `
 
-const Wrapper = styled.div<{ collapsed: boolean }>`
+const Wrapper = styled.div`
 	cursor: pointer;
-	background: ${props => props.collapsed ? 'transparent' : '#CAB8FF !important'};
 `;
 
 const InnerWrapper = styled(UncontrolledCollapse)`
-	background: #CAB8FF;
 	border: unset;
 `;
 
