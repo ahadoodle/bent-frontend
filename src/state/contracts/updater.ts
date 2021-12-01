@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any*/
 import { ethers, BigNumber, utils } from 'ethers';
 import { POOLS, TOKENS } from 'constant';
 import { useActiveWeb3React, useBlockNumber, useCrvFiLps, useMulticallProvider, useTokenPrices } from 'hooks';
@@ -128,7 +129,6 @@ export default function Updater(): null {
 				const apr = (BigNumber.from(poolLpBalance).isZero() || BigNumber.from(totalAllocPoint).isZero() || lpPriceBN.isZero()) ? 0 :
 					bentPriceBN.mul(rewardPerBlock).mul(poolAllocPoint).mul(6400).mul(365).mul(100)
 						.div(lpPriceBN).div(poolLpBalance).div(totalAllocPoint).toNumber();
-				console.log(apr, bentPrice, rewardPerBlock, lpPrice, poolLpBalance)
 				dispatch(updateSushiPoolApr({ poolKey, apr }));
 
 				// Update Sushi Pool Rewards
