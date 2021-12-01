@@ -9,13 +9,12 @@ interface Props {
 
 const Page = (props: Props): React.ReactElement => {
   const [theme, setTheme] = useLocalStorage('theme');
-	const handleTheme = (theme) => setTheme(theme)
 
   return (
     <React.Fragment>
-      <div className= {"Wrapper " + theme}>
-        <Header handleTheme={handleTheme} />
-         {props.children}
+      <div className={"Wrapper " + theme}>
+        <Header handleTheme={(theme) => setTheme(theme)} />
+        {props.children}
         <Footer />
       </div>
     </React.Fragment>

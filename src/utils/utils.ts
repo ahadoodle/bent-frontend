@@ -98,12 +98,27 @@ export const getTokenDecimals = (addr: string): number => {
 	return TOKENS[key].DECIMALS;
 }
 
+export const getTokenPrice = (tokenPrices: Record<string, number>, addr: string): BigNumber => {
+	const price = tokenPrices[addr.toLowerCase()];
+	if (!price) return ethers.constants.Zero;
+	return utils.parseUnits(price.toString());
+}
+
 export const getEtherscanLink = (addr: string): string => {
 	return `https://etherscan.io/address/${addr}`;
 }
 
 export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenPrice: number): BigNumber => {
+	if (!tokenPrice) return ethers.constants.Zero;
 	return rewardRate.mul(6400).mul(365)
 		.mul(utils.parseUnits(tokenPrice.toString()))
 		.div(BigNumber.from(10).pow(36 + getTokenDecimals(tokenAddr)));
+}
+
+export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
+	let total = ethers.constants.Zero;
+	Object.keys(bns).forEach(key => {
+		total = total.add(bns[key]);
+	})
+	return total;
 }

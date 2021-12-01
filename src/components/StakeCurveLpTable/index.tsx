@@ -2,8 +2,13 @@ import React from "react";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
+import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
+import { useCrvPoolEarns, useCrvTvls } from "hooks";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
+	const tvls = useCrvTvls();
+	const earns = useCrvPoolEarns();
+
 	return (
 		<Container>
 			<Row>
@@ -22,11 +27,14 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 											></i>
 										</Col>
 										<Col>
-											Earned (USD){" "}
-											<i
-												className="fa fa-caret-down"
-												aria-hidden="true"
-											></i>
+											<span className="small p-0">
+												Earned (USD)&nbsp;
+												<i className="fa fa-caret-down" aria-hidden="true" />
+											</span><br />
+											<b className="p-0">
+												<span className="small">$</span>
+												<span className="h5">{formatBigNumber(getSumBigNumbers(earns))}</span>
+											</b>
 										</Col>
 										<Col>
 											APR{" "}
@@ -43,17 +51,25 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 											></i>
 										</Col>
 										<Col>
-											TVL{" "}
-											<i
-												className="fa fa-caret-down"
-												aria-hidden="true"
-											></i>
+											<span className="small">
+												TVL&nbsp;
+												<i className="fa fa-caret-down" aria-hidden="true" />
+											</span><br />
+											<b>
+												<span className="small">$</span>
+												<span className="h5">{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 0)}</span>
+											</b>
 										</Col>
 									</Row>
 									<Card>
 										<CardBody>
-											{Object.keys(POOLS.BentPools).map(poolName =>
-												<StakeCurveLpItem poolInfo={POOLS.BentPools[poolName]} poolKey={poolName} key={poolName} />)
+											{
+												Object.keys(POOLS.BentPools).map(poolName =>
+													<StakeCurveLpItem
+														poolInfo={POOLS.BentPools[poolName]}
+														poolKey={poolName}
+														key={poolName}
+													/>)
 											}
 										</CardBody>
 									</Card>

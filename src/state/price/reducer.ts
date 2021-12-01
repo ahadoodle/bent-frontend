@@ -7,7 +7,7 @@ import {
 } from './actions';
 
 export interface PriceState {
-  tokenPrices: Record<string, number>
+	tokenPrices: Record<string, number>
 }
 
 const initialState: PriceState = {
@@ -18,18 +18,16 @@ const initialState: PriceState = {
 };
 
 export default createReducer(initialState, (builder) =>
-  builder
-    .addCase(updatePrices, (state, action) => {
-      const prices = action.payload;
+	builder
+		.addCase(updatePrices, (state, action) => {
+			const prices = action.payload;
 			Object.keys(prices).forEach(price => {
-				state.tokenPrices[price] = prices[price]['usd'];
+				state.tokenPrices[price.toLowerCase()] = prices[price]['usd'];
 			})
-    })
-		.addCase(updateBentPrice, (state, action) => {
-			state.tokenPrices[TOKENS['BENT'].ADDR] = action.payload;
-		})
-		.addCase(updateTokenPrice, (state, action) => {
+		}).addCase(updateBentPrice, (state, action) => {
+			state.tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()] = action.payload;
+		}).addCase(updateTokenPrice, (state, action) => {
 			const { tokenAddr, price } = action.payload
-			state.tokenPrices[tokenAddr] = price;
+			state.tokenPrices[tokenAddr.toLowerCase()] = price;
 		})
 );

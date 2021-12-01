@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
@@ -8,26 +8,24 @@ import styled from "styled-components";
 import {
 	ERC20,
 	BentBasePool,
-	CrvFiLp,
 	formatBigNumber,
 	getCrvDepositLink,
-	getTokenDecimals,
 	getEtherscanLink,
-	getMultiERC20Contract,
-	getMultiBentPool,
-	getMultiCvxRewardPool,
 	formatMillionsBigNumber,
-	getAnnualReward
 } from "utils";
-import { BigNumber, ethers, utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import {
 	useActiveWeb3React,
+	useBalance,
 	useBentPoolContract,
-	useBlockNumber,
+	useCrvApr,
+	useCrvDeposit,
 	useCrvFiLp,
+	usePoolAllowance,
+	useCrvPoolDepositedUsd,
+	useCrvPoolEarnedUsd,
+	useCrvTvl,
 	useGasPrice,
-	useMulticallProvider,
-	useTokenPrices
 } from "hooks";
 import { BentPool, TOKENS } from "constant";
 
@@ -42,92 +40,18 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const [lpBalance, setLpBalance] = useState<BigNumber>(ethers.constants.Zero);
-	const [allowance, setAllowance] = useState<BigNumber>(ethers.constants.Zero);
-	const [depositedLp, setDepositedLp] = useState<BigNumber>(ethers.constants.Zero);
-	const [tvl, setTvl] = useState<BigNumber>(ethers.constants.Zero);
-	const [apr, setApr] = useState<number>(0);
-	const [stakedUsd, setStakedUsd] = useState<BigNumber>(ethers.constants.Zero);
-	const [estRewards, setEstRewards] = useState<BigNumber>(ethers.constants.Zero);
-
 	const { account } = useActiveWeb3React();
 	const depositTokenContract = useCrvFiLp(props.poolInfo.DepositAsset);
-	const crvMinter = useCrvFiLp(props.poolInfo.CrvMinter || '');
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
-	const tokenPrices = useTokenPrices();
-	const blockNumber = useBlockNumber();
-	const multicall = useMulticallProvider();
+	const lpBalance = useBalance(props.poolInfo.DepositAsset);
+	const depositedLp = useCrvDeposit(props.poolKey);
 	const symbol = props.poolInfo.CrvLpSYMBOL;
-
-	useEffect(() => {
-		const accAddr = account || ethers.constants.AddressZero;
-		const lpTokenContract = getMultiERC20Contract(props.poolInfo.DepositAsset);
-		const bentPoolMC = getMultiBentPool(props.poolKey);
-		const cvxRewardPool = getMultiCvxRewardPool(props.poolInfo.CvxRewardsAddr);
-		multicall.all([
-			lpTokenContract.balanceOf(accAddr),
-			lpTokenContract.allowance(accAddr, props.poolInfo.POOL),
-			bentPoolMC.balanceOf(accAddr),
-			cvxRewardPool.balanceOf(props.poolInfo.POOL),
-			bentPoolMC.pendingReward(accAddr),
-			bentPoolMC.rewardPools(0),
-			bentPoolMC.rewardPools(1),
-			bentPoolMC.rewardPools(2),
-			getMultiERC20Contract(TOKENS['BENT'].ADDR).totalSupply(),
-		]).then(([availableLp, allowance, depositedLp, poolLpBalance, rewards, rewardsInfo1, rewardsInfo2, rewardsInfo3, bentSupply]) => {
-			setLpBalance(availableLp);
-			setAllowance(allowance);
-			setDepositedLp(depositedLp);
-			let totalReward = ethers.constants.Zero;
-			props.poolInfo.RewardsAssets.forEach((key, index) => {
-				const addr = TOKENS[key].ADDR.toLowerCase();
-				totalReward = (tokenPrices[addr] && rewards[index]) ?
-					utils.parseUnits(tokenPrices[addr].toString()).mul(rewards[index]).add(totalReward) : totalReward
-			});
-			setEstRewards(totalReward.div(BigNumber.from(10).pow(18)));
-
-			// Calculate Crv Lp Price
-			const lpFiContract = props.poolInfo.CrvMinter ? crvMinter : depositTokenContract;
-			/* eslint-disable @typescript-eslint/no-explicit-any*/
-			const lpFiContractCalls: any[] = [];
-			for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
-				lpFiContractCalls.push(CrvFiLp.getCoins(lpFiContract, i));
-				lpFiContractCalls.push(CrvFiLp.getBalances(lpFiContract, i));
-			}
-			lpFiContractCalls.push(CrvFiLp.getTotalSupply(depositTokenContract));
-			Promise.all(lpFiContractCalls).then((results) => {
-				const lpTotalSupply = results[results.length - 1];
-				if (BigNumber.from(lpTotalSupply).isZero()) {
-					return;
-				}
-				let totalUsd = ethers.constants.Zero;
-				for (let i = 0; i < props.poolInfo.CrvCoinsLength; i++) {
-					const addr = results[i * 2];
-					const bal = results[i * 2 + 1];
-					if (tokenPrices[addr.toLowerCase()]) {
-						totalUsd = utils.parseEther(tokenPrices[addr.toLowerCase()].toString())
-							.mul(bal).div(BigNumber.from(10).pow(getTokenDecimals(addr)))
-							.add(totalUsd);
-					}
-				}
-				const tvl = totalUsd.mul(poolLpBalance).div(lpTotalSupply)
-				setTvl(tvl);
-				setStakedUsd(totalUsd.mul(depositedLp).div(lpTotalSupply));
-
-				// Cvx rewards
-				let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
-				annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
-				if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
-					annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
-				// Bent Rewards
-				const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
-				const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
-				annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()]);
-				setApr((tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100);
-			})
-		})
-	}, [multicall, depositTokenContract, account, blockNumber, crvMinter, tokenPrices, props])
+	const allowance = usePoolAllowance(props.poolKey);
+	const tvl = useCrvTvl(props.poolKey);
+	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
+	const apr = useCrvApr(props.poolKey);
+	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -193,7 +117,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(estRewards)}</b>
+						<b><span className="small">$</span>{formatBigNumber(earnedUsd)}</b>
 					</Col>
 					<Col>
 						<b>
@@ -202,11 +126,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
+							~ ${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+						</b><br />
+						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
-							<span className="small text-bold"> {symbol}</span>
-						</b>
-						<span className="small text-muted"> ≈ <span className="small">$</span>
-							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							<span className="text-bold"> {symbol}</span>
 						</span>
 					</Col>
 					<Col>

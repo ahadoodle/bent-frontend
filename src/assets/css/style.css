@@ -310,7 +310,7 @@ table.tokentable.table tbody {
     text-align: left;
     color: #10151D;
     margin-bottom: 0 !important;
-    padding: 15px 12px;
+    padding: 10px;
 }
 .tokentable.table .card-body .bentInner:hover,
 .tokentable.table .card-body .bentInner:focus {
@@ -319,6 +319,7 @@ table.tokentable.table tbody {
     color: #10151D;
     box-shadow: none;
 }
+.Dark .tokentable.table .card-body .bentInner,
 .Dark .tokentable.table .card-body .bentInner {
     color: white;
 }
