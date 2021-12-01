@@ -1,6 +1,9 @@
 import { BigNumber } from 'ethers';
 import { createReducer } from '@reduxjs/toolkit';
 import {
+	updatePrices,
+	updateBentPrice,
+	updateTokenPrice,
 	updateBalance,
 	updateBentPoolRewardsInfo,
 	updateCrvDeposit,
@@ -17,7 +20,9 @@ import {
 	updateSushiPoolEarnedUsd,
 	updateSushiPoolTVL,
 	updateTotalSupply,
+	updateSushiPoolRewards,
 } from './actions';
+import { TOKENS } from 'constant';
 
 export interface BentPoolReward {
 	rewardRate: BigNumber,
@@ -25,6 +30,8 @@ export interface BentPoolReward {
 }
 
 export interface ContractsState {
+	tokenPrices: Record<string, number>
+
 	balances: Record<string, BigNumber>;
 	totalSupplies: Record<string, BigNumber>;
 
@@ -42,12 +49,15 @@ export interface ContractsState {
 	// Sushi Pool States
 	sushiTvl: Record<string, BigNumber>;
 	sushiApr: Record<string, number>;
+	sushiRewards: Record<string, BigNumber>;
 	sushiEarnedUsd: Record<string, BigNumber>;
 	sushiDepositedUsd: Record<string, BigNumber>;
 	sushiLpDeposited: Record<string, BigNumber>;
 }
 
 const initialState: ContractsState = {
+	tokenPrices: {},
+
 	balances: {},
 	totalSupplies: {},
 
@@ -63,6 +73,7 @@ const initialState: ContractsState = {
 
 	sushiTvl: {},
 	sushiApr: {},
+	sushiRewards: {},
 	sushiEarnedUsd: {},
 	sushiDepositedUsd: {},
 	sushiLpDeposited: {},
@@ -70,6 +81,21 @@ const initialState: ContractsState = {
 
 export default createReducer(initialState, (builder) =>
 	builder
+		.addCase(updatePrices, (state, action) => {
+			const prices = action.payload;
+			if (!state.tokenPrices) state.tokenPrices = {};
+			Object.keys(prices).forEach(tokenAddr => {
+				state.tokenPrices[tokenAddr.toLowerCase()] = prices[tokenAddr];
+			})
+		}).addCase(updateBentPrice, (state, action) => {
+			if (!state.tokenPrices) state.tokenPrices = {};
+			state.tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()] = action.payload;
+		}).addCase(updateTokenPrice, (state, action) => {
+			const { tokenAddr, price } = action.payload
+			if (!state.tokenPrices) state.tokenPrices = {};
+			state.tokenPrices[tokenAddr.toLowerCase()] = price;
+		})
+
 		.addCase(updateBalance, (state, action) => {
 			const { tokenAddr, balance } = action.payload;
 			if (!state.balances) state.balances = {};
@@ -138,5 +164,9 @@ export default createReducer(initialState, (builder) =>
 			const { poolKey, deposited } = action.payload;
 			if (!state.sushiDepositedUsd) state.sushiDepositedUsd = {};
 			state.sushiDepositedUsd[poolKey] = deposited;
+		}).addCase(updateSushiPoolRewards, (state, action) => {
+			const { poolKey, rewards } = action.payload;
+			if (!state.sushiRewards) state.sushiRewards = {};
+			state.sushiRewards[poolKey] = rewards;
 		})
 );

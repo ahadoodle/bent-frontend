@@ -4,7 +4,6 @@ import { save, load } from 'redux-localstorage-simple';
 
 import contracts from './contracts/reducer';
 import application from './application/reducer';
-import price from './price/reducer';
 // import slippage from './slippage/reducer';
 
 const PERSISTED_KEYS: string[] = ['price', 'contracts', 'token', 'slippage'];
@@ -12,7 +11,6 @@ const PERSISTED_KEYS: string[] = ['price', 'contracts', 'token', 'slippage'];
 const store = configureStore({
   reducer: {
     application,
-    price,
     contracts,
     // token,
     // slippage

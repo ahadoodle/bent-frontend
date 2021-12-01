@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import {
 	Row, Col, Button
 } from "reactstrap";
 import {
 	useActiveWeb3React,
-	useBlockNumber,
 	useBentMasterChefContract,
 	useGasPrice,
-	useTokenPrice,
-	useMulticallProvider
+	useSushiLpDeposited,
+	useSushiPoolDepositedUsd,
+	useSushiPoolEarnedUsd,
+	useSushiPoolRewards,
 } from "hooks";
 import {
 	formatBigNumber,
 	BentMasterChef,
-	getMultiERC20Contract,
-	getMultiBentMasterChef
 } from "utils";
-import { BigNumber, ethers, utils } from 'ethers';
-import { POOLS, SushiPool, TOKENS } from "constant";
+import { BigNumber } from 'ethers';
+import { POOLS, SushiPool } from "constant";
 
 interface Props {
 	poolInfo: SushiPool
@@ -26,53 +25,30 @@ interface Props {
 }
 
 export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
-	const [collapsed, setCollapsed] = useState<boolean>(true);
-	const [symbol, setSymbol] = useState<string>('');
-	const [depositedLp, setDepositedLp] = useState<BigNumber>(ethers.constants.Zero);
-	const [pendingRewards, setPendingRewards] = useState<BigNumber>(ethers.constants.Zero);
-	const [earnedUsd, setEarnedUsd] = useState<BigNumber>(ethers.constants.Zero);
-
+	const symbol = props.poolInfo.Name + ' SLP';
 	const { account } = useActiveWeb3React();
-	const blockNumber = useBlockNumber();
 	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
 	const gasPrice = useGasPrice();
-	const multicall = useMulticallProvider();
-	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
-
-	useEffect(() => {
-		const accAddr = account || ethers.constants.AddressZero
-		const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
-		multicall.all([
-			getMultiERC20Contract(props.poolInfo.DepositAsset).symbol(),
-			bentMasterChefMC.userInfo(props.poolInfo.PoolId, accAddr),
-			bentMasterChefMC.pendingReward(props.poolInfo.PoolId, accAddr)
-		]).then(([symbol, userInfo, pendingRewards]) => {
-			setSymbol(symbol);
-			setDepositedLp(userInfo.amount);
-			setPendingRewards(pendingRewards);
-			setEarnedUsd(utils.parseEther(bentPrice.toString()).mul(pendingRewards)
-				.div(BigNumber.from(10).pow(TOKENS['BENT'].DECIMALS)));
-		})
-	}, [multicall, blockNumber, account, props, bentPrice])
+	const depositedLp = useSushiLpDeposited(props.poolKey);
+	const stakedUsd = useSushiPoolDepositedUsd(props.poolKey);
+	const rewards = useSushiPoolRewards(props.poolKey);
+	const earned = useSushiPoolEarnedUsd(props.poolKey);
 
 	const claim = async () => {
 		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
 	}
 
 	const haveRewards = () => {
-		return !BigNumber.from(pendingRewards).isZero();
+		return !rewards.isZero();
 	}
 
 	return (
-		<div className="innerWrap p-0 pt-1 pb-1 rounded">
+		<div className="innerWrap p-0 rounded">
 			<Wrapper
 				className="bentInner"
 				color="primary"
-				id={`toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
-				onClick={() => setCollapsed(!collapsed)}
-				collapsed={collapsed}
 			>
-				<Row className="align-items-center">
+				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO[0]} alt="" />
@@ -81,11 +57,11 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b>
-							{formatBigNumber(BigNumber.from(pendingRewards))}
+						<b><span className="small">$</span>{formatBigNumber(earned)}</b><br />
+						<span className="small text-muted">
+							{formatBigNumber(BigNumber.from(rewards))}
 							<span className="small text-bold"> BENT</span>
-						</b>
-						<span className="small text-muted"> ≈ ${formatBigNumber(earnedUsd)}</span>
+						</span>
 					</Col>
 					{/* <Col>
 						<div className="earnValue">
@@ -101,9 +77,11 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 					</Col> */}
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(depositedLp))}
-							<span className="small text-bold"> {props.poolInfo.Name} {symbol}</span>
-						</b>
+							~ ${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+						</b><br />
+						<span className="small text-muted">
+							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
+						</span>
 					</Col>
 					<Col>
 						<div className="climBtn">
@@ -159,13 +137,7 @@ const PoolLogo = styled.img`
 	width: 28px;
 `
 
-const Wrapper = styled.div<{ collapsed: boolean }>`
+const Wrapper = styled.div`
 	cursor: pointer;
-	background: ${props => props.collapsed ? 'transparent' : '#CAB8FF !important'};
-	padding: 13px 15px;
+	padding: 10px;
 `;
-
-// const InnerWrapper = styled(UncontrolledCollapse)`
-// 	background: #CAB8FF;
-// 	border: unset;
-// `;

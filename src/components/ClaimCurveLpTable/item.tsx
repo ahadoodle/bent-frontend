@@ -5,18 +5,18 @@ import {
 } from "reactstrap";
 import {
 	useActiveWeb3React,
-	useBlockNumber,
 	useBentPoolContract,
+	useCrvDeposit,
+	useCrvPoolDepositedUsd,
+	useCrvPoolEarnedUsd,
 	useGasPrice,
 	useTokenPrices,
-	useMulticallProvider
+	useCrvPoolRewards
 } from "hooks";
 import {
 	BentBasePool,
 	formatBigNumber,
 	getTokenDecimals,
-	getMultiERC20Contract,
-	getMultiBentPool
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
@@ -28,24 +28,16 @@ interface Props {
 
 export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
-	const [symbol, setSymbol] = useState<string>('');
-	const [deposit, setDeposit] = useState<BigNumber>(ethers.constants.Zero);
-	const [rewards, setRewards] = useState<BigNumber[]>([]);
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { account } = useActiveWeb3React();
-	const blockNumber = useBlockNumber();
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
-	const multicall = useMulticallProvider();
-
-	const totalEarned = (): BigNumber => {
-		let sum = ethers.constants.Zero;
-		usdRewards.forEach(reward => {
-			sum = sum.add(reward)
-		})
-		return sum;
-	}
+	const symbol = props.poolInfo.CrvLpSYMBOL;
+	const depositedLp = useCrvDeposit(props.poolKey);
+	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
+	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
+	const rewards = useCrvPoolRewards(props.poolKey);
 
 	const haveRewards = () => {
 		let enable = false;
@@ -54,41 +46,30 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	useEffect(() => {
-		const accAddr = account || ethers.constants.AddressZero;
-		const bentPoolMC = getMultiBentPool(props.poolKey);
-		multicall.all([
-			getMultiERC20Contract(props.poolInfo.DepositAsset).symbol(),
-			bentPoolMC.balanceOf(accAddr),
-			bentPoolMC.pendingReward(accAddr)
-		]).then(([symbol, depositedLp, rewards]) => {
-			setSymbol(symbol);
-			setDeposit(depositedLp);
-			setRewards(rewards);
-			setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
-				const addr = TOKENS[key].ADDR.toLowerCase();
-				if (tokenPrices[addr] && rewards[index]) {
-					return utils.parseUnits((tokenPrices[addr].toString()))
-						.mul(rewards[index]).div(BigNumber.from(10).pow(getTokenDecimals(addr)));
-				} else
-					return ethers.constants.Zero;
-			}));
-		});
-	}, [multicall, blockNumber, account, props, tokenPrices])
+		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
+			const addr = TOKENS[key].ADDR.toLowerCase();
+			if (tokenPrices[addr] && rewards[index]) {
+				return utils.parseUnits((tokenPrices[addr].toString()))
+					.mul(rewards[index]).div(BigNumber.from(10).pow(getTokenDecimals(addr)));
+			} else
+				return ethers.constants.Zero;
+		}));
+	}, [props, tokenPrices, rewards])
 
 	const claim = async () => {
 		await BentBasePool.harvest(bentPool, account, gasPrice);
 	}
 
 	return (
-		<div className="innerWrap p-0 pt-1 pb-1 rounded">
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'}`} >
 			<Wrapper
-				className="bentInner"
+				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
 				id={`toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
 				onClick={() => setCollapsed(!collapsed)}
 				collapsed={collapsed}
 			>
-				<Row className="align-items-center">
+				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO} alt="" />
@@ -96,10 +77,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b>
-							<span>$</span>
-							{formatBigNumber(totalEarned())}
-						</b>
+						<b><span className="small">$</span>{formatBigNumber(earnedUsd)}</b>
 					</Col>
 					{/* <Col>
 						<div className="earnValue">
@@ -115,9 +93,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					</Col> */}
 					<Col>
 						<b>
-							{formatBigNumber(BigNumber.from(deposit))}
-							<span className="small text-bold"> {symbol}</span>
-						</b>
+							~ ${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+						</b><br />
+						<span className="small text-muted">
+							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
+							<span className="text-bold"> {symbol}</span>
+						</span>
 					</Col>
 					<Col>
 						<div className="climBtn">
@@ -138,8 +119,8 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 				className="innerAccordian"
 				toggler={`#toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
 			>
-				<Card>
-					<CardBody>
+				<Card style={{ borderTop: '1px solid black', borderRadius: 0 }}>
+					<CardBody className="px-3">
 						<Row className="align-items-center">
 							<Col sm={12}>
 								<p>Breakdown of claimable earnings:</p>
@@ -150,7 +131,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 								<Col>
 									<div className="imgText">
 										<img src={TOKENS[tokenKey].LOGO} alt="" width="28" />
-										<h4>{tokenKey}</h4>
+										<h4 className="rewards-breakdown">{tokenKey}</h4>
 									</div>
 								</Col>
 								<Col>
@@ -180,8 +161,7 @@ const PoolLogo = styled.img`
 
 const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
-	background: ${props => props.collapsed ? 'transparent' : '#CAB8FF !important'};
-	padding: 13px 15px;
+	padding: 10px;
 `;
 
 const InnerWrapper = styled(UncontrolledCollapse)`

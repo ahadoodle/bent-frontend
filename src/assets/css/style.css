@@ -246,10 +246,10 @@ h2.white {
 .convert-up {
     margin-top: -100px;
 }
-.stakebent-token .convert-up {
+.section .convert-up {
     margin-top: 0px;
 }
-.stakebent-token {
+.section {
     margin-top: 120px;
 }
 .infoWrap p {
@@ -295,10 +295,6 @@ table.tokentable.table tbody {
 	box-shadow: 10px 15px 0px 0px #607390;
 	border: none;
 }
-.tokentable {
-    background: #B5DEFF;
-    border: 3px solid #B5DEFF;
-}
 .Dark .tokentable {
     border: 3px solid #414C5C;
     box-shadow: 10px 15px 0px 0px #607390;
@@ -324,15 +320,6 @@ table.tokentable.table tbody {
 }
 .Dark .tokentable.table .card-body .bentInner {
     color: white;
-}
-.Dark .tokentable.table .card-body .bentInner:hover,
-.Dark .tokentable.table .card-body .bentInner.open,
-.Dark .tokentable.table .card-body .bentInner:hover .imgText h4,
-.Dark .tokentable.table .card-body .bentInner.open .imgText h4,
-.Dark .tokentable.table .innerWrap.open .card-text,
-.Dark .tokentable.table .innerWrap.open .labeltext label,
-.Dark .tokentable.table .innerWrap.open p {
-    color: #10151D;
 }
 .bentInner .small {
     font-size: 0.8rem;
@@ -586,7 +573,7 @@ table.tokentable.table tbody tr:first-child td:last-child {
 table.tokentable.table tbody tr:first-child td {
     border-top: 3px solid #10151D;
 }
-.stakebent-token table.tokentable.table th {
+.section table.tokentable.table th {
     border-bottom: none;
 }
 button.maxbtn {
@@ -694,12 +681,23 @@ button.btn.btnshow i {
 .Dark .contentSection {
     background: #253143;
 }
+.Dark .tokentable.table .card-body .bentInner:hover,
+.Dark .tokentable.table .card-body .bentInner.open,
+.Dark .tokentable.table .card-body .bentInner:hover .imgText h4,
+.Dark .tokentable.table .card-body .bentInner.open .imgText h4,
+.Dark .tokentable.table .innerWrap.open .card-text,
+.Dark .tokentable.table .innerWrap.open .labeltext label,
+.Dark .tokentable.table .innerWrap.open p,
+.Dark .tokentable.table .innerWrap.open .imgText h4,
+.Dark .tokentable.table .innerWrap.open b{
+    color: #10151D;
+}
 .Dark .boxwrap h2, .Dark .boxwrap p, .Dark .converttabs a.active.nav-link,
 .Dark .converttabs p.card-text, .Dark .converttabs label, .Dark  h2.black,
 .Dark table.tokentable.table td, .Dark .currentText h3, .Dark .currentText p, 
 .Dark li.addreesAdd, .Dark .tableText h4, .Dark .tableText b,
 .Dark .infoWrap p, .Dark .innerWrap .imgText h4, .Dark .innerWrapother, 
-.Dark p.epsText, .Dark .innerAccordian p, .Dark .innerAccordian .imgText h4,
+.Dark p.epsText, .Dark .innerAccordian p,
 .Dark .innerAccordian {
 	color: #fff;
 }
@@ -1196,10 +1194,6 @@ button.claimbtn.btn.btn-secondary {
 }
 .innerWrap .card {
     border-top: none;
-}
-.innerWrap .card-body {
-    border-top: 1px solid #10151D;
-    padding: 10px 0;
 }
 .claimText {
     background: #cab8ff;
@@ -1729,7 +1723,7 @@ h2.black {
 .bannerboxes {
     padding-right: 12px;
 }
-.stakebent-token, .convert-up.cvxSection {
+.section, .convert-up.cvxSection {
     margin-top: 80px;
 }
 .boxwrap h2 b, .bannerBlockWrap .boxwrap h2 b {

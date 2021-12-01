@@ -2,6 +2,10 @@ import { BigNumber } from 'ethers';
 import { createAction } from '@reduxjs/toolkit';
 import { BentPoolReward } from './reducer';
 
+export const updatePrices = createAction<Record<string, number>>('prices/updatePrices');
+export const updateBentPrice = createAction<number>('prices/updateBentPrice');
+export const updateTokenPrice = createAction<{ tokenAddr: string, price: number }>('prices/updateTokenPrice');
+
 export const updateBalance = createAction<{ tokenAddr: string, balance: BigNumber }>('contracts/updateBalance');
 export const updateTotalSupply = createAction<{ tokenAddr: string, supply: BigNumber }>('contracts/updateTotalSupply');
 
@@ -17,6 +21,7 @@ export const updateCrvPoolDepositedUsd = createAction<{ poolKey: string, deposit
 
 export const updateSushiPoolTVL = createAction<{ poolKey: string, tvl: BigNumber }>('contracts/updateSushiPoolTVL');
 export const updateSushiPoolApr = createAction<{ poolKey: string, apr: number }>('contracts/updateSushiPoolApr');
+export const updateSushiPoolRewards = createAction<{ poolKey: string, rewards: BigNumber }>('contracts/updateSushiPoolRewards');
 export const updateSushiPoolEarnedUsd = createAction<{ poolKey: string, earned: BigNumber }>('contracts/updateSushiPoolEarnedUsd');
 export const updateSushiLpDeposited = createAction<{ poolKey: string, deposited: BigNumber }>('contracts/updateSushiLpDeposited');
 export const updateSushiLpDepositedUsd = createAction<{ poolKey: string, deposited: BigNumber }>('contracts/updateSushiLpDepositedUsd');

@@ -49,8 +49,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const symbol = props.poolInfo.CrvLpSYMBOL;
 	const allowance = usePoolAllowance(props.poolKey);
 	const tvl = useCrvTvl(props.poolKey);
-	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
+	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 
 	const toggle = tab => {
