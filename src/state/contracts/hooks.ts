@@ -51,7 +51,7 @@ export const useCrvAverageApr = (): number => {
 	const tvls = useCrvTvls();
 	const aprs = useCrvAprs();
 	Object.keys(POOLS.BentPools).forEach(poolKey => {
-		const apr = aprs[poolKey] || 0;
+		const apr = parseFloat(aprs[poolKey].toFixed(2)) || 0;
 		const tvl = BigNumber.from(tvls[poolKey] || ethers.constants.Zero);
 		totalTvl = tvl.add(totalTvl);
 		totalRewards = tvl.mul(apr * 100).add(totalRewards);
