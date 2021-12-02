@@ -3,12 +3,13 @@ import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
-import { useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls } from "hooks";
+import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls } from "hooks";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const tvls = useCrvTvls();
 	const earns = useCrvPoolEarns();
 	const depostedUsd = useCrvPoolDepositedUsds();
+	const avgApr = useCrvAverageApr();
 
 	return (
 		<Container className="convert-up">
@@ -35,7 +36,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 							<Col>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									<span className="h5">TBC</span>
+									<span className="h5">{avgApr} %</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
