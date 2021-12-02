@@ -1,4 +1,5 @@
-import { BigNumber, ethers } from 'ethers';
+import { POOLS } from 'constant';
+import { BigNumber, ethers, utils } from 'ethers';
 import { useSelector } from 'react-redux';
 import { AppState } from '../index';
 import { BentPoolReward } from './reducer';
@@ -38,6 +39,24 @@ export const useCrvTotalTvl = (): BigNumber => {
 
 export function useCrvApr(poolKey: string): number {
 	return useSelector((state: AppState) => state.contracts.crvApr ? state.contracts.crvApr[poolKey] ?? 0 : 0);
+}
+
+export const useCrvAprs = (): Record<string, number> => {
+	return useSelector((state: AppState) => state.contracts.crvApr || {});
+}
+
+export const useCrvAverageApr = (): number => {
+	let totalRewards = ethers.constants.Zero;
+	let totalTvl = ethers.constants.Zero;
+	const deposits = useCrvPoolDepositedUsds();
+	const aprs = useCrvAprs();
+	Object.keys(POOLS.BentPools).forEach(poolKey => {
+		const apr = aprs[poolKey] * 100 || 0;
+		const tvl = BigNumber.from(deposits[poolKey] || ethers.constants.Zero);
+		totalTvl = tvl.add(totalTvl);
+		totalRewards = utils.parseEther(apr.toString()).mul(tvl).div(BigNumber.from(10).pow(18)).add(totalRewards);
+	})
+	return totalTvl.isZero() ? 0 : totalRewards.div(totalTvl).toNumber() / 100;
 }
 
 export const useCrvDeposit = (poolKey: string): BigNumber => {
