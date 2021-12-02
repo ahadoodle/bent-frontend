@@ -4,12 +4,8 @@ import {
 } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeSushiLpItem } from "./item";
-import { useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
-import { formatBigNumber, formatMillionsBigNumber } from "utils";
 
 export const StakeSushiLpTable = (): React.ReactElement => {
-	const totalEarns = useSushiPoolTotalEarned();
-	const totalTvl = useSushiTotalTvl();
 	return (
 		<Container className="convert-up">
 			<Row>

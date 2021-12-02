@@ -3,11 +3,8 @@ import { Row, Col, Card, CardBody, Container } from "reactstrap";
 import { POOLS } from "constant";
 import SushiLogo from 'assets/images/token/SUSHI.png';
 import { ClaimSushiLpItem } from "./item";
-import { useSushiPoolTotalEarned } from "hooks";
-import { formatBigNumber } from "utils";
 
 export const ClaimSushiLpTable = (): React.ReactElement => {
-	const totalEarns = useSushiPoolTotalEarned();
 	return (
 		<Container className="convert-up">
 			<Row>
