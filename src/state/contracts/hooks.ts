@@ -1,5 +1,5 @@
 import { POOLS } from 'constant';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { useSelector } from 'react-redux';
 import { AppState } from '../index';
 import { BentPoolReward } from './reducer';
@@ -51,10 +51,10 @@ export const useCrvAverageApr = (): number => {
 	const deposits = useCrvPoolDepositedUsds();
 	const aprs = useCrvAprs();
 	Object.keys(POOLS.BentPools).forEach(poolKey => {
-		const apr = parseFloat(aprs[poolKey].toFixed(2)) || 0;
+		const apr = aprs[poolKey] * 100 || 0;
 		const tvl = BigNumber.from(deposits[poolKey] || ethers.constants.Zero);
 		totalTvl = tvl.add(totalTvl);
-		totalRewards = tvl.mul(apr * 100).add(totalRewards);
+		totalRewards = utils.parseEther(apr.toString()).mul(tvl).div(BigNumber.from(10).pow(18)).add(totalRewards);
 	})
 	return totalRewards.div(totalTvl).toNumber() / 100;
 }
