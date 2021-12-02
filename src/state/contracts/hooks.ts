@@ -56,7 +56,7 @@ export const useCrvAverageApr = (): number => {
 		totalTvl = tvl.add(totalTvl);
 		totalRewards = utils.parseEther(apr.toString()).mul(tvl).div(BigNumber.from(10).pow(18)).add(totalRewards);
 	})
-	return totalRewards.div(totalTvl).toNumber() / 100;
+	return totalTvl.isZero() ? 0 : totalRewards.div(totalTvl).toNumber() / 100;
 }
 
 export const useCrvDeposit = (poolKey: string): BigNumber => {
