@@ -48,11 +48,11 @@ export const useCrvAprs = (): Record<string, number> => {
 export const useCrvAverageApr = (): number => {
 	let totalRewards = ethers.constants.Zero;
 	let totalTvl = ethers.constants.Zero;
-	const tvls = useCrvTvls();
+	const deposits = useCrvPoolDepositedUsds();
 	const aprs = useCrvAprs();
 	Object.keys(POOLS.BentPools).forEach(poolKey => {
 		const apr = parseFloat(aprs[poolKey].toFixed(2)) || 0;
-		const tvl = BigNumber.from(tvls[poolKey] || ethers.constants.Zero);
+		const tvl = BigNumber.from(deposits[poolKey] || ethers.constants.Zero);
 		totalTvl = tvl.add(totalTvl);
 		totalRewards = tvl.mul(apr * 100).add(totalRewards);
 	})
