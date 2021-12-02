@@ -3,17 +3,18 @@ import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
-import { useCrvPoolEarns, useCrvTvls } from "hooks";
+import { useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls } from "hooks";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const tvls = useCrvTvls();
 	const earns = useCrvPoolEarns();
+	const depostedUsd = useCrvPoolDepositedUsds();
 
 	return (
 		<Container className="convert-up">
 			<Row>
 				<Col md="12">
-					<h2 className="black">Stake Curve LP Tokens</h2>
+					<h2 className="section-header">Stake Curve LP Tokens</h2>
 					<div className="toggleWrap tokentable table">
 						<Row className="align-items-center thead">
 							<Col>
@@ -24,37 +25,36 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								></i>
 							</Col>
 							<Col>
-								<span className="small p-0">
-									Earned (USD)&nbsp;
-									<i className="fa fa-caret-down" aria-hidden="true" />
-								</span><br />
+								<span className="small p-0">Total Earned (USD)</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
 									<span className="h5">{formatBigNumber(getSumBigNumbers(earns))}</span>
+									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
 							<Col>
-								APR{" "}
-								<i
-									className="fa fa-caret-down"
-									aria-hidden="true"
-								></i>
+								<span className="small p-0">My Average APR</span><br />
+								<b className="p-0">
+									<span className="h5">TBC</span>
+									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+								</b>
 							</Col>
 							<Col>
-								Deposits{" "}
-								<i
-									className="fa fa-caret-down"
-									aria-hidden="true"
-								></i>
+								<span className="small p-0">My Total Deposits</span><br />
+								<b className="p-0">
+									<span className="small">$</span>
+									<span className="h5">{formatBigNumber(getSumBigNumbers(depostedUsd))}</span>
+									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+								</b>
 							</Col>
 							<Col>
 								<span className="small">
-									TVL&nbsp;
-									<i className="fa fa-caret-down" aria-hidden="true" />
+									TVL
 								</span><br />
 								<b>
 									<span className="small">$</span>
 									<span className="h5">{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 0)}</span>
+									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
 						</Row>
