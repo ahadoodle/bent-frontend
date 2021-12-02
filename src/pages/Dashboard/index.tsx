@@ -23,10 +23,10 @@ const Dashboard = () => {
       <div className="contentSection">
         <StakeBent />
         {/* <ConvertCrv /> */}
-        <div className="stakebent-token">
+        <div className="section">
           <StakeCurveLpTable />
         </div>
-        <div className="stakebent-token">
+        <div className="section">
           <StakeSushiLpTable />
         </div>
       </div>

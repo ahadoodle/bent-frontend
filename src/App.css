@@ -1,3 +1,7 @@
+#root {
+  font-family: 'Rubik';
+}
+
 .App {
   text-align: center;
 }
@@ -35,8 +39,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-body {
-  font-family: "DM Sans", sans-serif;
 }

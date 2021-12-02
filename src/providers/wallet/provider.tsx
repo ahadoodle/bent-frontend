@@ -6,11 +6,9 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 
 import { useEthers } from 'hooks'
-import { NetworkConnectorPatched } from 'utils/NetworkConnectorPatch'
 import { WalletContext } from './context';
 
 import {
-  DEFAULT_CHAIN,
   NETWORK_CONNECTIONS,
   SUPPORTED_CHAINS,
   NETWORK_NAMES,
@@ -20,11 +18,6 @@ import {
 // connectors
 const injected = new InjectedConnector({
   supportedChainIds: SUPPORTED_CHAINS
-})
-
-const defaultConnector = new NetworkConnectorPatched({
-  urls: NETWORK_CONNECTIONS,
-  defaultChainId: DEFAULT_CHAIN
 })
 
 const walletConnectConnector = (chainId: number) => {
@@ -151,7 +144,7 @@ export function WalletProvider({ children }: Props): React.ReactElement {
   // load default connector
   function handleDefaultConnect() {
     setUnsupportedChain(false)
-    activate(defaultConnector)
+    // activate(defaultConnector)
   }
 
   // load MM connector
@@ -166,7 +159,7 @@ export function WalletProvider({ children }: Props): React.ReactElement {
     })()
     // no web3 or metamask => open tab for download
     if (!hasInstalledMetaMask) {
-      if(web3Wallet === 'metamask')
+      if (web3Wallet === 'metamask')
         return window.open('https://metamask.io/download.html')
     }
     // activate injected MM

@@ -1,27 +1,24 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Row, Col, Card, CardBody } from "reactstrap";
+import React from "react";
+import { Row, Col, Card, CardBody, Container } from "reactstrap";
 import { POOLS } from "constant";
 import CrvLogo from 'assets/images/token/CRV.svg';
 import { ClaimCurveLpItem } from "./item";
+import { useCrvPoolEarns, useCrvPoolDepositedUsds } from "hooks";
+import { formatBigNumber, getSumBigNumbers } from "utils";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
-	const [collapsed, setCollapsed] = useState<boolean>(true);
-
+	const earns = useCrvPoolEarns();
+	const depostedUsd = useCrvPoolDepositedUsds();
 	return (
-		<div className="cliamBlockOne">
-			<div className="table-Responsive">
-				<div className="toggleWrap tokentable">
-					<div className="toggleWrap">
-						<Wrapper
-							className="bentPool mb-0"
-							color="primary"
-							id="togglerClaimBentPool"
-							style={{ padding: "13px 15px" }}
-							collapsed={false}
-							onClick={() => setCollapsed(!collapsed)}
-						>
-							<Row className="align-items-center">
+		<Container>
+			<Row>
+				<Col md="12">
+					<div className="convert-up">
+						<h2 className="white">
+							Claim Earnings
+						</h2>
+						<div className="toggleWrap tokentable table">
+							<Row className="align-items-center thead p-0 pt-2 pb-2">
 								<Col>
 									<div className="imgText">
 										<img src={CrvLogo} alt="" width="28" />
@@ -29,16 +26,14 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 									</div>
 								</Col>
 								<Col>
-									<div className="earnValue">
-										<p>Earned (USD value)</p>
-										<b>
-											<span>$</span>{0}
-										</b>
-										<i
-											className="fa fa-caret-down"
-											aria-hidden="true"
-										></i>
-									</div>
+									<span className="small">
+										Total Earned (USD)
+									</span><br />
+									<b>
+										<span className="small">$</span>
+										<span className="h5">{formatBigNumber(getSumBigNumbers(earns))}</span>
+										&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+									</b>
 								</Col>
 								{/* <Col>
 									<div className="earnValue">
@@ -49,7 +44,12 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 									</div>
 								</Col> */}
 								<Col>
-									<h3>Deposits</h3>
+									<span className="small p-0">My Total Deposits</span><br />
+									<b className="p-0">
+										<span className="small">$</span>
+										<span className="h5">{formatBigNumber(getSumBigNumbers(depostedUsd))}</span>
+										&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+									</b>
 								</Col>
 								<Col>
 									<div className="clmBtn">
@@ -61,13 +61,6 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 									</div>
 								</Col>
 							</Row>
-						</Wrapper>
-
-						{/* <UncontrolledCollapse
-							toggler="#togglerClaimBentPool"
-							className="bentpoolText"
-						> */}
-						<div className="bentpoolText">
 							<Card>
 								<CardBody>
 									{Object.keys(POOLS.BentPools).map((poolName, index) =>
@@ -75,22 +68,14 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 											poolInfo={POOLS.BentPools[poolName]}
 											poolKey={poolName}
 											key={poolName}
-										// poolIndex={index}
-										// updateEarning={onEarningUpdate}
 										/>)
 									}
 								</CardBody>
 							</Card>
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
+				</Col>
+			</Row>
+		</Container>
 	)
 }
-
-const Wrapper = styled.div<{ collapsed: boolean }>`
-	cursor: pointer;
-	background: ${props => props.collapsed ? 'transparent' : '#B5DEFF !important'};
-	border-radius: 8px;
-`;

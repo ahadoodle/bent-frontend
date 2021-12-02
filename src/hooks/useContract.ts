@@ -9,6 +9,7 @@ import {
 	getCvxBaseRewardPool,
 	getCrvFiLp
 } from 'utils';
+import { POOLS } from 'constant';
 
 export const useBentPoolContract = (poolName: string): Contract => {
 	const web3 = useWeb3();
@@ -38,4 +39,15 @@ export const useCvxBaseRewardPool = (address: string): Contract => {
 export const useCrvFiLp = (address: string): Contract => {
 	const web3 = useWeb3();
 	return useMemo(() => getCrvFiLp(address, web3), [web3, address]);
+}
+
+export const useCrvFiLps = (): Record<string, Contract> => {
+	const web3 = useWeb3();
+	return useMemo(() => {
+		const contracts = {};
+		Object.keys(POOLS.BentPools).forEach(poolKey => {
+			contracts[poolKey] = getCrvFiLp(POOLS.BentPools[poolKey].CrvMinter ?? POOLS.BentPools[poolKey].DepositAsset, web3)
+		})
+		return contracts;
+	}, [web3]);
 }

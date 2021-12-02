@@ -76,10 +76,13 @@ export const getPrice = async (contract_addresses: string[], vsCoin = 'usd'): Pr
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const res: any = await axios.get(url);
+		const priceData: Record<string, number> = {};
 		Object.keys(res.data).forEach(key => {
-			if (isNaN(res.data[key][vsCoin.toLowerCase()])) res.data[key][vsCoin.toLowerCase()] = 0;
+			if (isNaN(res.data[key][vsCoin.toLowerCase()]))
+				res.data[key][vsCoin.toLowerCase()] = 0;
+			priceData[key.toLowerCase()] = isNaN(res.data[key][vsCoin.toLowerCase()]) ? 0 : res.data[key][vsCoin.toLowerCase()];
 		})
-		return res.data;
+		return priceData;
 	} catch (error) {
 		console.error(error);
 		await sleep(3000);
@@ -95,7 +98,14 @@ export const sleep = (ms = 0): Promise<unknown> => {
 
 export const getTokenDecimals = (addr: string): number => {
 	const key = Object.keys(TOKENS).filter(key => TOKENS[key].ADDR.toLowerCase() === addr.toLowerCase())[0];
+	if (!key) return 18;
 	return TOKENS[key].DECIMALS;
+}
+
+export const getTokenPrice = (tokenPrices: Record<string, number>, addr: string): BigNumber => {
+	const price = tokenPrices[addr.toLowerCase()];
+	if (!price) return ethers.constants.Zero;
+	return utils.parseUnits(price.toString());
 }
 
 export const getEtherscanLink = (addr: string): string => {
@@ -103,7 +113,16 @@ export const getEtherscanLink = (addr: string): string => {
 }
 
 export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenPrice: number): BigNumber => {
+	if (!tokenPrice) return ethers.constants.Zero;
 	return rewardRate.mul(6400).mul(365)
 		.mul(utils.parseUnits(tokenPrice.toString()))
 		.div(BigNumber.from(10).pow(36 + getTokenDecimals(tokenAddr)));
+}
+
+export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
+	let total = ethers.constants.Zero;
+	Object.keys(bns).forEach(key => {
+		total = total.add(bns[key]);
+	})
+	return total;
 }

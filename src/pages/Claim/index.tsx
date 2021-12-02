@@ -141,12 +141,13 @@ export const Claim = (): React.ReactElement => {
           )}
         </div>
       </div>
-      <div className="claimText">
+      <div className="contentSection">
+        <ClaimCurveLpTable />
+        <div className="section">
+          <ClaimSushiLpTable />
+        </div>
         <Container>
           <div className="cliamBox">
-            <h2 className="white">Claim Earnings</h2>
-            <ClaimCurveLpTable />
-            <ClaimSushiLpTable />
             {/* <div className="cliamBlockOne LastBlock">
               <div className="table-Responsive">
                 <div className="table-Wrapper">

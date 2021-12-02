@@ -223,9 +223,6 @@ h2.white {
     cursor: pointer;
 }
 .converttabs {
-    background: #fff;
-    border-top: 3px solid #10151D;
-    border-radius: 8px;
     padding: 10px 20px 20px;
 }
 .converttabs .card.card-body {
@@ -249,10 +246,10 @@ h2.white {
 .convert-up {
     margin-top: -100px;
 }
-.stakebent-token .convert-up {
+.section .convert-up {
     margin-top: 0px;
 }
-.stakebent-token {
+.section {
     margin-top: 120px;
 }
 .infoWrap p {
@@ -268,7 +265,8 @@ h2.white {
     text-decoration: none;
     font-style: italic;
 }
-h2.black {
+h2.section-header {
+    padding-left: 10px;
     font-style: normal;
     font-weight: bold;
     font-size: 24px;
@@ -286,6 +284,7 @@ table.tokentable.table tbody {
     background: #fff;
 }
 .tokentable.table {
+    background: #B5DEFF;
     vertical-align: middle;
     border: 3px solid #10151D;
     border-radius: 8px;
@@ -293,12 +292,37 @@ table.tokentable.table tbody {
     border-spacing: 0;
     box-shadow: 10px 15px 0px 0px #10151d;
 }
+.Dark .convert-table {
+	box-shadow: 10px 15px 0px 0px #607390;
+	border: none;
+}
+.Dark .tokentable {
+    border: 3px solid #414C5C;
+    box-shadow: 10px 15px 0px 0px #607390;
+}
 .tokentable.table .thead {
     margin: 0;
     background: #B5DEFF;
     border-radius: 8px;
     padding: 10px 15px;
     overflow: hidden;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    height: 70px;
+    line-height: 14px;
+    letter-spacing: -0.005em;
+    font-feature-settings: 'ss01' on;
+}
+.tokentable.table .thead .small {
+    font-weight: 400;
+    font-size: 12px;
+}
+.tokentable.table .thead b .small {
+    font-weight: 500;
+}
+.tokentable.table b {
+    font-weight: 500;
 }
 .tokentable.table .card-body {
     padding: 0;
@@ -310,14 +334,10 @@ table.tokentable.table tbody {
     text-align: left;
     color: #10151D;
     margin-bottom: 0 !important;
-    padding: 15px 12px;
+    padding: 10px;
 }
-.tokentable.table .card-body .bentInner:hover,
-.tokentable.table .card-body .bentInner:focus {
-    background: #CAB8FF;
-    border: none;
-    color: #10151D;
-    box-shadow: none;
+.Dark .tokentable.table .card-body .bentInner {
+    color: white;
 }
 .bentInner .small {
     font-size: 0.8rem;
@@ -371,9 +391,6 @@ table.tokentable.table td span {
 tr:hover {
     background: #CAB8FF;
 }
-table.tokentable.table thead tr:hover {
-    background: #B5DEFF;
-}    
 .tvlText i.fa.fa-caret-down {
     position: absolute;
     right: 30px;
@@ -478,43 +495,43 @@ p.copyright {
     border-radius: 3px;
   }
   
-  .advance-btn .slider:before {
-        position: absolute;
-        content: "";
-        height: 22px;
-        width: 22px;
-        left: -1px;
-        bottom: -5px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-        border: 3px solid #9BA2AC;
-        border-radius: 3px;
-    }
+.advance-btn .slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: -1px;
+    bottom: -5px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border: 3px solid #9BA2AC;
+    border-radius: 3px;
+}
   
-  .advance-btn input:checked + .slider {
+.advance-btn input:checked + .slider {
     background-color: #2196F3;
-  }
+}
   
-  .advance-btn input:focus + .slider {
+.advance-btn input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
-  }
+}
   
-  .advance-btn input:checked + .slider:before {
+.advance-btn input:checked + .slider:before {
     -webkit-transform: translateX(18px);
     -ms-transform: translateX(18px);
     transform: translateX(18px);
-  }
+}
   
   /* Rounded sliders */
-  .advance-btn .slider.round {
+.advance-btn .slider.round {
     border-radius: 34px;
-  }
+}
   
-  .advance-btn .slider.round:before {
+.advance-btn .slider.round:before {
     border-radius: 50%;
-  }
-  .converttabs .divider-left {
+}
+.converttabs .divider-left {
     padding-left: 30px;
     padding-right: 30px;
     border-left: 3px solid rgba(41, 49, 60, 0.2);
@@ -574,7 +591,7 @@ table.tokentable.table tbody tr:first-child td:last-child {
 table.tokentable.table tbody tr:first-child td {
     border-top: 3px solid #10151D;
 }
-.stakebent-token table.tokentable.table th {
+.section table.tokentable.table th {
     border-bottom: none;
 }
 button.maxbtn {
@@ -682,23 +699,33 @@ button.btn.btnshow i {
 .Dark .contentSection {
     background: #253143;
 }
+.Dark .tokentable.table .card-body .bentInner:hover,
+.Dark .tokentable.table .card-body .bentInner.open,
+.Dark .tokentable.table .card-body .bentInner:hover .imgText h4,
+.Dark .tokentable.table .card-body .bentInner.open .imgText h4,
+.Dark .tokentable.table .innerWrap.open .card-text,
+.Dark .tokentable.table .innerWrap.open .labeltext label,
+.Dark .tokentable.table .innerWrap.open p,
+.Dark .tokentable.table .innerWrap.open .imgText h4,
+.Dark .tokentable.table .innerWrap.open b{
+    color: #10151D;
+}
 .Dark .boxwrap h2, .Dark .boxwrap p, .Dark .converttabs a.active.nav-link,
-.Dark .converttabs p.card-text, .Dark .converttabs label, .Dark  h2.black,
+.Dark .converttabs p.card-text, .Dark .converttabs label, .Dark  h2.section-header,
 .Dark table.tokentable.table td, .Dark .currentText h3, .Dark .currentText p, 
 .Dark li.addreesAdd, .Dark .tableText h4, .Dark .tableText b,
-.Dark .infoWrap p, .Dark .innerWrapother .imgText h4, .Dark .innerWrapother, 
-.Dark p.epsText, .Dark .innerAccordian p, .Dark .innerAccordian .imgText h4,
+.Dark .infoWrap p, .Dark .innerWrap .imgText h4, .Dark .innerWrapother, 
+.Dark p.epsText, .Dark .innerAccordian p,
 .Dark .innerAccordian {
 	color: #fff;
 }
-.Dark .boxwrap,.Dark .converttabs,.Dark .card, .Dark .convert-table {
-    background: #374559;
+.Dark .boxwrap,
+.Dark .card,
+.Dark .convert-table {
+    background: #18202C;
 }
 .Dark table.tokentable.table tr:hover td {
 	color: #10151D;
-}
-.Dark .converttabs {
-	
 }
 .Dark .amountinput input {
     border: 3px solid #fff;
@@ -719,20 +746,6 @@ button.btn.btnshow i {
 .Dark table.tokentable.table tbody {
     background: #18202C;
 	color:#fff;
-}
-.Dark table.tokentable.table {
-    border: 3px solid #607390;
-    box-shadow: 10px 15px 0px 0px #607390;
-}
-.Dark .converttabs {
-    border: 3px solid #607390;	
-	box-shadow: 10px 15px 0px 0px #607390;
-}
-.Dark .convert-table {
-	box-shadow: 10px 15px 0px 0px #607390;
-}
-.Dark .convert-table {
-	border: none;	
 }
 .Dark .delegateBox {
     background: #B5DEFF;
@@ -782,9 +795,6 @@ button.btn.btnshow i {
 }
 .Dark .bentpoolText {
     border: 3px solid #607390;
-}
-.Dark .innerWrap .card-body {
-	    border-top: 1px solid #fff;
 }
 .primaryMenu .dropdown-toggle {
     background-color: transparent!important;
@@ -1092,7 +1102,6 @@ button.bentPool p {
 .cliamBlockOne .card {
     box-sizing: border-box;
     border-radius: 8px;
-    background: #FAFAFA;
 }
 button.bentInner {
     width: 100%;
@@ -1188,7 +1197,7 @@ button.claimbtn.btn.btn-secondary {
     font-size: 26px;
 }
 .innerAccordian .card {
-    background: rgba(202, 184, 255, 0.1);
+    background: unset;
     padding: 16px 12px;
 }
 .depositText {
@@ -1197,15 +1206,12 @@ button.claimbtn.btn.btn-secondary {
     font-size: 16px;
     line-height: 19px;
 }
-.innerWrap:hover {
+.tokentable.table .card .card-body .innerWrap:hover,
+.tokentable.table .card .card-body .innerWrap.open {
     background: #CAB8FF;
 }
 .innerWrap .card {
     border-top: none;
-}
-.innerWrap .card-body {
-    border-top: 1px solid #10151D;
-    padding: 10px 0;
 }
 .claimText {
     background: #cab8ff;
@@ -1725,17 +1731,13 @@ table.tokentable.table td {
     font-size: 12px;
     line-height: 14px;
 }
-h2.black {
-    font-size: 16px;
-    line-height: 19px;
-}
 .convert-table {
     margin-right: 12px;
 }
 .bannerboxes {
     padding-right: 12px;
 }
-.stakebent-token, .convert-up.cvxSection {
+.section, .convert-up.cvxSection {
     margin-top: 80px;
 }
 .boxwrap h2 b, .bannerBlockWrap .boxwrap h2 b {
