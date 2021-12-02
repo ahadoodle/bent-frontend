@@ -3,11 +3,12 @@ import { Row, Col, Card, CardBody, Container } from "reactstrap";
 import { POOLS } from "constant";
 import CrvLogo from 'assets/images/token/CRV.svg';
 import { ClaimCurveLpItem } from "./item";
-import { useCrvPoolEarns } from "hooks";
+import { useCrvPoolEarns, useCrvPoolDepositedUsds } from "hooks";
 import { formatBigNumber, getSumBigNumbers } from "utils";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const earns = useCrvPoolEarns();
+	const depostedUsd = useCrvPoolDepositedUsds();
 	return (
 		<Container>
 			<Row>
@@ -26,12 +27,12 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								</Col>
 								<Col>
 									<span className="small">
-										Earned (USD)&nbsp;
-										<i className="fa fa-caret-down" aria-hidden="true" />
+										Total Earned (USD)
 									</span><br />
-									<b className="">
+									<b>
 										<span className="small">$</span>
 										<span className="h5">{formatBigNumber(getSumBigNumbers(earns))}</span>
+										&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 									</b>
 								</Col>
 								{/* <Col>
@@ -43,7 +44,12 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 									</div>
 								</Col> */}
 								<Col>
-									Deposits
+									<span className="small p-0">My Total Deposits</span><br />
+									<b className="p-0">
+										<span className="small">$</span>
+										<span className="h5">{formatBigNumber(getSumBigNumbers(depostedUsd))}</span>
+										&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+									</b>
 								</Col>
 								<Col>
 									<div className="clmBtn">

@@ -14,49 +14,23 @@ export const StakeSushiLpTable = (): React.ReactElement => {
 		<Container className="convert-up">
 			<Row>
 				<Col md="12">
-					<h2 className="black">Provide liquidity on SushiSwap</h2>
+					<h2 className="section-header">Provide liquidity on SushiSwap</h2>
 					<div className="toggleWrap tokentable table">
 						<Row className="align-items-center thead">
 							<Col>
-								Pool Name{" "}
-								<i
-									className="fa fa-caret-down"
-									aria-hidden="true"
-								></i>
+								Pool Name
 							</Col>
 							<Col>
-								<span className="small p-0">
-									Earned (USD)&nbsp;
-									<i className="fa fa-caret-down" aria-hidden="true" />
-								</span><br />
-								<b className="p-0">
-									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(totalEarns)}</span>
-								</b>
+								Earned
 							</Col>
 							<Col>
-								APR{" "}
-								<i
-									className="fa fa-caret-down"
-									aria-hidden="true"
-								></i>
+								APR
 							</Col>
 							<Col>
-								My Staked Balances{" "}
-								<i
-									className="fa fa-caret-down"
-									aria-hidden="true"
-								></i>
+								Deposits
 							</Col>
 							<Col>
-								<span className="small">
-									TVL&nbsp;
-									<i className="fa fa-caret-down" aria-hidden="true" />
-								</span><br />
-								<b>
-									<span className="small">$</span>
-									<span className="h5">{formatMillionsBigNumber(totalTvl, 18, 0)}</span>
-								</b>
+								TVL
 							</Col>
 						</Row>
 						<Card>

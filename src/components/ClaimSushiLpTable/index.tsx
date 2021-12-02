@@ -21,14 +21,7 @@ export const ClaimSushiLpTable = (): React.ReactElement => {
 								</div>
 							</Col>
 							<Col>
-								<span className="small">
-									Earned (USD)&nbsp;
-									<i className="fa fa-caret-down" aria-hidden="true" />
-								</span><br />
-								<b className="">
-									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(totalEarns)}</span>
-								</b>
+								Earned
 							</Col>
 							{/* <Col>
 									<div className="earnValue">

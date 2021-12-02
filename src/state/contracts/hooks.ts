@@ -85,6 +85,10 @@ export const useCrvPoolDepositedUsd = (poolKey: string): BigNumber => {
 	return useSelector((state: AppState) => state.contracts.crvDepositedUsd ? BigNumber.from(state.contracts.crvDepositedUsd[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
+export const useCrvPoolDepositedUsds = (): Record<string, BigNumber> => {
+	return useSelector((state: AppState) => state.contracts.crvDepositedUsd || {});
+}
+
 export function useCrvPoolEarns(): Record<string, BigNumber> {
 	return useSelector((state: AppState) => state.contracts.crvEarnedUsd || {});
 }
