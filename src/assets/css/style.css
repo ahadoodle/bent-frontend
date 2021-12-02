@@ -339,6 +339,14 @@ table.tokentable.table tbody {
 .Dark .tokentable.table .card-body .bentInner {
     color: white;
 }
+.bentInner .fa-caret-down {
+    transition: transform 0.5s;
+}
+.bentInner.open .fa-caret-down {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
 .bentInner .small {
     font-size: 0.8rem;
 }
@@ -394,7 +402,19 @@ tr:hover {
 .tvlText i.fa.fa-caret-down {
     position: absolute;
     right: 30px;
-    font-size: 30px;
+    font-size: 20px;
+}
+.bent-rewards-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-row-gap: 28px;
+    grid-column-gap: 28px;
+}
+.Dark .bent-rewards-item h4 {
+    color: white;
+}
+.Dark .stake-bent.container a.active.nav-link {
+    color: white;
 }
 table.tokentable.table td {
     border: none;
@@ -1130,7 +1150,7 @@ button.bentInner:hover, button.bentInner:focus {
     font-feature-settings: 'ss01' on;
     color: #10151D;
     display: inline-block;
-    padding-left: 15px;
+    padding-left: 10px;
 }
 .earnValue p {
     font-style: normal;
@@ -1170,14 +1190,8 @@ button.claimbtn.btn.btn-secondary {
     text-align: right;
     position: absolute;
     right: 20px;
-    top: 16px;
-    font-size: 26px;
-}
-.climBtn i.fa.fa-caret-down {
-    position: absolute;
-    right: 20px;
     top: 10px;
-    font-size: 26px;
+    font-size: 20px;
 }
 .climBtn {
     position: relative;
@@ -1189,12 +1203,6 @@ button.claimbtn.btn.btn-secondary {
 }
 .clmBtn {
     position: relative;
-}
-.clmBtn .fa-caret-down {
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 26px;
 }
 .innerAccordian .card {
     background: unset;

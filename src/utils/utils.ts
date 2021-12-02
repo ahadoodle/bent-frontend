@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TOKENS } from 'constant';
+import { POOLS, TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
@@ -125,4 +125,16 @@ export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 		total = total.add(bns[key]);
 	})
 	return total;
+}
+
+export const getRewardTokenKeys = (): string[] => {
+	const tokenKeys: string[] = [];
+	Object.keys(POOLS.BentPools).forEach(poolKey => {
+		POOLS.BentPools[poolKey].RewardsAssets.forEach(tokenKey => {
+			if (tokenKeys.indexOf(tokenKey) === -1) {
+				tokenKeys.push(tokenKey);
+			}
+		})
+	})
+	return tokenKeys
 }

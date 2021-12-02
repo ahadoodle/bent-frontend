@@ -328,7 +328,6 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 }
 
 const PoolLogo = styled.img`
-	margin-right: 10px;
 	width: 28px;
 `
 

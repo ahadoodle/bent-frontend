@@ -4,15 +4,19 @@ import {
 	Card, CardTitle, CardText, Input, Label, CardBody,
 } from "reactstrap";
 import classnames from "classnames";
-import { TOKEN_LOGO } from "constant";
+import { TOKENS, TOKEN_LOGO } from "constant";
+import { getRewardTokenKeys } from "utils";
 
 export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
 	};
+
+	const rewardsTokenKeys = getRewardTokenKeys();
+
 	return (
-		<Container>
+		<Container className="stake-bent">
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
@@ -70,18 +74,27 @@ export const StakeBent = (): React.ReactElement => {
 							<Card>
 								<CardBody>
 									<div className="innerAccordian">
-
 										<div className="converttabs">
 											<Nav tabs>
 												<NavItem>
 													<NavLink
 														className={classnames({ active: activeTab === "1" })}
-														onClick={() => {
-															toggle("1");
-														}}
-													>
-														Stake
-													</NavLink>
+														onClick={() => toggle("1")}
+													>Stake</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														className={classnames({ active: activeTab === "2" })}
+														onClick={() => toggle("2")}
+														disabled={true}
+													>Unstake</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														className={classnames({ active: activeTab === "3" })}
+														onClick={() => toggle("3")}
+														disabled={true}
+													>Info</NavLink>
 												</NavItem>
 											</Nav>
 											<TabContent activeTab={activeTab}>
@@ -90,8 +103,16 @@ export const StakeBent = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Stake your BENT to earn a portion of the platforms revenue.
+																	Stake your <b>BENT</b> to earn a portion of the platforms revenue in:
 																</CardText>
+																<div className="bent-rewards-container">
+																	{rewardsTokenKeys.map(key =>
+																		<div className="imgText bent-rewards-item">
+																			<img src={TOKENS[key].LOGO} alt="Icon" width="28" />
+																			<h4>{key}</h4>
+																		</div>
+																	)}
+																</div>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">

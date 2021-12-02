@@ -51,6 +51,7 @@ export default function Updater(): null {
 		getPrice(tokenAddrs).then(tokenPrices => {
 			dispatch(updatePrices(tokenPrices))
 
+			console.log('Updating contract states');
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
 
@@ -128,8 +129,8 @@ export default function Updater(): null {
 					// Update Sushi Pool APR
 					const poolAllocPoint = results[startIndex + 6].allocPoint;
 					const apr = (BigNumber.from(poolLpBalance).isZero() || BigNumber.from(totalAllocPoint).isZero() || lpPriceBN.isZero()) ? 0 :
-						bentPriceBN.mul(rewardPerBlock).mul(poolAllocPoint).mul(6400).mul(365).mul(100)
-							.div(lpPriceBN).div(poolLpBalance).div(totalAllocPoint).toNumber();
+						bentPriceBN.mul(rewardPerBlock).mul(poolAllocPoint).mul(6400).mul(365).mul(10000)
+							.div(lpPriceBN).div(poolLpBalance).div(totalAllocPoint).toNumber() / 100;
 					dispatch(updateSushiPoolApr({ poolKey, apr }));
 
 					// Update Sushi Pool Rewards

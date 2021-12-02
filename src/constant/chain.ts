@@ -5,8 +5,9 @@ export enum ChainId {
 
 export const SUPPORTED_CHAINS = [ChainId.Mainnet];
 
+export const INFURA_KEY = 'd242d48659e4423d9b2cf581e09774a2';
 export const NETWORK_CONNECTIONS = {
-	[ChainId.Mainnet]: 'https://mainnet.infura.io/v3/d242d48659e4423d9b2cf581e09774a2',
+	[ChainId.Mainnet]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
 }
 
 export const NETWORK_NAMES = {
@@ -15,5 +16,3 @@ export const NETWORK_NAMES = {
 }
 
 export const DEFAULT_CHAIN = ChainId.Mainnet;
-
-export const INFURA_KEY = 'd242d48659e4423d9b2cf581e09774a2';
