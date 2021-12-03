@@ -119,8 +119,8 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 				className="innerAccordian"
 				toggler={`#toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
 			>
-				<Card style={{ borderTop: '1px solid black', borderRadius: 0 }}>
-					<CardBody className="px-3">
+				<Card className="splitter-horizontal" style={{ borderRadius: 0 }}>
+					<CardBody className="p-1">
 						<Row className="align-items-center">
 							<Col sm={12}>
 								<p>Breakdown of claimable earnings:</p>

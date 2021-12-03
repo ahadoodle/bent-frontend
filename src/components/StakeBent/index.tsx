@@ -20,43 +20,43 @@ export const StakeBent = (): React.ReactElement => {
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
-						<h2 className="white">
+						<h2 className="white section-header">
 							Stake your BENT
-							<span className="text-muted"> (coming soon - you'll earn platform fees)</span>
 						</h2>
 						<div className="toggleWrap tokentable table">
-							<Row className="align-items-center thead p-1">
+							<Row className="align-items-center thead p-0 pt-2 pb-2">
 								<Col>
-									<div className="tableTitle mt-1">
-										<img src={TOKEN_LOGO.BENT} alt="Icon" width="28" /> <b> BENT </b>
+									<div className="imgText">
+										<img src={TOKEN_LOGO.BENT} alt="" width="28" />
+										<h2>BENT</h2>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>Earned (USD value)</p>
+										<p>Total Earned (USD)</p>
 										<div className="boldText">
 											{" "}
 											<b>
-												<span>$</span>0
+												<span className="small">$</span>0
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>APR</p>
+										<p>Average APR</p>
 										<div className="boldText">
 											<b>
-												---<span>%</span>
+												0<span className="small">%</span>
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>My BENT Staked</p>
+										<p>My Staked BENT (--)</p>
 										<div className="boldText">
-											<b>-</b>
+											<span className="small">$</span><b>0</b>
 										</div>
 									</div>
 								</Col>
@@ -65,7 +65,7 @@ export const StakeBent = (): React.ReactElement => {
 										<p>TVL</p>
 										<div className="boldText">
 											<b>
-												<span>$</span>---
+												<span className="small">$</span>0
 											</b>
 										</div>
 									</div>
@@ -107,7 +107,7 @@ export const StakeBent = (): React.ReactElement => {
 																</CardText>
 																<div className="bent-rewards-container">
 																	{rewardsTokenKeys.map(key =>
-																		<div className="imgText bent-rewards-item">
+																		<div className="imgText bent-rewards-item" key={key}>
 																			<img src={TOKENS[key].LOGO} alt="Icon" width="28" />
 																			<h4>{key}</h4>
 																		</div>
@@ -117,7 +117,7 @@ export const StakeBent = (): React.ReactElement => {
 														</Col>
 														<Col sm="6" className="divider-left">
 															<Card body>
-																<div className="card-text mt-4">
+																<div className="card-text">
 																	<div className="amount-crv">
 																		<p className="labeltext">
 																			<Label>

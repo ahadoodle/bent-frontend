@@ -88,20 +88,21 @@ ul.primaryMenu li a:hover {
     color: #C1FFD7;
 }
 .bannerboxes {
-    margin: 70px  auto 40px;
+    padding-right: 12px;
+    margin: 0 auto 40px;
 }
 .boxwrap {
+    display: flex;
     width: 100%;
-    padding: 31px 25px;
-    margin: 15px 0;
+    padding: 25px;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 10px 15px 0px 0px #b5deff;
+    box-shadow: 10px 10px 0px 0px #b5deff;
     position: relative;
     overflow: hidden;
 }
 .boxwrap.second {
-    box-shadow: 10px 15px 0px 0px #cab8ff;
+    box-shadow: 10px 10px 0px 0px #cab8ff;
 }
 .boxwrap p {
     color: #10151D;
@@ -111,7 +112,7 @@ ul.primaryMenu li a:hover {
     font-size: 16px;
     line-height: 19px;
     letter-spacing: 0.2px;
-    margin: 10px 0;
+    margin: 0;
 }
 .boxwrap h2 {
     letter-spacing: 3px;
@@ -120,6 +121,7 @@ ul.primaryMenu li a:hover {
     font-weight: normal;
     font-size: 48px;
     line-height: 57px;
+    margin: 0;
 }
 .boxwrap h2 b {
     font-weight: bold;
@@ -233,10 +235,10 @@ h2.white {
     border-bottom: none;
 }
 .converttabs p.card-text {
+    margin-top: 0;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
-    margin-top: 20px;
     line-height: 24px;
     color: #10151D;
 }
@@ -355,7 +357,9 @@ table.tokentable.table tbody {
     color: #6E7889;
     background: unset;
     border: unset;
-    padding: 30px 15px;
+}
+.tokentable.table .card-body .nav-item:first-child .nav-link {
+    padding-left: 0;
 }
 .tokentable.table .card-body .nav-link.active {
     font-weight: bold;
@@ -404,9 +408,14 @@ tr:hover {
     right: 30px;
     font-size: 20px;
 }
+.splitter-horizontal {
+    border-top: 1px solid black !important;
+}
 .bent-rewards-container {
+    margin-top: 10px;
+    margin-right: auto;
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto auto;
     grid-row-gap: 28px;
     grid-column-gap: 28px;
 }
@@ -840,19 +849,17 @@ button.btn.btnshow i {
 /* Claim page css start */
 
 .bannerBlockWrap {
-    max-width: 750px;
     margin-left: auto;
     margin-right: auto;
 }
-.bannerBlockWrap .boxwrap h2 b {
-    font-size: 56px;
-    line-height: 66px;
+.bannerBlockWrap .boxwrap .bannerIcon {
+    width: 56px;
 }
 .bannerBlockWrap .boxwrap h2 {
     letter-spacing: 0px;
     font-style: normal;
     font-weight: normal;
-    font-size: 56px;
+    font-size: 48px;
     line-height: 66px;
 }
 .boxwrap img.cardCoin {
@@ -1742,25 +1749,8 @@ table.tokentable.table td {
 .convert-table {
     margin-right: 12px;
 }
-.bannerboxes {
-    padding-right: 12px;
-}
 .section, .convert-up.cvxSection {
     margin-top: 80px;
-}
-.boxwrap h2 b, .bannerBlockWrap .boxwrap h2 b {
-    font-weight: bold;
-    font-size: 26px;
-    line-height: 31px;
-}
-.boxwrap p {
-    font-size: 10px;
-    line-height: 12px;
-    margin: 5px 0;
-}
-.boxwrap {
-    padding: 10px;
-    box-shadow: 5px 5px 0px 0px #b5deff;
 }
 .boxwrap.second {
     box-shadow: 5px 5px 0px 0px #cab8ff;
@@ -1819,11 +1809,6 @@ h2.white {
 }
 .converttabs ul {
     margin-bottom: 0px;
-}
-.converttabs p.card-text {
-    margin-top: 0;
-    font-size: 12px;
-    line-height: 16px;
 }
 ul.nav.nav-tabs li.nav-item:first-child a.nav-link {
     padding-left: 0px;
