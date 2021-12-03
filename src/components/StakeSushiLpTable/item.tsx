@@ -121,13 +121,13 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b><span className="small">$</span>{formatBigNumber(earned)}</b>
 					</Col>
-					<Col style={{ width: '15%' }}>
+					<Col>
 						<b>
 							{utils.commify(apr)}
 							<span className="small">%</span>
 						</b>
 					</Col>
-					<Col style={{ width: '25%' }}>
+					<Col>
 						<b>
 							~ <span className="small">$</span>
 							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}

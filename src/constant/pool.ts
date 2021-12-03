@@ -64,6 +64,17 @@ const BentPools: Record<string, BentPool> = {
 		CrvCoinsLength: 3,
 		CrvLpSYMBOL: '3CrvCrypto2'
 	},
+	STETH: {
+		LOGO: TOKEN_LOGO.STETH,
+		Name: 'steth',
+		POOL: '0xEAC2c97A6Fcd488617a7f1B00bC76CB03aD70b26',
+		DepositAsset: '0x06325440D014e39736583c165C2963BA99fAf14E', // Curve.fi ETH/stETH
+		CvxRewardsAddr: '0x0a760466e1b4621579a82a39cb56dda2f4e70f03',
+		RewardsAssets: ['BENT', 'CRV', 'CVX', 'LDO'],
+		CrvMinter: '0xDC24316b9AE028F1497c275EB9192a3Ea0f67022',
+		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'stethCrv'
+	},
 }
 
 export interface SushiPool {

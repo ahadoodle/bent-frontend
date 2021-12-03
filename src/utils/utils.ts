@@ -52,6 +52,7 @@ export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): 
 }
 
 export const formatMillions = (value: string): string => {
+	if (value === '0') return '0.0';
 	const parts = value.split('.');
 	const steps = parts[0].split(',');
 	const first = steps[0];

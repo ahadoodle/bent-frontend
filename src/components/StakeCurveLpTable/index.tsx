@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
 import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls } from "hooks";
+import { MorePoolsRow } from "components/MorePoolsRow";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
+	const [showAll, setShowAll] = useState(false);
 	const tvls = useCrvTvls();
 	const earns = useCrvPoolEarns();
 	const depostedUsd = useCrvPoolDepositedUsds();
@@ -63,32 +65,17 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 						<Card>
 							<CardBody>
 								{
-									Object.keys(POOLS.BentPools).map(poolName =>
+									Object.keys(POOLS.BentPools).map((poolName, index) =>
 										<StakeCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}
 											poolKey={poolName}
 											key={poolName}
+											visible={index < 5 || showAll}
 										/>)
 								}
+								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} />
 							</CardBody>
 						</Card>
-
-						{/* <tbody>
-										<tr>
-											<td colSpan={5}>
-												<div className="text-center btnwrap">
-													<button className="btn btnshow">
-														Show all Bent pools{" "}
-														<i
-															className="fa fa-caret-down"
-															aria-hidden="true"
-														></i>
-													</button>
-												</div>
-											</td>
-										</tr>
-									</tbody> */}
-
 					</div>
 				</Col>
 			</Row>

@@ -6,7 +6,7 @@ import { ClaimSushiLpItem } from "./item";
 
 export const ClaimSushiLpTable = (): React.ReactElement => {
 	return (
-		<Container className="convert-up">
+		<Container className="mt-5">
 			<Row>
 				<Col md="12">
 					<div className="toggleWrap tokentable table">
@@ -20,25 +20,13 @@ export const ClaimSushiLpTable = (): React.ReactElement => {
 							<Col>
 								Earned
 							</Col>
-							{/* <Col>
-									<div className="earnValue">
-										<p>Average APR</p>
-										<b>
-											-<span>%</span>
-										</b>
-									</div>
-								</Col> */}
+							<Col>
+								APR
+							</Col>
 							<Col>
 								Deposits
 							</Col>
 							<Col>
-								<div className="clmBtn">
-									{/* <Button className="claimbtn">Claim All</Button>
-										<i
-											className="fa fa-caret-down"
-											aria-hidden="true"
-										></i> */}
-								</div>
 							</Col>
 						</Row>
 						<Card>
