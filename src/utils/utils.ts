@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POOLS, TOKENS } from 'constant';
+import { TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
@@ -130,18 +130,8 @@ export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 	return total;
 }
 
-export const getRewardTokenKeys = (): string[] => {
-	// const tokenKeys: string[] = [];
-	// Object.keys(POOLS.BentPools).forEach(poolKey => {
-	// 	POOLS.BentPools[poolKey].RewardsAssets.forEach(tokenKey => {
-	// 		if (tokenKeys.indexOf(tokenKey) === -1) {
-	// 			tokenKeys.push(tokenKey);
-	// 		}
-	// 	})
-	// })
-	return ['CRV', 'SPELL', 'ALCX', 'CVX', 'FXS', 'LDO']
-}
-
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line  @typescript-eslint/explicit-module-boundary-types
 export const sortCrvPool = (a, b, field: string, order: number): number => {
 	if (field === 'name') {
 		return a.Name.localeCompare(b.Name) * order;

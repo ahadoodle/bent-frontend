@@ -1,4 +1,4 @@
-import { utils, BigNumber, ethers } from "ethers";
+import { utils, BigNumber } from "ethers";
 import { Contract } from 'web3-eth-contract';
 
 const stake = async (contract: Contract, account: string | null | undefined, amount: string, gasPrice: BigNumber): Promise<boolean> => {
