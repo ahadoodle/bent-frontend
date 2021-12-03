@@ -6,7 +6,6 @@ import ClaimIcon from "assets/images/claimIcon.svg";
 import DepositIcon from "assets/images/depositIcon.svg";
 import { useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned } from "hooks";
 import { formatBigNumber } from "utils";
-import { BigNumber } from 'ethers';
 // import LockIcon from "assets/images/lockIcon.svg";
 // import DbIcon from "assets/images/dbIcon.svg";
 
@@ -29,9 +28,9 @@ const BannerBlocks = (): React.ReactElement => {
       <Container>
         <div className="bannerBlockWrap">
           <Row>
-            <Col md="6" className="text-light m-auto mb-5">
-              Dear Sers, whilst the Bent contracts are live and functioning with quite a bit of TVL already;the frontend is still a WIP.
-              Expect us to be updating the TVL, APR and other goodies in the coming weeks.
+            <Col md="8" className="text-light m-auto mb-5">
+              Dear Sers, whilst the Bent contracts are live and functioning with quite a bit of TVL; the frontend is still a WIP.
+              Expect us to be  updating over the coming weeks.
               We have successfully completed one audit, more audits are scheduled.
               Please use this protocol at your own risk.
             </Col>

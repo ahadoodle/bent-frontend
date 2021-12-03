@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POOLS, TOKENS } from 'constant';
+import { TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
