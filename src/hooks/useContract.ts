@@ -42,12 +42,9 @@ export const useCrvFiLp = (address: string): Contract => {
 }
 
 export const useCrvFiLps = (): Record<string, Contract> => {
-	const web3 = useWeb3();
-	return useMemo(() => {
-		const contracts = {};
-		Object.keys(POOLS.BentPools).forEach(poolKey => {
-			contracts[poolKey] = getCrvFiLp(POOLS.BentPools[poolKey].CrvMinter ?? POOLS.BentPools[poolKey].DepositAsset, web3)
-		})
-		return contracts;
-	}, [web3]);
+	const contracts = {};
+	Object.keys(POOLS.BentPools).forEach(poolKey => {
+		contracts[poolKey] = getCrvFiLp(POOLS.BentPools[poolKey].CrvMinter ?? POOLS.BentPools[poolKey].DepositAsset)
+	})
+	return contracts;
 }

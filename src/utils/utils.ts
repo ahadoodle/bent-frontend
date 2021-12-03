@@ -126,3 +126,15 @@ export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 	})
 	return total;
 }
+
+export const getRewardTokenKeys = (): string[] => {
+	// const tokenKeys: string[] = [];
+	// Object.keys(POOLS.BentPools).forEach(poolKey => {
+	// 	POOLS.BentPools[poolKey].RewardsAssets.forEach(tokenKey => {
+	// 		if (tokenKeys.indexOf(tokenKey) === -1) {
+	// 			tokenKeys.push(tokenKey);
+	// 		}
+	// 	})
+	// })
+	return ['CRV', 'SPELL', 'ALCX', 'CVX', 'FXS', 'LDO']
+}

@@ -36,7 +36,8 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 							<Col>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									<span className="h5">{avgApr} %</span>
+									<span className="h5">{avgApr}</span>
+									<span className="small">%</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -44,7 +45,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">My Total Deposits</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(getSumBigNumbers(depostedUsd))}</span>
+									<span className="h5">{formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2)}</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>

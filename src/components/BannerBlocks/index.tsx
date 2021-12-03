@@ -1,46 +1,67 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-// import CardCoin from "assets/images/cardCoin.png";
-// import DollorIcon from "assets/images/dollorIcon.png";
-// import ClaimIcon from "assets/images/claimIcon.svg";
-// import DepositIcon from "assets/images/depositIcon.svg";
+import CardCoin from "assets/images/cardCoin.png";
+import DollorIcon from "assets/images/dollorIcon.png";
+import ClaimIcon from "assets/images/claimIcon.svg";
+import DepositIcon from "assets/images/depositIcon.svg";
+import { useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned } from "hooks";
+import { formatBigNumber } from "utils";
 // import LockIcon from "assets/images/lockIcon.svg";
 // import DbIcon from "assets/images/dbIcon.svg";
 
 const BannerBlocks = (): React.ReactElement => {
+  const crvEarnings = useCrvPoolTotalEarned();
+  const sushiEarnings = useSushiPoolTotalEarned();
+  const crvDeposits = useCrvPoolTotalDepositedUsds();
+  const sushiDeposits = useSushiPoolTotalDepositedUsd();
+
+  const totalEarnings = (): string => {
+    return formatBigNumber(crvEarnings.add(sushiEarnings), 18, 2);
+  }
+
+  const totalDeposits = (): string => {
+    return formatBigNumber(crvDeposits.add(sushiDeposits), 18, 2)
+  }
+
   return (
     <React.Fragment>
       <Container>
         <div className="bannerBlockWrap">
           <Row>
-            <Col className="text-light">
-              Dear Sers, whilst the Bent contracts are live and functioning with quite a bit of TVL already;the frontend is still a WIP.
-              Expect us to be updating the TVL, APR and other goodies in the coming weeks.
+            <Col md="8" className="text-light m-auto mb-5">
+              Dear Sers, whilst the Bent contracts are live and functioning with quite a bit of TVL; the frontend is still a WIP.
+              Expect us to be  updating over the coming weeks.
               We have successfully completed one audit, more audits are scheduled.
               Please use this protocol at your own risk.
             </Col>
-            {/* <Col xs="6">
+          </Row>
+          <Row>
+            <Col xs="6">
               <div className="boxwrap">
                 <img className="cardCoin" src={CardCoin} alt="Icon" />
-                <img src={ClaimIcon} alt="Icon" />
-                <p>Total Claimable</p>
-                <h2>
-                <span>$</span>
-                <b>---</b>
-                </h2>
+                <img className="bannerIcon" src={ClaimIcon} alt="Icon" />
+                <div className="mx-3">
+                  <p>Total Claimable</p>
+                  <h2>
+                    <span>$</span>
+                    <b>{totalEarnings().split('.')[0]}</b>.{totalEarnings().split('.')[1]}
+                  </h2>
+                </div>
               </div>
             </Col>
             <Col xs="6">
               <div className="boxwrap second">
                 <img className="dollorCoin" src={DollorIcon} alt="Icon" />
-                <img src={DepositIcon} alt="Icon" />
-                <p>Total Deposit</p>
-                <h2>
-                <span>$</span>
-                <b>---</b>
-                </h2>
+                <img className="bannerIcon" src={DepositIcon} alt="Icon" />
+                <div className="mx-3">
+                  <p>Total Deposit</p>
+                  <h2>
+                    <span>$</span>
+                    <b>{totalDeposits().split('.')[0]}</b>.{totalDeposits().split('.')[1]}
+                  </h2>
+                </div>
               </div>
-            </Col> */}
+            </Col>
             {/* <Col md="4">
               <Row>
                 <Col md="12">
