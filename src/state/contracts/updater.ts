@@ -51,7 +51,7 @@ export default function Updater(): null {
 		getPrice(tokenAddrs).then(tokenPrices => {
 			dispatch(updatePrices(tokenPrices))
 
-			console.log('Updating contract states');
+			console.log('Updating contract states', Date.now(), account, blockNumber);
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
 
