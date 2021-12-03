@@ -383,7 +383,7 @@ button.btn.btnshow {
     text-align: center;
     letter-spacing: -0.24px;
     color: #10151D;
-    width: 280px;
+    width: 200px;
     height: 46px;
 }
 .text-center.btnwrap {
@@ -425,9 +425,11 @@ tr:hover {
 .Dark .stake-bent input {
     color: white;
 }
+.stake-bent.claim .bent-rewards-item {
+    width: 300px;
+}
 .bent-rewards-item {
     display: flex;
-    width: 300px;
 }
 .bent-rewards-item p.apr,
 .bent-rewards-item p.rewards-token {
@@ -809,12 +811,6 @@ button.btn.btnshow i {
 .Dark .lockInner .convert-table {
 	background: #B5DEFF;
 }
-.Dark button.btn.btnshow {
-	background: transparent;
-    border: 3px solid #C1FFD7;
-    box-shadow: 4px 4px 0px #C1FFD7;
-	color: #C1FFD7;
-}
 .Dark .convert-up .convert-table {
 	background: #B5DEFF;
 }
@@ -825,12 +821,6 @@ button.btn.btnshow i {
 .Dark .delegateWrap input {
 	background: transparent;
 	border-color: #fff;	
-}
-.Dark .delegateWrap button.btn.btn-secondary, .Dark button.claimbtn.btn.btn-secondary {
-	background: transparent;
-    color: #C1FFD7;
-    border: 2px solid #C1FFD7;
-    box-shadow: 4px 4px 0 #C1FFD7;
 }
 .Dark .claimText {
 	background: #253143;
@@ -1857,17 +1847,6 @@ button.approvebtn.btn.btn-secondary {
     padding: 5px 5px 8px;
     font-size: 12.78px;
     line-height: 15px;
-}
-button.btn.btnshow {
-    width: 180px;
-    height: 38px;
-    font-size: 14px;
-    line-height: 17px;
-}
-button.btn.btnshow i {
-    padding-left: 8px;
-    position: relative;
-    top: 3px;
 }
 .table-Responsive.LpToken table.tokentable.table {
     width: 650px;
