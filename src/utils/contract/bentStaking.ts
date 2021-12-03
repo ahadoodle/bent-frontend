@@ -44,8 +44,24 @@ const claimAll = async (contract: Contract, account: string | null | undefined, 
 		return false;
 	}
 }
+
+const claim = async (contract: Contract, account: string | null | undefined, indexes: string[], gasPrice: BigNumber): Promise<boolean> => {
+	try {
+		if (!account || !contract.options.address) return false;
+		await contract.methods.claim(indexes).send({
+			from: account,
+			gasPrice,
+		});
+		return true;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+}
+
 export const BentStaking = {
 	stake,
 	withdraw,
 	claimAll,
+	claim,
 }
