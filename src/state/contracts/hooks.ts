@@ -1,6 +1,7 @@
 import { POOLS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers';
 import { useSelector } from 'react-redux';
+import { sortCrvPool } from 'utils';
 import { AppState } from '../index';
 import { BentPoolReward } from './reducer';
 
@@ -13,11 +14,51 @@ export function useTokenPrices(): Record<string, number> {
 }
 
 export const useBalance = (tokenAddr: string): BigNumber => {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.balances[tokenAddr.toLowerCase()] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.balances ? BigNumber.from(state.contracts.balances[tokenAddr.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const useTotalSupply = (tokenAddr: string): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.totalSupplies[tokenAddr.toLowerCase()] || ethers.constants.Zero));
+}
+
+export const useBentTvl = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentTvl || ethers.constants.Zero));
+}
+
+export const useBentAllowance = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentAllowance || ethers.constants.Zero));
+}
+
+export const useBentStaked = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentStaked || ethers.constants.Zero));
+}
+
+export const useBentStakedUsd = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentStakedUsd || ethers.constants.Zero));
+}
+
+export const useBentRewards = (): Record<string, BigNumber> => {
+	return useSelector((state: AppState) => state.contracts.bentRewards || {});
+}
+
+export const useBentRewardsUsd = (): Record<string, BigNumber> => {
+	return useSelector((state: AppState) => state.contracts.bentRewardsUsd || {});
+}
+
+export const useBentRewardsAprs = (): Record<string, number> => {
+	return useSelector((state: AppState) => state.contracts.bentAprs || {});
+}
+
+export const useBentRewardsApr = (token: string): number => {
+	return useSelector((state: AppState) => state.contracts.bentAprs ? state.contracts.bentAprs[token] || 0 : 0);
+}
+
+export const useBentAvgApr = (): number => {
+	return useSelector((state: AppState) => state.contracts.bentAvgApr || 0);
+}
+
+export const useBentEarnedUsd = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentEarnedUsd || ethers.constants.Zero));
 }
 
 export function useCrvTvls(): Record<string, BigNumber> {
@@ -108,6 +149,15 @@ export const useCrvPoolDepositedUsds = (): Record<string, BigNumber> => {
 	return useSelector((state: AppState) => state.contracts.crvDepositedUsd || {});
 }
 
+export const useCrvPoolTotalDepositedUsds = (): BigNumber => {
+	let total = ethers.constants.Zero;
+	const earns = useSelector((state: AppState) => state.contracts.crvDepositedUsd || {});
+	Object.keys(earns).forEach(poolKey => {
+		total = total.add(BigNumber.from(earns[poolKey] || ethers.constants.Zero));
+	})
+	return total;
+}
+
 export function useCrvPoolEarns(): Record<string, BigNumber> {
 	return useSelector((state: AppState) => state.contracts.crvEarnedUsd || {});
 }
@@ -161,4 +211,21 @@ export const useSushiPoolEarnedUsd = (poolKey: string): BigNumber => {
 
 export const useSushiPoolDepositedUsd = (poolKey: string): BigNumber => {
 	return useSelector((state: AppState) => state.contracts.sushiDepositedUsd ? BigNumber.from(state.contracts.sushiDepositedUsd[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
+}
+
+export const useSushiPoolTotalDepositedUsd = (): BigNumber => {
+	let total = ethers.constants.Zero;
+	const earns = useSelector((state: AppState) => state.contracts.sushiDepositedUsd || {});
+	Object.keys(earns).forEach(poolKey => {
+		total = total.add(BigNumber.from(earns[poolKey] || ethers.constants.Zero));
+	})
+	return total;
+}
+
+export const useSortedCrvPoolKeys = (field: string, order: number): string[] => {
+	const keys = Object.keys(POOLS.BentPools);
+	if (field === 'name') {
+		return keys.sort((a, b) => sortCrvPool(POOLS.BentPools[a], POOLS.BentPools[b], field, order));
+	}
+	return keys;
 }

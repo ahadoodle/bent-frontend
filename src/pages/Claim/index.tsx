@@ -8,6 +8,7 @@ import BannerBlocks from "components/BannerBlocks";
 import "font-awesome/css/font-awesome.min.css";
 import { ClaimCurveLpTable } from "components/ClaimCurveLpTable";
 import { ClaimSushiLpTable } from "components/ClaimSushiLpTable";
+import { ClaimBent } from "components/ClaimBent";
 
 export const Claim = (): React.ReactElement => {
   const [autoClaimStatus, setAutoClaimStatus] = useState(false);
@@ -142,10 +143,9 @@ export const Claim = (): React.ReactElement => {
         </div>
       </div>
       <div className="contentSection">
+        <ClaimBent />
         <ClaimCurveLpTable />
-        <div className="section">
-          <ClaimSushiLpTable />
-        </div>
+        <ClaimSushiLpTable />
         <Container>
           <div className="cliamBox">
             {/* <div className="cliamBlockOne LastBlock">

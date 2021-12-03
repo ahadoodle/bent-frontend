@@ -19,7 +19,7 @@ export const getDefaultProvider = (): ethers.providers.Web3Provider | ethers.pro
 	if (web3) {
 		return new ethers.providers.Web3Provider(web3.currentProvider)
 	}
-	
+
 	// If no injected web3 instance is detected, fall back to backup node
 	return new ethers.providers.JsonRpcProvider(RPC_URL)
 }

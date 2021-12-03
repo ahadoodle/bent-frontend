@@ -32,6 +32,7 @@ import { BentPool, TOKENS } from "constant";
 interface Props {
 	poolInfo: BentPool
 	poolKey: string
+	visible: boolean
 }
 
 export const StakeCurveLpItem = (props: Props): React.ReactElement => {
@@ -100,7 +101,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}
@@ -120,12 +121,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? `${apr}%` : 'TBC'}
+							{apr ? <>{apr}<span className="small">%</span></> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
 						<b>
-							~ ${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							~ <span className="small">$</span>
+							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
@@ -147,180 +149,182 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 				className="innerAccordian"
 				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 			>
-				<div className="converttabs" style={{ background: 'unset', borderTop: '1px solid black', borderRadius: 0 }}>
-					<Nav tabs>
-						<NavItem>
-							<NavLink
-								className={classnames({ active: currentActiveTab === "1" })}
-								onClick={() => toggle("1")}
-							>Deposit</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink
-								className={classnames({ active: currentActiveTab === "2" })}
-								onClick={() => toggle("2")}
-							>Withdraw</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink
-								className={classnames({ active: currentActiveTab === "3" })}
-								onClick={() => toggle("3")}
-							>Info</NavLink>
-						</NavItem>
-					</Nav>
-					<TabContent activeTab={currentActiveTab}>
-						<TabPane tabId="1">
-							<Row>
-								<Col md="6" className="inverse">
-									<Card body>
-										<CardText>
-											Deposit liquidity into the &nbsp;
-											<OutterLink href={getCrvDepositLink(props.poolInfo.Name)} target="_blank">
-												Curve {props.poolInfo.Name} pool
-											</OutterLink>
-											&nbsp;(without staking in the Curve gauge),
-											and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
-										</CardText>
-									</Card>
-								</Col>
-								<Col md="6" className="divider-left">
-									<Card body>
-										<CardTitle>
-											<div className="advance-btn">
-												<Label className="switch">
-													<Input type="checkbox" />
-													<span className="slider"></span>
-												</Label>
-												<span className="textadvance">Advanced</span>
-											</div>
-										</CardTitle>
-										<div className="card-text mt-4">
-											<div className="amount-crv">
-												<p className="labeltext">
-													<Label>
-														Amount of {symbol} to stake
+				<div className="splitter-horizontal p-1">
+					<div className="converttabs" style={{ background: 'unset', borderRadius: 0 }}>
+						<Nav tabs>
+							<NavItem>
+								<NavLink
+									className={classnames({ active: currentActiveTab === "1" })}
+									onClick={() => toggle("1")}
+								>Deposit</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink
+									className={classnames({ active: currentActiveTab === "2" })}
+									onClick={() => toggle("2")}
+								>Withdraw</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink
+									className={classnames({ active: currentActiveTab === "3" })}
+									onClick={() => toggle("3")}
+								>Info</NavLink>
+							</NavItem>
+						</Nav>
+						<TabContent activeTab={currentActiveTab}>
+							<TabPane tabId="1">
+								<Row>
+									<Col md="6" className="inverse">
+										<Card body>
+											<CardText>
+												Deposit liquidity into the &nbsp;
+												<OutterLink href={getCrvDepositLink(props.poolInfo.Name)} target="_blank">
+													Curve {props.poolInfo.Name} pool
+												</OutterLink>
+												&nbsp;(without staking in the Curve gauge),
+												and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
+											</CardText>
+										</Card>
+									</Col>
+									<Col md="6" className="divider-left">
+										<Card body>
+											<CardTitle>
+												<div className="advance-btn">
+													<Label className="switch">
+														<Input type="checkbox" />
+														<span className="slider"></span>
 													</Label>
-													<Label>Available:{formatBigNumber(lpBalance)}</Label>
-												</p>
-												<div className="amountinput">
-													<Input
-														type="number" placeholder="0"
-														onChange={(e) => onStakeAmountChange(e.target.value)}
-														value={stakeAmount}
-													/>
-													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
-													<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
+													<span className="textadvance">Advanced</span>
 												</div>
-												<div className="btnouter">
-													<p className="lineup"></p>
-													<div className="btnwrapper">
-														<Button
-															className="approvebtn"
-															disabled={
-																lpBalance.isZero() || isApproved ||
-																parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																utils.parseUnits(stakeAmount, 18).gt(lpBalance)
-															}
-															onClick={approve}
-														>Approve</Button>
-														<Button
-															className="approvebtn"
-															disabled={
-																lpBalance.isZero() || !isApproved ||
-																parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																utils.parseUnits(stakeAmount, 18).gt(lpBalance)
-															}
-															onClick={stake}
-														>Stake</Button>
+											</CardTitle>
+											<div className="card-text mt-4">
+												<div className="amount-crv">
+													<p className="labeltext">
+														<Label>
+															Amount of {symbol} to stake
+														</Label>
+														<Label>Available:{formatBigNumber(lpBalance)}</Label>
+													</p>
+													<div className="amountinput">
+														<Input
+															type="number" placeholder="0"
+															onChange={(e) => onStakeAmountChange(e.target.value)}
+															value={stakeAmount}
+														/>
+														<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
+														<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
+													</div>
+													<div className="btnouter">
+														<p className="lineup"></p>
+														<div className="btnwrapper">
+															<Button
+																className="approvebtn"
+																disabled={
+																	lpBalance.isZero() || isApproved ||
+																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																}
+																onClick={approve}
+															>Approve</Button>
+															<Button
+																className="approvebtn"
+																disabled={
+																	lpBalance.isZero() || !isApproved ||
+																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																}
+																onClick={stake}
+															>Stake</Button>
+														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-									</Card>
-								</Col>
-							</Row>
-						</TabPane>
-						<TabPane tabId="2">
-							<Row>
-								<Col md="12" className="inverse">
-									<Card body>
-										<CardTitle>
-											<div className="advance-btn">
-												<Label className="switch">
-													<Input type="checkbox" />
-													<span className="slider"></span>
-												</Label>
-												<span className="textadvance">Advanced</span>
-											</div>
-										</CardTitle>
-										<div className="card-text mt-4 d-flex">
-											<div className="amount-crv col-md-5">
-												<p className="labeltext">
-													<Label>
-														Amount of {symbol} to withdraw
+										</Card>
+									</Col>
+								</Row>
+							</TabPane>
+							<TabPane tabId="2">
+								<Row>
+									<Col md="12" className="inverse">
+										<Card body>
+											<CardTitle>
+												<div className="advance-btn">
+													<Label className="switch">
+														<Input type="checkbox" />
+														<span className="slider"></span>
 													</Label>
-													<Label>Deposited:{formatBigNumber(BigNumber.from(depositedLp))}</Label>
-												</p>
-												<div className="amountinput">
-													<Input
-														type="number" placeholder="0"
-														onChange={(e) => onWithdrawAmountChange(e.target.value)}
-														value={withdrawAmount}
-													/>
-													<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
-													<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
+													<span className="textadvance">Advanced</span>
+												</div>
+											</CardTitle>
+											<div className="card-text mt-4 d-flex">
+												<div className="amount-crv col-md-5">
+													<p className="labeltext">
+														<Label>
+															Amount of {symbol} to withdraw
+														</Label>
+														<Label>Deposited:{formatBigNumber(BigNumber.from(depositedLp))}</Label>
+													</p>
+													<div className="amountinput">
+														<Input
+															type="number" placeholder="0"
+															onChange={(e) => onWithdrawAmountChange(e.target.value)}
+															value={withdrawAmount}
+														/>
+														<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
+														<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
+													</div>
+												</div>
+												<div className="amount-crv" style={{ marginLeft: 20 }}>
+													<p className="labeltext">
+														<Label>
+															&nbsp;
+														</Label>
+													</p>
+													<Button
+														className="approvebtn"
+														disabled={
+															BigNumber.from(depositedLp).isZero() ||
+															parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
+															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
+														}
+														onClick={withdraw}
+													>Withdraw</Button>
 												</div>
 											</div>
-											<div className="amount-crv" style={{ marginLeft: 20 }}>
-												<p className="labeltext">
-													<Label>
-														&nbsp;
-													</Label>
+										</Card>
+									</Col>
+								</Row>
+							</TabPane>
+							<TabPane tabId="3">
+								<Row>
+									<Col sm="12">
+										<Card body>
+											<div className="infoWrap card-text mt-4">
+												<p>
+													BENT token address:&nbsp;
+													<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
+														{TOKENS.BENT.ADDR}
+													</a>
 												</p>
-												<Button
-													className="approvebtn"
-													disabled={
-														BigNumber.from(depositedLp).isZero() ||
-														parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-														utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
-													}
-													onClick={withdraw}
-												>Withdraw</Button>
+												<p>
+													Deposit contract address:&nbsp;
+													<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
+														{bentPool.options.address}
+													</a>
+												</p>
+												<p>
+													Rewards contract address:&nbsp;
+													<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
+														{bentPool.options.address}
+													</a>
+												</p>
 											</div>
-										</div>
-									</Card>
-								</Col>
-							</Row>
-						</TabPane>
-						<TabPane tabId="3">
-							<Row>
-								<Col sm="12">
-									<Card body>
-										<div className="infoWrap card-text mt-4">
-											<p>
-												BENT token address:&nbsp;
-												<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
-													{TOKENS.BENT.ADDR}
-												</a>
-											</p>
-											<p>
-												Deposit contract address:&nbsp;
-												<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
-													{bentPool.options.address}
-												</a>
-											</p>
-											<p>
-												Rewards contract address:&nbsp;
-												<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
-													{bentPool.options.address}
-												</a>
-											</p>
-										</div>
-									</Card>
-								</Col>
-							</Row>
-						</TabPane>
-					</TabContent>
+										</Card>
+									</Col>
+								</Row>
+							</TabPane>
+						</TabContent>
+					</div>
 				</div>
 			</InnerWrapper>
 		</div>
@@ -328,7 +332,6 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 }
 
 const PoolLogo = styled.img`
-	margin-right: 10px;
 	width: 28px;
 `
 

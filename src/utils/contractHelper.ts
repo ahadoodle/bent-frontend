@@ -32,3 +32,7 @@ export const getCvxBaseRewardPool = (address: string, web3?: Web3): Contract => 
 export const getCrvFiLp = (address: string, web3?: Web3): Contract => {
 	return getWeb3Contract(address, ABIS.CrvFiLp, web3);
 }
+
+export const getBentStakingContract = (address: string, web3?: Web3): Contract => {
+	return getWeb3Contract(address, ABIS.BentSingleStaking, web3);
+}
