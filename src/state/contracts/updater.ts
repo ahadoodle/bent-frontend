@@ -15,6 +15,7 @@ import {
 	getMultiBentMasterChef,
 	getPrice,
 	getTokenPrice,
+	getEthBalanceOf,
 } from 'utils';
 import {
 	updateBentPrice,
@@ -181,6 +182,7 @@ export default function Updater(): null {
 					for (let i = 0; i < POOLS.BentPools[poolKey].CrvCoinsLength; i++) {
 						lpFiContractCalls.push(CrvFiLp.getCoins(lpFiContract, i));
 						lpFiContractCalls.push(CrvFiLp.getBalances(lpFiContract, i));
+						lpFiContractCalls.push(getEthBalanceOf(lpFiContract.options.address));
 					}
 				})
 
@@ -196,10 +198,10 @@ export default function Updater(): null {
 						let totalUsd = ethers.constants.Zero;
 						for (let i = 0; i < POOLS.BentPools[poolKey].CrvCoinsLength; i++) {
 							const addr = lpFiResults[lpResIndex++];
-							const bal = lpFiResults[lpResIndex++];
+							const bal = addr === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' ? lpFiResults[lpResIndex++ + 1] : lpFiResults[lpResIndex++];
 							const lpPrice = getTokenPrice(tokenPrices, addr);
-							totalUsd = lpPrice.mul(bal).div(BigNumber.from(10).pow(getTokenDecimals(addr)))
-								.add(totalUsd);
+							totalUsd = lpPrice.mul(bal).div(BigNumber.from(10).pow(getTokenDecimals(addr))).add(totalUsd);
+							lpResIndex++;
 						}
 						const poolLpBalance = crvPoolLpBalances[poolKey]
 						const tvl = totalUsd.mul(poolLpBalance).div(lpTotalSupply)
@@ -214,10 +216,11 @@ export default function Updater(): null {
 						annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
 						if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
 							annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+
 						// Bent Rewards
 						const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
 						const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
-						annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice);
+						annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
 						const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
 						dispatch(updateCrvPoolApr({ poolKey, apr }))
 					})

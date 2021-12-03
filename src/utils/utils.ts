@@ -104,6 +104,8 @@ export const getTokenDecimals = (addr: string): number => {
 }
 
 export const getTokenPrice = (tokenPrices: Record<string, number>, addr: string): BigNumber => {
+	if (addr === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE') // Black Hole
+		addr = TOKENS['WETH'].ADDR;
 	const price = tokenPrices[addr.toLowerCase()];
 	if (!price) return ethers.constants.Zero;
 	return utils.parseUnits(price.toString());

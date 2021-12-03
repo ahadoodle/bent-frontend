@@ -14,9 +14,9 @@ export const useEthers = (): Web3Ethers => useWeb3React<Web3Provider>()
 export const useActiveWeb3React = (): Web3ReactContextInterface<Web3Provider> => {
   const { library, chainId, ...web3React } = useWeb3React()
   const initProvider = () => {
-    if(library === undefined) {
+    if (library === undefined) {
       const { ethereum } = window as any;
-      if(!ethereum) return simpleRpcProvider;
+      if (!ethereum) return simpleRpcProvider;
       return new ethers.providers.Web3Provider(ethereum) || simpleRpcProvider;
     } else {
       return new ethers.providers.Web3Provider(library) || simpleRpcProvider;
@@ -25,9 +25,9 @@ export const useActiveWeb3React = (): Web3ReactContextInterface<Web3Provider> =>
   const [provider, setProvider] = useState<any>(initProvider());
 
   useEffect(() => {
-    if(library === undefined) {
+    if (library === undefined) {
       const { ethereum } = window as any;
-      if(!ethereum) setProvider(simpleRpcProvider);
+      if (!ethereum) setProvider(simpleRpcProvider);
       else setProvider(new ethers.providers.Web3Provider(ethereum) || simpleRpcProvider);
     } else {
       setProvider(new ethers.providers.Web3Provider(library) || simpleRpcProvider);
