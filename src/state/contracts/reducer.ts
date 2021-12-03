@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { createReducer } from '@reduxjs/toolkit';
 import {
 	updatePrices,
@@ -21,6 +21,15 @@ import {
 	updateSushiPoolTVL,
 	updateTotalSupply,
 	updateSushiPoolRewards,
+	updateStakingPoolTvl,
+	updateStakingPoolAllowance,
+	updateStakingPoolDepositedUsd,
+	updateStakingPoolDeposited,
+	updateStakingPoolAvgApr,
+	updateStakingPoolApr,
+	updateStakingPoolEarningUsd,
+	updateStakingPoolRewards,
+	updateStakingPoolRewardsUsd,
 } from './actions';
 import { TOKENS } from 'constant';
 
@@ -34,6 +43,17 @@ export interface ContractsState {
 
 	balances: Record<string, BigNumber>;
 	totalSupplies: Record<string, BigNumber>;
+
+	// Bent Staking Pool States
+	bentTvl: BigNumber,
+	bentStaked: BigNumber,
+	bentStakedUsd: BigNumber,
+	bentEarnedUsd: BigNumber,
+	bentAllowance: BigNumber,
+	bentRewards: Record<string, BigNumber>,
+	bentRewardsUsd: Record<string, BigNumber>,
+	bentAvgApr: number,
+	bentAprs: Record<string, number>,
 
 	// Curve Pool States
 	crvTvl: Record<string, BigNumber>;
@@ -60,6 +80,16 @@ const initialState: ContractsState = {
 
 	balances: {},
 	totalSupplies: {},
+
+	bentTvl: ethers.constants.Zero,
+	bentStaked: ethers.constants.Zero,
+	bentStakedUsd: ethers.constants.Zero,
+	bentEarnedUsd: ethers.constants.Zero,
+	bentAllowance: ethers.constants.Zero,
+	bentRewards: {},
+	bentRewardsUsd: {},
+	bentAprs: {},
+	bentAvgApr: 0,
 
 	crvTvl: {},
 	crvApr: {},
@@ -168,5 +198,31 @@ export default createReducer(initialState, (builder) =>
 			const { poolKey, rewards } = action.payload;
 			if (!state.sushiRewards) state.sushiRewards = {};
 			state.sushiRewards[poolKey] = rewards;
+		})
+
+		.addCase(updateStakingPoolTvl, (state, action) => {
+			state.bentTvl = action.payload;
+		}).addCase(updateStakingPoolAllowance, (state, action) => {
+			state.bentAllowance = action.payload;
+		}).addCase(updateStakingPoolDepositedUsd, (state, action) => {
+			state.bentStakedUsd = action.payload;
+		}).addCase(updateStakingPoolDeposited, (state, action) => {
+			state.bentStaked = action.payload;
+		}).addCase(updateStakingPoolAvgApr, (state, action) => {
+			state.bentAvgApr = action.payload;
+		}).addCase(updateStakingPoolApr, (state, action) => {
+			const { tokenAddr, apr } = action.payload;
+			if (!state.bentAprs) state.bentAprs = {};
+			state.bentAprs[tokenAddr] = apr;
+		}).addCase(updateStakingPoolEarningUsd, (state, action) => {
+			state.bentEarnedUsd = action.payload;
+		}).addCase(updateStakingPoolRewards, (state, action) => {
+			const { tokenAddr, reward } = action.payload;
+			if (!state.bentRewards) state.bentRewards = {};
+			state.bentRewards[tokenAddr] = reward;
+		}).addCase(updateStakingPoolRewardsUsd, (state, action) => {
+			const { tokenAddr, rewardUsd } = action.payload;
+			if (!state.bentRewardsUsd) state.bentRewardsUsd = {};
+			state.bentRewardsUsd[tokenAddr] = rewardUsd;
 		})
 );

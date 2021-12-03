@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TOKENS } from 'constant';
+import { POOLS, TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
@@ -140,4 +140,11 @@ export const getRewardTokenKeys = (): string[] => {
 	// 	})
 	// })
 	return ['CRV', 'SPELL', 'ALCX', 'CVX', 'FXS', 'LDO']
+}
+
+export const sortCrvPool = (a, b, field: string, order: number): number => {
+	if (field === 'name') {
+		return a.Name.localeCompare(b.Name) * order;
+	}
+	return 0;
 }

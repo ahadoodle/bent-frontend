@@ -2,11 +2,38 @@ import React from "react";
 import {
 	Container, Button, Row, Col, Card, CardText, CardBody,
 } from "reactstrap";
-import { TOKENS, TOKEN_LOGO } from "constant";
-import { getRewardTokenKeys } from "utils";
+import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
+import { formatBigNumber, BentStaking } from "utils";
+import {
+	useBentAvgApr,
+	useBentStaked,
+	useBentStakedUsd,
+	useBentRewardsAprs,
+	useBentEarnedUsd,
+	useBentRewards,
+	useBentRewardsUsd,
+	useGasPrice,
+	useActiveWeb3React,
+	useBentStakingContract,
+} from 'hooks';
+import { ethers, BigNumber } from "ethers";
 
 export const ClaimBent = (): React.ReactElement => {
-	const rewardsTokenKeys = getRewardTokenKeys();
+	const bentStaked = useBentStaked();
+	const bentstakedUsd = useBentStakedUsd();
+	const bentAvgApr = useBentAvgApr();
+	const rewardAprs = useBentRewardsAprs();
+	const earnedUsd = useBentEarnedUsd();
+	const bentRewards = useBentRewards();
+	const bentRewardsUsd = useBentRewardsUsd();
+
+	const { account } = useActiveWeb3React();
+	const bentStakingContract = useBentStakingContract(POOLS.BentStaking.POOL);
+	const gasPrice = useGasPrice();
+
+	const onClaim = async () => {
+		await BentStaking.claimAll(bentStakingContract, account, gasPrice);
+	}
 
 	return (
 		<Container className="stake-bent claim">
@@ -28,9 +55,8 @@ export const ClaimBent = (): React.ReactElement => {
 									<div className="tableTitle">
 										<p>Total Earned (USD)</p>
 										<div className="boldText">
-											{" "}
 											<b>
-												<span className="small">$</span>0
+												<span className="small">$</span>{formatBigNumber(earnedUsd, 18, 2)}
 											</b>
 										</div>
 									</div>
@@ -40,21 +66,21 @@ export const ClaimBent = (): React.ReactElement => {
 										<p>Average APR</p>
 										<div className="boldText">
 											<b>
-												0<span className="small">%</span>
+												{bentAvgApr}<span className="small">%</span>
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>My Staked BENT (--)</p>
+										<p>My Staked BENT ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)})</p>
 										<div className="boldText">
-											<span className="small">$</span><b>0</b>
+											<span className="small">$</span><b>{formatBigNumber(bentstakedUsd, 18, 2)}</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
-									<Button className="claimbtn">Claim</Button>
+									<Button className="claimbtn" onClick={onClaim}>Claim All</Button>
 								</Col>
 							</Row>
 							<Card>
@@ -67,10 +93,17 @@ export const ClaimBent = (): React.ReactElement => {
 														<span className="small">Breakdown of claimable earnings:</span>
 													</CardText>
 													<div className="bent-rewards-container">
-														{rewardsTokenKeys.map(key =>
+														{POOLS.BentStaking.RewardAssets.map(key =>
 															<div className="imgText bent-rewards-item" key={key}>
 																<img src={TOKENS[key].LOGO} alt="Icon" width="28" />
-																<h4>{key}</h4>
+																<div>
+																	<h4 className="mb-0">{key}</h4>
+																	<p className="apr">{rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}% APR</p>
+																</div>
+																<div>
+																	<h4 className="mb-0"><span className="small">$</span>{formatBigNumber(bentRewardsUsd ? BigNumber.from(bentRewardsUsd[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero)}</h4>
+																	<p className="rewards-token">{formatBigNumber(bentRewards ? BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero)} {key}</p>
+																</div>
 															</div>
 														)}
 													</div>

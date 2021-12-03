@@ -7,7 +7,8 @@ import {
 	getBentMasterChef,
 	getSushiPairContract,
 	getCvxBaseRewardPool,
-	getCrvFiLp
+	getCrvFiLp,
+	getBentStakingContract
 } from 'utils';
 import { POOLS } from 'constant';
 
@@ -47,4 +48,9 @@ export const useCrvFiLps = (): Record<string, Contract> => {
 		contracts[poolKey] = getCrvFiLp(POOLS.BentPools[poolKey].CrvMinter ?? POOLS.BentPools[poolKey].DepositAsset)
 	})
 	return contracts;
+}
+
+export const useBentStakingContract = (address: string): Contract => {
+	const web3 = useWeb3();
+	return useMemo(() => getBentStakingContract(address, web3), [web3, address]);
 }
