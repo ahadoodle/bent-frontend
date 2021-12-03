@@ -11,12 +11,13 @@ import {
 	useSushiPoolDepositedUsd,
 	useSushiPoolEarnedUsd,
 	useSushiPoolRewards,
+	useSushiApr
 } from "hooks";
 import {
 	formatBigNumber,
 	BentMasterChef,
 } from "utils";
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { POOLS, SushiPool } from "constant";
 
 interface Props {
@@ -33,6 +34,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const stakedUsd = useSushiPoolDepositedUsd(props.poolKey);
 	const rewards = useSushiPoolRewards(props.poolKey);
 	const earned = useSushiPoolEarnedUsd(props.poolKey);
+	const apr = useSushiApr(props.poolKey);
 
 	const claim = async () => {
 		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
@@ -63,18 +65,12 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 							<span className="small text-bold"> BENT</span>
 						</span>
 					</Col>
-					{/* <Col>
-						<div className="earnValue">
-							<b>
-								6.56% <span>(proj.6.74%)</span>
-							</b>
-							<p>CRV boost: 1.7x</p>
-							<i
-								className="fa fa-info-circle"
-								aria-hidden="true"
-							></i>
-						</div>
-					</Col> */}
+					<Col>
+						<b>
+							{utils.commify(apr)}
+							<span className="small">%</span>
+						</b>
+					</Col>
 					<Col>
 						<b>
 							~ ${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}

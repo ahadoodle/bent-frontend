@@ -5,6 +5,7 @@ import SushiPair from './IUniswapV2Pair.json';
 import CvxBaseRewardPool from './IBaseRewardPool.json';
 import CrvFiLpMulti from './ICurveFi.json';
 import CrvFiLp from './ICurveFi_2.json';
+import BentSingleStaking from './BentSingleStaking.json';
 
 export const ABIS = {
 	BentBasePool,
@@ -13,5 +14,6 @@ export const ABIS = {
 	SushiPair,
 	CvxBaseRewardPool,
 	CrvFiLp,
-	CrvFiLpMulti
+	CrvFiLpMulti,
+	BentSingleStaking,
 }

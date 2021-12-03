@@ -13,15 +13,15 @@ export interface BentPool {
 }
 
 const BentPools: Record<string, BentPool> = {
-	ALUSD: {
-		LOGO: TOKEN_LOGO.ALUSD,
-		Name: 'alusd',
-		POOL: '0x1B3e21Cd1Da43B9840f31b82D76B597c131E3e4B',
-		DepositAsset: '0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c', // Curve.fi alUSD3CRV (alusd)
-		CvxRewardsAddr: '0x02e2151d4f351881017abdf2dd2b51150841d5b3',
-		RewardsAssets: ['BENT', 'CRV', 'CVX', 'ALCX'],
+	CRV: {
+		LOGO: TOKEN_LOGO.CRV,
+		Name: 'cvxcrv',
+		POOL: '0x270B6AFF561284ef380cDD6d8B036f4981049A86',
+		DepositAsset: '0x9D0464996170c6B9e75eED71c68B99dDEDf279e8', // Curve.fi cvxCRV (CRV)
+		CvxRewardsAddr: '0x0392321e86f42c2f94fbb0c6853052487db521f0',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvCoinsLength: 2,
-		CrvLpSYMBOL: 'alusdCrv'
+		CrvLpSYMBOL: 'cvxcrvCrv'
 	},
 	MIM: {
 		LOGO: TOKEN_LOGO.MIM,
@@ -33,16 +33,6 @@ const BentPools: Record<string, BentPool> = {
 		CrvCoinsLength: 2,
 		CrvLpSYMBOL: 'mimCrv'
 	},
-	CRV: {
-		LOGO: TOKEN_LOGO.CRV,
-		Name: 'cvxcrv',
-		POOL: '0x270B6AFF561284ef380cDD6d8B036f4981049A86',
-		DepositAsset: '0x9D0464996170c6B9e75eED71c68B99dDEDf279e8', // Curve.fi cvxCRV (CRV)
-		CvxRewardsAddr: '0x0392321e86f42c2f94fbb0c6853052487db521f0',
-		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvCoinsLength: 2,
-		CrvLpSYMBOL: 'cvxcrvCrv'
-	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
 		Name: 'frax',
@@ -52,6 +42,27 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX', 'FXS'],
 		CrvCoinsLength: 2,
 		CrvLpSYMBOL: 'fraxCrv'
+	},
+	STETH: {
+		LOGO: TOKEN_LOGO.STETH,
+		Name: 'steth',
+		POOL: '0xEAC2c97A6Fcd488617a7f1B00bC76CB03aD70b26',
+		DepositAsset: '0x06325440D014e39736583c165C2963BA99fAf14E', // Curve.fi ETH/stETH
+		CvxRewardsAddr: '0x0a760466e1b4621579a82a39cb56dda2f4e70f03',
+		RewardsAssets: ['BENT', 'CRV', 'CVX', 'LDO'],
+		CrvMinter: '0xDC24316b9AE028F1497c275EB9192a3Ea0f67022',
+		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'stethCrv'
+	},
+	ALUSD: {
+		LOGO: TOKEN_LOGO.ALUSD,
+		Name: 'alusd',
+		POOL: '0x1B3e21Cd1Da43B9840f31b82D76B597c131E3e4B',
+		DepositAsset: '0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c', // Curve.fi alUSD3CRV (alusd)
+		CvxRewardsAddr: '0x02e2151d4f351881017abdf2dd2b51150841d5b3',
+		RewardsAssets: ['BENT', 'CRV', 'CVX', 'ALCX'],
+		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'alusdCrv'
 	},
 	TRICRYPTO2: {
 		LOGO: TOKEN_LOGO.TRICRYPTO2,
@@ -94,7 +105,13 @@ const SushiPools: {
 	}
 }
 
+const BentStaking = {
+	POOL: '0x07228C1820b4a3D75206a6E61F1AdD1BB157ce80',
+	RewardAssets: ['CRV', 'CVX', 'SPELL', 'ALCX', 'LDO']
+}
+
 export const POOLS = {
 	BentPools,
-	SushiPools
+	SushiPools,
+	BentStaking
 }

@@ -86,5 +86,10 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.LDO,
 		ADDR: '0x5a98fcbea516cf06857215779fd812ca3bef1b32',
 		DECIMALS: 18
+	},
+	STETH: {
+		LOGO: TOKEN_LOGO.STETH,
+		ADDR: '0xae7ab96520de3a18e5e111b5eaab095312d7fe84',
+		DECIMALS: 18
 	}
 }

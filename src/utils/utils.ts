@@ -52,6 +52,7 @@ export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): 
 }
 
 export const formatMillions = (value: string): string => {
+	if (value === '0') return '0.0';
 	const parts = value.split('.');
 	const steps = parts[0].split(',');
 	const first = steps[0];
@@ -103,6 +104,8 @@ export const getTokenDecimals = (addr: string): number => {
 }
 
 export const getTokenPrice = (tokenPrices: Record<string, number>, addr: string): BigNumber => {
+	if (addr === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE') // Black Hole
+		addr = TOKENS['WETH'].ADDR;
 	const price = tokenPrices[addr.toLowerCase()];
 	if (!price) return ethers.constants.Zero;
 	return utils.parseUnits(price.toString());
@@ -127,14 +130,11 @@ export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 	return total;
 }
 
-export const getRewardTokenKeys = (): string[] => {
-	// const tokenKeys: string[] = [];
-	// Object.keys(POOLS.BentPools).forEach(poolKey => {
-	// 	POOLS.BentPools[poolKey].RewardsAssets.forEach(tokenKey => {
-	// 		if (tokenKeys.indexOf(tokenKey) === -1) {
-	// 			tokenKeys.push(tokenKey);
-	// 		}
-	// 	})
-	// })
-	return ['CRV', 'SPELL', 'ALCX', 'CVX', 'FXS', 'LDO']
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+// eslint-disable-next-line  @typescript-eslint/explicit-module-boundary-types
+export const sortCrvPool = (a, b, field: string, order: number): number => {
+	if (field === 'name') {
+		return a.Name.localeCompare(b.Name) * order;
+	}
+	return 0;
 }

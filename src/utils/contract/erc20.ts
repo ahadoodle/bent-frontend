@@ -1,5 +1,16 @@
 import { BigNumber, ethers } from "ethers";
+import web3NoAccount from "utils/web3";
 import { Contract } from 'web3-eth-contract';
+
+export const getEthBalanceOf = async (address: string): Promise<BigNumber> => {
+	try {
+		if (!address) return ethers.constants.Zero;
+		return BigNumber.from(await web3NoAccount.eth.getBalance(address));
+	} catch (error) {
+		console.error(error);
+		return ethers.constants.Zero;
+	}
+}
 
 const getBalanceOf = async (contract: Contract, account: string | null | undefined): Promise<BigNumber> => {
 	try {

@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
-import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls } from "hooks";
+import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls, useSortedCrvPoolKeys } from "hooks";
+import { MorePoolsRow } from "components/MorePoolsRow";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
+	const [showAll, setShowAll] = useState(false);
+	const [sortField, setSortField] = useState('');
+	const [sortOrder, setSortOrder] = useState(1);
 	const tvls = useCrvTvls();
 	const earns = useCrvPoolEarns();
 	const depostedUsd = useCrvPoolDepositedUsds();
 	const avgApr = useCrvAverageApr();
+	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
+
+	const onSort = (field: string) => {
+		if (field === sortField) {
+			setSortOrder(sortOrder * -1);
+		} else {
+			setSortField(field);
+			setSortOrder(1);
+		}
+	}
 
 	return (
 		<Container className="convert-up">
@@ -18,12 +32,9 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 					<h2 className="section-header">Stake Curve LP Tokens</h2>
 					<div className="toggleWrap tokentable table">
 						<Row className="align-items-center thead">
-							<Col>
+							<Col onClick={() => onSort('name')} className="cursor-pointer">
 								Pool Name{" "}
-								<i
-									className="fa fa-caret-down"
-									aria-hidden="true"
-								></i>
+								<i className="fa fa-caret-down" aria-hidden="true" />
 							</Col>
 							<Col>
 								<span className="small p-0">Total Earned (USD)</span><br />
@@ -63,32 +74,17 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 						<Card>
 							<CardBody>
 								{
-									Object.keys(POOLS.BentPools).map(poolName =>
+									keys.map((poolName, index) =>
 										<StakeCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}
 											poolKey={poolName}
 											key={poolName}
+											visible={index < 5 || showAll}
 										/>)
 								}
+								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} />
 							</CardBody>
 						</Card>
-
-						{/* <tbody>
-										<tr>
-											<td colSpan={5}>
-												<div className="text-center btnwrap">
-													<button className="btn btnshow">
-														Show all Bent pools{" "}
-														<i
-															className="fa fa-caret-down"
-															aria-hidden="true"
-														></i>
-													</button>
-												</div>
-											</td>
-										</tr>
-									</tbody> */}
-
 					</div>
 				</Col>
 			</Row>

@@ -267,6 +267,9 @@ h2.white {
     text-decoration: none;
     font-style: italic;
 }
+h2.section-header.white {
+    color: white;
+}
 h2.section-header {
     padding-left: 10px;
     font-style: normal;
@@ -418,6 +421,23 @@ tr:hover {
     grid-template-columns: auto auto auto;
     grid-row-gap: 28px;
     grid-column-gap: 28px;
+}
+.Dark .stake-bent input {
+    color: white;
+}
+.bent-rewards-item {
+    display: flex;
+    width: 300px;
+}
+.bent-rewards-item p.apr,
+.bent-rewards-item p.rewards-token {
+    font-weight: normal;
+    color: #10150D;
+    padding-left: 10px;
+    margin-bottom: 0;
+}
+.Dark .bent-rewards-item p.apr {
+    color: #C1FFD7;
 }
 .Dark .bent-rewards-item h4 {
     color: white;

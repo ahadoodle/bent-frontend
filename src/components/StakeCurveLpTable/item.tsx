@@ -32,6 +32,7 @@ import { BentPool, TOKENS } from "constant";
 interface Props {
 	poolInfo: BentPool
 	poolKey: string
+	visible: boolean
 }
 
 export const StakeCurveLpItem = (props: Props): React.ReactElement => {
@@ -100,7 +101,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}

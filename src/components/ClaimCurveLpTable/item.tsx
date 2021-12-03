@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-	Row, Col, Card, CardBody, UncontrolledCollapse, Button
+	Row, Col, Card, CardBody, UncontrolledCollapse, Button, CardText
 } from "reactstrap";
 import {
 	useActiveWeb3React,
@@ -11,7 +11,8 @@ import {
 	useCrvPoolEarnedUsd,
 	useGasPrice,
 	useTokenPrices,
-	useCrvPoolRewards
+	useCrvPoolRewards,
+	useCrvApr
 } from "hooks";
 import {
 	BentBasePool,
@@ -24,6 +25,7 @@ import { BentPool, TOKENS } from "constant";
 interface Props {
 	poolInfo: BentPool
 	poolKey: string
+	visible: boolean
 }
 
 export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
@@ -38,6 +40,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 	const rewards = useCrvPoolRewards(props.poolKey);
+	const apr = useCrvApr(props.poolKey);
 
 	const haveRewards = () => {
 		let enable = false;
@@ -61,7 +64,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
 			<Wrapper
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
@@ -79,18 +82,11 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b><span className="small">$</span>{formatBigNumber(earnedUsd)}</b>
 					</Col>
-					{/* <Col>
-						<div className="earnValue">
-							<b>
-								6.56% <span>(proj.6.74%)</span>
-							</b>
-							<p>CRV boost: 1.7x</p>
-							<i
-								className="fa fa-info-circle"
-								aria-hidden="true"
-							></i>
-						</div>
-					</Col> */}
+					<Col>
+						<b>
+							{apr ? <>{apr}<span className="small">%</span></> : 'TBC'}
+						</b>
+					</Col>
 					<Col>
 						<b>
 							~ ${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
@@ -120,10 +116,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 				toggler={`#toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
 			>
 				<Card className="splitter-horizontal" style={{ borderRadius: 0 }}>
-					<CardBody className="p-1">
+					<CardBody className="p-1 converttabs">
 						<Row className="align-items-center">
 							<Col sm={12}>
-								<p>Breakdown of claimable earnings:</p>
+								<CardText className="mt-0 mb-2">
+									<span className="small">Breakdown of claimable earnings:</span>
+								</CardText>
 							</Col>
 						</Row>
 						{props.poolInfo.RewardsAssets.map((tokenKey, index) =>
@@ -143,6 +141,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 										usdRewards[index] ? formatBigNumber(usdRewards[index]) : 0
 									}</span>
 								</Col>
+								<Col></Col>
 								<Col></Col>
 								<Col></Col>
 							</Row>
