@@ -54,7 +54,7 @@ const BannerBlocks = (): React.ReactElement => {
                 <img className="dollorCoin" src={DollorIcon} alt="Icon" />
                 <img className="bannerIcon" src={DepositIcon} alt="Icon" />
                 <div className="mx-3">
-                  <p>Total Deposit</p>
+                  <p>Total Deposits</p>
                   <h2>
                     <span>$</span>
                     <b>{totalDeposits().split('.')[0]}</b>.{totalDeposits().split('.')[1]}
