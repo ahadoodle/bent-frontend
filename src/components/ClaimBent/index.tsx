@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-	Container, Button, Row, Col, Card, CardText, CardBody,
+	Container, Button, Row, Col, Card, CardText, CardBody, Input
 } from "reactstrap";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
 import { formatBigNumber, BentStaking } from "utils";
@@ -17,8 +17,12 @@ import {
 	useBentStakingContract,
 } from 'hooks';
 import { ethers, BigNumber } from "ethers";
+import { ClaimBentRewardItem } from "./item";
 
 export const ClaimBent = (): React.ReactElement => {
+	const [claimBtnText, setClaimBtnText] = useState('Claim');
+	const [checkAll, setCheckAll] = useState(false);
+	const [claimChecked, setClaimChecked] = useState<Record<number, boolean>>({});
 	const bentStaked = useBentStaked();
 	const bentstakedUsd = useBentStakedUsd();
 	const bentAvgApr = useBentAvgApr();
@@ -31,8 +35,45 @@ export const ClaimBent = (): React.ReactElement => {
 	const bentStakingContract = useBentStakingContract(POOLS.BentStaking.POOL);
 	const gasPrice = useGasPrice();
 
+	const checkedIndexes = () => {
+		const checkedIndexes: string[] = [];
+		Object.keys(claimChecked).forEach(key => {
+			if (claimChecked[key]) checkedIndexes.push(key);
+		})
+		return checkedIndexes;
+	}
+
 	const onClaim = async () => {
-		await BentStaking.claimAll(bentStakingContract, account, gasPrice);
+		if (checkAll) {
+			await BentStaking.claimAll(bentStakingContract, account, gasPrice);
+		} else {
+			await BentStaking.claim(bentStakingContract, account, checkedIndexes(), gasPrice);
+		}
+	}
+
+	const onClaimCheckChange = (index: number, add: boolean) => {
+		if (!add) setCheckAll(false);
+		claimChecked[index] = add;
+		setClaimChecked(Object.assign({}, claimChecked));
+		if (checkedIndexes().length === POOLS.BentStaking.RewardAssets.length) {
+			setCheckAll(true);
+			setClaimBtnText('Claim All');
+		} else {
+			setClaimBtnText('Claim');
+		}
+	}
+
+	const onCheckAll = () => {
+		setCheckAll(!checkAll);
+		POOLS.BentStaking.RewardAssets.forEach((key, index) => {
+			claimChecked[index] = !checkAll;
+		})
+		setClaimChecked(Object.assign({}, claimChecked));
+		if (!checkAll) {
+			setClaimBtnText('Claim All');
+		} else {
+			setClaimBtnText('Claim');
+		}
 	}
 
 	return (
@@ -80,7 +121,11 @@ export const ClaimBent = (): React.ReactElement => {
 									</div>
 								</Col>
 								<Col>
-									<Button className="claimbtn" onClick={onClaim}>Claim All</Button>
+									<Button
+										className="claimbtn"
+										onClick={onClaim}
+										disabled={checkedIndexes().length === 0}
+									>{claimBtnText}</Button>
 								</Col>
 							</Row>
 							<Card>
@@ -91,20 +136,20 @@ export const ClaimBent = (): React.ReactElement => {
 												<Col sm="6">
 													<CardText className="mt-0">
 														<span className="small">Breakdown of claimable earnings:</span>
+														<Input type="checkbox" className="mx-3" checked={checkAll} onChange={onCheckAll} />
+														<span className="small">Select All</span>
 													</CardText>
 													<div className="bent-rewards-container">
-														{POOLS.BentStaking.RewardAssets.map(key =>
-															<div className="imgText bent-rewards-item" key={key}>
-																<img src={TOKENS[key].LOGO} alt="Icon" width="28" />
-																<div>
-																	<h4 className="mb-0">{key}</h4>
-																	<p className="apr">{rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}% APR</p>
-																</div>
-																<div>
-																	<h4 className="mb-0"><span className="small">$</span>{formatBigNumber(bentRewardsUsd ? BigNumber.from(bentRewardsUsd[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero)}</h4>
-																	<p className="rewards-token">{formatBigNumber(bentRewards ? BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero)} {key}</p>
-																</div>
-															</div>
+														{POOLS.BentStaking.RewardAssets.map((key, index) =>
+															<ClaimBentRewardItem
+																index={index}
+																tokenKey={key}
+																apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}
+																rewardUsd={bentRewardsUsd ? BigNumber.from(bentRewardsUsd[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
+																reward={bentRewards ? BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
+																checked={claimChecked[index] || false}
+																onChange={onClaimCheckChange}
+															/>
 														)}
 													</div>
 												</Col>
