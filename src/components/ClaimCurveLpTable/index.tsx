@@ -3,29 +3,45 @@ import { Row, Col, Card, CardBody, Container } from "reactstrap";
 import { POOLS } from "constant";
 import CrvLogo from 'assets/images/token/CRV.svg';
 import { ClaimCurveLpItem } from "./item";
-import { useCrvPoolEarns, useCrvPoolDepositedUsds, useCrvAverageApr } from "hooks";
+import { useCrvPoolEarns, useCrvPoolDepositedUsds, useCrvAverageApr, useSortedCrvPoolKeys } from "hooks";
 import { formatBigNumber, getSumBigNumbers } from "utils";
 import { MorePoolsRow } from "components/MorePoolsRow";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
+	const [sortField, setSortField] = useState('');
+	const [sortOrder, setSortOrder] = useState(1);
 	const earns = useCrvPoolEarns();
 	const depostedUsd = useCrvPoolDepositedUsds();
 	const avgApr = useCrvAverageApr();
+	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
+
+	const onSort = (field: string) => {
+		if (field === sortField) {
+			setSortOrder(sortOrder * -1);
+		} else {
+			setSortField(field);
+			setSortOrder(1);
+		}
+	}
+
+	const sortOrderClass = (field) => {
+		return sortField === field ? (sortOrder === 1 ? 'desc' : 'asc') : '';
+	}
 
 	return (
 		<Container className="mt-5">
 			<Row>
 				<Col md="12">
-					<div className="toggleWrap tokentable table">
+					<div className="toggleWrap tokentable table sortable">
 						<Row className="align-items-center thead p-0 pt-2 pb-2">
-							<Col>
+							<Col onClick={() => onSort('name')} className={sortOrderClass('name')}>
 								<div className="imgText">
 									<img src={CrvLogo} alt="" width="28" />
 									<h2>Curve Pools</h2>
 								</div>
 							</Col>
-							<Col>
+							<Col onClick={() => onSort('earned')} className={sortOrderClass('earned')}>
 								<span className="small">
 									Total Earned (USD)
 								</span><br />
@@ -35,7 +51,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
-							<Col>
+							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
 									<span className="h5">{avgApr}</span>
@@ -43,7 +59,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
-							<Col>
+							<Col onClick={() => onSort('deposit')} className={sortOrderClass('deposit')}>
 								<span className="small p-0">My Total Deposits</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
@@ -63,7 +79,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 						</Row>
 						<Card>
 							<CardBody>
-								{Object.keys(POOLS.BentPools).map((poolName, index) =>
+								{keys.map((poolName, index) =>
 									<ClaimCurveLpItem
 										poolInfo={POOLS.BentPools[poolName]}
 										poolKey={poolName}
