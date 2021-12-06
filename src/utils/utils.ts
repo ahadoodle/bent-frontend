@@ -147,5 +147,8 @@ export const sortCrvPool = (a, b, field: string, order: number): number => {
 	if (field === 'name') {
 		return a.Name.localeCompare(b.Name) * order;
 	}
+	if (field === 'earned' || field === 'apr' || field === 'deposit' || field === 'tvl') {
+		return (BigNumber.from(a).gt(BigNumber.from(b)) ? 1 : -1) * order;
+	}
 	return 0;
 }

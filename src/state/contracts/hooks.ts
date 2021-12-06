@@ -224,8 +224,21 @@ export const useSushiPoolTotalDepositedUsd = (): BigNumber => {
 
 export const useSortedCrvPoolKeys = (field: string, order: number): string[] => {
 	const keys = Object.keys(POOLS.BentPools);
+	const earns = useSelector((state: AppState) => state.contracts.crvEarnedUsd || {});
+	const aprs = useSelector((state: AppState) => state.contracts.crvApr || {});
+	const deposits = useSelector((state: AppState) => state.contracts.crvDepositedUsd || {});
+	const tvls = useSelector((state: AppState) => state.contracts.crvTvl || {});
+
 	if (field === 'name') {
 		return keys.sort((a, b) => sortCrvPool(POOLS.BentPools[a], POOLS.BentPools[b], field, order));
+	} else if (field === 'earned') {
+		return keys.sort((a, b) => sortCrvPool(earns[a], earns[b], field, order));
+	} else if (field === 'apr') {
+		return keys.sort((a, b) => sortCrvPool(utils.parseEther(aprs[a].toString()), utils.parseEther(aprs[b].toString()), field, order));
+	} else if (field === 'deposit') {
+		return keys.sort((a, b) => sortCrvPool(deposits[a], deposits[b], field, order));
+	} else if (field === 'tvl') {
+		return keys.sort((a, b) => sortCrvPool(tvls[a], tvls[b], field, order));
 	}
 	return keys;
 }

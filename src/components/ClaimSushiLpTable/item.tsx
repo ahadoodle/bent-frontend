@@ -78,7 +78,8 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							<span className="small">$</span>
+							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
