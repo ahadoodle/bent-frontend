@@ -142,7 +142,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							~ <span className="small">$</span>
+							<span className="small">$</span>
 							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
 						</b><br />
 						<span className="small text-muted">
