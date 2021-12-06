@@ -4,7 +4,7 @@ import CardCoin from "assets/images/cardCoin.png";
 import DollorIcon from "assets/images/dollorIcon.png";
 import ClaimIcon from "assets/images/claimIcon.svg";
 import DepositIcon from "assets/images/depositIcon.svg";
-import { useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned } from "hooks";
+import { useBentEarnedUsd, useBentStakedUsd, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned } from "hooks";
 import { formatBigNumber } from "utils";
 // import LockIcon from "assets/images/lockIcon.svg";
 // import DbIcon from "assets/images/dbIcon.svg";
@@ -12,15 +12,17 @@ import { formatBigNumber } from "utils";
 const BannerBlocks = (): React.ReactElement => {
   const crvEarnings = useCrvPoolTotalEarned();
   const sushiEarnings = useSushiPoolTotalEarned();
+  const bentEarnings = useBentEarnedUsd();
   const crvDeposits = useCrvPoolTotalDepositedUsds();
   const sushiDeposits = useSushiPoolTotalDepositedUsd();
+  const bentDeposits = useBentStakedUsd();
 
   const totalEarnings = (): string => {
-    return formatBigNumber(crvEarnings.add(sushiEarnings), 18, 2);
+    return formatBigNumber(crvEarnings.add(sushiEarnings).add(bentEarnings), 18, 2);
   }
 
   const totalDeposits = (): string => {
-    return formatBigNumber(crvDeposits.add(sushiDeposits), 18, 2)
+    return formatBigNumber(crvDeposits.add(sushiDeposits).add(bentDeposits), 18, 2)
   }
 
   return (

@@ -3,7 +3,7 @@ import {
 	Container, Button, Row, Col, Card, CardText, CardBody, Input
 } from "reactstrap";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
-import { formatBigNumber, BentStaking } from "utils";
+import { formatBigNumber } from "utils";
 import {
 	useBentAvgApr,
 	useBentStaked,
@@ -31,8 +31,8 @@ export const ClaimBent = (): React.ReactElement => {
 	const bentRewards = useBentRewards();
 	const bentRewardsUsd = useBentRewardsUsd();
 
-	const { account } = useActiveWeb3React();
-	const bentStakingContract = useBentStakingContract(POOLS.BentStaking.POOL);
+	const { library } = useActiveWeb3React();
+	const bentStakingContract = useBentStakingContract();
 	const gasPrice = useGasPrice();
 
 	const checkedIndexes = () => {
@@ -44,10 +44,12 @@ export const ClaimBent = (): React.ReactElement => {
 	}
 
 	const onClaim = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
 		if (checkAll) {
-			await BentStaking.claimAll(bentStakingContract, account, gasPrice);
+			await bentStakingContract.connect(signer).claimAll({ gasPrice });
 		} else {
-			await BentStaking.claim(bentStakingContract, account, checkedIndexes(), gasPrice);
+			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasPrice });
 		}
 	}
 
