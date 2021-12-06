@@ -81,8 +81,10 @@ export const StakeBent = (): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
+		const gas = await bentStakingContract.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
 		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
 			gasPrice,
+			gasLimit: gas
 		});
 		if (res) {
 			setStakeAmount('')
@@ -93,8 +95,10 @@ export const StakeBent = (): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
+		const gas = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
 		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
-			gasPrice
+			gasPrice,
+			gasLimit: gas
 		});
 		if (res) {
 			setWithdrawAmount('')
