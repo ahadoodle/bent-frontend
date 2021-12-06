@@ -5,7 +5,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
-import { ERC20, formatBigNumber, formatMillionsBigNumber, BentStaking } from "utils";
+import { ERC20, formatBigNumber, formatMillionsBigNumber } from "utils";
 import {
 	useActiveWeb3React,
 	useBalance,
@@ -36,9 +36,9 @@ export const StakeBent = (): React.ReactElement => {
 	const rewardAprs = useBentRewardsAprs();
 	const earnedUsd = useBentEarnedUsd();
 
-	const { account } = useActiveWeb3React();
+	const { account, library } = useActiveWeb3React();
 	const bentTokenContract = useERC20Contract(TOKENS['BENT'].ADDR);
-	const bentStakingContract = useBentStakingContract(POOLS.BentStaking.POOL);
+	const bentStakingContract = useBentStakingContract();
 	const gasPrice = useGasPrice();
 
 	const toggle = (tab) => {
@@ -73,7 +73,11 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	const stake = async () => {
-		const res = await BentStaking.stake(bentStakingContract, account, stakeAmount, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
+			gasPrice,
+		});
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -81,7 +85,11 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	const withdraw = async () => {
-		const res = await BentStaking.withdraw(bentStakingContract, account, withdrawAmount, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
+			gasPrice
+		});
 		if (res) {
 			setWithdrawAmount('')
 		}

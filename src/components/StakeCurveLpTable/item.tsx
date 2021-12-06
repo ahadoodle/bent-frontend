@@ -7,7 +7,6 @@ import classnames from "classnames";
 import styled from "styled-components";
 import {
 	ERC20,
-	BentBasePool,
 	formatBigNumber,
 	getCrvDepositLink,
 	getEtherscanLink,
@@ -27,7 +26,7 @@ import {
 	useCrvTvl,
 	useGasPrice,
 } from "hooks";
-import { BentPool, TOKENS } from "constant";
+import { BentPool, POOLS, TOKENS } from "constant";
 
 interface Props {
 	poolInfo: BentPool
@@ -41,7 +40,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const { account } = useActiveWeb3React();
+	const { account, library } = useActiveWeb3React();
 	const depositTokenContract = useCrvFiLp(props.poolInfo.DepositAsset);
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
@@ -86,7 +85,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const stake = async () => {
-		const res = await BentBasePool.stake(bentPool, account, stakeAmount, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await bentPool.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18))
+		const res = await bentPool.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
+			gasPrice,
+			gasLimit: gas
+		})
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -94,7 +99,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const withdraw = async () => {
-		const res = await BentBasePool.withdraw(bentPool, account, withdrawAmount, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await bentPool.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18))
+		const res = await bentPool.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
+			gasPrice,
+			gasLimit: gas
+		})
 		if (res) {
 			setWithdrawAmount('')
 		}
@@ -308,14 +319,14 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 												</p>
 												<p>
 													Deposit contract address:&nbsp;
-													<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
-														{bentPool.options.address}
+													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
+														{POOLS.BentPools[props.poolKey].POOL}
 													</a>
 												</p>
 												<p>
 													Rewards contract address:&nbsp;
-													<a href={getEtherscanLink(bentPool.options.address)} target="_blank" rel="noreferrer">
-														{bentPool.options.address}
+													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
+														{POOLS.BentPools[props.poolKey].POOL}
 													</a>
 												</p>
 											</div>
