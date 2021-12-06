@@ -6,8 +6,6 @@ import {
 	getBentPool,
 	getERC20,
 	getBentMasterChef,
-	getSushiPairContract,
-	getCvxBaseRewardPool,
 	getCrvFiLp,
 	getBentStakingContract
 } from 'utils';
@@ -18,24 +16,19 @@ export const useBentPoolContract = (poolName: string): Contract => {
 	return useMemo(() => getBentPool(poolName, library), [library, poolName]);
 }
 
-export const useERC20Contract = (address: string): Web3Contract => {
-	const web3 = useWeb3();
-	return useMemo(() => getERC20(address, web3), [web3, address]);
+export const useERC20Contract = (address: string): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => getERC20(address, library), [library, address]);
 }
 
-export const useBentMasterChefContract = (address: string): Web3Contract => {
-	const web3 = useWeb3();
-	return useMemo(() => getBentMasterChef(address, web3), [web3, address]);
+export const useBentMasterChefContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => getBentMasterChef(library), [library]);
 }
 
-export const useSushiPairContract = (address: string): Web3Contract => {
-	const web3 = useWeb3();
-	return useMemo(() => getSushiPairContract(address, web3), [web3, address]);
-}
-
-export const useCvxBaseRewardPool = (address: string): Web3Contract => {
-	const web3 = useWeb3();
-	return useMemo(() => getCvxBaseRewardPool(address, web3), [web3, address]);
+export const useBentStakingContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => getBentStakingContract(library), [library]);
 }
 
 export const useCrvFiLp = (address: string): Web3Contract => {
@@ -49,9 +42,4 @@ export const useCrvFiLps = (): Record<string, Web3Contract> => {
 		contracts[poolKey] = getCrvFiLp(POOLS.BentPools[poolKey].CrvMinter ?? POOLS.BentPools[poolKey].DepositAsset)
 	})
 	return contracts;
-}
-
-export const useBentStakingContract = (): Contract => {
-	const { library } = useActiveWeb3React();
-	return useMemo(() => getBentStakingContract(library), [library]);
 }

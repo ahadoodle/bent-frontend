@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
+import web3NoAccount from './web3';
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
 	if (!fullStr || fullStr.length <= strLen) return fullStr;
@@ -128,6 +129,16 @@ export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 		total = total.add(bns[key]);
 	})
 	return total;
+}
+
+export const getEthBalanceOf = async (address: string): Promise<BigNumber> => {
+	try {
+		if (!address) return ethers.constants.Zero;
+		return BigNumber.from(await web3NoAccount.eth.getBalance(address));
+	} catch (error) {
+		console.error(error);
+		return ethers.constants.Zero;
+	}
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any

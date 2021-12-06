@@ -15,10 +15,9 @@ import {
 } from "hooks";
 import {
 	formatBigNumber,
-	BentMasterChef,
 } from "utils";
 import { BigNumber, utils } from 'ethers';
-import { POOLS, SushiPool } from "constant";
+import { SushiPool } from "constant";
 
 interface Props {
 	poolInfo: SushiPool
@@ -27,8 +26,8 @@ interface Props {
 
 export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const symbol = props.poolInfo.Name + ' SLP';
-	const { account } = useActiveWeb3React();
-	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
+	const { account, library } = useActiveWeb3React();
+	const masterChef = useBentMasterChefContract();
 	const gasPrice = useGasPrice();
 	const depositedLp = useSushiLpDeposited(props.poolKey);
 	const stakedUsd = useSushiPoolDepositedUsd(props.poolKey);
@@ -37,7 +36,13 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const apr = useSushiApr(props.poolKey);
 
 	const claim = async () => {
-		await BentMasterChef.claim(masterChef, account, props.poolInfo.PoolId, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await masterChef.connect(signer).estimateGas.claim(props.poolInfo.PoolId, account);
+		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account, {
+			gasPrice,
+			gasLimit: gas
+		})
 	}
 
 	const haveRewards = () => {

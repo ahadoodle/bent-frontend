@@ -6,25 +6,24 @@ import {
 import classnames from "classnames";
 import styled from "styled-components";
 import {
-	ERC20,
 	formatBigNumber,
 	getCrvDepositLink,
 	getEtherscanLink,
 	formatMillionsBigNumber,
 } from "utils";
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import {
 	useActiveWeb3React,
 	useBalance,
 	useBentPoolContract,
 	useCrvApr,
 	useCrvDeposit,
-	useCrvFiLp,
 	usePoolAllowance,
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
 	useGasPrice,
+	useERC20Contract,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 
@@ -40,8 +39,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const { account, library } = useActiveWeb3React();
-	const depositTokenContract = useCrvFiLp(props.poolInfo.DepositAsset);
+	const { library } = useActiveWeb3React();
+	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
@@ -78,7 +77,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const approve = async () => {
-		const res = await ERC20.approve(depositTokenContract, account, props.poolInfo.POOL, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
+		const res = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
+			gasPrice,
+			gasLimit: gas
+		});
 		if (res) {
 			setIsApproved(true);
 		}

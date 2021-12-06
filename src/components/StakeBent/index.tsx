@@ -5,7 +5,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
-import { ERC20, formatBigNumber, formatMillionsBigNumber } from "utils";
+import { formatBigNumber, formatMillionsBigNumber } from "utils";
 import {
 	useActiveWeb3React,
 	useBalance,
@@ -20,7 +20,7 @@ import {
 	useERC20Contract,
 	useGasPrice
 } from "hooks";
-import { utils } from "ethers";
+import { ethers, utils } from "ethers";
 
 export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -36,8 +36,8 @@ export const StakeBent = (): React.ReactElement => {
 	const rewardAprs = useBentRewardsAprs();
 	const earnedUsd = useBentEarnedUsd();
 
-	const { account, library } = useActiveWeb3React();
-	const bentTokenContract = useERC20Contract(TOKENS['BENT'].ADDR);
+	const { library } = useActiveWeb3React();
+	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
 	const bentStakingContract = useBentStakingContract();
 	const gasPrice = useGasPrice();
 
@@ -66,7 +66,13 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	const approve = async () => {
-		const res = await ERC20.approve(bentTokenContract, account, POOLS.BentStaking.POOL, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await bentToken.connect(signer).estimateGas.approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
+		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256, {
+			gasPrice,
+			gasLimit: gas
+		});
 		if (res) {
 			setIsApproved(true);
 		}
