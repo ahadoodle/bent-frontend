@@ -15,7 +15,6 @@ import {
 	useCrvApr
 } from "hooks";
 import {
-	BentBasePool,
 	formatBigNumber,
 	getTokenDecimals,
 } from "utils";
@@ -31,7 +30,7 @@ interface Props {
 export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
-	const { account } = useActiveWeb3React();
+	const { library } = useActiveWeb3React();
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
@@ -60,7 +59,10 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	}, [props, tokenPrices, rewards])
 
 	const claim = async () => {
-		await BentBasePool.harvest(bentPool, account, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await bentPool.connect(signer).estimateGas.harvest();
+		await bentPool.connect(signer).harvest({ gasPrice, gasLimit: gas });
 	}
 
 	return (
@@ -80,7 +82,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earnedUsd)}</b>
+						<b><span className="small">$</span>{formatBigNumber(earnedUsd, 18, 2)}</b>
 					</Col>
 					<Col>
 						<b>
@@ -89,7 +91,8 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							~ ${formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							<span className="small">$</span>
+							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}

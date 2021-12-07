@@ -25,26 +25,30 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 		}
 	}
 
+	const sortOrderClass = (field) => {
+		return sortField === field ? (sortOrder === 1 ? 'desc' : 'asc') : '';
+	}
+
 	return (
 		<Container className="convert-up">
 			<Row>
 				<Col md="12">
 					<h2 className="section-header">Stake Curve LP Tokens</h2>
-					<div className="toggleWrap tokentable table">
+					<div className="toggleWrap tokentable table sortable">
 						<Row className="align-items-center thead">
-							<Col onClick={() => onSort('name')} className="cursor-pointer">
+							<Col onClick={() => onSort('name')} className={sortOrderClass('name')}>
 								Pool Name{" "}
 								<i className="fa fa-caret-down" aria-hidden="true" />
 							</Col>
-							<Col>
+							<Col onClick={() => onSort('earned')} className={sortOrderClass('earned')}>
 								<span className="small p-0">Total Earned (USD)</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(getSumBigNumbers(earns))}</span>
+									<span className="h5">{formatBigNumber(getSumBigNumbers(earns), 18, 2)}</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
-							<Col>
+							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
 									<span className="h5">{avgApr}</span>
@@ -52,7 +56,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
-							<Col>
+							<Col onClick={() => onSort('deposit')} className={sortOrderClass('deposit')}>
 								<span className="small p-0">My Total Deposits</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
@@ -60,7 +64,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
-							<Col>
+							<Col onClick={() => onSort('tvl')} className={sortOrderClass('tvl')}>
 								<span className="small">
 									TVL
 								</span><br />

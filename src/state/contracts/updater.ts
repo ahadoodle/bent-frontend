@@ -19,7 +19,6 @@ import {
 	getMultiBentSingleStaking,
 } from 'utils';
 import {
-	updateBentPrice,
 	updateTokenPrice,
 	updatePrices,
 	updateBalance,
@@ -62,7 +61,11 @@ export default function Updater(): null {
 		getPrice(tokenAddrs).then(tokenPrices => {
 			dispatch(updatePrices(tokenPrices))
 
-			console.log('Updating contract states', Date.now(), account, blockNumber);
+			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
+			const bentPriceBN = utils.parseUnits(bentPrice.toString());
+
+			console.log(`Updating contract states\nTime: ${Date.now()}\nAccount: ${account}\nBlockNumber: ${blockNumber}\nBent Price: ${bentPrice}`);
+
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
 
@@ -122,17 +125,11 @@ export default function Updater(): null {
 				// Update Sushi Pool Infos
 				const rewardPerBlock = results[startIndex++];
 				const totalAllocPoint = results[startIndex++];
-				let bentPrice = 0;
-				let bentPriceBN = ethers.constants.Zero;
 				Object.keys(POOLS.SushiPools.Pools).forEach(poolKey => {
 					// Update Lp Price
 					const tokenAddr = POOLS.SushiPools.Pools[poolKey].DepositAsset;
 					const reserves = results[startIndex];
 					const totalSupply = results[startIndex + 1];
-					if (poolKey === 'BENT_DAI') {
-						bentPrice = BigNumber.from(reserves.reserve0).isZero() ? 0 : BigNumber.from(reserves.reserve1).mul(10 ** 6).div(reserves.reserve0).toNumber() / 10 ** 6;
-						dispatch(updateBentPrice(bentPrice));
-					}
 					const lpPrice = BigNumber.from(totalSupply).isZero() ? 0 : BigNumber.from(reserves.reserve1).mul(2).mul(10 ** 6).div(totalSupply).toNumber() / 10 ** 6;
 					dispatch(updateTokenPrice({ tokenAddr, price: lpPrice }));
 
@@ -142,7 +139,6 @@ export default function Updater(): null {
 					dispatch(updateSushiLpDeposited({ poolKey, deposited: results[startIndex + 4].amount }));
 
 					// Update Sushi Pool TVL
-					bentPriceBN = utils.parseUnits(bentPrice.toString());
 					const poolLpBalance = results[startIndex + 5];
 					const lpPriceBN = utils.parseUnits(lpPrice.toString());
 					const tvl = lpPriceBN.mul(poolLpBalance).div(BigNumber.from(10).pow(18))

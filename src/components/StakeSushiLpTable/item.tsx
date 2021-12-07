@@ -4,7 +4,7 @@ import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant"
 import classnames from "classnames";
 import {
@@ -23,8 +23,6 @@ import {
 import {
 	formatBigNumber,
 	formatMillionsBigNumber,
-	ERC20,
-	BentMasterChef,
 	getEtherscanLink,
 } from "utils";
 
@@ -42,9 +40,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 
-	const { account } = useActiveWeb3React();
-	const depositTokenContract = useERC20Contract(props.poolInfo.DepositAsset);
-	const masterChef = useBentMasterChefContract(POOLS.SushiPools.MasterChef);
+	const { library } = useActiveWeb3React();
+	const sushiLpToken = useERC20Contract(props.poolInfo.DepositAsset);
+	const masterChef = useBentMasterChefContract();
 	const gasPrice = useGasPrice();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const allowance = usePoolAllowance(props.poolKey);
@@ -76,18 +74,30 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(BigNumber.from(depositedLp), 18, 8).replaceAll(',', ''));
+		setWithdrawAmount(formatBigNumber(BigNumber.from(depositedLp), 18, 18).replaceAll(',', ''));
 	}
 
 	const approve = async () => {
-		const res = await ERC20.approve(depositTokenContract, account, POOLS.SushiPools.MasterChef, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await sushiLpToken.connect(signer).estimateGas.approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
+		const res = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256, {
+			gasPrice,
+			gasLimit: gas
+		});
 		if (res) {
 			setIsApproved(true);
 		}
 	}
 
 	const stake = async () => {
-		const res = await BentMasterChef.stake(masterChef, account, props.poolInfo.PoolId, stakeAmount, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await masterChef.connect(signer).estimateGas.deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
+		const res = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18), {
+			gasPrice,
+			gasLimit: gas
+		});
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -95,7 +105,13 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const withdraw = async () => {
-		const res = await BentMasterChef.withdraw(masterChef, account, props.poolInfo.PoolId, withdrawAmount, gasPrice);
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gas = await masterChef.connect(signer).estimateGas.withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
+		const res = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18), {
+			gasPrice,
+			gasLimit: gas
+		});
 		if (res) {
 			setWithdrawAmount('')
 		}
@@ -119,7 +135,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earned)}</b>
+						<b><span className="small">$</span>{formatBigNumber(earned, 18, 2)}</b>
 					</Col>
 					<Col>
 						<b>
@@ -129,7 +145,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							~ <span className="small">$</span>
+							<span className="small">$</span>
 							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
 						</b><br />
 						<span className="small text-muted">

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import LogoIcon from "assets/images/logo.png";
+import LogoIcon from "assets/images/logo-light.svg";
 import { Container, Row, Col } from "reactstrap";
 
 const Footer = (): React.ReactElement => {
@@ -28,7 +28,7 @@ const Footer = (): React.ReactElement => {
                 <h3>Resources</h3>
                 <ul>
                   <li>
-                    <a href="https://github.com/bent-protocol/bent-audit" target="_blank" rel="noreferrer" >Audit</a>
+                    <a href="https://hacken.io/audits/#bent_finance" target="_blank" rel="noreferrer" >Audit</a>
                   </li>
                   <li>
                     <a href="https://docs.bentfinance.com/" target="_blank" rel="noreferrer" >Documentation</a>
