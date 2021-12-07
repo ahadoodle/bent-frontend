@@ -104,6 +104,9 @@ ul.primaryMenu li a:hover {
 .boxwrap.second {
     box-shadow: 10px 10px 0px 0px #cab8ff;
 }
+.boxwrap.third {
+    box-shadow: 10px 10px 0px 0px #AFE3C1;
+}
 .boxwrap p {
     color: #10151D;
     opacity: 0.7;
@@ -1706,9 +1709,6 @@ button.btn.btn-secondary.wallet {
 }
 .section, .convert-up.cvxSection {
     margin-top: 80px;
-}
-.boxwrap.second {
-    box-shadow: 5px 5px 0px 0px #cab8ff;
 }
 .boxwrap h2, .bannerBlockWrap .boxwrap h2 {
     font-size: 26px;
