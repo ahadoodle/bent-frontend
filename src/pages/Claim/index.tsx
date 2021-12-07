@@ -1,34 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import { withRouter } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import {
-  Container, Button, Row, Col, Input, Label,
+  Container
 } from "reactstrap";
-import BannerBlocks from "components/BannerBlocks";
 import "font-awesome/css/font-awesome.min.css";
+import BannerBlocks from "components/BannerBlocks";
 import { ClaimCurveLpTable } from "components/ClaimCurveLpTable";
 import { ClaimSushiLpTable } from "components/ClaimSushiLpTable";
 import { ClaimBent } from "components/ClaimBent";
 
 export const Claim = (): React.ReactElement => {
-  const [autoClaimStatus, setAutoClaimStatus] = useState(false);
-  const [autoText, setAutoText] = useState(0);
-  const [stakeStatus, setStakeStatus] = useState("none");
-  const handleStakeStus = (value) => {
-    setStakeStatus(value);
-  };
-  const handleAutoActiveStatus = async (e) => {
-    console.log("value", e.target.value);
-    const { value } = e.target;
-    console.log("value", value);
-    if (value === 0) {
-      setAutoClaimStatus(true);
-      setAutoText(1);
-    } else {
-      setAutoClaimStatus(false);
-      setAutoText(0);
-    }
-  };
+  // const [autoClaimStatus, setAutoClaimStatus] = useState(false);
+  // const [autoText, setAutoText] = useState(0);
+  // const [stakeStatus, setStakeStatus] = useState("none");
+  // const handleStakeStus = (value) => {
+  //   setStakeStatus(value);
+  // };
+  // const handleAutoActiveStatus = async (e) => {
+  //   console.log("value", e.target.value);
+  //   const { value } = e.target;
+  //   console.log("value", value);
+  //   if (value === 0) {
+  //     setAutoClaimStatus(true);
+  //     setAutoText(1);
+  //   } else {
+  //     setAutoClaimStatus(false);
+  //     setAutoText(0);
+  //   }
+  // };
   return (
     <React.Fragment>
       <Helmet>
@@ -37,7 +37,7 @@ export const Claim = (): React.ReactElement => {
       <div className="banner">
         <div className="bannerboxes">
           <BannerBlocks />
-          <div className="autoText">
+          {/* <div className="autoText">
             <div className="advance-btn">
               <Label className="switch">
                 <Input
@@ -139,7 +139,7 @@ export const Claim = (): React.ReactElement => {
             </div>
           ) : (
             ""
-          )}
+          )} */}
         </div>
       </div>
       <div className="contentSection">
