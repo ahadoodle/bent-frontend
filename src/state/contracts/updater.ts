@@ -19,7 +19,6 @@ import {
 	getMultiBentSingleStaking,
 } from 'utils';
 import {
-	updateBentPrice,
 	updateTokenPrice,
 	updatePrices,
 	updateBalance,
