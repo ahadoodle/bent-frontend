@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import LogoIcon from "assets/images/logo.png";
+import LogoIcon from "assets/images/logo-light.svg";
 import { Container, Row, Col } from "reactstrap";
 
 const Footer = (): React.ReactElement => {
