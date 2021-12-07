@@ -8,7 +8,7 @@ import {
   // Dropdown,
   // DropdownToggle,
 } from "reactstrap";
-import LogoIcon from "assets/images/logo.png";
+import LogoIcon from "assets/images/logo-light.svg";
 import MenuIcon from "assets/images/menu.svg";
 import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";

@@ -135,7 +135,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earned)}</b>
+						<b><span className="small">$</span>{formatBigNumber(earned, 18, 2)}</b>
 					</Col>
 					<Col>
 						<b>

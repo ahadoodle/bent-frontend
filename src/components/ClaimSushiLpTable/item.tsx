@@ -64,7 +64,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earned)}</b><br />
+						<b><span className="small">$</span>{formatBigNumber(earned, 18, 2)}</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(rewards))}
 							<span className="small text-bold"> BENT</span>
