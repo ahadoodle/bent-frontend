@@ -44,7 +44,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">Total Earned (USD)</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(getSumBigNumbers(earns))}</span>
+									<span className="h5">{formatBigNumber(getSumBigNumbers(earns), 18, 2)}</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
