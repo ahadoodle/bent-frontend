@@ -24,7 +24,7 @@ export const ClaimBentRewardItem = (props: Props): React.ReactElement => {
 				<p className="apr">{props.apr}% APR</p>
 			</div>
 			<div style={{ minWidth: 100 }}>
-				<h4 className="mb-0"><span className="small">$</span>{formatBigNumber(props.rewardUsd)}</h4>
+				<h4 className="mb-0"><span className="small">$</span>{formatBigNumber(props.rewardUsd, 18, 2)}</h4>
 				<p className="rewards-token">{formatBigNumber(props.reward)} {tokenKey}</p>
 			</div>
 			<div className="claim-reward">
