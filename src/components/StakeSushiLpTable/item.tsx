@@ -26,6 +26,7 @@ import {
 	formatMillionsBigNumber,
 	getEtherscanLink,
 } from "utils";
+import { DecimalSpan } from "components/DecimalSpan";
 
 
 interface Props {
@@ -139,8 +140,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(earned, 18, 2).split('.')[0]}.
-							<span className="small">{formatBigNumber(earned, 18, 2).split('.')[1]}</span>
+							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(rewards, 18, 2)} BENT
@@ -148,15 +148,14 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{utils.commify(apr).split('.')[0]}.
-							<span className="small">{utils.commify(apr).split('.')[1]} %</span>
+							<DecimalSpan value={utils.commify(apr)} />
+							<span className="small"> %</span>
 						</b>
 					</Col>
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(stakedUsd, 18, 2).split('.')[0]}.
-							<span className="small">{formatBigNumber(stakedUsd, 18, 2).split('.')[1]}</span>
+							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
@@ -166,8 +165,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								{formatMillionsBigNumber(tvl, 18, 0).split('.')[0]}.
-								<span className="small">{formatMillionsBigNumber(tvl, 18, 0).split('.')[1]}</span>
+								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 0)} />
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>

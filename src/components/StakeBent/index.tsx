@@ -22,6 +22,7 @@ import {
 	useGasPrice
 } from "hooks";
 import { ethers, utils } from "ethers";
+import { DecimalSpan } from "components/DecimalSpan";
 
 export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -129,8 +130,7 @@ export const StakeBent = (): React.ReactElement => {
 										<div className="boldText">
 											<b>
 												<span className="small">$</span>
-												{formatBigNumber(earnedUsd, 18, 2).split('.')[0]}.
-												<span className="small">{formatBigNumber(earnedUsd, 18, 2).split('.')[1]}</span>
+												<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
 											</b>
 										</div>
 									</div>
@@ -140,8 +140,8 @@ export const StakeBent = (): React.ReactElement => {
 										<p>APR</p>
 										<div className="boldText">
 											<b>
-												{bentAvgApr.toString().split('.')[0]}.
-												<span className="small">{bentAvgApr.toString().split('.')[1]} %</span>
+												<DecimalSpan value={bentAvgApr.toString()} />
+												<span className="small"> %</span>
 											</b>
 										</div>
 									</div>
@@ -152,8 +152,7 @@ export const StakeBent = (): React.ReactElement => {
 										<div className="boldText">
 											<b>
 												<span className="small">$</span>
-												{formatBigNumber(bentstakedUsd, 18, 2).split('.')[0]}.
-												<span className="small">{formatBigNumber(bentstakedUsd, 18, 2).split('.')[1]}</span>
+												<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
 											</b>
 										</div>
 									</div>
@@ -164,8 +163,7 @@ export const StakeBent = (): React.ReactElement => {
 										<div className="boldText">
 											<b>
 												<span className="small">$</span>
-												{formatMillionsBigNumber(tvl, 18, 2).split('.')[0]}.
-												<span className="small">{formatMillionsBigNumber(tvl, 18, 2).split('.')[1]}</span>
+												<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
 											</b>
 										</div>
 									</div>

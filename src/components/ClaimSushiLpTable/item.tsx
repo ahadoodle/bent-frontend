@@ -18,6 +18,7 @@ import {
 } from "utils";
 import { BigNumber, utils } from 'ethers';
 import { SushiPool } from "constant";
+import { DecimalSpan } from "components/DecimalSpan";
 
 interface Props {
 	poolInfo: SushiPool
@@ -64,7 +65,10 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earned, 18, 2)}</b><br />
+						<b>
+							<span className="small">$</span>
+							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
+						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(rewards))}
 							<span className="small text-bold"> BENT</span>
@@ -72,14 +76,14 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{utils.commify(apr)}
-							<span className="small">%</span>
+							<DecimalSpan value={utils.commify(apr)} />
+							<span className="small"> %</span>
 						</b>
 					</Col>
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}

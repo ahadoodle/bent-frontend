@@ -20,6 +20,7 @@ import {
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
+import { DecimalSpan } from "components/DecimalSpan";
 
 interface Props {
 	poolInfo: BentPool
@@ -82,17 +83,23 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earnedUsd, 18, 2)}</b>
+						<b>
+							<span className="small">$</span>
+							<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+						</b>
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{apr}<span className="small">%</span></> : 'TBC'}
+							{apr ? <>
+								<DecimalSpan value={apr.toString()} />
+								<span className="small"> %</span>
+							</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}

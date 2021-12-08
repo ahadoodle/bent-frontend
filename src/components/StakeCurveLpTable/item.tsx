@@ -26,6 +26,7 @@ import {
 	useERC20Contract,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
+import { DecimalSpan } from "components/DecimalSpan";
 
 interface Props {
 	poolInfo: BentPool
@@ -135,23 +136,21 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(earnedUsd, 18, 2).split('.')[0]}.
-							<span className="small">{formatBigNumber(earnedUsd, 18, 2).split('.')[1]}</span>
+							<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
 						</b>
 					</Col>
 					<Col>
 						<b>
 							{apr ? <>
-								{apr.toString().split('.')[0]}.
-								<span className="small">{apr.toString().split('.')[1]} %</span>
+								<DecimalSpan value={apr.toString()} />
+								<span className="small"> %</span>
 							</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(stakedUsd, 18, 2).split('.')[0]}.
-							<span className="small">{formatBigNumber(stakedUsd, 18, 2).split('.')[1]}</span>
+							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
@@ -162,8 +161,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								{formatMillionsBigNumber(tvl, 18, 2).split('.')[0]}.
-								<span className="small">{formatMillionsBigNumber(tvl, 18, 2).split('.')[1]}</span>
+								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>
