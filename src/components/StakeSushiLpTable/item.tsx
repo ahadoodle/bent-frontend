@@ -18,6 +18,7 @@ import {
 	useSushiLpDeposited,
 	useSushiPoolDepositedUsd,
 	useSushiPoolEarnedUsd,
+	useSushiPoolRewards,
 	useSushiTvl,
 } from "hooks";
 import {
@@ -50,6 +51,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const tvl = useSushiTvl(props.poolKey);
 	const apr = useSushiApr(props.poolKey);
 	const earned = useSushiPoolEarnedUsd(props.poolKey);
+	const rewards = useSushiPoolRewards(props.poolKey);
 	const stakedUsd = useSushiPoolDepositedUsd(props.poolKey);
 
 	const toggle = tab => {
@@ -135,18 +137,26 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earned, 18, 2)}</b>
+						<b>
+							<span className="small">$</span>
+							{formatBigNumber(earned, 18, 2).split('.')[0]}.
+							<span className="small">{formatBigNumber(earned, 18, 2).split('.')[1]}</span>
+						</b><br />
+						<span className="small text-muted">
+							{formatBigNumber(rewards, 18, 2)} BENT
+						</span>
 					</Col>
 					<Col>
 						<b>
-							{utils.commify(apr)}
-							<span className="small">%</span>
+							{utils.commify(apr).split('.')[0]}.
+							<span className="small">{utils.commify(apr).split('.')[1]} %</span>
 						</b>
 					</Col>
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							{formatBigNumber(stakedUsd, 18, 2).split('.')[0]}.
+							<span className="small">{formatBigNumber(stakedUsd, 18, 2).split('.')[1]}</span>
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
@@ -154,11 +164,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b><span className="small">$</span>{formatMillionsBigNumber(tvl, 18, 0)}</b>
-							<i
-								className="fa fa-caret-down"
-								aria-hidden="true"
-							></i>
+							<b>
+								<span className="small">$</span>
+								{formatMillionsBigNumber(tvl, 18, 0).split('.')[0]}.
+								<span className="small">{formatMillionsBigNumber(tvl, 18, 0).split('.')[1]}</span>
+							</b>
+							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>
 					</Col>
 				</Row>

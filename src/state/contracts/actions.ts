@@ -18,6 +18,7 @@ export const updateStakingPoolApr = createAction<{ tokenAddr: string, apr: numbe
 export const updateStakingPoolAvgApr = createAction<number>('contracts/updateStakingPoolAvgApr');
 export const updateStakingPoolRewards = createAction<{ tokenAddr: string, reward: BigNumber }>('contracts/updateStakingPoolRewards');
 export const updateStakingPoolRewardsUsd = createAction<{ tokenAddr: string, rewardUsd: BigNumber }>('contracts/updateStakingPoolRewardsUsd');
+export const updateStakingPoolStakedBent = createAction<BigNumber>('contracts/updateStakingPoolStakedBent');
 
 export const updateCrvPoolTVL = createAction<{ poolKey: string, tvl: BigNumber }>('contracts/updateCrvPoolTVL');
 export const updateCrvPoolApr = createAction<{ poolKey: string, apr: number }>('contracts/updateCrvPoolApr');

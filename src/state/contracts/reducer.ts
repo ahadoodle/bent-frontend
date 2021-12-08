@@ -30,6 +30,7 @@ import {
 	updateStakingPoolEarningUsd,
 	updateStakingPoolRewards,
 	updateStakingPoolRewardsUsd,
+	updateStakingPoolStakedBent,
 } from './actions';
 import { TOKENS } from 'constant';
 
@@ -54,6 +55,7 @@ export interface ContractsState {
 	bentRewardsUsd: Record<string, BigNumber>,
 	bentAvgApr: number,
 	bentAprs: Record<string, number>,
+	bentTotalStaked: BigNumber,
 
 	// Curve Pool States
 	crvTvl: Record<string, BigNumber>;
@@ -90,6 +92,7 @@ const initialState: ContractsState = {
 	bentRewardsUsd: {},
 	bentAprs: {},
 	bentAvgApr: 0,
+	bentTotalStaked: ethers.constants.Zero,
 
 	crvTvl: {},
 	crvApr: {},
@@ -224,5 +227,7 @@ export default createReducer(initialState, (builder) =>
 			const { tokenAddr, rewardUsd } = action.payload;
 			if (!state.bentRewardsUsd) state.bentRewardsUsd = {};
 			state.bentRewardsUsd[tokenAddr] = rewardUsd;
+		}).addCase(updateStakingPoolStakedBent, (state, action) => {
+			state.bentTotalStaked = action.payload;
 		})
 );

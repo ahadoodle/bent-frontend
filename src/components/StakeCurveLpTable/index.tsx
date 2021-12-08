@@ -44,15 +44,16 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">Total Earned (USD)</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(getSumBigNumbers(earns), 18, 2)}</span>
+									{formatBigNumber(getSumBigNumbers(earns), 18, 2).split('.')[0]}.
+									<span className="small">{formatBigNumber(getSumBigNumbers(earns), 18, 2).split('.')[1]}</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
 							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									<span className="h5">{avgApr}</span>
-									<span className="small">%</span>
+									{avgApr.toString().split('.')[0]}.
+									<span className="small">{avgApr.toString().split('.')[1]}%</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -60,7 +61,8 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">My Total Deposits</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2)}</span>
+									{formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2).split('.')[0]}.
+									<span className="small">{formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2).split('.')[1]}</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -70,7 +72,8 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								</span><br />
 								<b>
 									<span className="small">$</span>
-									<span className="h5">{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 0)}</span>
+									{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 2).split('.')[0]}.
+									<span className="small">{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 2).split('.')[1]}</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>

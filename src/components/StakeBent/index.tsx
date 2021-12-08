@@ -16,6 +16,7 @@ import {
 	useBentStaked,
 	useBentStakedUsd,
 	useBentStakingContract,
+	useBentTotalStaked,
 	useBentTvl,
 	useERC20Contract,
 	useGasPrice
@@ -35,6 +36,7 @@ export const StakeBent = (): React.ReactElement => {
 	const bentAvgApr = useBentAvgApr();
 	const rewardAprs = useBentRewardsAprs();
 	const earnedUsd = useBentEarnedUsd();
+	const bentTotalStaked = useBentTotalStaked();
 
 	const { library } = useActiveWeb3React();
 	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
@@ -123,38 +125,47 @@ export const StakeBent = (): React.ReactElement => {
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>Total Earned (USD)</p>
+										<p>Earned (USD)</p>
 										<div className="boldText">
 											<b>
-												<span className="small">$</span>{formatBigNumber(earnedUsd, 18, 2)}
+												<span className="small">$</span>
+												{formatBigNumber(earnedUsd, 18, 2).split('.')[0]}.
+												<span className="small">{formatBigNumber(earnedUsd, 18, 2).split('.')[1]}</span>
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>Average APR</p>
+										<p>APR</p>
 										<div className="boldText">
 											<b>
-												{bentAvgApr}<span className="small">%</span>
+												{bentAvgApr.toString().split('.')[0]}.
+												<span className="small">{bentAvgApr.toString().split('.')[1]} %</span>
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>My Staked BENT ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)})</p>
+										<p>My Staked ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)} BENT)</p>
 										<div className="boldText">
-											<span className="small">$</span><b>{formatBigNumber(bentstakedUsd, 18, 2)}</b>
+											<b>
+												<span className="small">$</span>
+												{formatBigNumber(bentstakedUsd, 18, 2).split('.')[0]}.
+												<span className="small">{formatBigNumber(bentstakedUsd, 18, 2).split('.')[1]}</span>
+											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>TVL</p>
+										<p>TVL ({formatBigNumber(bentTotalStaked, 18, 2)} BENT)</p>
 										<div className="boldText">
 											<b>
-												<span className="small">$</span>{formatMillionsBigNumber(tvl, 18, 2)}
+												<span className="small">$</span>
+												{formatMillionsBigNumber(tvl, 18, 2).split('.')[0]}.
+												<span className="small">{formatMillionsBigNumber(tvl, 18, 2).split('.')[1]}</span>
 											</b>
 										</div>
 									</div>
@@ -191,7 +202,7 @@ export const StakeBent = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Stake your <b>BENT</b> to earn a portion of the platforms revenue in:
+																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms revenue in:
 																</CardText>
 																<div className="bent-rewards-container">
 																	{POOLS.BentStaking.RewardAssets.map(key =>

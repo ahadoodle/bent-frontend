@@ -61,6 +61,10 @@ export const useBentEarnedUsd = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentEarnedUsd || ethers.constants.Zero));
 }
 
+export const useBentTotalStaked = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentTotalStaked || ethers.constants.Zero));
+}
+
 export function useCrvTvls(): Record<string, BigNumber> {
 	return useSelector((state: AppState) => state.contracts.crvTvl || {});
 }

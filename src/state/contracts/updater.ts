@@ -47,6 +47,7 @@ import {
 	updateStakingPoolEarningUsd,
 	updateStakingPoolRewards,
 	updateStakingPoolRewardsUsd,
+	updateStakingPoolStakedBent,
 } from './actions';
 
 export default function Updater(): null {
@@ -170,6 +171,7 @@ export default function Updater(): null {
 				const totalBentStaked = results[startIndex++];
 				const bentPoolTVL = bentPriceBN.mul(totalBentStaked).div(BigNumber.from(10).pow(18));
 				dispatch(updateStakingPoolDeposited(bentStaked));
+				dispatch(updateStakingPoolStakedBent(totalBentStaked));
 				dispatch(updateStakingPoolDepositedUsd(bentPriceBN.mul(bentStaked).div(BigNumber.from(10).pow(18))))
 				dispatch(updateStakingPoolTvl(bentPoolTVL));
 

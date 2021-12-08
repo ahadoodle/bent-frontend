@@ -133,17 +133,25 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						</div>
 					</Col>
 					<Col>
-						<b><span className="small">$</span>{formatBigNumber(earnedUsd, 18, 2)}</b>
+						<b>
+							<span className="small">$</span>
+							{formatBigNumber(earnedUsd, 18, 2).split('.')[0]}.
+							<span className="small">{formatBigNumber(earnedUsd, 18, 2).split('.')[1]}</span>
+						</b>
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{apr}<span className="small">%</span></> : 'TBC'}
+							{apr ? <>
+								{apr.toString().split('.')[0]}.
+								<span className="small">{apr.toString().split('.')[1]} %</span>
+							</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
 						<b>
 							<span className="small">$</span>
-							{formatBigNumber(BigNumber.from(stakedUsd), 18, 2)}
+							{formatBigNumber(stakedUsd, 18, 2).split('.')[0]}.
+							<span className="small">{formatBigNumber(stakedUsd, 18, 2).split('.')[1]}</span>
 						</b><br />
 						<span className="small text-muted">
 							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
@@ -152,11 +160,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<div className="tvlText">
-							<b><span className="small">$</span>{formatMillionsBigNumber(tvl, 18, 0)}</b>
-							<i
-								className="fa fa-caret-down"
-								aria-hidden="true"
-							></i>
+							<b>
+								<span className="small">$</span>
+								{formatMillionsBigNumber(tvl, 18, 2).split('.')[0]}.
+								<span className="small">{formatMillionsBigNumber(tvl, 18, 2).split('.')[1]}</span>
+							</b>
+							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>
 					</Col>
 				</Row>

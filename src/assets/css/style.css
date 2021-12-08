@@ -396,6 +396,7 @@ table.tokentable.table td span {
     font-size: 12px;
 }
 .tokentable.table .thead b .small {
+    font-size: 14px;
     font-weight: 500;
 }
 .tokentable.table b {
