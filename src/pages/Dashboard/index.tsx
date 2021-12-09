@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import "font-awesome/css/font-awesome.min.css";
 import { StakeCurveLpTable } from "components/StakeCurveLpTable";
-// import { ConvertCrv } from 'components/ConvertCrv';
+import { StakeBentCVX } from 'components/StakeBentCVX';
 import { StakeBent } from 'components/StakeBent';
 import { StakeSushiLpTable } from "components/StakeSushiLpTable";
 import BannerBlocks from "components/BannerBlocks";
@@ -22,7 +22,9 @@ const Dashboard = () => {
 
       <div className="contentSection">
         <StakeBent />
-        {/* <ConvertCrv /> */}
+        <div className="section">
+          <StakeBentCVX />
+        </div>
         <div className="section">
           <StakeCurveLpTable />
         </div>

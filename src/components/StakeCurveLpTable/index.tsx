@@ -5,6 +5,7 @@ import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
 import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls, useSortedCrvPoolKeys } from "hooks";
 import { MorePoolsRow } from "components/MorePoolsRow";
+import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
@@ -80,8 +81,14 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 						</Row>
 						<Card>
 							<CardBody>
-								{
-									keys.map((poolName, index) =>
+								{keys.map((poolName, index) =>
+									POOLS.BentPools[poolName].isBentCvx ?
+										<StakeBentCvxCurveLpItem
+											poolInfo={POOLS.BentPools[poolName]}
+											poolKey={poolName}
+											key={poolName}
+											visible={index < 5 || showAll}
+										/> :
 										<StakeCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}
 											poolKey={poolName}

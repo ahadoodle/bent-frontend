@@ -7,6 +7,7 @@ import { useCrvPoolEarns, useCrvPoolDepositedUsds, useCrvAverageApr, useSortedCr
 import { formatBigNumber, getSumBigNumbers } from "utils";
 import { MorePoolsRow } from "components/MorePoolsRow";
 import { DecimalSpan } from "components/DecimalSpan";
+import { ClaimBentCvxCurveLpItem } from "./bentcvxItem";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
@@ -81,12 +82,19 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 						<Card>
 							<CardBody>
 								{keys.map((poolName, index) =>
-									<ClaimCurveLpItem
-										poolInfo={POOLS.BentPools[poolName]}
-										poolKey={poolName}
-										key={poolName}
-										visible={index < 5 || showAll}
-									/>)
+									POOLS.BentPools[poolName].isBentCvx ?
+										<ClaimBentCvxCurveLpItem
+											poolInfo={POOLS.BentPools[poolName]}
+											poolKey={poolName}
+											key={poolName}
+											visible={index < 5 || showAll}
+										/> :
+										<ClaimCurveLpItem
+											poolInfo={POOLS.BentPools[poolName]}
+											poolKey={poolName}
+											key={poolName}
+											visible={index < 5 || showAll}
+										/>)
 								}
 								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} />
 							</CardBody>

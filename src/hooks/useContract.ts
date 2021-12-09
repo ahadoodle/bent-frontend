@@ -3,32 +3,39 @@ import { useActiveWeb3React, useWeb3 } from 'hooks';
 import { Contract } from 'ethers';
 import { Contract as Web3Contract } from 'web3-eth-contract';
 import {
-	getBentPool,
-	getERC20,
-	getBentMasterChef,
 	getCrvFiLp,
-	getBentStakingContract
 } from 'utils';
-import { POOLS } from 'constant';
+import { POOLS, TOKENS } from 'constant';
+import { ABIS } from 'abis';
 
 export const useBentPoolContract = (poolName: string): Contract => {
 	const { library } = useActiveWeb3React();
-	return useMemo(() => getBentPool(poolName, library), [library, poolName]);
+	return useMemo(() => new Contract(POOLS.BentPools[poolName].POOL, ABIS.BentBasePool, library), [library, poolName]);
 }
 
 export const useERC20Contract = (address: string): Contract => {
 	const { library } = useActiveWeb3React();
-	return useMemo(() => getERC20(address, library), [library, address]);
+	return useMemo(() => new Contract(address, ABIS.ERC20, library), [library, address]);
+}
+
+export const useBentCVXContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(TOKENS['BENTCVX'].ADDR, ABIS.BentCVX, library), [library]);
 }
 
 export const useBentMasterChefContract = (): Contract => {
 	const { library } = useActiveWeb3React();
-	return useMemo(() => getBentMasterChef(library), [library]);
+	return useMemo(() => new Contract(POOLS.SushiPools.MasterChef, ABIS.BentMasterChef, library), [library]);
+}
+
+export const useBentCvxMasterChefContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.BentPools['BENTCVX'].POOL, ABIS.BentMasterChef, library), [library]);
 }
 
 export const useBentStakingContract = (): Contract => {
 	const { library } = useActiveWeb3React();
-	return useMemo(() => getBentStakingContract(library), [library]);
+	return useMemo(() => new Contract(POOLS.BentStaking.POOL, ABIS.BentSingleStaking, library), [library]);
 }
 
 export const useCrvFiLp = (address: string): Web3Contract => {

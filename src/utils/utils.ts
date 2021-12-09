@@ -69,6 +69,8 @@ export const formatMillionsBigNumber = (value?: BigNumber, units = 18, displayDe
 export const getCrvDepositLink = (tokenName: string): string => {
 	if (tokenName === 'cvxcrv')
 		return `https://curve.fi/factory/22/deposit`;
+	else if (tokenName === 'bentcvx')
+		return 'https://curve.fi/factory/76/deposit';
 	else
 		return `https://curve.fi/${tokenName}/deposit`;
 }
@@ -107,6 +109,9 @@ export const getTokenDecimals = (addr: string): number => {
 export const getTokenPrice = (tokenPrices: Record<string, number>, addr: string): BigNumber => {
 	if (addr === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE') // Black Hole
 		addr = TOKENS['WETH'].ADDR;
+	else if (addr.toLowerCase() === TOKENS['BENTCVX'].ADDR.toLowerCase()) {
+		addr = TOKENS['CVX'].ADDR;
+	}
 	const price = tokenPrices[addr.toLowerCase()];
 	if (!price) return ethers.constants.Zero;
 	return utils.parseUnits(price.toString());

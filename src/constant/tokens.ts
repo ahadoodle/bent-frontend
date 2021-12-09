@@ -91,5 +91,10 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.STETH,
 		ADDR: '0xae7ab96520de3a18e5e111b5eaab095312d7fe84',
 		DECIMALS: 18
+	},
+	BENTCVX: {
+		LOGO: TOKEN_LOGO.BENT,
+		ADDR: '0x9e0441e084f5db0606565737158aa6ab6b970fe0',
+		DECIMALS: 18
 	}
 }
