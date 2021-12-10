@@ -146,13 +146,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(rewards, 18, 2)} BENT
+							{rewards.isZero() ? '--' : formatBigNumber(rewards, 18, 2)} BENT
 						</span>
 					</Col>
 					<Col>
 						<b>
-							<DecimalSpan value={utils.commify(apr)} />
-							<span className="small"> %</span>
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -161,14 +160,14 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
+							{depositedLp.isZero() ? '--' : formatBigNumber(depositedLp, 18, 2)} {symbol}
 						</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 0)} />
+								{formatMillionsBigNumber(tvl, 18, 0)}
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>

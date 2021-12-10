@@ -16,7 +16,7 @@ import {
 	useActiveWeb3React,
 	useBentStakingContract,
 } from 'hooks';
-import { ethers, BigNumber } from "ethers";
+import { ethers, BigNumber, utils } from "ethers";
 import { ClaimBentRewardItem } from "./item";
 import { DecimalSpan } from "components/DecimalSpan";
 
@@ -113,8 +113,7 @@ export const ClaimBent = (): React.ReactElement => {
 										<p>APR</p>
 										<div className="boldText">
 											<b>
-												<DecimalSpan value={bentAvgApr.toString()} />
-												<span className="small"> %</span>
+												{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
 											</b>
 										</div>
 									</div>

@@ -24,6 +24,7 @@ import {
 	useCrvTvl,
 	useGasPrice,
 	useERC20Contract,
+	useGasFeeData,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -44,6 +45,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentPoolContract(props.poolKey);
 	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const depositedLp = useCrvDeposit(props.poolKey);
 	const symbol = props.poolInfo.CrvLpSYMBOL;
@@ -82,8 +84,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
 		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		const res = await tx.wait();
 		if (res) {
@@ -144,10 +147,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>
-								<DecimalSpan value={apr.toString()} />
-								<span className="small"> %</span>
-							</> : 'TBC'}
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -156,7 +156,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
+							{BigNumber.from(depositedLp).isZero() ? '--' : formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
 							<span className="text-bold"> {symbol}</span>
 						</span>
 					</Col>
@@ -164,7 +164,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
+								{formatMillionsBigNumber(tvl, 18, 2)}
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>

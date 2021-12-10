@@ -140,8 +140,7 @@ export const StakeBent = (): React.ReactElement => {
 										<p>APR</p>
 										<div className="boldText">
 											<b>
-												<DecimalSpan value={bentAvgApr.toString()} />
-												<span className="small"> %</span>
+												{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
 											</b>
 										</div>
 									</div>
@@ -163,7 +162,7 @@ export const StakeBent = (): React.ReactElement => {
 										<div className="boldText">
 											<b>
 												<span className="small">$</span>
-												<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
+												{formatMillionsBigNumber(tvl, 18, 2)}
 											</b>
 										</div>
 									</div>
@@ -200,7 +199,7 @@ export const StakeBent = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms revenue in:
+																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms earnings in:
 																</CardText>
 																<div className="bent-rewards-container">
 																	{POOLS.BentStaking.RewardAssets.map(key =>

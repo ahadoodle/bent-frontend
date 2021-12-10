@@ -144,10 +144,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>
-								<DecimalSpan value={apr.toString()} />
-								<span className="small"> %</span>
-							</> : 'TBC'}
+							{apr ? <>{apr.toString()}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -156,15 +153,14 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
-							<span className="text-bold"> {symbol}</span>
+							{depositedLp.isZero() ? '--' : formatBigNumber(depositedLp, 18, 2)} {symbol}
 						</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
+								{formatMillionsBigNumber(tvl, 18, 2)}
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>
@@ -208,7 +204,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 													Curve {props.poolInfo.Name} pool
 												</OutterLink>
 												&nbsp;(without staking in the Curve gauge),
-												and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
+												and then stake  your {symbol} tokens here to earn Bent.
 											</CardText>
 										</Card>
 									</Col>

@@ -91,10 +91,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>
-								<DecimalSpan value={apr.toString()} />
-								<span className="small"> %</span>
-							</> : 'TBC'}
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -103,7 +100,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
+							{depositedLp.isZero() ? '--' : formatBigNumber(depositedLp, 18, 2)}
 							<span className="text-bold"> {symbol}</span>
 						</span>
 					</Col>

@@ -70,14 +70,13 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(rewards))}
+							{rewards.isZero() ? '--' : formatBigNumber(BigNumber.from(rewards))}
 							<span className="small text-bold"> BENT</span>
 						</span>
 					</Col>
 					<Col>
 						<b>
-							<DecimalSpan value={utils.commify(apr)} />
-							<span className="small"> %</span>
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -86,7 +85,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
+							{depositedLp.isZero() ? '--' : formatBigNumber(depositedLp, 18, 2)} {symbol}
 						</span>
 					</Col>
 					<Col>
