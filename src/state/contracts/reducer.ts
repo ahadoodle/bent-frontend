@@ -13,7 +13,6 @@ import {
 	updateCrvPoolEarnedUsd,
 	updateCrvPoolRewards,
 	updateCrvPoolTVL,
-	updateCvxLpBalance,
 	updateSushiLpDeposited,
 	updateSushiLpDepositedUsd,
 	updateSushiPoolApr,
@@ -30,6 +29,8 @@ import {
 	updateStakingPoolEarningUsd,
 	updateStakingPoolRewards,
 	updateStakingPoolRewardsUsd,
+	updateStakingPoolStakedBent,
+	updateBentCvxAllowance,
 } from './actions';
 import { TOKENS } from 'constant';
 
@@ -54,12 +55,15 @@ export interface ContractsState {
 	bentRewardsUsd: Record<string, BigNumber>,
 	bentAvgApr: number,
 	bentAprs: Record<string, number>,
+	bentTotalStaked: BigNumber,
+
+	// BentCVX Staking Pool States
+	bentCvxAllowance: BigNumber,
 
 	// Curve Pool States
 	crvTvl: Record<string, BigNumber>;
 	crvApr: Record<string, number>;
 	crvDeposit: Record<string, BigNumber>;
-	cvxLpBalance: Record<string, BigNumber>;			// Crv lp balance deposited on Cvx pool
 	crvPoolRewards: Record<string, BigNumber[]>;	// Crv Pool Rewards
 	bentPoolRewardsInfo: Record<string, BentPoolReward[]>;
 	crvLpAllowance: Record<string, BigNumber>;
@@ -90,11 +94,13 @@ const initialState: ContractsState = {
 	bentRewardsUsd: {},
 	bentAprs: {},
 	bentAvgApr: 0,
+	bentTotalStaked: ethers.constants.Zero,
+
+	bentCvxAllowance: ethers.constants.Zero,
 
 	crvTvl: {},
 	crvApr: {},
 	crvDeposit: {},
-	cvxLpBalance: {},
 	crvPoolRewards: {},
 	bentPoolRewardsInfo: {},
 	crvLpAllowance: {},
@@ -148,10 +154,6 @@ export default createReducer(initialState, (builder) =>
 			const { poolKey, deposit } = action.payload;
 			if (!state.crvDeposit) state.crvDeposit = {};
 			state.crvDeposit[poolKey] = deposit;
-		}).addCase(updateCvxLpBalance, (state, action) => {
-			const { poolKey, deposit } = action.payload;
-			if (!state.cvxLpBalance) state.cvxLpBalance = {};
-			state.cvxLpBalance[poolKey] = deposit;
 		}).addCase(updateCrvPoolRewards, (state, action) => {
 			const { poolKey, rewards } = action.payload;
 			if (!state.crvPoolRewards) state.crvPoolRewards = {};
@@ -224,5 +226,11 @@ export default createReducer(initialState, (builder) =>
 			const { tokenAddr, rewardUsd } = action.payload;
 			if (!state.bentRewardsUsd) state.bentRewardsUsd = {};
 			state.bentRewardsUsd[tokenAddr] = rewardUsd;
+		}).addCase(updateStakingPoolStakedBent, (state, action) => {
+			state.bentTotalStaked = action.payload;
+		})
+
+		.addCase(updateBentCvxAllowance, (state, action) => {
+			state.bentCvxAllowance = action.payload;
 		})
 );

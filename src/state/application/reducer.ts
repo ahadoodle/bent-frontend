@@ -24,6 +24,14 @@ export interface ApplicationState {
   settingsMenuOpen: boolean;
 
   gasPrice: BigNumber;
+  maxFeePerGas: BigNumber;
+  maxPriorityFeePerGas: BigNumber;
+}
+
+export type GasFeeData = {
+  gasPrice: BigNumber;
+  maxFeePerGas: BigNumber;
+  maxPriorityFeePerGas: BigNumber;
 }
 
 const initialState: ApplicationState = {
@@ -33,6 +41,8 @@ const initialState: ApplicationState = {
   settingsMenuOpen: false,
 
   gasPrice: ethers.constants.Zero,
+  maxFeePerGas: ethers.constants.Zero,
+  maxPriorityFeePerGas: ethers.constants.Zero,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -72,6 +82,9 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(updateGasPrice, (state, action) => {
-      state.gasPrice = action.payload.gasPrice;
+      const { gasPrice, maxFeePerGas, maxPriorityFeePerGas } = action.payload;
+      state.gasPrice = gasPrice;
+      state.maxFeePerGas = maxFeePerGas;
+      state.maxPriorityFeePerGas = maxPriorityFeePerGas;
     })
 );

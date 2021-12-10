@@ -51,9 +51,11 @@ const BannerBlocks = (): React.ReactElement => {
                 <div className="mx-3">
                   <p>Bent TVL</p>
                   <h2>
-                    <span>$</span>
-                    <b>{totalTvl().split('.')[0]}</b>
-                    <span>.{totalTvl().split('.')[1]}</span>
+                    <b>
+                      <span className="small">$</span>
+                      {totalTvl().split('.')[0]}.
+                      <span className="small">{totalTvl().split('.')[1]}</span>
+                    </b>
                   </h2>
                 </div>
               </div>
@@ -67,9 +69,11 @@ const BannerBlocks = (): React.ReactElement => {
                 <div className="mx-3">
                   <p>My Claimable</p>
                   <h2>
-                    <span>$</span>
-                    <b>{totalEarnings().split('.')[0]}</b>
-                    <span>.{totalEarnings().split('.')[1]}</span>
+                    <b>
+                      <span className="small">$</span>
+                      {totalEarnings().split('.')[0]}.
+                      <span className="small">{totalEarnings().split('.')[1]}</span>
+                    </b>
                   </h2>
                 </div>
               </div>
@@ -81,9 +85,11 @@ const BannerBlocks = (): React.ReactElement => {
                 <div className="mx-3">
                   <p>My Deposits</p>
                   <h2>
-                    <span>$</span>
-                    <b>{totalDeposits().split('.')[0]}</b>
-                    <span>.{totalDeposits().split('.')[1]}</span>
+                    <b>
+                      <span className="small">$</span>
+                      {totalDeposits().split('.')[0]}.
+                      <span className="small">{totalDeposits().split('.')[1]}</span>
+                    </b>
                   </h2>
                 </div>
               </div>
