@@ -93,7 +93,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		DECIMALS: 18
 	},
 	BENTCVX: {
-		LOGO: TOKEN_LOGO.BENT,
+		LOGO: TOKEN_LOGO.BENTCVX,
 		ADDR: '0x9e0441e084f5db0606565737158aa6ab6b970fe0',
 		DECIMALS: 18
 	}

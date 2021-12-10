@@ -14,6 +14,17 @@ export interface BentPool {
 }
 
 const BentPools: Record<string, BentPool> = {
+	BENTCVX: {
+		LOGO: TOKEN_LOGO.CVX,
+		Name: 'bentcvx',
+		POOL: '0xfeaea5e904d6e8b88888ea1101c59f4084a94557',
+		DepositAsset: '0xf083fba98ded0f9c970e5a418500bad08d8b9732', // Curve.fi USD-BTC-ETH (crv3crypto)
+		CvxRewardsAddr: '',
+		RewardsAssets: ['BENT'],
+		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'bentcvxCrv',
+		isBentCvx: true,
+	},
 	CRV: {
 		LOGO: TOKEN_LOGO.CRV,
 		Name: 'cvxcrv',
@@ -75,17 +86,6 @@ const BentPools: Record<string, BentPool> = {
 		CrvMinter: '0xd51a44d3fae010294c616388b506acda1bfaae46',
 		CrvCoinsLength: 3,
 		CrvLpSYMBOL: '3CrvCrypto2'
-	},
-	BENTCVX: {
-		LOGO: TOKEN_LOGO.BENT,
-		Name: 'bentcvx',
-		POOL: '0xfeaea5e904d6e8b88888ea1101c59f4084a94557',
-		DepositAsset: '0xf083fba98ded0f9c970e5a418500bad08d8b9732', // Curve.fi USD-BTC-ETH (crv3crypto)
-		CvxRewardsAddr: '',
-		RewardsAssets: ['BENT'],
-		CrvCoinsLength: 2,
-		CrvLpSYMBOL: 'bentcvxCrv',
-		isBentCvx: true,
 	},
 }
 
