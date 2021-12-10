@@ -100,6 +100,11 @@ export const StakeBentCVX = (): React.ReactElement => {
 	}
 
 	const onOpen = () => {
+		// $('html,body').animate({
+		// 	scrollTop: $('#toggleInner-stake-curve-lp-bentcvx').offset()?.top
+		// }, 'fast', function () {
+		// 	$('#toggleInner-stake-curve-lp-bentcvx').trigger('collapse');
+		// });
 		window.open('https://curve.fi/factory/76/deposit', '_blank');
 	}
 
@@ -211,7 +216,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																			<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 																		</div>
 																		<div className="btnouter">
-																			<p className="lineup"></p>
+																			<p className="lineup" style={{ width: 175, marginLeft: 75 }}></p>
 																			<div className="btnwrapper">
 																				<Button
 																					className="approvebtn"
@@ -223,7 +228,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					onClick={approve}
 																				>Approve</Button>
 																				<Button
-																					className="approvebtn"
+																					className="approvebtn mx-3"
 																					disabled={
 																						cvxBalance.isZero() || !isApproved ||
 																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
@@ -231,6 +236,11 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					}
 																					onClick={convert}
 																				>Convert</Button>
+																				<Button
+																					className="approvebtn"
+																					disabled={true}
+																					style={{ lineHeight: 0.8 }}
+																				>Stake <br /><span style={{ fontSize: 10 }}>(Coming soon)</span></Button>
 																			</div>
 																			<div className="btnwrapper">
 																				<Button
