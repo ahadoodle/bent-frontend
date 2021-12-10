@@ -22,7 +22,7 @@ import {
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
-	useGasPrice,
+	useGasFeeData,
 	useERC20Contract,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
@@ -43,7 +43,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const { library } = useActiveWeb3React();
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentCvxMasterChefContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const depositedLp = useCrvDeposit(props.poolKey);
 	const symbol = props.poolInfo.CrvLpSYMBOL;
@@ -82,8 +82,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
 		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		const res = await tx.wait();
 		if (res) {
@@ -96,8 +97,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
 		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		})
 		const res = await tx.wait();
 		if (res) {
@@ -111,8 +113,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
 		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		})
 		const res = await tx.wait();
 		if (res) {

@@ -9,7 +9,7 @@ import {
 	useCrvDeposit,
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
-	useGasPrice,
+	useGasFeeData,
 	useTokenPrices,
 	useCrvPoolRewards,
 	useCrvApr
@@ -33,7 +33,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
 	const bentPool = useBentCvxMasterChefContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 	const tokenPrices = useTokenPrices();
 	const symbol = props.poolInfo.CrvLpSYMBOL;
 	const depositedLp = useCrvDeposit(props.poolKey);
@@ -64,7 +64,11 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const account = await signer.getAddress();
 		const gas = await bentPool.connect(signer).estimateGas.claim(0, account);
-		await bentPool.connect(signer).claim(0, account, { gasPrice, gasLimit: gas });
+		await bentPool.connect(signer).claim(0, account, {
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
+		});
 	}
 
 	return (

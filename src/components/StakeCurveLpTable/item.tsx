@@ -22,7 +22,6 @@ import {
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
-	useGasPrice,
 	useERC20Contract,
 	useGasFeeData,
 } from "hooks";
@@ -44,7 +43,6 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const { library } = useActiveWeb3React();
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentPoolContract(props.poolKey);
-	const gasPrice = useGasPrice();
 	const gasData = useGasFeeData();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const depositedLp = useCrvDeposit(props.poolKey);
@@ -99,8 +97,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18))
 		const tx = await bentPool.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		})
 		const res = await tx.wait();
 		if (res) {
@@ -114,8 +113,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18))
 		const tx = await bentPool.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		})
 		const res = await tx.wait();
 		if (res) {

@@ -14,7 +14,7 @@ import {
 	useBentStaked,
 	useBentStakingContract,
 	useERC20Contract,
-	useGasPrice
+	useGasFeeData
 } from "hooks";
 import { ethers, utils } from "ethers";
 
@@ -30,7 +30,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
 	const bentCVX = useBentCVXContract();
 	const bentStakingContract = useBentStakingContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
@@ -61,8 +61,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await cvxToken.connect(signer).estimateGas.approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256);
 		const tx = await cvxToken.connect(signer).approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256, {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		const res = await tx.wait();
 		if (res) {
@@ -75,8 +76,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentCVX.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
 		const tx = await bentCVX.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		const res = await tx.wait();
 		if (res) {
@@ -90,8 +92,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
 		const tx = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		const res = await tx.wait();
 		if (res) {

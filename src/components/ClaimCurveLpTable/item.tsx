@@ -9,10 +9,10 @@ import {
 	useCrvDeposit,
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
-	useGasPrice,
 	useTokenPrices,
 	useCrvPoolRewards,
-	useCrvApr
+	useCrvApr,
+	useGasFeeData
 } from "hooks";
 import {
 	formatBigNumber,
@@ -33,7 +33,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
 	const bentPool = useBentPoolContract(props.poolKey);
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 	const tokenPrices = useTokenPrices();
 	const symbol = props.poolInfo.CrvLpSYMBOL;
 	const depositedLp = useCrvDeposit(props.poolKey);
@@ -63,7 +63,11 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.harvest();
-		await bentPool.connect(signer).harvest({ gasPrice, gasLimit: gas });
+		await bentPool.connect(signer).harvest({
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
+		});
 	}
 
 	return (
