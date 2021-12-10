@@ -255,7 +255,7 @@ h2.white {
     margin-top: 0px;
 }
 .section {
-    margin-top: 120px;
+    margin-top: 70px;
 }
 .infoWrap p {
     font-weight: 500;
@@ -396,6 +396,7 @@ table.tokentable.table td span {
     font-size: 12px;
 }
 .tokentable.table .thead b .small {
+    font-size: 14px;
     font-weight: 500;
 }
 .tokentable.table b {
@@ -490,6 +491,15 @@ tr:hover {
     width: 28px;
     height: 28px;
     padding: 0;
+    margin-top: 5px;
+}
+.bentCVX .bent-rewards-item {
+    display: block;
+}
+.bentCVX .bent-rewards-item img {
+    width: auto;
+    height: 20px;
+    margin: 0;
 }
 .bent-rewards-item p.apr,
 .bent-rewards-item p.rewards-token {

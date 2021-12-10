@@ -18,6 +18,7 @@ import {
 } from 'hooks';
 import { ethers, BigNumber } from "ethers";
 import { ClaimBentRewardItem } from "./item";
+import { DecimalSpan } from "components/DecimalSpan";
 
 export const ClaimBent = (): React.ReactElement => {
 	const [claimBtnText, setClaimBtnText] = useState('Claim');
@@ -47,9 +48,11 @@ export const ClaimBent = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		if (checkAll) {
-			await bentStakingContract.connect(signer).claimAll({ gasPrice });
+			const gas = await bentStakingContract.connect(signer).estimateGas.claimAll();
+			await bentStakingContract.connect(signer).claimAll({ gasPrice, gasLimit: gas });
 		} else {
-			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasPrice });
+			const gas = await bentStakingContract.connect(signer).estimateGas.claim(checkedIndexes());
+			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasPrice, gasLimit: gas });
 		}
 	}
 
@@ -96,29 +99,34 @@ export const ClaimBent = (): React.ReactElement => {
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>Total Earned (USD)</p>
+										<p>Earned (USD)</p>
 										<div className="boldText">
 											<b>
-												<span className="small">$</span>{formatBigNumber(earnedUsd, 18, 2)}
+												<span className="small">$</span>
+												<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>Average APR</p>
+										<p>APR</p>
 										<div className="boldText">
 											<b>
-												{bentAvgApr}<span className="small">%</span>
+												<DecimalSpan value={bentAvgApr.toString()} />
+												<span className="small"> %</span>
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>My Staked BENT ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)})</p>
+										<p>My Staked ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)} BENT)</p>
 										<div className="boldText">
-											<span className="small">$</span><b>{formatBigNumber(bentstakedUsd, 18, 2)}</b>
+											<b>
+												<span className="small">$</span>
+												<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
+											</b>
 										</div>
 									</div>
 								</Col>
@@ -144,6 +152,7 @@ export const ClaimBent = (): React.ReactElement => {
 													<div className="bent-rewards-container">
 														{POOLS.BentStaking.RewardAssets.map((key, index) =>
 															<ClaimBentRewardItem
+																key={key}
 																index={index}
 																tokenKey={key}
 																apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}

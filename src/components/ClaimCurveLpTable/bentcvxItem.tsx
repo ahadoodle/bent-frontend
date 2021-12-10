@@ -5,7 +5,7 @@ import {
 } from "reactstrap";
 import {
 	useActiveWeb3React,
-	useBentPoolContract,
+	useBentCvxMasterChefContract,
 	useCrvDeposit,
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
@@ -28,11 +28,11 @@ interface Props {
 	visible: boolean
 }
 
-export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
+export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
-	const bentPool = useBentPoolContract(props.poolKey);
+	const bentPool = useBentCvxMasterChefContract();
 	const gasPrice = useGasPrice();
 	const tokenPrices = useTokenPrices();
 	const symbol = props.poolInfo.CrvLpSYMBOL;
@@ -62,8 +62,9 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const claim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await bentPool.connect(signer).estimateGas.harvest();
-		await bentPool.connect(signer).harvest({ gasPrice, gasLimit: gas });
+		const account = await signer.getAddress();
+		const gas = await bentPool.connect(signer).estimateGas.claim(0, account);
+		await bentPool.connect(signer).claim(0, account, { gasPrice, gasLimit: gas });
 	}
 
 	return (

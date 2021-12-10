@@ -7,6 +7,7 @@ import DepositIcon from "assets/images/depositIcon.svg";
 import { useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTvls, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
 import { formatBigNumber, getSumBigNumbers } from "utils";
 import LockIcon from "assets/images/lockIcon.svg";
+import { DecimalSpan } from "components/DecimalSpan";
 // import DbIcon from "assets/images/dbIcon.svg";
 
 const BannerBlocks = (): React.ReactElement => {
@@ -51,9 +52,10 @@ const BannerBlocks = (): React.ReactElement => {
                 <div className="mx-3">
                   <p>Bent TVL</p>
                   <h2>
-                    <span>$</span>
-                    <b>{totalTvl().split('.')[0]}</b>
-                    <span>.{totalTvl().split('.')[1]}</span>
+                    <b>
+                      <span className="small">$</span>
+                      <DecimalSpan value={totalTvl()} />
+                    </b>
                   </h2>
                 </div>
               </div>
@@ -67,9 +69,10 @@ const BannerBlocks = (): React.ReactElement => {
                 <div className="mx-3">
                   <p>My Claimable</p>
                   <h2>
-                    <span>$</span>
-                    <b>{totalEarnings().split('.')[0]}</b>
-                    <span>.{totalEarnings().split('.')[1]}</span>
+                    <b>
+                      <span className="small">$</span>
+                      <DecimalSpan value={totalEarnings()} />
+                    </b>
                   </h2>
                 </div>
               </div>
@@ -81,9 +84,10 @@ const BannerBlocks = (): React.ReactElement => {
                 <div className="mx-3">
                   <p>My Deposits</p>
                   <h2>
-                    <span>$</span>
-                    <b>{totalDeposits().split('.')[0]}</b>
-                    <span>.{totalDeposits().split('.')[1]}</span>
+                    <b>
+                      <span className="small">$</span>
+                      <DecimalSpan value={totalDeposits()} />
+                    </b>
                   </h2>
                 </div>
               </div>

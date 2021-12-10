@@ -1,59 +1,57 @@
-import React, { useState } from "react"
-import styled from "styled-components";
+import React, { useState } from "react";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
-import { BigNumber, ethers, utils } from 'ethers';
-import { POOLS, SushiPool, TOKENS } from "constant"
 import classnames from "classnames";
+import styled from "styled-components";
+import {
+	formatBigNumber,
+	getCrvDepositLink,
+	getEtherscanLink,
+	formatMillionsBigNumber,
+} from "utils";
+import { BigNumber, ethers, utils } from 'ethers';
 import {
 	useActiveWeb3React,
 	useBalance,
-	useBentMasterChefContract,
-	useERC20Contract,
-	useGasPrice,
+	useBentCvxMasterChefContract,
+	useCrvApr,
+	useCrvDeposit,
 	usePoolAllowance,
-	useSushiApr,
-	useSushiLpDeposited,
-	useSushiPoolDepositedUsd,
-	useSushiPoolEarnedUsd,
-	useSushiPoolRewards,
-	useSushiTvl,
+	useCrvPoolDepositedUsd,
+	useCrvPoolEarnedUsd,
+	useCrvTvl,
+	useGasPrice,
+	useERC20Contract,
 } from "hooks";
-import {
-	formatBigNumber,
-	formatMillionsBigNumber,
-	getEtherscanLink,
-} from "utils";
+import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
 
-
 interface Props {
-	poolInfo: SushiPool
+	poolInfo: BentPool
 	poolKey: string
+	visible: boolean
 }
 
-export const StakeSushiLpItem = (props: Props): React.ReactElement => {
-	const symbol = props.poolInfo.Name + ' SLP';
+export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-
 	const { library } = useActiveWeb3React();
-	const sushiLpToken = useERC20Contract(props.poolInfo.DepositAsset);
-	const masterChef = useBentMasterChefContract();
+	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
+	const bentPool = useBentCvxMasterChefContract();
 	const gasPrice = useGasPrice();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
+	const depositedLp = useCrvDeposit(props.poolKey);
+	const symbol = props.poolInfo.CrvLpSYMBOL;
 	const allowance = usePoolAllowance(props.poolKey);
-	const depositedLp = useSushiLpDeposited(props.poolKey);
-	const tvl = useSushiTvl(props.poolKey);
-	const apr = useSushiApr(props.poolKey);
-	const earned = useSushiPoolEarnedUsd(props.poolKey);
-	const rewards = useSushiPoolRewards(props.poolKey);
-	const stakedUsd = useSushiPoolDepositedUsd(props.poolKey);
+	const tvl = useCrvTvl(props.poolKey);
+	const apr = useCrvApr(props.poolKey);
+	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
+	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -63,7 +61,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		setStakeAmount(value);
 		if (isNaN(parseFloat(value))) return;
 		const amountBN = utils.parseUnits(value, 18);
-		setIsApproved(BigNumber.from(allowance).gte(amountBN) && !amountBN.isZero());
+		setIsApproved(allowance.gte(amountBN) && !amountBN.isZero());
 	}
 
 	const onWithdrawAmountChange = (value) => {
@@ -71,20 +69,19 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const onStakeMax = () => {
-		const lpBalance_display = BigNumber.from(lpBalance);
-		setStakeAmount(formatBigNumber(lpBalance_display, 18, 18).replaceAll(',', ''));
-		setIsApproved(BigNumber.from(allowance).gte(lpBalance_display) && !lpBalance_display.isZero());
+		setStakeAmount(formatBigNumber(lpBalance, 18, 18).replaceAll(',', ''));
+		setIsApproved(allowance.gte(lpBalance) && !lpBalance.isZero());
 	}
 
 	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(BigNumber.from(depositedLp), 18, 18).replaceAll(',', ''));
+		setWithdrawAmount(formatBigNumber(depositedLp, 18, 18).replaceAll(',', ''));
 	}
 
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await sushiLpToken.connect(signer).estimateGas.approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
-		const tx = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256, {
+		const gas = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
+		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
 			gasPrice,
 			gasLimit: gas
 		});
@@ -97,11 +94,11 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await masterChef.connect(signer).estimateGas.deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
-		const tx = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18), {
+		const gas = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
+		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), {
 			gasPrice,
 			gasLimit: gas
-		});
+		})
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
@@ -112,11 +109,11 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await masterChef.connect(signer).estimateGas.withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
-		const tx = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18), {
+		const gas = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
+		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), {
 			gasPrice,
 			gasLimit: gas
-		});
+		})
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
@@ -124,35 +121,33 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'}`}>
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
-				id={`toggleInner-stake-sushi-lp-${props.poolKey}`}
+				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 				style={{ marginBottom: "1rem" }}
 			>
 				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
-							<PoolLogo src={props.poolInfo.LOGO[0]} alt="" />
-							<PoolLogo src={props.poolInfo.LOGO[1]} alt="" style={{ marginLeft: -20 }} />
+							<PoolLogo src={props.poolInfo.LOGO} alt="" />
 							<h4>{props.poolInfo.Name}</h4>
 						</div>
 					</Col>
 					<Col>
 						<b>
 							<span className="small">$</span>
-							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
-						</b><br />
-						<span className="small text-muted">
-							{formatBigNumber(rewards, 18, 2)} BENT
-						</span>
+							<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+						</b>
 					</Col>
 					<Col>
 						<b>
-							<DecimalSpan value={utils.commify(apr)} />
-							<span className="small"> %</span>
+							{apr ? <>
+								<DecimalSpan value={apr.toString()} />
+								<span className="small"> %</span>
+							</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -161,14 +156,15 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
+							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
+							<span className="text-bold"> {symbol}</span>
 						</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 0)} />
+								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>
@@ -177,7 +173,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 			</Wrapper>
 			<InnerWrapper
 				className="innerAccordian"
-				toggler={`#toggleInner-stake-sushi-lp-${props.poolKey}`}
+				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
 			>
 				<div className="splitter-horizontal p-1">
 					<div className="converttabs" style={{ background: 'unset', borderRadius: 0 }}>
@@ -208,12 +204,11 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 										<Card body>
 											<CardText>
 												Deposit liquidity into the &nbsp;
-												<OutterLink href={props.poolInfo.DepositLink} target="_blank">
-													SushiSwap {props.poolInfo.Name} pool
+												<OutterLink href={getCrvDepositLink(props.poolInfo.Name)} target="_blank">
+													Curve {props.poolInfo.Name} pool
 												</OutterLink>
-												&nbsp;
-												and then stake your SushiSwap {props.poolInfo.Name} LP tokens here
-												to earn BENT on top of SushiSwap trading fees.
+												&nbsp;(without staking in the Curve gauge),
+												and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
 											</CardText>
 										</Card>
 									</Col>
@@ -234,7 +229,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 														<Label>
 															Amount of {symbol} to stake
 														</Label>
-														<Label>Available:{formatBigNumber(BigNumber.from(lpBalance))}</Label>
+														<Label>Available:{formatBigNumber(lpBalance)}</Label>
 													</p>
 													<div className="amountinput">
 														<Input
@@ -242,8 +237,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 															onChange={(e) => onStakeAmountChange(e.target.value)}
 															value={stakeAmount}
 														/>
-														<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo" />
-														<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second" />
+														<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
 														<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 													</div>
 													<div className="btnouter">
@@ -252,18 +246,18 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 															<Button
 																className="approvebtn"
 																disabled={
-																	BigNumber.from(lpBalance).isZero() || isApproved ||
+																	lpBalance.isZero() || isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 																}
 																onClick={approve}
 															>Approve</Button>
 															<Button
 																className="approvebtn"
 																disabled={
-																	BigNumber.from(lpBalance).isZero() || !isApproved ||
+																	lpBalance.isZero() || !isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 																}
 																onClick={stake}
 															>Stake</Button>
@@ -302,8 +296,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 															onChange={(e) => onWithdrawAmountChange(e.target.value)}
 															value={withdrawAmount}
 														/>
-														<img src={props.poolInfo.LOGO[0]} alt="input-logo" className="inputlogo" />
-														<img src={props.poolInfo.LOGO[1]} alt="input-logo" className="inputlogo-second" />
+														<img src={props.poolInfo.LOGO} alt="input-logo" className="inputlogo" />
 														<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 													</div>
 												</div>
@@ -341,14 +334,14 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 												</p>
 												<p>
 													Deposit contract address:&nbsp;
-													<a href={getEtherscanLink(POOLS.SushiPools.MasterChef)} target="_blank" rel="noreferrer">
-														{POOLS.SushiPools.MasterChef}
+													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
+														{POOLS.BentPools[props.poolKey].POOL}
 													</a>
 												</p>
 												<p>
 													Rewards contract address:&nbsp;
-													<a href={getEtherscanLink(POOLS.SushiPools.MasterChef)} target="_blank" rel="noreferrer">
-														{POOLS.SushiPools.MasterChef}
+													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
+														{POOLS.BentPools[props.poolKey].POOL}
 													</a>
 												</p>
 											</div>
@@ -365,7 +358,6 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 }
 
 const PoolLogo = styled.img`
-	margin-right: 10px;
 	width: 28px;
 `
 
@@ -374,7 +366,6 @@ const Wrapper = styled.div`
 `;
 
 const InnerWrapper = styled(UncontrolledCollapse)`
-	background: #CAB8FF;
 	border: unset;
 `;
 

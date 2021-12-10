@@ -6,6 +6,8 @@ import { ClaimCurveLpItem } from "./item";
 import { useCrvPoolEarns, useCrvPoolDepositedUsds, useCrvAverageApr, useSortedCrvPoolKeys } from "hooks";
 import { formatBigNumber, getSumBigNumbers } from "utils";
 import { MorePoolsRow } from "components/MorePoolsRow";
+import { DecimalSpan } from "components/DecimalSpan";
+import { ClaimBentCvxCurveLpItem } from "./bentcvxItem";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
@@ -47,15 +49,15 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								</span><br />
 								<b>
 									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(getSumBigNumbers(earns), 18, 2)}</span>
+									<DecimalSpan value={formatBigNumber(getSumBigNumbers(earns), 18, 2)} />
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
 							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									<span className="h5">{avgApr}</span>
-									<span className="small">%</span>
+									<DecimalSpan value={avgApr.toString()} />
+									<span className="small"> %</span>
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -63,7 +65,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">My Total Deposits</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									<span className="h5">{formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2)}</span>
+									<DecimalSpan value={formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2)} />
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -80,12 +82,19 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 						<Card>
 							<CardBody>
 								{keys.map((poolName, index) =>
-									<ClaimCurveLpItem
-										poolInfo={POOLS.BentPools[poolName]}
-										poolKey={poolName}
-										key={poolName}
-										visible={index < 5 || showAll}
-									/>)
+									POOLS.BentPools[poolName].isBentCvx ?
+										<ClaimBentCvxCurveLpItem
+											poolInfo={POOLS.BentPools[poolName]}
+											poolKey={poolName}
+											key={poolName}
+											visible={index < 5 || showAll}
+										/> :
+										<ClaimCurveLpItem
+											poolInfo={POOLS.BentPools[poolName]}
+											poolKey={poolName}
+											key={poolName}
+											visible={index < 5 || showAll}
+										/>)
 								}
 								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} />
 							</CardBody>
