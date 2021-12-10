@@ -81,10 +81,11 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gas = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
-		const res = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
+		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
 			gasPrice,
 			gasLimit: gas
 		});
+		const res = await tx.wait();
 		if (res) {
 			setIsApproved(true);
 		}
@@ -94,10 +95,11 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
-		const res = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), {
+		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), {
 			gasPrice,
 			gasLimit: gas
 		})
+		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -108,10 +110,11 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
-		const res = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), {
+		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), {
 			gasPrice,
 			gasLimit: gas
 		})
+		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
 		}

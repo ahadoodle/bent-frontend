@@ -48,9 +48,11 @@ export const ClaimBent = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		if (checkAll) {
-			await bentStakingContract.connect(signer).claimAll({ gasPrice });
+			const gas = await bentStakingContract.connect(signer).estimateGas.claimAll();
+			await bentStakingContract.connect(signer).claimAll({ gasPrice, gasLimit: gas });
 		} else {
-			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasPrice });
+			const gas = await bentStakingContract.connect(signer).estimateGas.claim(checkedIndexes());
+			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasPrice, gasLimit: gas });
 		}
 	}
 
@@ -150,6 +152,7 @@ export const ClaimBent = (): React.ReactElement => {
 													<div className="bent-rewards-container">
 														{POOLS.BentStaking.RewardAssets.map((key, index) =>
 															<ClaimBentRewardItem
+																key={key}
 																index={index}
 																tokenKey={key}
 																apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}

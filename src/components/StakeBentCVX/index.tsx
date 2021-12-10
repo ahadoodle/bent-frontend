@@ -60,10 +60,11 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gas = await cvxToken.connect(signer).estimateGas.approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256);
-		const res = await cvxToken.connect(signer).approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256, {
+		const tx = await cvxToken.connect(signer).approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256, {
 			gasPrice,
 			gasLimit: gas
 		});
+		const res = await tx.wait();
 		if (res) {
 			setIsApproved(true);
 		}
@@ -73,10 +74,11 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gas = await bentCVX.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
-		const res = await bentCVX.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
+		const tx = await bentCVX.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
 			gasPrice,
 			gasLimit: gas
 		});
+		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -87,10 +89,11 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gas = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
-		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
+		const tx = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
 			gasPrice,
 			gasLimit: gas
 		});
+		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
 		}
