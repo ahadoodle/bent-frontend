@@ -6,6 +6,7 @@ import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "util
 import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls, useSortedCrvPoolKeys } from "hooks";
 import { MorePoolsRow } from "components/MorePoolsRow";
 import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
+import { utils } from "ethers";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
@@ -53,8 +54,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									{avgApr.toString().split('.')[0]}.
-									<span className="small">{avgApr.toString().split('.')[1]}%</span>
+									{utils.commify(avgApr)}%
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -73,8 +73,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								</span><br />
 								<b>
 									<span className="small">$</span>
-									{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 2).split('.')[0]}.
-									<span className="small">{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 2).split('.')[1]}</span>
+									{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 2)}
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>

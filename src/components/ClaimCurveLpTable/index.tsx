@@ -8,6 +8,7 @@ import { formatBigNumber, getSumBigNumbers } from "utils";
 import { MorePoolsRow } from "components/MorePoolsRow";
 import { DecimalSpan } from "components/DecimalSpan";
 import { ClaimBentCvxCurveLpItem } from "./bentcvxItem";
+import { utils } from "ethers";
 
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
@@ -56,8 +57,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									<DecimalSpan value={avgApr.toString()} />
-									<span className="small"> %</span>
+									{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>

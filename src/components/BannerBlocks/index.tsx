@@ -7,7 +7,6 @@ import DepositIcon from "assets/images/depositIcon.svg";
 import { useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTvls, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
 import { formatBigNumber, getSumBigNumbers } from "utils";
 import LockIcon from "assets/images/lockIcon.svg";
-import { DecimalSpan } from "components/DecimalSpan";
 // import DbIcon from "assets/images/dbIcon.svg";
 
 const BannerBlocks = (): React.ReactElement => {
@@ -54,7 +53,8 @@ const BannerBlocks = (): React.ReactElement => {
                   <h2>
                     <b>
                       <span className="small">$</span>
-                      <DecimalSpan value={totalTvl()} />
+                      {totalTvl().split('.')[0]}.
+                      <span className="small">{totalTvl().split('.')[1]}</span>
                     </b>
                   </h2>
                 </div>
@@ -71,7 +71,8 @@ const BannerBlocks = (): React.ReactElement => {
                   <h2>
                     <b>
                       <span className="small">$</span>
-                      <DecimalSpan value={totalEarnings()} />
+                      {totalEarnings().split('.')[0]}.
+                      <span className="small">{totalEarnings().split('.')[1]}</span>
                     </b>
                   </h2>
                 </div>
@@ -86,7 +87,8 @@ const BannerBlocks = (): React.ReactElement => {
                   <h2>
                     <b>
                       <span className="small">$</span>
-                      <DecimalSpan value={totalDeposits()} />
+                      {totalDeposits().split('.')[0]}.
+                      <span className="small">{totalDeposits().split('.')[1]}</span>
                     </b>
                   </h2>
                 </div>

@@ -9,7 +9,7 @@ import {
 	useCrvDeposit,
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
-	useGasPrice,
+	useGasFeeData,
 	useTokenPrices,
 	useCrvPoolRewards,
 	useCrvApr
@@ -33,7 +33,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
 	const bentPool = useBentCvxMasterChefContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 	const tokenPrices = useTokenPrices();
 	const symbol = props.poolInfo.CrvLpSYMBOL;
 	const depositedLp = useCrvDeposit(props.poolKey);
@@ -64,7 +64,11 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const account = await signer.getAddress();
 		const gas = await bentPool.connect(signer).estimateGas.claim(0, account);
-		await bentPool.connect(signer).claim(0, account, { gasPrice, gasLimit: gas });
+		await bentPool.connect(signer).claim(0, account, {
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
+		});
 	}
 
 	return (
@@ -91,10 +95,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>
-								<DecimalSpan value={apr.toString()} />
-								<span className="small"> %</span>
-							</> : 'TBC'}
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -103,7 +104,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
+							{depositedLp.isZero() ? '--' : formatBigNumber(depositedLp, 18, 2)}
 							<span className="text-bold"> {symbol}</span>
 						</span>
 					</Col>

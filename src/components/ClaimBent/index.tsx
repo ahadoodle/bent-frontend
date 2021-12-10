@@ -12,11 +12,11 @@ import {
 	useBentEarnedUsd,
 	useBentRewards,
 	useBentRewardsUsd,
-	useGasPrice,
+	useGasFeeData,
 	useActiveWeb3React,
 	useBentStakingContract,
 } from 'hooks';
-import { ethers, BigNumber } from "ethers";
+import { ethers, BigNumber, utils } from "ethers";
 import { ClaimBentRewardItem } from "./item";
 import { DecimalSpan } from "components/DecimalSpan";
 
@@ -34,7 +34,7 @@ export const ClaimBent = (): React.ReactElement => {
 
 	const { library } = useActiveWeb3React();
 	const bentStakingContract = useBentStakingContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 
 	const checkedIndexes = () => {
 		const checkedIndexes: string[] = [];
@@ -49,10 +49,18 @@ export const ClaimBent = (): React.ReactElement => {
 		const signer = await library.getSigner();
 		if (checkAll) {
 			const gas = await bentStakingContract.connect(signer).estimateGas.claimAll();
-			await bentStakingContract.connect(signer).claimAll({ gasPrice, gasLimit: gas });
+			await bentStakingContract.connect(signer).claimAll({
+				gasLimit: gas,
+				maxFeePerGas: gasData.maxFeePerGas,
+				maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
+			});
 		} else {
 			const gas = await bentStakingContract.connect(signer).estimateGas.claim(checkedIndexes());
-			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasPrice, gasLimit: gas });
+			await bentStakingContract.connect(signer).claim(checkedIndexes(), {
+				gasLimit: gas,
+				maxFeePerGas: gasData.maxFeePerGas,
+				maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
+			});
 		}
 	}
 
@@ -113,8 +121,7 @@ export const ClaimBent = (): React.ReactElement => {
 										<p>APR</p>
 										<div className="boldText">
 											<b>
-												<DecimalSpan value={bentAvgApr.toString()} />
-												<span className="small"> %</span>
+												{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
 											</b>
 										</div>
 									</div>

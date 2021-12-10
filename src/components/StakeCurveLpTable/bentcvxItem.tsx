@@ -22,7 +22,7 @@ import {
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
-	useGasPrice,
+	useGasFeeData,
 	useERC20Contract,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
@@ -43,7 +43,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const { library } = useActiveWeb3React();
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentCvxMasterChefContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const depositedLp = useCrvDeposit(props.poolKey);
 	const symbol = props.poolInfo.CrvLpSYMBOL;
@@ -82,8 +82,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
 		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		const res = await tx.wait();
 		if (res) {
@@ -96,8 +97,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
 		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		})
 		const res = await tx.wait();
 		if (res) {
@@ -111,8 +113,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
 		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		})
 		const res = await tx.wait();
 		if (res) {
@@ -144,10 +147,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>
-								<DecimalSpan value={apr.toString()} />
-								<span className="small"> %</span>
-							</> : 'TBC'}
+							{apr ? <>{apr.toString()}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -156,15 +156,14 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)}
-							<span className="text-bold"> {symbol}</span>
+							{depositedLp.isZero() ? '--' : formatBigNumber(depositedLp, 18, 2)} {symbol}
 						</span>
 					</Col>
 					<Col>
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
+								{formatMillionsBigNumber(tvl, 18, 2)}
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>
@@ -208,7 +207,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 													Curve {props.poolInfo.Name} pool
 												</OutterLink>
 												&nbsp;(without staking in the Curve gauge),
-												and then stake  your {symbol} tokens here to earn Bent on top of Convex's native rewards.
+												and then stake  your {symbol} tokens here to earn Bent.
 											</CardText>
 										</Card>
 									</Col>

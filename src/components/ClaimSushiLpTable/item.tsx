@@ -6,7 +6,7 @@ import {
 import {
 	useActiveWeb3React,
 	useBentMasterChefContract,
-	useGasPrice,
+	useGasFeeData,
 	useSushiLpDeposited,
 	useSushiPoolDepositedUsd,
 	useSushiPoolEarnedUsd,
@@ -29,7 +29,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const symbol = props.poolInfo.Name + ' SLP';
 	const { account, library } = useActiveWeb3React();
 	const masterChef = useBentMasterChefContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 	const depositedLp = useSushiLpDeposited(props.poolKey);
 	const stakedUsd = useSushiPoolDepositedUsd(props.poolKey);
 	const rewards = useSushiPoolRewards(props.poolKey);
@@ -41,8 +41,9 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await masterChef.connect(signer).estimateGas.claim(props.poolInfo.PoolId, account);
 		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account, {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		})
 	}
 
@@ -70,14 +71,13 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(rewards))}
+							{rewards.isZero() ? '--' : formatBigNumber(BigNumber.from(rewards))}
 							<span className="small text-bold"> BENT</span>
 						</span>
 					</Col>
 					<Col>
 						<b>
-							<DecimalSpan value={utils.commify(apr)} />
-							<span className="small"> %</span>
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -86,7 +86,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 							<DecimalSpan value={formatBigNumber(stakedUsd, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(depositedLp), 18, 2)} {symbol}
+							{depositedLp.isZero() ? '--' : formatBigNumber(depositedLp, 18, 2)} {symbol}
 						</span>
 					</Col>
 					<Col>

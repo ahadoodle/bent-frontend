@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { BigNumber } from 'ethers';
+import { GasFeeData } from './reducer';
 
 export type PopupContent = {
   txn?: {
@@ -27,4 +27,4 @@ export const addPopup = createAction<{
 export const removePopup = createAction<{ key: string }>('app/removePopup');
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('app/updateBlockNumber');
-export const updateGasPrice = createAction<{ gasPrice: BigNumber }>('app/updateGasPrice');
+export const updateGasPrice = createAction<GasFeeData>('app/updateGasPrice');

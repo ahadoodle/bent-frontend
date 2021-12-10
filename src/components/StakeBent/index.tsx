@@ -19,7 +19,7 @@ import {
 	useBentTotalStaked,
 	useBentTvl,
 	useERC20Contract,
-	useGasPrice
+	useGasFeeData
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -42,7 +42,7 @@ export const StakeBent = (): React.ReactElement => {
 	const { library } = useActiveWeb3React();
 	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
 	const bentStakingContract = useBentStakingContract();
-	const gasPrice = useGasPrice();
+	const gasData = useGasFeeData();
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
@@ -73,8 +73,9 @@ export const StakeBent = (): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentToken.connect(signer).estimateGas.approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
 		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256, {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		if (res) {
 			setIsApproved(true);
@@ -86,8 +87,9 @@ export const StakeBent = (): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentStakingContract.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
 		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		if (res) {
 			setStakeAmount('')
@@ -100,8 +102,9 @@ export const StakeBent = (): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gas = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
 		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
-			gasPrice,
-			gasLimit: gas
+			gasLimit: gas,
+			maxFeePerGas: gasData.maxFeePerGas,
+			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
 		});
 		if (res) {
 			setWithdrawAmount('')
@@ -140,8 +143,7 @@ export const StakeBent = (): React.ReactElement => {
 										<p>APR</p>
 										<div className="boldText">
 											<b>
-												<DecimalSpan value={bentAvgApr.toString()} />
-												<span className="small"> %</span>
+												{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
 											</b>
 										</div>
 									</div>
@@ -163,7 +165,7 @@ export const StakeBent = (): React.ReactElement => {
 										<div className="boldText">
 											<b>
 												<span className="small">$</span>
-												<DecimalSpan value={formatMillionsBigNumber(tvl, 18, 2)} />
+												{formatMillionsBigNumber(tvl, 18, 2)}
 											</b>
 										</div>
 									</div>
@@ -200,7 +202,7 @@ export const StakeBent = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms revenue in:
+																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms earnings in:
 																</CardText>
 																<div className="bent-rewards-container">
 																	{POOLS.BentStaking.RewardAssets.map(key =>
