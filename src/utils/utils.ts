@@ -57,7 +57,7 @@ export const formatMillions = (value: string): string => {
 	const parts = value.split('.');
 	const steps = parts[0].split(',');
 	const first = steps[0];
-	const last = steps.length > 1 ? (parseFloat(steps[1]) / 1000).toFixed(2).split('.')[1] : parseFloat(`0.${value.split('.')[1]}`).toFixed(2);
+	const last = steps.length > 1 ? (steps[1][0] + steps[1][1]) : parseFloat(`0.${value.split('.')[1]}`).toFixed(2);
 	const unit = steps.length > 3 ? 'B' : steps.length > 2 ? 'M' : steps.length > 1 ? 'K' : '';
 	return `${first}.${last}${unit}`;
 }
