@@ -108,7 +108,12 @@ const Header = (props: Props): React.ReactElement => {
                 <div style={{ padding: 15 }}>
                   <Row>
                     <Col md="5">BENT Price:</Col>
-                    <Col md="7" className="text-right"><b>${bentPrice.toString()} (Coingecko)</b></Col>
+                    <Col md="7" className="text-right">
+                      <b>
+                        ${bentPrice.toString()}&nbsp;
+                        <a className="text-white" href="https://www.coingecko.com/en/coins/bent-finance" target="_blank" rel="noreferrer" >(Coingecko)</a>
+                      </b>
+                    </Col>
                   </Row>
                   <Row>
                     <Col md="5">Marketcap:</Col>
@@ -143,7 +148,10 @@ const Header = (props: Props): React.ReactElement => {
                   <Row>
                     <Col md="5"><b>Voting Power</b></Col>
                     <Col md="7" className="text-right">
-                      $1 Staked BENT = ${(cvxPrice / bentPrice).toFixed(2)} vlCVX
+                      $1 Staked BENT = ${
+                        ((utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(16)).div(
+                          utils.parseEther(bentPrice.toString()).mul(bentStaked).div(BigNumber.from(10).pow(18))
+                        )).toNumber() / 100).toFixed(2)} vlCVX
                     </Col>
                   </Row>
                 </VotingPowerContainer>
