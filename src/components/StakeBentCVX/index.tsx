@@ -176,7 +176,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 															<Card body>
 																<CardText className="mt-0">
 																	Convert CVX to bentCVX. By staking bentCVX, you're earning the usual rewards from
-																	Convex (cvxCRV + any additional incentives) + 10% of the Bent's Platform earnings + BENT tokens.<br /><br />
+																	Convex (cvxCRV + any additional incentives) + 10% of the Bent Platform earnings + BENT tokens.<br /><br />
 																	Note: Converting CVX to bentCVX is irreversible. You may stake and unstake bentCVX tokens,
 																	but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
