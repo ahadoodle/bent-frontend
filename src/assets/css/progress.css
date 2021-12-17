@@ -1,0 +1,24 @@
+.progress-step {
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.progress-step .RSPBprogressBar {
+	margin: auto;
+	height: 5px;
+	border-radius: 5px;
+}
+
+.progress-step .progress-label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	color: white;
+	background-color: gray;
+}
+.progress-step .progress-label.active {
+	background-color: #3bc53b;
+}

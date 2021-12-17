@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
-	Card, CardTitle, CardText, Input, Label, CardBody,
+	Card, CardTitle, CardText, Input, Label, CardBody
 } from "reactstrap";
 import classnames from "classnames";
 import { TOKENS, TOKEN_LOGO } from "constant";
@@ -116,7 +116,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
-						<h2 className="white section-header">
+						<h2 className="section-header">
 							Convert CVX
 						</h2>
 						<div className="toggleWrap tokentable table">
@@ -152,12 +152,19 @@ export const StakeBentCVX = (): React.ReactElement => {
 														className={classnames({ active: activeTab === "2" })}
 														onClick={() => toggle("2")}
 														disabled={true}
-													>Unstake</NavLink>
+													>Stake</NavLink>
 												</NavItem>
 												<NavItem>
 													<NavLink
 														className={classnames({ active: activeTab === "3" })}
 														onClick={() => toggle("3")}
+														disabled={true}
+													>Unstake</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														className={classnames({ active: activeTab === "4" })}
+														onClick={() => toggle("4")}
 														disabled={true}
 													>Info</NavLink>
 												</NavItem>
@@ -219,7 +226,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																			<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
 																		</div>
 																		<div className="btnouter">
-																			<p className="lineup" style={{ width: 175, marginLeft: 75 }}></p>
+																			<p className="lineup"></p>
 																			<div className="btnwrapper">
 																				<Button
 																					className="approvebtn"
@@ -231,7 +238,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					onClick={approve}
 																				>Approve</Button>
 																				<Button
-																					className="approvebtn mx-3"
+																					className="approvebtn"
 																					disabled={
 																						cvxBalance.isZero() || !isApproved ||
 																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
@@ -239,11 +246,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					}
 																					onClick={convert}
 																				>Convert</Button>
-																				<Button
-																					className="approvebtn"
-																					disabled={true}
-																					style={{ lineHeight: 0.8 }}
-																				>Stake <br /><span style={{ fontSize: 10 }}>(Coming soon)</span></Button>
 																			</div>
 																			<div className="btnwrapper">
 																				<Button

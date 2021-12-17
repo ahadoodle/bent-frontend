@@ -31,6 +31,8 @@ import {
 	updateStakingPoolRewardsUsd,
 	updateStakingPoolStakedBent,
 	updateBentCvxAllowance,
+	updateBentCirculatingSupply,
+	updateVlCvxBalance,
 } from './actions';
 import { TOKENS } from 'constant';
 
@@ -40,6 +42,7 @@ export interface BentPoolReward {
 }
 
 export interface ContractsState {
+	bentCirculatingSupply: BigNumber,
 	tokenPrices: Record<string, number>
 
 	balances: Record<string, BigNumber>;
@@ -59,6 +62,7 @@ export interface ContractsState {
 
 	// BentCVX Staking Pool States
 	bentCvxAllowance: BigNumber,
+	vlCvxBalance: BigNumber,
 
 	// Curve Pool States
 	crvTvl: Record<string, BigNumber>;
@@ -80,6 +84,7 @@ export interface ContractsState {
 }
 
 const initialState: ContractsState = {
+	bentCirculatingSupply: ethers.constants.Zero,
 	tokenPrices: {},
 
 	balances: {},
@@ -97,6 +102,7 @@ const initialState: ContractsState = {
 	bentTotalStaked: ethers.constants.Zero,
 
 	bentCvxAllowance: ethers.constants.Zero,
+	vlCvxBalance: ethers.constants.Zero,
 
 	crvTvl: {},
 	crvApr: {},
@@ -117,6 +123,9 @@ const initialState: ContractsState = {
 
 export default createReducer(initialState, (builder) =>
 	builder
+		.addCase(updateBentCirculatingSupply, (state, action) => {
+			state.bentCirculatingSupply = action.payload;
+		})
 		.addCase(updatePrices, (state, action) => {
 			const prices = action.payload;
 			if (!state.tokenPrices) state.tokenPrices = {};
@@ -232,5 +241,7 @@ export default createReducer(initialState, (builder) =>
 
 		.addCase(updateBentCvxAllowance, (state, action) => {
 			state.bentCvxAllowance = action.payload;
+		}).addCase(updateVlCvxBalance, (state, action) => {
+			state.vlCvxBalance = action.payload;
 		})
 );

@@ -7,7 +7,6 @@ import classnames from "classnames";
 import styled from "styled-components";
 import {
 	formatBigNumber,
-	getCrvDepositLink,
 	getEtherscanLink,
 	formatMillionsBigNumber,
 } from "utils";
@@ -203,7 +202,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 										<Card body>
 											<CardText>
 												Deposit liquidity into the &nbsp;
-												<OutterLink href={getCrvDepositLink(props.poolInfo.Name)} target="_blank">
+												<OutterLink href={props.poolInfo.crvPoolLink} target="_blank">
 													Curve {props.poolInfo.Name} pool
 												</OutterLink>
 												&nbsp;(without staking in the Curve gauge),

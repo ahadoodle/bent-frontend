@@ -1,3 +1,9 @@
+.ml-auto {
+    margin-left: auto;
+}
+.text-right {
+    text-align: right;
+}
 a,button {
     transition: 0.5s all ease;
 }
@@ -46,15 +52,8 @@ ul.primaryMenu {
 .theme-icon {
     width: 40px;
     height: 40px;
-    margin-left: auto;
-    margin-right: 28px;
+    margin-right: 20px;
     cursor: pointer;
-}
-.tokentable .fa-info-circle {
-    position: absolute;
-    right: 50px;
-    top: 30px;
-    opacity: 0;
 }
 .tokentable.table tr:hover .fa-info-circle,
 .tokentable.table tr:hover .tvlText i.fa.fa-caret-down {
@@ -265,7 +264,7 @@ h2.white {
     font-feature-settings: 'ss01' on;
     color: #10151D;
 }
-.infoWrap p a {
+.infoWrap a {
     color: #703FFF;
     text-decoration: none;
     font-style: italic;
@@ -727,6 +726,29 @@ button.btn.btnshow i {
 }
 .convert-up.cvxSection {
     margin-top: 120px;
+}
+.bent-details .tooltip.show {
+    opacity: 1;
+}
+.bent-details .tooltip-inner {
+    font-size: 12px;
+    line-height: 30px;
+    padding: 0;
+    border: 1px solid #1E2735;
+    text-align: left;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.bent-details .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, .bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: #1E2735;
+}
+.tooltip-inner {
+    font-family: 'Rubik';
+    width: 368px;
+    max-width: unset !important;
+    background: #171E29 !important;
+    border: 1px solid #1E2735;
+    border-radius: 8px;
 }
 .Dark .contentSection {
     background: #253143;
@@ -1193,11 +1215,6 @@ button.claimbtn.btn.btn-secondary {
 }
 .climBtn {
     position: relative;
-}
-.bentInner .fa-info-circle {
-    position: absolute;
-    right: 10px;
-    top: 15px;
 }
 .clmBtn {
     position: relative;

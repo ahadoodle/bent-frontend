@@ -57,7 +57,7 @@ export const formatMillions = (value: string): string => {
 	const parts = value.split('.');
 	const steps = parts[0].split(',');
 	const first = steps[0];
-	const last = steps.length > 1 ? (steps[1][0] + steps[1][1]) : parseFloat(`0.${value.split('.')[1]}`).toFixed(2);
+	const last = steps.length > 1 ? (steps[1][0] + steps[1][1]) : parseFloat(`0.${value.split('.')[1]}`).toFixed(2).split('.')[1];
 	const unit = steps.length > 3 ? 'B' : steps.length > 2 ? 'M' : steps.length > 1 ? 'K' : '';
 	return `${first}.${last}${unit}`;
 }
@@ -91,6 +91,16 @@ export const getPrice = async (contract_addresses: string[], vsCoin = 'usd'): Pr
 		console.error(error);
 		await sleep(3000);
 		return getPrice(contract_addresses, vsCoin);
+	}
+}
+
+export const getCirculatingSupply = async (): Promise<BigNumber> => {
+	const url = 'https://getbent-api-supply.bentfinance.com/api/bent/circulatingSupply';
+	try {
+		const res = await axios.get(url);
+		return BigNumber.from(res.data);
+	} catch (error) {
+		return ethers.constants.Zero;
 	}
 }
 

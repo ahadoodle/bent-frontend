@@ -23,6 +23,11 @@ export const useBentCVXContract = (): Contract => {
 	return useMemo(() => new Contract(TOKENS['BENTCVX'].ADDR, ABIS.BentCVX, library), [library]);
 }
 
+export const useCvxLocker = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.VlCvxLocker, ABIS.CvxLocker, library), [library]);
+}
+
 export const useBentMasterChefContract = (): Contract => {
 	const { library } = useActiveWeb3React();
 	return useMemo(() => new Contract(POOLS.SushiPools.MasterChef, ABIS.BentMasterChef, library), [library]);
