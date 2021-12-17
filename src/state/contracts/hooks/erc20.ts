@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../../index';
 
 export function useTokenPrice(tokenAddr: string): number {
-	return useSelector((state: AppState) => state.contracts.tokenPrices[tokenAddr.toLowerCase()] || 0);
+	return useSelector((state: AppState) => state.contracts.tokenPrices[tokenAddr.toLowerCase()] || 1);
 }
 
 export function useTokenPrices(): Record<string, number> {

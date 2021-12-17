@@ -5,3 +5,7 @@ import { AppState } from '../../index';
 export const useBentCvxAllowance = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentCvxAllowance || ethers.constants.Zero));
 }
+
+export const useVlCvxBalance = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.vlCvxBalance || ethers.constants.Zero));
+}

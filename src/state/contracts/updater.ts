@@ -17,6 +17,8 @@ import {
 	getTokenPrice,
 	getEthBalanceOf,
 	getMultiBentSingleStaking,
+	getCirculatingSupply,
+	getMultiCvxLocker,
 } from 'utils';
 import {
 	updateTokenPrice,
@@ -48,6 +50,8 @@ import {
 	updateStakingPoolRewardsUsd,
 	updateStakingPoolStakedBent,
 	updateBentCvxAllowance,
+	updateBentCirculatingSupply,
+	updateVlCvxBalance,
 } from './actions';
 
 export default function Updater(): null {
@@ -59,8 +63,12 @@ export default function Updater(): null {
 
 	useEffect(() => {
 		const tokenAddrs = Object.keys(TOKENS).map(token => TOKENS[token].ADDR);
-		getPrice(tokenAddrs).then(tokenPrices => {
+		Promise.all([
+			getPrice(tokenAddrs),
+			getCirculatingSupply(),
+		]).then(([tokenPrices, bentCirculatingSupply]) => {
 			dispatch(updatePrices(tokenPrices))
+			dispatch(updateBentCirculatingSupply(bentCirculatingSupply))
 
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
@@ -69,6 +77,9 @@ export default function Updater(): null {
 
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
+
+			const vlCvxLocker = getMultiCvxLocker();
+			contractCalls.push(vlCvxLocker.lockedBalanceOf(POOLS.Multisig))
 
 			// Add Sushi contract calls
 			const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
@@ -138,6 +149,8 @@ export default function Updater(): null {
 				const depositedLpBalance = {};
 				const rewardsInfo = {};
 				let startIndex = 0;
+
+				dispatch(updateVlCvxBalance(results[startIndex++]));
 
 				// Update Sushi Pool Infos
 				const rewardPerBlock = results[startIndex++];

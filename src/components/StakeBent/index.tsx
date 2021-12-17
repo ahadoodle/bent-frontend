@@ -5,7 +5,7 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
-import { formatBigNumber, formatMillionsBigNumber } from "utils";
+import { formatBigNumber, formatMillionsBigNumber, getEtherscanLink } from "utils";
 import {
 	useActiveWeb3React,
 	useBalance,
@@ -192,7 +192,6 @@ export const StakeBent = (): React.ReactElement => {
 													<NavLink
 														className={classnames({ active: activeTab === "3" })}
 														onClick={() => toggle("3")}
-														disabled={true}
 													>Info</NavLink>
 												</NavItem>
 											</Nav>
@@ -319,24 +318,34 @@ export const StakeBent = (): React.ReactElement => {
 												</TabPane>
 												<TabPane tabId="3">
 													<Row>
-														<Col sm="6">
+														<Col sm="12">
 															<Card body>
-																<CardTitle>Special Title Treatment</CardTitle>
-																<CardText>
-																	With supporting text below as a natural lead-in to
-																	additional content.
-																</CardText>
-																<Button>Go somewhere</Button>
-															</Card>
-														</Col>
-														<Col sm="6">
-															<Card body>
-																<CardTitle>Special Title Treatment</CardTitle>
-																<CardText>
-																	With supporting text below as a natural lead-in to
-																	additional content.
-																</CardText>
-																<Button>Go somewhere</Button>
+																<div className="infoWrap">
+																	<Row>
+																		<Col md="3">
+																			<CardText className="mt-0">
+																				<b>BENT</b> token address:
+																			</CardText>
+																		</Col>
+																		<Col md="9">
+																			<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
+																				{TOKENS.BENT.ADDR}
+																			</a>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col md="3">
+																			<CardText className="mt-0">
+																				Rewards contract address:
+																			</CardText>
+																		</Col>
+																		<Col md="9">
+																			<a href={getEtherscanLink(POOLS.BentStaking.POOL)} target="_blank" rel="noreferrer">
+																				{POOLS.BentStaking.POOL}
+																			</a>
+																		</Col>
+																	</Row>
+																</div>
 															</Card>
 														</Col>
 													</Row>
