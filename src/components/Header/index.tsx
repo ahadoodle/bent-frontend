@@ -149,9 +149,10 @@ const Header = (props: Props): React.ReactElement => {
                     <Col md="5"><b>Voting Power</b></Col>
                     <Col md="7" className="text-right">
                       $1 Staked BENT = ${
-                        ((utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(16)).div(
-                          utils.parseEther(bentPrice.toString()).mul(bentStaked).div(BigNumber.from(10).pow(18))
-                        )).toNumber() / 100).toFixed(2)} vlCVX
+                        bentStaked.isZero() ? '--' :
+                          ((utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(16)).div(
+                            utils.parseEther(bentPrice.toString()).mul(bentStaked).div(BigNumber.from(10).pow(18))
+                          )).toNumber() / 100).toFixed(2)} vlCVX
                     </Col>
                   </Row>
                 </VotingPowerContainer>
