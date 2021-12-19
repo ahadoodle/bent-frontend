@@ -7,7 +7,6 @@ import classnames from "classnames";
 import styled from "styled-components";
 import {
 	formatBigNumber,
-	getCrvDepositLink,
 	getEtherscanLink,
 	formatMillionsBigNumber,
 } from "utils";
@@ -203,7 +202,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 										<Card body>
 											<CardText>
 												Deposit liquidity into the &nbsp;
-												<OutterLink href={getCrvDepositLink(props.poolInfo.Name)} target="_blank">
+												<OutterLink href={props.poolInfo.crvPoolLink} target="_blank">
 													Curve {props.poolInfo.Name} pool
 												</OutterLink>
 												&nbsp;(without staking in the Curve gauge),
@@ -323,27 +322,43 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							<TabPane tabId="3">
 								<Row>
 									<Col sm="12">
-										<Card body>
-											<div className="infoWrap card-text mt-4">
-												<p>
-													BENT token address:&nbsp;
+										<Card body className="infoWrap">
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														<b>BENT</b> token address:
+													</CardText>
+												</Col>
+												<Col md="9">
 													<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
 														{TOKENS.BENT.ADDR}
 													</a>
-												</p>
-												<p>
-													Deposit contract address:&nbsp;
+												</Col>
+											</Row>
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														Deposit contract address:
+													</CardText>
+												</Col>
+												<Col md="9">
 													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
 														{POOLS.BentPools[props.poolKey].POOL}
 													</a>
-												</p>
-												<p>
-													Rewards contract address:&nbsp;
+												</Col>
+											</Row>
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														Rewards contract address:
+													</CardText>
+												</Col>
+												<Col md="9">
 													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
 														{POOLS.BentPools[props.poolKey].POOL}
 													</a>
-												</p>
-											</div>
+												</Col>
+											</Row>
 										</Card>
 									</Col>
 								</Row>

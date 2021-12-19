@@ -29,3 +29,7 @@ export const getMultiSushiPair = (address: string): Contract => {
 export const getMultiBentSingleStaking = (address: string): Contract => {
 	return new Contract(address, ABIS.BentSingleStaking);
 }
+
+export const getMultiCvxLocker = (): Contract => {
+	return new Contract(POOLS.VlCvxLocker, ABIS.CvxLocker);
+}

@@ -2,6 +2,10 @@ import { useSelector } from 'react-redux';
 import { BigNumber, ethers } from 'ethers';
 import { AppState } from '../../index';
 
+export const useBentCirculatingSupply = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentCirculatingSupply || ethers.constants.Zero));
+}
+
 export const useBentTvl = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentTvl || ethers.constants.Zero));
 }

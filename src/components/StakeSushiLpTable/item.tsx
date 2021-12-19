@@ -333,27 +333,43 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 							<TabPane tabId="3">
 								<Row>
 									<Col sm="12">
-										<Card body>
-											<div className="infoWrap card-text mt-4">
-												<p>
-													BENT token address:&nbsp;
+										<Card body className="infoWrap">
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														<b>BENT</b> token address:
+													</CardText>
+												</Col>
+												<Col md="9">
 													<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
 														{TOKENS.BENT.ADDR}
 													</a>
-												</p>
-												<p>
-													Deposit contract address:&nbsp;
+												</Col>
+											</Row>
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														Deposit contract address:
+													</CardText>
+												</Col>
+												<Col md="9">
 													<a href={getEtherscanLink(POOLS.SushiPools.MasterChef)} target="_blank" rel="noreferrer">
 														{POOLS.SushiPools.MasterChef}
 													</a>
-												</p>
-												<p>
-													Rewards contract address:&nbsp;
+												</Col>
+											</Row>
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														Rewards contract address:
+													</CardText>
+												</Col>
+												<Col md="9">
 													<a href={getEtherscanLink(POOLS.SushiPools.MasterChef)} target="_blank" rel="noreferrer">
 														{POOLS.SushiPools.MasterChef}
 													</a>
-												</p>
-											</div>
+												</Col>
+											</Row>
 										</Card>
 									</Col>
 								</Row>

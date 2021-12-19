@@ -7,6 +7,7 @@ import CrvFiLpMulti from './ICurveFi.json';
 import CrvFiLp from './ICurveFi_2.json';
 import BentSingleStaking from './BentSingleStaking.json';
 import BentCVX from './BentCVX.json';
+import CvxLocker from './CvxLocker.json';
 
 export const ABIS = {
 	BentBasePool,
@@ -18,4 +19,5 @@ export const ABIS = {
 	CrvFiLpMulti,
 	BentSingleStaking,
 	BentCVX,
+	CvxLocker,
 }
