@@ -12,6 +12,7 @@ import { useActiveWeb3React } from 'hooks';
 import { BigNumber } from 'ethers';
 import { ChainId } from 'constant';
 import { GasFeeData } from './reducer';
+import { ContractsState } from 'state/contracts/reducer';
 
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React();
@@ -20,6 +21,10 @@ export function useBlockNumber(): number | undefined {
 
 export function useGasPrice(): BigNumber {
   return useSelector((state: AppState) => state.application.gasPrice);
+}
+
+export function useContractState(): ContractsState {
+  return useSelector((state: AppState) => state.contracts);
 }
 
 export const useGasFeeData = (): GasFeeData => {

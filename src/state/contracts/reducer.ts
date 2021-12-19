@@ -1,40 +1,8 @@
 import { BigNumber, ethers } from 'ethers';
 import { createReducer } from '@reduxjs/toolkit';
 import {
-	updatePrices,
-	updateBentPrice,
-	updateTokenPrice,
-	updateBalance,
-	updateBentPoolRewardsInfo,
-	updateCrvDeposit,
-	updateCrvLpAllowance,
-	updateCrvPoolApr,
-	updateCrvPoolDepositedUsd,
-	updateCrvPoolEarnedUsd,
-	updateCrvPoolRewards,
-	updateCrvPoolTVL,
-	updateSushiLpDeposited,
-	updateSushiLpDepositedUsd,
-	updateSushiPoolApr,
-	updateSushiPoolEarnedUsd,
-	updateSushiPoolTVL,
-	updateTotalSupply,
-	updateSushiPoolRewards,
-	updateStakingPoolTvl,
-	updateStakingPoolAllowance,
-	updateStakingPoolDepositedUsd,
-	updateStakingPoolDeposited,
-	updateStakingPoolAvgApr,
-	updateStakingPoolApr,
-	updateStakingPoolEarningUsd,
-	updateStakingPoolRewards,
-	updateStakingPoolRewardsUsd,
-	updateStakingPoolStakedBent,
-	updateBentCvxAllowance,
-	updateBentCirculatingSupply,
-	updateVlCvxBalance,
+	updateContractInfo,
 } from './actions';
-import { TOKENS } from 'constant';
 
 export interface BentPoolReward {
 	rewardRate: BigNumber,
@@ -123,125 +91,84 @@ const initialState: ContractsState = {
 
 export default createReducer(initialState, (builder) =>
 	builder
-		.addCase(updateBentCirculatingSupply, (state, action) => {
-			state.bentCirculatingSupply = action.payload;
-		})
-		.addCase(updatePrices, (state, action) => {
-			const prices = action.payload;
-			if (!state.tokenPrices) state.tokenPrices = {};
-			Object.keys(prices).forEach(tokenAddr => {
-				state.tokenPrices[tokenAddr.toLowerCase()] = prices[tokenAddr];
+		.addCase(updateContractInfo, (state, action) => {
+			Object.keys(action.payload.tokenPrices).forEach(tokenAddr => {
+				state.tokenPrices[tokenAddr.toLowerCase()] = action.payload.tokenPrices[tokenAddr];
 			})
-		}).addCase(updateBentPrice, (state, action) => {
-			if (!state.tokenPrices) state.tokenPrices = {};
-			state.tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()] = action.payload;
-		}).addCase(updateTokenPrice, (state, action) => {
-			const { tokenAddr, price } = action.payload
-			if (!state.tokenPrices) state.tokenPrices = {};
-			state.tokenPrices[tokenAddr.toLowerCase()] = price;
-		})
+			Object.keys(action.payload.balances).forEach(tokenAddr => {
+				state.balances[tokenAddr.toLowerCase()] = action.payload.balances[tokenAddr];
+			})
+			Object.keys(action.payload.totalSupplies).forEach(tokenAddr => {
+				state.totalSupplies[tokenAddr.toLowerCase()] = action.payload.totalSupplies[tokenAddr];
+			})
 
-		.addCase(updateBalance, (state, action) => {
-			const { tokenAddr, balance } = action.payload;
-			if (!state.balances) state.balances = {};
-			state.balances[tokenAddr.toLowerCase()] = balance;
-		}).addCase(updateTotalSupply, (state, action) => {
-			const { tokenAddr, supply } = action.payload;
-			if (!state.totalSupplies) state.totalSupplies = {};
-			state.totalSupplies[tokenAddr.toLowerCase()] = supply;
-		})
+			// Crv Pools
+			Object.keys(action.payload.crvTvl).forEach(poolKey => {
+				state.crvTvl[poolKey] = action.payload.crvTvl[poolKey];
+			})
+			Object.keys(action.payload.crvApr).forEach(poolKey => {
+				state.crvApr[poolKey] = action.payload.crvApr[poolKey];
+			})
+			Object.keys(action.payload.crvDeposit).forEach(poolKey => {
+				state.crvDeposit[poolKey] = action.payload.crvDeposit[poolKey];
+			})
+			Object.keys(action.payload.crvPoolRewards).forEach(poolKey => {
+				state.crvPoolRewards[poolKey] = action.payload.crvPoolRewards[poolKey];
+			})
+			Object.keys(action.payload.bentPoolRewardsInfo).forEach(poolKey => {
+				state.bentPoolRewardsInfo[poolKey] = action.payload.bentPoolRewardsInfo[poolKey];
+			})
+			Object.keys(action.payload.crvLpAllowance).forEach(poolKey => {
+				state.crvLpAllowance[poolKey] = action.payload.crvLpAllowance[poolKey];
+			})
+			Object.keys(action.payload.crvEarnedUsd).forEach(poolKey => {
+				state.crvEarnedUsd[poolKey] = action.payload.crvEarnedUsd[poolKey];
+			})
+			Object.keys(action.payload.crvDepositedUsd).forEach(poolKey => {
+				state.crvDepositedUsd[poolKey] = action.payload.crvDepositedUsd[poolKey];
+			})
 
-		.addCase(updateCrvPoolTVL, (state, action) => {
-			const { poolKey, tvl } = action.payload;
-			if (!state.crvTvl) state.crvTvl = {};
-			state.crvTvl[poolKey] = tvl;
-		}).addCase(updateCrvPoolApr, (state, action) => {
-			const { poolKey, apr } = action.payload;
-			if (!state.crvApr) state.crvApr = {};
-			state.crvApr[poolKey] = apr;
-		}).addCase(updateCrvDeposit, (state, action) => {
-			const { poolKey, deposit } = action.payload;
-			if (!state.crvDeposit) state.crvDeposit = {};
-			state.crvDeposit[poolKey] = deposit;
-		}).addCase(updateCrvPoolRewards, (state, action) => {
-			const { poolKey, rewards } = action.payload;
-			if (!state.crvPoolRewards) state.crvPoolRewards = {};
-			state.crvPoolRewards[poolKey] = rewards;
-		}).addCase(updateBentPoolRewardsInfo, (state, action) => {
-			const { poolKey, rewardsInfo } = action.payload;
-			if (!state.bentPoolRewardsInfo) state.bentPoolRewardsInfo = {};
-			state.bentPoolRewardsInfo[poolKey] = rewardsInfo;
-		}).addCase(updateCrvLpAllowance, (state, action) => {
-			const { poolKey, allowance } = action.payload;
-			if (!state.crvLpAllowance) state.crvLpAllowance = {};
-			state.crvLpAllowance[poolKey] = allowance;
-		}).addCase(updateCrvPoolEarnedUsd, (state, action) => {
-			const { poolKey, earned } = action.payload;
-			if (!state.crvEarnedUsd) state.crvEarnedUsd = {};
-			state.crvEarnedUsd[poolKey] = earned;
-		}).addCase(updateCrvPoolDepositedUsd, (state, action) => {
-			const { poolKey, deposited } = action.payload;
-			if (!state.crvDepositedUsd) state.crvDepositedUsd = {};
-			state.crvDepositedUsd[poolKey] = deposited;
-		})
+			// Sushi Pools
+			Object.keys(action.payload.sushiTvl).forEach(poolKey => {
+				state.sushiTvl[poolKey] = action.payload.sushiTvl[poolKey];
+			})
+			Object.keys(action.payload.sushiApr).forEach(poolKey => {
+				state.sushiApr[poolKey] = action.payload.sushiApr[poolKey];
+			})
+			Object.keys(action.payload.sushiLpDeposited).forEach(poolKey => {
+				state.sushiLpDeposited[poolKey] = action.payload.sushiLpDeposited[poolKey];
+			})
+			Object.keys(action.payload.sushiEarnedUsd).forEach(poolKey => {
+				state.sushiEarnedUsd[poolKey] = action.payload.sushiEarnedUsd[poolKey];
+			})
+			Object.keys(action.payload.sushiDepositedUsd).forEach(poolKey => {
+				state.sushiDepositedUsd[poolKey] = action.payload.sushiDepositedUsd[poolKey];
+			})
+			Object.keys(action.payload.sushiRewards).forEach(poolKey => {
+				state.sushiRewards[poolKey] = action.payload.sushiRewards[poolKey];
+			})
 
-		.addCase(updateSushiPoolTVL, (state, action) => {
-			const { poolKey, tvl } = action.payload;
-			if (!state.sushiTvl) state.sushiTvl = {};
-			state.sushiTvl[poolKey] = tvl;
-		}).addCase(updateSushiPoolApr, (state, action) => {
-			const { poolKey, apr } = action.payload;
-			if (!state.sushiApr) state.sushiApr = {};
-			state.sushiApr[poolKey] = apr;
-		}).addCase(updateSushiLpDeposited, (state, action) => {
-			const { poolKey, deposited } = action.payload;
-			if (!state.sushiLpDeposited) state.sushiLpDeposited = {};
-			state.sushiLpDeposited[poolKey] = deposited;
-		}).addCase(updateSushiPoolEarnedUsd, (state, action) => {
-			const { poolKey, earned } = action.payload;
-			if (!state.sushiEarnedUsd) state.sushiEarnedUsd = {};
-			state.sushiEarnedUsd[poolKey] = earned;
-		}).addCase(updateSushiLpDepositedUsd, (state, action) => {
-			const { poolKey, deposited } = action.payload;
-			if (!state.sushiDepositedUsd) state.sushiDepositedUsd = {};
-			state.sushiDepositedUsd[poolKey] = deposited;
-		}).addCase(updateSushiPoolRewards, (state, action) => {
-			const { poolKey, rewards } = action.payload;
-			if (!state.sushiRewards) state.sushiRewards = {};
-			state.sushiRewards[poolKey] = rewards;
-		})
+			// Bent Staking Pool
+			state.bentTvl = action.payload.bentTvl;
+			state.bentAllowance = action.payload.bentAllowance;
+			state.bentStakedUsd = action.payload.bentStakedUsd;
+			state.bentStaked = action.payload.bentStaked;
+			state.bentAvgApr = action.payload.bentAvgApr;
+			state.bentEarnedUsd = action.payload.bentEarnedUsd;
+			state.bentTotalStaked = action.payload.bentTotalStaked;
+			state.bentCirculatingSupply = action.payload.bentCirculatingSupply;
+			Object.keys(action.payload.bentAprs).forEach(poolKey => {
+				state.bentAprs[poolKey] = action.payload.bentAprs[poolKey];
+			})
+			Object.keys(action.payload.bentRewards).forEach(tokenAddr => {
+				state.bentRewards[tokenAddr] = action.payload.bentRewards[tokenAddr];
+			})
+			Object.keys(action.payload.bentRewardsUsd).forEach(tokenAddr => {
+				state.bentRewardsUsd[tokenAddr] = action.payload.bentRewardsUsd[tokenAddr];
+			})
 
-		.addCase(updateStakingPoolTvl, (state, action) => {
-			state.bentTvl = action.payload;
-		}).addCase(updateStakingPoolAllowance, (state, action) => {
-			state.bentAllowance = action.payload;
-		}).addCase(updateStakingPoolDepositedUsd, (state, action) => {
-			state.bentStakedUsd = action.payload;
-		}).addCase(updateStakingPoolDeposited, (state, action) => {
-			state.bentStaked = action.payload;
-		}).addCase(updateStakingPoolAvgApr, (state, action) => {
-			state.bentAvgApr = action.payload;
-		}).addCase(updateStakingPoolApr, (state, action) => {
-			const { tokenAddr, apr } = action.payload;
-			if (!state.bentAprs) state.bentAprs = {};
-			state.bentAprs[tokenAddr] = apr;
-		}).addCase(updateStakingPoolEarningUsd, (state, action) => {
-			state.bentEarnedUsd = action.payload;
-		}).addCase(updateStakingPoolRewards, (state, action) => {
-			const { tokenAddr, reward } = action.payload;
-			if (!state.bentRewards) state.bentRewards = {};
-			state.bentRewards[tokenAddr] = reward;
-		}).addCase(updateStakingPoolRewardsUsd, (state, action) => {
-			const { tokenAddr, rewardUsd } = action.payload;
-			if (!state.bentRewardsUsd) state.bentRewardsUsd = {};
-			state.bentRewardsUsd[tokenAddr] = rewardUsd;
-		}).addCase(updateStakingPoolStakedBent, (state, action) => {
-			state.bentTotalStaked = action.payload;
-		})
-
-		.addCase(updateBentCvxAllowance, (state, action) => {
-			state.bentCvxAllowance = action.payload;
-		}).addCase(updateVlCvxBalance, (state, action) => {
-			state.vlCvxBalance = action.payload;
+			// bentCVX
+			state.bentCvxAllowance = action.payload.bentCvxAllowance;
+			state.vlCvxBalance = action.payload.vlCvxBalance;
 		})
 );
