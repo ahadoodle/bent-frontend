@@ -71,28 +71,28 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'd3poolCrv',
 		crvPoolLink: 'https://curve.fi/factory/57/deposit',
 	},
-	MIMUST: {
-		LOGO: TOKEN_LOGO.MIM,
-		Name: 'mim-ust',
-		POOL: '0x2a3ff0b54a5195b39808f5412fb680e80514a1d9',
-		DepositAsset: '0x55a8a39bc9694714e2874c1ce77aa1e599461e18', // Curve.fi USD-BTC-ETH (crv3crypto)
-		CvxRewardsAddr: '0xc62de533ea77d46f3172516ab6b1000daf577e89',
-		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvCoinsLength: 2,
-		CrvLpSYMBOL: 'mimustCrv',
-		crvPoolLink: 'https://curve.fi/factory/48/deposit',
-	},
-	USTWORMHOLE: {
-		LOGO: TOKEN_LOGO.UST,
-		Name: 'ust-wormhole',
-		POOL: '0x1c4f9f3cd557a21604cb5831eddd7023a3c63371',
-		DepositAsset: '0xceaf7747579696a2f0bb206a14210e3c9e6fb269', // Curve.fi USD-BTC-ETH (crv3crypto)
-		CvxRewardsAddr: '0x7e2b9b5244bcfa5108a76d5e7b507cfd5581ad4a',
-		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvCoinsLength: 2,
-		CrvLpSYMBOL: 'ustwCrv',
-		crvPoolLink: 'https://curve.fi/factory/53/deposit',
-	},
+	// MIMUST: {
+	// 	LOGO: TOKEN_LOGO.MIM,
+	// 	Name: 'mim-ust',
+	// 	POOL: '0x2a3ff0b54a5195b39808f5412fb680e80514a1d9',
+	// 	DepositAsset: '0x55a8a39bc9694714e2874c1ce77aa1e599461e18', // Curve.fi USD-BTC-ETH (crv3crypto)
+	// 	CvxRewardsAddr: '0xc62de533ea77d46f3172516ab6b1000daf577e89',
+	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
+	// 	CrvCoinsLength: 2,
+	// 	CrvLpSYMBOL: 'mimustCrv',
+	// 	crvPoolLink: 'https://curve.fi/factory/48/deposit',
+	// },
+	// USTWORMHOLE: {
+	// 	LOGO: TOKEN_LOGO.UST,
+	// 	Name: 'ust-wormhole',
+	// 	POOL: '0x1c4f9f3cd557a21604cb5831eddd7023a3c63371',
+	// 	DepositAsset: '0xceaf7747579696a2f0bb206a14210e3c9e6fb269', // Curve.fi USD-BTC-ETH (crv3crypto)
+	// 	CvxRewardsAddr: '0x7e2b9b5244bcfa5108a76d5e7b507cfd5581ad4a',
+	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
+	// 	CrvCoinsLength: 2,
+	// 	CrvLpSYMBOL: 'ustwCrv',
+	// 	crvPoolLink: 'https://curve.fi/factory/53/deposit',
+	// },
 	TRICRYPTO2: {
 		LOGO: TOKEN_LOGO.TRICRYPTO2,
 		Name: 'tricrypto2',
