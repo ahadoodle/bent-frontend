@@ -6,7 +6,6 @@ import {
 import {
 	useActiveWeb3React,
 	useBentMasterChefContract,
-	useGasFeeData,
 	useSushiLpDeposited,
 	useSushiPoolDepositedUsd,
 	useSushiPoolEarnedUsd,
@@ -29,7 +28,6 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const symbol = props.poolInfo.Name + ' SLP';
 	const { account, library } = useActiveWeb3React();
 	const masterChef = useBentMasterChefContract();
-	const gasData = useGasFeeData();
 	const depositedLp = useSushiLpDeposited(props.poolKey);
 	const stakedUsd = useSushiPoolDepositedUsd(props.poolKey);
 	const rewards = useSushiPoolRewards(props.poolKey);
@@ -39,12 +37,8 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const claim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await masterChef.connect(signer).estimateGas.claim(props.poolInfo.PoolId, account);
-		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account, {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		})
+		const gasLimit = await masterChef.connect(signer).estimateGas.claim(props.poolInfo.PoolId, account);
+		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account, { gasLimit })
 	}
 
 	const haveRewards = () => {
