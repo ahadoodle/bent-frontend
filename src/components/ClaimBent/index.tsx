@@ -12,7 +12,6 @@ import {
 	useBentEarnedUsd,
 	useBentRewards,
 	useBentRewardsUsd,
-	useGasFeeData,
 	useActiveWeb3React,
 	useBentStakingContract,
 } from 'hooks';
@@ -34,7 +33,6 @@ export const ClaimBent = (): React.ReactElement => {
 
 	const { library } = useActiveWeb3React();
 	const bentStakingContract = useBentStakingContract();
-	const gasData = useGasFeeData();
 
 	const checkedIndexes = () => {
 		const checkedIndexes: string[] = [];
@@ -48,19 +46,11 @@ export const ClaimBent = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		if (checkAll) {
-			const gas = await bentStakingContract.connect(signer).estimateGas.claimAll();
-			await bentStakingContract.connect(signer).claimAll({
-				gasLimit: gas,
-				maxFeePerGas: gasData.maxFeePerGas,
-				maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-			});
+			const gasLimit = await bentStakingContract.connect(signer).estimateGas.claimAll();
+			await bentStakingContract.connect(signer).claimAll({ gasLimit });
 		} else {
-			const gas = await bentStakingContract.connect(signer).estimateGas.claim(checkedIndexes());
-			await bentStakingContract.connect(signer).claim(checkedIndexes(), {
-				gasLimit: gas,
-				maxFeePerGas: gasData.maxFeePerGas,
-				maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-			});
+			const gasLimit = await bentStakingContract.connect(signer).estimateGas.claim(checkedIndexes());
+			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasLimit });
 		}
 	}
 

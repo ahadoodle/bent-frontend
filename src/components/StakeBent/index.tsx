@@ -19,7 +19,6 @@ import {
 	useBentTotalStaked,
 	useBentTvl,
 	useERC20Contract,
-	useGasFeeData
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -42,7 +41,6 @@ export const StakeBent = (): React.ReactElement => {
 	const { library } = useActiveWeb3React();
 	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
 	const bentStakingContract = useBentStakingContract();
-	const gasData = useGasFeeData();
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
@@ -71,12 +69,8 @@ export const StakeBent = (): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await bentToken.connect(signer).estimateGas.approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
-		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256, {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await bentToken.connect(signer).estimateGas.approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
+		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256, { gasLimit });
 		if (res) {
 			setIsApproved(true);
 		}
@@ -85,12 +79,8 @@ export const StakeBent = (): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await bentStakingContract.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
-		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await bentStakingContract.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
+		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), { gasLimit });
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -100,12 +90,8 @@ export const StakeBent = (): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
-		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
+		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), { gasLimit });
 		if (res) {
 			setWithdrawAmount('')
 		}

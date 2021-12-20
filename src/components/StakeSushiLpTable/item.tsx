@@ -12,7 +12,6 @@ import {
 	useBalance,
 	useBentMasterChefContract,
 	useERC20Contract,
-	useGasFeeData,
 	usePoolAllowance,
 	useSushiApr,
 	useSushiLpDeposited,
@@ -45,7 +44,6 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const { library } = useActiveWeb3React();
 	const sushiLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const masterChef = useBentMasterChefContract();
-	const gasData = useGasFeeData();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const allowance = usePoolAllowance(props.poolKey);
 	const depositedLp = useSushiLpDeposited(props.poolKey);
@@ -83,12 +81,8 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await sushiLpToken.connect(signer).estimateGas.approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
-		const tx = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256, {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await sushiLpToken.connect(signer).estimateGas.approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
+		const tx = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256, { gasLimit });
 		const res = await tx.wait();
 		if (res) {
 			setIsApproved(true);
@@ -98,12 +92,8 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await masterChef.connect(signer).estimateGas.deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
-		const tx = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18), {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await masterChef.connect(signer).estimateGas.deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
+		const tx = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18), { gasLimit });
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
@@ -114,12 +104,8 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await masterChef.connect(signer).estimateGas.withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
-		const tx = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18), {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await masterChef.connect(signer).estimateGas.withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
+		const tx = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18), { gasLimit });
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')

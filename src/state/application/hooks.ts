@@ -11,7 +11,6 @@ import { AppState } from '../index';
 import { useActiveWeb3React } from 'hooks';
 import { BigNumber } from 'ethers';
 import { ChainId } from 'constant';
-import { GasFeeData } from './reducer';
 import { ContractsState } from 'state/contracts/reducer';
 
 export function useBlockNumber(): number | undefined {
@@ -25,16 +24,6 @@ export function useGasPrice(): BigNumber {
 
 export function useContractState(): ContractsState {
   return useSelector((state: AppState) => state.contracts);
-}
-
-export const useGasFeeData = (): GasFeeData => {
-  return useSelector((state: AppState) => {
-    return {
-      gasPrice: state.application.gasPrice,
-      maxFeePerGas: state.application.maxFeePerGas,
-      maxPriorityFeePerGas: state.application.maxPriorityFeePerGas
-    }
-  });
 }
 
 export function useWalletModalOpen(): boolean {
