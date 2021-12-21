@@ -9,7 +9,6 @@ import {
 	useCrvDeposit,
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
-	useGasFeeData,
 	useTokenPrices,
 	useCrvPoolRewards,
 	useCrvApr
@@ -33,7 +32,6 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
 	const bentPool = useBentCvxMasterChefContract();
-	const gasData = useGasFeeData();
 	const tokenPrices = useTokenPrices();
 	const symbol = props.poolInfo.CrvLpSYMBOL;
 	const depositedLp = useCrvDeposit(props.poolKey);
@@ -42,11 +40,11 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const rewards = useCrvPoolRewards(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
 
-	const haveRewards = () => {
-		let enable = false;
-		rewards.forEach(reward => enable = enable || reward.toString() !== '0');
-		return enable;
-	}
+	// const haveRewards = () => {
+	// 	let enable = false;
+	// 	rewards.forEach(reward => enable = enable || reward.toString() !== '0');
+	// 	return enable;
+	// }
 
 	useEffect(() => {
 		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
@@ -63,12 +61,8 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const account = await signer.getAddress();
-		const gas = await bentPool.connect(signer).estimateGas.claim(0, account);
-		await bentPool.connect(signer).claim(0, account, {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await bentPool.connect(signer).estimateGas.claim(0, account);
+		await bentPool.connect(signer).claim(0, account, { gasLimit });
 	}
 
 	return (
@@ -113,8 +107,12 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							<Button
 								className="claimbtn"
 								onClick={claim}
-								disabled={!haveRewards()}
-							>Claim</Button>
+								// disabled={!haveRewards()}
+								disabled={true}
+							>
+								Claim<br />
+								<span className="small">(temp. paused)</span>
+							</Button>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

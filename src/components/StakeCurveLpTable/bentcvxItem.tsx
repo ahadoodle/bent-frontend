@@ -21,7 +21,6 @@ import {
 	useCrvPoolDepositedUsd,
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
-	useGasFeeData,
 	useERC20Contract,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
@@ -42,7 +41,6 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const { library } = useActiveWeb3React();
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentCvxMasterChefContract();
-	const gasData = useGasFeeData();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const depositedLp = useCrvDeposit(props.poolKey);
 	const symbol = props.poolInfo.CrvLpSYMBOL;
@@ -79,12 +77,8 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
-		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		});
+		const gasLimit = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
+		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, { gasLimit });
 		const res = await tx.wait();
 		if (res) {
 			setIsApproved(true);
@@ -94,12 +88,8 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
-		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		})
+		const gasLimit = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
+		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), { gasLimit })
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
@@ -110,12 +100,8 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gas = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
-		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), {
-			gasLimit: gas,
-			maxFeePerGas: gasData.maxFeePerGas,
-			maxPriorityFeePerGas: gasData.maxPriorityFeePerGas,
-		})
+		const gasLimit = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
+		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), { gasLimit })
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
@@ -253,12 +239,16 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 															<Button
 																className="approvebtn"
 																disabled={
-																	lpBalance.isZero() || !isApproved ||
-																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																	true
+																	// lpBalance.isZero() || !isApproved ||
+																	// parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
+																	// utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 																}
 																onClick={stake}
-															>Stake</Button>
+															>
+																Stake<br />
+																<span className="small">(temp. paused)</span>
+															</Button>
 														</div>
 													</div>
 												</div>
