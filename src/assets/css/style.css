@@ -658,7 +658,7 @@ button.approvebtn.btn.btn-secondary {
     font-style: normal;
     font-weight: bold;
     font-size: 16px;
-    line-height: 19px;
+    line-height: 15px;
     text-align: center;
     letter-spacing: -0.24px;
     background-color: #C1FFD7;
@@ -668,6 +668,10 @@ button.approvebtn.btn.btn-secondary {
     width: 185px;
     height: 42px;
     padding: 5px 5px 8px;
+}
+button.approvebtn.btn.btn-secondary .small {
+    font-weight: normal;
+    font-size: 13px;
 }
 button.approvebtn.btn.btn-secondary.disabled {
     color: #FAFAFA;
@@ -1204,7 +1208,11 @@ button.claimbtn.btn.btn-secondary {
     box-shadow: 4px 4px 0px 0px #10151d;
     border: 2px solid #10151d;
     padding: 8.5px 20px;
-    width: 101px;
+    width: 120px;
+}
+button.claimbtn.btn.btn-secondary .small {
+    font-weight: normal;
+    font-size: 11px;
 }
 .climBtn i.fa.fa-caret-down {
     text-align: right;
