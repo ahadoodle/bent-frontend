@@ -240,12 +240,16 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 															<Button
 																className="approvebtn"
 																disabled={
-																	lpBalance.isZero() || !isApproved ||
-																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																	true
+																	// lpBalance.isZero() || !isApproved ||
+																	// parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
+																	// utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 																}
 																onClick={stake}
-															>Stake</Button>
+															>
+																Stake<br />
+																<span className="small">(temp. paused)</span>
+															</Button>
 														</div>
 													</div>
 												</div>
