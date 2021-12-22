@@ -40,11 +40,11 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const rewards = useCrvPoolRewards(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
 
-	// const haveRewards = () => {
-	// 	let enable = false;
-	// 	rewards.forEach(reward => enable = enable || reward.toString() !== '0');
-	// 	return enable;
-	// }
+	const haveRewards = () => {
+		let enable = false;
+		rewards.forEach(reward => enable = enable || reward.toString() !== '0');
+		return enable;
+	}
 
 	useEffect(() => {
 		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
@@ -83,12 +83,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b>
 							<span className="small">$</span>
-							<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+							<DecimalSpan value={props.poolInfo.disabled ? '--' : formatBigNumber(earnedUsd, 18, 2)} />
 						</b>
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{props.poolInfo.disabled ? 'TBC' : apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -106,12 +106,8 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 							<Button
 								className="claimbtn"
 								onClick={claim}
-								// disabled={!haveRewards()}
-								disabled={true}
-							>
-								Claim<br />
-								<span className="small">(temp. paused)</span>
-							</Button>
+								disabled={!haveRewards()}
+							>Claim</Button>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

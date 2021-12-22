@@ -12,6 +12,7 @@ export interface BentPool {
 	CrvLpSYMBOL: string;
 	isBentCvx?: boolean;
 	crvPoolLink: string;
+	disabled?: boolean;
 }
 
 const BentPools: Record<string, BentPool> = {
@@ -37,6 +38,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvCoinsLength: 2,
 		CrvLpSYMBOL: 'cvxcrvCrv',
 		crvPoolLink: 'https://curve.fi/factory/22/deposit',
+		disabled: true,
 	},
 	MIM: {
 		LOGO: TOKEN_LOGO.MIM,
@@ -48,6 +50,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvCoinsLength: 2,
 		CrvLpSYMBOL: 'mimCrv',
 		crvPoolLink: 'https://curve.fi/mim/deposit',
+		disabled: true,
 	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,

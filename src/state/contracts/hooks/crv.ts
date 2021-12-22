@@ -17,6 +17,7 @@ export const useCrvTotalTvl = (): BigNumber => {
 	let total = ethers.constants.Zero;
 	const tvls = useSelector((state: AppState) => state.contracts.crvTvl || {});
 	Object.keys(tvls).forEach(poolKey => {
+		if (POOLS.BentPools[poolKey] && POOLS.BentPools[poolKey].disabled) return;
 		total = total.add(BigNumber.from(tvls[poolKey] || ethers.constants.Zero));
 	})
 	return total;
@@ -36,6 +37,7 @@ export const useCrvAverageApr = (): number => {
 	const deposits = useCrvPoolDepositedUsds();
 	const aprs = useCrvAprs();
 	Object.keys(POOLS.BentPools).forEach(poolKey => {
+		if (POOLS.BentPools[poolKey] && POOLS.BentPools[poolKey].disabled) return;
 		const apr = aprs[poolKey] * 100 || 0;
 		const tvl = BigNumber.from(deposits[poolKey] || ethers.constants.Zero);
 		totalTvl = tvl.add(totalTvl);
@@ -85,6 +87,7 @@ export const useCrvPoolTotalEarned = (): BigNumber => {
 	let total = ethers.constants.Zero;
 	const earns = useSelector((state: AppState) => state.contracts.crvEarnedUsd || {});
 	Object.keys(earns).forEach(poolKey => {
+		if (POOLS.BentPools[poolKey] && POOLS.BentPools[poolKey].disabled) return;
 		total = total.add(BigNumber.from(earns[poolKey] || ethers.constants.Zero));
 	})
 	return total;
