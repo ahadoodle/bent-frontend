@@ -40,11 +40,11 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const rewards = useCrvPoolRewards(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
 
-	// const haveRewards = () => {
-	// 	let enable = false;
-	// 	rewards.forEach(reward => enable = enable || reward.toString() !== '0');
-	// 	return enable;
-	// }
+	const haveRewards = () => {
+		let enable = false;
+		rewards.forEach(reward => enable = enable || reward.toString() !== '0');
+		return enable;
+	}
 
 	useEffect(() => {
 		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
@@ -107,12 +107,8 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							<Button
 								className="claimbtn"
 								onClick={claim}
-								// disabled={!haveRewards()}
-								disabled={true}
-							>
-								Claim<br />
-								<span className="small">(temp. paused)</span>
-							</Button>
+								disabled={!haveRewards()}
+							>Claim</Button>
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"

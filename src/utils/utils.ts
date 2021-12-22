@@ -141,7 +141,7 @@ export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenP
 export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 	let total = ethers.constants.Zero;
 	Object.keys(bns).forEach(key => {
-		if (POOLS.BentPools[key].disabled) return;
+		if (POOLS.BentPools[key] && POOLS.BentPools[key].disabled) return;
 		total = total.add(bns[key]);
 	})
 	return total;
