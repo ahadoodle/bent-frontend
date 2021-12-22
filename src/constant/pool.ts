@@ -12,6 +12,7 @@ export interface BentPool {
 	CrvLpSYMBOL: string;
 	isBentCvx?: boolean;
 	crvPoolLink: string;
+	disabled?: boolean;
 }
 
 const BentPools: Record<string, BentPool> = {
@@ -27,17 +28,18 @@ const BentPools: Record<string, BentPool> = {
 		isBentCvx: true,
 		crvPoolLink: 'https://curve.fi/factory/76/deposit',
 	},
-	// CRV: {
-	// 	LOGO: TOKEN_LOGO.CRV,
-	// 	Name: 'cvxcrv',
-	// 	POOL: '0x270B6AFF561284ef380cDD6d8B036f4981049A86',
-	// 	DepositAsset: '0x9D0464996170c6B9e75eED71c68B99dDEDf279e8', // Curve.fi cvxCRV (CRV)
-	// 	CvxRewardsAddr: '0x0392321e86f42c2f94fbb0c6853052487db521f0',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
-	// 	CrvCoinsLength: 2,
-	// 	CrvLpSYMBOL: 'cvxcrvCrv',
-	// 	crvPoolLink: 'https://curve.fi/factory/22/deposit',
-	// },
+	CRV: {
+		LOGO: TOKEN_LOGO.CRV,
+		Name: 'cvxcrv',
+		POOL: '0x270B6AFF561284ef380cDD6d8B036f4981049A86',
+		DepositAsset: '0x9D0464996170c6B9e75eED71c68B99dDEDf279e8', // Curve.fi cvxCRV (CRV)
+		CvxRewardsAddr: '0x0392321e86f42c2f94fbb0c6853052487db521f0',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'cvxcrvCrv',
+		crvPoolLink: 'https://curve.fi/factory/22/deposit',
+		disabled: true,
+	},
 	MIM: {
 		LOGO: TOKEN_LOGO.MIM,
 		Name: 'mim',
@@ -48,6 +50,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvCoinsLength: 2,
 		CrvLpSYMBOL: 'mimCrv',
 		crvPoolLink: 'https://curve.fi/mim/deposit',
+		disabled: true,
 	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
