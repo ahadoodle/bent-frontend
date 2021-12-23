@@ -33,3 +33,7 @@ export const getMultiBentSingleStaking = (address: string): Contract => {
 export const getMultiCvxLocker = (): Contract => {
 	return new Contract(POOLS.VlCvxLocker, ABIS.CvxLocker);
 }
+
+export const getMultiBentCvxStaking = (): Contract => {
+	return new Contract(POOLS.BentCvxStaking.BentCvxStaking, ABIS.BentCvxStaking);
+}

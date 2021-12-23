@@ -31,6 +31,8 @@ export interface ContractsState {
 	// BentCVX Staking Pool States
 	bentCvxAllowance: BigNumber,
 	vlCvxBalance: BigNumber,
+	bentCvxStakingAllowance: BigNumber,
+	bentCvxStaked: BigNumber,
 
 	// Curve Pool States
 	crvTvl: Record<string, BigNumber>;
@@ -71,6 +73,8 @@ const initialState: ContractsState = {
 
 	bentCvxAllowance: ethers.constants.Zero,
 	vlCvxBalance: ethers.constants.Zero,
+	bentCvxStakingAllowance: ethers.constants.Zero,
+	bentCvxStaked: ethers.constants.Zero,
 
 	crvTvl: {},
 	crvApr: {},
@@ -170,5 +174,7 @@ export default createReducer(initialState, (builder) =>
 			// bentCVX
 			state.bentCvxAllowance = action.payload.bentCvxAllowance;
 			state.vlCvxBalance = action.payload.vlCvxBalance;
+			state.bentCvxStakingAllowance = action.payload.bentCvxStakingAllowance
+			state.bentCvxStaked = action.payload.bentCvxStaked;
 		})
 );

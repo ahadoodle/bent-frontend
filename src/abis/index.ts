@@ -8,6 +8,9 @@ import CrvFiLp from './ICurveFi_2.json';
 import BentSingleStaking from './BentSingleStaking.json';
 import BentCVX from './BentCVX.json';
 import CvxLocker from './CvxLocker.json';
+import BentCvxStaking from './BentCvxStaking.json';
+import BentCvxRewarder from './BentCvxRewarder.json';
+import BentCvxRewarderMasterchef from './BentCvxRewarderMasterchef.json';
 
 export const ABIS = {
 	BentBasePool,
@@ -20,4 +23,7 @@ export const ABIS = {
 	BentSingleStaking,
 	BentCVX,
 	CvxLocker,
+	BentCvxStaking,
+	BentCvxRewarder,
+	BentCvxRewarderMasterchef,
 }

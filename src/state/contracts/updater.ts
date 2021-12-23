@@ -19,6 +19,7 @@ import {
 	getMultiBentSingleStaking,
 	getCirculatingSupply,
 	getMultiCvxLocker,
+	getMultiBentCvxStaking,
 } from 'utils';
 import {
 	// updateStakingPoolApr,
@@ -78,6 +79,8 @@ export default function Updater(): null {
 
 			let bentCvxAllowance = ethers.constants.Zero;
 			let vlCvxBalance = ethers.constants.Zero;
+			let bentCvxStakingAllowance = ethers.constants.Zero;
+			let bentCvxStaked = ethers.constants.Zero;
 
 			console.log(`Updating contract states\nTime: ${Date.now()}\nAccount: ${account}\nBlockNumber: ${blockNumber}\nBent Price: ${bentPrice}`);
 
@@ -118,8 +121,13 @@ export default function Updater(): null {
 
 			// Add BentCVX staking calls
 			const cvxToken = getMultiERC20Contract(TOKENS['CVX'].ADDR);
+			const bentCvxToken = getMultiERC20Contract(TOKENS['BENTCVX'].ADDR);
+			const bentCvxStaking = getMultiBentCvxStaking();
 			contractCalls.push(cvxToken.balanceOf(accAddr));
 			contractCalls.push(cvxToken.allowance(accAddr, TOKENS['BENTCVX'].ADDR));
+			contractCalls.push(bentCvxToken.balanceOf(accAddr));
+			contractCalls.push(bentCvxToken.allowance(accAddr, POOLS.BentCvxStaking.BentCvxStaking));
+			contractCalls.push(bentCvxStaking.balanceOf(accAddr));
 
 			// Add Curve contract calls
 			contractCalls.push(bentToken.totalSupply());
@@ -222,6 +230,9 @@ export default function Updater(): null {
 				// Update BentCVX Staking Pool Infos
 				balances[TOKENS['CVX'].ADDR.toLowerCase()] = results[startIndex++];
 				bentCvxAllowance = results[startIndex++];
+				balances[TOKENS['BENTCVX'].ADDR.toLowerCase()] = results[startIndex++];
+				bentCvxStakingAllowance = results[startIndex++];
+				bentCvxStaked = results[startIndex++];
 
 				// Update Curve Pool Infos
 				const bentSupply = results[startIndex++];
@@ -327,7 +338,6 @@ export default function Updater(): null {
 						bentAllowance,
 						bentAprs,
 						bentAvgApr,
-						bentCvxAllowance,
 						bentEarnedUsd,
 						bentPoolRewardsInfo,
 						bentRewards,
@@ -350,6 +360,9 @@ export default function Updater(): null {
 						sushiRewards,
 						sushiTvl,
 						vlCvxBalance,
+						bentCvxAllowance,
+						bentCvxStakingAllowance,
+						bentCvxStaked,
 					}));
 				})
 			})

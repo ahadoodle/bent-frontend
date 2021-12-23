@@ -9,3 +9,11 @@ export const useBentCvxAllowance = (): BigNumber => {
 export const useVlCvxBalance = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.vlCvxBalance || ethers.constants.Zero));
 }
+
+export const useBentCvxStakingAllowance = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentCvxStakingAllowance || ethers.constants.Zero));
+}
+
+export const useBentCvxStaked = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentCvxStaked || ethers.constants.Zero));
+}
