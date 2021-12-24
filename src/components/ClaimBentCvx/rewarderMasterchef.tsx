@@ -50,7 +50,7 @@ export const ClaimBentCvxRewarderMasterChef = (props: Props): React.ReactElement
 							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
 						</b><br />
 						<span className="small text-muted">
-							{formatBigNumber(BigNumber.from(rewards[0]) || ethers.constants.Zero, 18, 2)} BENT
+							{formatBigNumber(BigNumber.from(rewards.length ? rewards[0] : ethers.constants.Zero), 18, 2)} BENT
 						</span>
 					</Col>
 					<Col>
