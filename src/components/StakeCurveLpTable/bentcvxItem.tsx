@@ -239,16 +239,12 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 															<Button
 																className="approvebtn"
 																disabled={
-																	true
-																	// lpBalance.isZero() || !isApproved ||
-																	// parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	// utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																	lpBalance.isZero() || !isApproved ||
+																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 																}
 																onClick={stake}
-															>
-																Stake<br />
-																<span className="small">(temp. paused)</span>
-															</Button>
+															>Stake</Button>
 														</div>
 													</div>
 												</div>
