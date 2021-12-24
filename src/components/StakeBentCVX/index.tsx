@@ -5,18 +5,24 @@ import {
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
-import { formatBigNumber, getEtherscanLink } from "utils";
+import { formatBigNumber, formatMillionsBigNumber, getEtherscanLink } from "utils";
 import {
 	useActiveWeb3React,
 	useBalance,
 	useBentCvxAllowance,
 	useBentCVXContract,
 	useBentCvxStaked,
+	useBentCvxStakedUSD,
 	useBentCvxStakingAllowance,
 	useBentCvxStakingContract,
+	useBentCvxTotalStaked,
+	useBentCvxTvl,
 	useERC20Contract,
+	useBentCvxAvgApr,
+	useBentCvxTotalEarned,
 } from "hooks";
 import { ethers, utils } from "ethers";
+import { DecimalSpan } from "components/DecimalSpan";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -30,6 +36,11 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const bentCvxBalance = useBalance(TOKENS['BENTCVX'].ADDR);
 	const bentCvxAllowance = useBentCvxStakingAllowance();
 	const bentCvxStaked = useBentCvxStaked();
+	const bentCvxStakedUsd = useBentCvxStakedUSD();
+	const bentCvxTotalStaked = useBentCvxTotalStaked();
+	const avgApr = useBentCvxAvgApr();
+	const earnedUsd = useBentCvxTotalEarned();
+	const tvl = useBentCvxTvl();
 	const { library } = useActiveWeb3React();
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
 	const bentCVX = useBentCVXContract();
@@ -154,12 +165,47 @@ export const StakeBentCVX = (): React.ReactElement => {
 									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>Earned (USD)</p>
+										<div className="boldText">
+											<b>
+												<span className="small">$</span>
+												<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+											</b>
+										</div>
+									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>APR</p>
+										<div className="boldText">
+											<b>
+												{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+											</b>
+										</div>
+									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>My Staked ({bentCvxStaked.isZero() ? '--' : formatBigNumber(bentCvxStaked, 18, 2)} bentCVX)</p>
+										<div className="boldText">
+											<b>
+												<span className="small">$</span>
+												<DecimalSpan value={formatBigNumber(bentCvxStakedUsd, 18, 2)} />
+											</b>
+										</div>
+									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>TVL ({formatBigNumber(bentCvxTotalStaked, 18, 2)} bentCVX)</p>
+										<div className="boldText">
+											<b>
+												<span className="small">$</span>
+												{formatMillionsBigNumber(tvl, 18, 2)}
+											</b>
+										</div>
+									</div>
 								</Col>
 							</Row>
 							<Card>

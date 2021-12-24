@@ -1210,9 +1210,17 @@ button.claimbtn.btn.btn-secondary {
     padding: 8.5px 20px;
     width: 120px;
 }
+.claimbtn-container {
+    position: absolute;
+	top: 20px;
+	right: 150px;
+}
 button.claimbtn.btn.btn-secondary .small {
     font-weight: normal;
     font-size: 11px;
+}
+div.climBtn {
+    height: 38px;
 }
 .climBtn i.fa.fa-caret-down {
     text-align: right;

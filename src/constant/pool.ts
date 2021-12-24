@@ -168,9 +168,18 @@ const BentStaking = {
 
 const BentCvxStaking = {
 	BentCvxStaking: '0xe55C5069ED7F8fE2EA656aFf4551af52F8dbdeF7',
-	BentCvxRewarderCvx: '0xf7e8f63E453C5e2931AAdF263eD7FDB5F54eB4F2',
-	BentCvxRewarderBent: '0x6c4F65d3e7DA3bc1F00194AA81FC00Fc4916f229',
-	BentCvxRewarderMasterchef: '0xE644710aAc3c23bFE8cD22fFef003792e4b1c15d'
+	BentCvxRewarderCvx: {
+		Pool: '0xf7e8f63E453C5e2931AAdF263eD7FDB5F54eB4F2',
+		RewardsAssets: ['CVXCRV']
+	},
+	BentCvxRewarderBent: {
+		Pool: '0x6c4F65d3e7DA3bc1F00194AA81FC00Fc4916f229',
+		RewardsAssets: ['CVX', 'BENTCVX', 'SPELL', 'ALCX', 'LDO']
+	},
+	BentCvxRewarderMasterchef: {
+		Pool: '0xE644710aAc3c23bFE8cD22fFef003792e4b1c15d',
+		RewardsAssets: ['BENT']
+	}
 }
 
 export const POOLS = {

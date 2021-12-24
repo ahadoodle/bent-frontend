@@ -5,27 +5,14 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "rewarder",
-				"type": "address"
-			}
-		],
-		"name": "AddRewarder",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
 				"name": "user",
 				"type": "address"
 			},
 			{
 				"indexed": false,
-				"internalType": "uint256[][]",
-				"name": "indexes",
-				"type": "uint256[][]"
+				"internalType": "uint256[]",
+				"name": "pids",
+				"type": "uint256[]"
 			}
 		],
 		"name": "Claim",
@@ -65,12 +52,6 @@
 	},
 	{
 		"anonymous": false,
-		"inputs": [],
-		"name": "OnReward",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
 		"inputs": [
 			{
 				"indexed": true,
@@ -86,19 +67,6 @@
 			}
 		],
 		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "rewarder",
-				"type": "address"
-			}
-		],
-		"name": "RemoveRewarder",
 		"type": "event"
 	},
 	{
@@ -123,12 +91,12 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_rewarder",
-				"type": "address"
+				"internalType": "address[]",
+				"name": "_rewardTokens",
+				"type": "address[]"
 			}
 		],
-		"name": "addRewarder",
+		"name": "addRewardTokens",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -157,7 +125,20 @@
 		"name": "bentCVX",
 		"outputs": [
 			{
-				"internalType": "contract IERC20Upgradeable",
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "bentCVXStaking",
+		"outputs": [
+			{
+				"internalType": "address",
 				"name": "",
 				"type": "address"
 			}
@@ -168,25 +149,66 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256[][]",
-				"name": "_indexes",
-				"type": "uint256[][]"
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "pids",
+				"type": "uint256[]"
 			}
 		],
 		"name": "claim",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "claimAll",
-		"outputs": [],
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "claimed",
+				"type": "bool"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "claimAll",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "claimed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "cvx",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
 			{
 				"internalType": "uint256",
 				"name": "_amount",
@@ -199,11 +221,44 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "endRewardBlock",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_cvx",
+				"type": "address"
+			},
 			{
 				"internalType": "address",
 				"name": "_bentCVX",
 				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_bentCVXStaking",
+				"type": "address"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_rewardTokens",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_windowLength",
+				"type": "uint256"
 			}
 		],
 		"name": "initialize",
@@ -219,7 +274,7 @@
 				"type": "address"
 			}
 		],
-		"name": "isRewarder",
+		"name": "isRewardToken",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -228,6 +283,26 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "lastRewardBlock",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "onReward",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -246,12 +321,31 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "pendingReward",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "pending",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "_index",
 				"type": "uint256"
 			}
 		],
-		"name": "removeRewarder",
+		"name": "removeRewardToken",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -271,12 +365,40 @@
 				"type": "uint256"
 			}
 		],
-		"name": "rewarders",
+		"name": "rewardPools",
 		"outputs": [
 			{
-				"internalType": "contract IBentCVXRewarder",
-				"name": "",
+				"internalType": "address",
+				"name": "rewardToken",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "accRewardPerShare",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "rewardRate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "reserves",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "rewardPoolsCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -309,7 +431,25 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "windowLength",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
 			{
 				"internalType": "uint256",
 				"name": "_amount",
