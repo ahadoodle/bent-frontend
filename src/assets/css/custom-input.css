@@ -4,8 +4,25 @@
 	display: inline-block;
 	width: 38px;
 	height: 12px;
+	font-style: normal;
+	font-weight: 700;
+	font-size: 11px;
+	line-height: 13px;
 }
 
+span.textadvance {
+	position: relative;
+	bottom: 0px;
+	padding-left: 8px;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 17px;
+	letter-spacing: -0.24px;
+}
+.Dark span.textadvance {
+	color: white;
+}
 .advance-btn .switch input {
 	opacity: 0;
 	width: 0;

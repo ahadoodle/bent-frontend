@@ -5,11 +5,13 @@ import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
 import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls, useSortedCrvPoolKeys } from "hooks";
 import { MorePoolsRow } from "components/MorePoolsRow";
+import { SwitchSlider } from "components/Switch";
 import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
 import { utils } from "ethers";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
+	const [showNew, setShowNew] = useState(true);
 	const [sortField, setSortField] = useState('');
 	const [sortOrder, setSortOrder] = useState(1);
 	const tvls = useCrvTvls();
@@ -35,7 +37,15 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 		<Container className="convert-up">
 			<Row>
 				<Col md="12">
-					<h2 className="section-header">Stake Curve LP Tokens</h2>
+					<div className="d-flex">
+						<h2 className="section-header">Stake Curve LP Tokens</h2>
+						<SwitchSlider
+							label="V2 Pools"
+							className="ml-auto"
+							defaultValue={true}
+							onChange={showNew => setShowNew(showNew)}
+						/>
+					</div>
 					<div className="toggleWrap tokentable table sortable">
 						<Row className="align-items-center thead">
 							<Col onClick={() => onSort('name')} className={sortOrderClass('name')}>
@@ -80,7 +90,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 						</Row>
 						<Card>
 							<CardBody>
-								{keys.map((poolName, index) =>
+								{keys.filter(key => showNew ? !POOLS.BentPools[key].isLegacy : POOLS.BentPools[key].isLegacy).map((poolName, index) =>
 									POOLS.BentPools[poolName].isBentCvx ?
 										<StakeBentCvxCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}

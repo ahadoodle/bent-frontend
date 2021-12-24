@@ -587,17 +587,6 @@ p.copyright {
 .converttabs .inverse {
     padding-right: 30px;
 }
-span.textadvance {
-    position: relative;
-    bottom: 8px;
-    padding-left: 8px;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 17px;
-    letter-spacing: -0.24px;
-    color: #9BA2AC;
-}
 .labeltext {
     display: flex;
     justify-content: space-between;
@@ -789,9 +778,6 @@ button.btn.btnshow i {
     border: 3px solid #fff;
     background-color: transparent;
 }
-.Dark span.textadvance {
-    bottom: 0px;
-}
 .Dark button.maxbtn {
     box-shadow: 2px 2px 0px 0px #c1ffd7;
     background: transparent;
@@ -910,6 +896,7 @@ button.btn.btnshow i {
     line-height: 19px;
     letter-spacing: -0.24px;
     color: #FFFFFF;
+    bottom: 6px;
 }
 /* The container */
 .contain {
@@ -1877,9 +1864,6 @@ p.copyright {
 .contain {
     padding-left: 24px;
     margin-right: 10px;
-}
-.autoText span.textadvance {
-    bottom: 6px;
 }
 button.greyBtn.btn.btn-secondary {
     font-size: 14px;
