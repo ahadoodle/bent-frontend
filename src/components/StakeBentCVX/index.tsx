@@ -4,84 +4,135 @@ import {
 	Card, CardTitle, CardText, Input, Label, CardBody
 } from "reactstrap";
 import classnames from "classnames";
-import { TOKENS, TOKEN_LOGO } from "constant";
-import { formatBigNumber } from "utils";
+import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
+import { formatBigNumber, formatMillionsBigNumber, getEtherscanLink } from "utils";
 import {
 	useActiveWeb3React,
 	useBalance,
 	useBentCvxAllowance,
 	useBentCVXContract,
-	useBentStaked,
-	useBentStakingContract,
+	useBentCvxStaked,
+	useBentCvxStakedUSD,
+	useBentCvxStakingAllowance,
+	useBentCvxStakingContract,
+	useBentCvxTotalStaked,
+	useBentCvxTvl,
 	useERC20Contract,
+	useBentCvxAvgApr,
+	useBentCvxTotalEarned,
 } from "hooks";
 import { ethers, utils } from "ethers";
+import { DecimalSpan } from "components/DecimalSpan";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
+	const [convertAmount, setConvertAmount] = useState('');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [isConvertApproved, setIsConvertApproved] = useState<boolean>(false);
+	const [isStakeApproved, setIsStakeApproved] = useState<boolean>(false);
 	const cvxBalance = useBalance(TOKENS['CVX'].ADDR);
-	const allowance = useBentCvxAllowance();
-	const bentStaked = useBentStaked();
+	const cvxAllowance = useBentCvxAllowance();
+	const bentCvxBalance = useBalance(TOKENS['BENTCVX'].ADDR);
+	const bentCvxAllowance = useBentCvxStakingAllowance();
+	const bentCvxStaked = useBentCvxStaked();
+	const bentCvxStakedUsd = useBentCvxStakedUSD();
+	const bentCvxTotalStaked = useBentCvxTotalStaked();
+	const avgApr = useBentCvxAvgApr();
+	const earnedUsd = useBentCvxTotalEarned();
+	const tvl = useBentCvxTvl();
 	const { library } = useActiveWeb3React();
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
 	const bentCVX = useBentCVXContract();
-	const bentStakingContract = useBentStakingContract();
+	const bentCvxStaking = useBentCvxStakingContract();
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
 	};
 
+	const onConvertMax = () => {
+		setConvertAmount(formatBigNumber(cvxBalance, 18, 18).replaceAll(',', ''));
+		setIsConvertApproved(cvxAllowance.gte(cvxBalance) && !cvxBalance.isZero());
+	}
+
 	const onStakeMax = () => {
-		setStakeAmount(formatBigNumber(cvxBalance, 18, 18).replaceAll(',', ''));
-		setIsApproved(allowance.gte(cvxBalance) && !cvxBalance.isZero());
+		setStakeAmount(formatBigNumber(bentCvxBalance, 18, 18).replaceAll(',', ''));
+		setIsStakeApproved(bentCvxAllowance.gte(bentCvxBalance) && !bentCvxBalance.isZero());
 	}
 
 	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(bentStaked, 18, 18).replaceAll(',', ''));
+		setWithdrawAmount(formatBigNumber(bentCvxStaked, 18, 18).replaceAll(',', ''));
+	}
+
+	const onConvertAmountChange = (value) => {
+		setConvertAmount(value);
+		if (isNaN(parseFloat(value))) return;
+		const amountBN = utils.parseUnits(value, 18);
+		setIsConvertApproved(cvxAllowance.gte(amountBN) && !amountBN.isZero());
 	}
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
 		if (isNaN(parseFloat(value))) return;
 		const amountBN = utils.parseUnits(value, 18);
-		setIsApproved(allowance.gte(amountBN) && !amountBN.isZero());
+		setIsStakeApproved(bentCvxAllowance.gte(amountBN) && !amountBN.isZero());
 	}
 
 	const onWithdrawAmountChange = (value) => {
 		setWithdrawAmount(value);
 	}
 
-	const approve = async () => {
+	const onCvxApprove = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await cvxToken.connect(signer).estimateGas.approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256);
 		const tx = await cvxToken.connect(signer).approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256, { gasLimit });
 		const res = await tx.wait();
 		if (res) {
-			setIsApproved(true);
+			setIsConvertApproved(true);
 		}
 	}
 
-	const convert = async () => {
+	const onConvert = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentCVX.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
-		const tx = await bentCVX.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), { gasLimit });
+		const gasLimit = await bentCVX.connect(signer).estimateGas.deposit(utils.parseUnits(convertAmount, 18));
+		const tx = await bentCVX.connect(signer).deposit(utils.parseUnits(convertAmount, 18), { gasLimit });
+		const res = await tx.wait();
+		if (res) {
+			setConvertAmount('')
+			setIsConvertApproved(false);
+		}
+	}
+
+	const onBentCvxApprove = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gasLimit = await bentCVX.connect(signer).estimateGas.approve(POOLS.BentCvxStaking.BentCvxStaking, ethers.constants.MaxUint256);
+		const tx = await bentCVX.connect(signer).approve(POOLS.BentCvxStaking.BentCvxStaking, ethers.constants.MaxUint256, { gasLimit });
+		const res = await tx.wait();
+		if (res) {
+			setIsStakeApproved(true);
+		}
+	}
+
+	const onStake = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gasLimit = await bentCvxStaking.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
+		const tx = await bentCvxStaking.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), { gasLimit });
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
-			setIsApproved(false);
+			setIsStakeApproved(false);
 		}
 	}
 
-	const withdraw = async () => {
+	const onWithdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
-		const tx = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), { gasLimit });
+		const gasLimit = await bentCvxStaking.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
+		const tx = await bentCvxStaking.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), { gasLimit });
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
@@ -114,12 +165,47 @@ export const StakeBentCVX = (): React.ReactElement => {
 									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>Earned (USD)</p>
+										<div className="boldText">
+											<b>
+												<span className="small">$</span>
+												<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+											</b>
+										</div>
+									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>APR</p>
+										<div className="boldText">
+											<b>
+												{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+											</b>
+										</div>
+									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>My Staked ({bentCvxStaked.isZero() ? '--' : formatBigNumber(bentCvxStaked, 18, 2)} bentCVX)</p>
+										<div className="boldText">
+											<b>
+												<span className="small">$</span>
+												<DecimalSpan value={formatBigNumber(bentCvxStakedUsd, 18, 2)} />
+											</b>
+										</div>
+									</div>
 								</Col>
 								<Col>
+									<div className="tableTitle">
+										<p>TVL ({formatBigNumber(bentCvxTotalStaked, 18, 2)} bentCVX)</p>
+										<div className="boldText">
+											<b>
+												<span className="small">$</span>
+												{formatMillionsBigNumber(tvl, 18, 2)}
+											</b>
+										</div>
+									</div>
 								</Col>
 							</Row>
 							<Card>
@@ -137,21 +223,18 @@ export const StakeBentCVX = (): React.ReactElement => {
 													<NavLink
 														className={classnames({ active: activeTab === "2" })}
 														onClick={() => toggle("2")}
-														disabled={true}
 													>Stake</NavLink>
 												</NavItem>
 												<NavItem>
 													<NavLink
 														className={classnames({ active: activeTab === "3" })}
 														onClick={() => toggle("3")}
-														disabled={true}
 													>Unstake</NavLink>
 												</NavItem>
 												<NavItem>
 													<NavLink
 														className={classnames({ active: activeTab === "4" })}
 														onClick={() => toggle("4")}
-														disabled={true}
 													>Info</NavLink>
 												</NavItem>
 											</Nav>
@@ -198,18 +281,18 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	<div className="amount-crv">
 																		<p className="labeltext">
 																			<Label>
-																				Amount of CVX to convert and stake
+																				Amount of CVX to convert
 																			</Label>
 																			<Label>Available:{formatBigNumber(cvxBalance)}</Label>
 																		</p>
 																		<div className="amountinput">
 																			<Input
 																				type="number" placeholder="0"
-																				onChange={(e) => onStakeAmountChange(e.target.value)}
-																				value={stakeAmount}
+																				onChange={(e) => onConvertAmountChange(e.target.value)}
+																				value={convertAmount}
 																			/>
 																			<img src={TOKEN_LOGO.CVX} alt="input-logo" className="inputlogo" />
-																			<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
+																			<Button className="maxbtn" onClick={onConvertMax} >Max</Button>
 																		</div>
 																		<div className="btnouter">
 																			<p className="lineup"></p>
@@ -217,20 +300,20 @@ export const StakeBentCVX = (): React.ReactElement => {
 																				<Button
 																					className="approvebtn"
 																					disabled={
-																						cvxBalance.isZero() || isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(cvxBalance)
+																						cvxBalance.isZero() || isConvertApproved ||
+																						parseFloat(convertAmount) === 0 || isNaN(parseFloat(convertAmount)) ||
+																						utils.parseUnits(convertAmount, 18).gt(cvxBalance)
 																					}
-																					onClick={approve}
+																					onClick={onCvxApprove}
 																				>Approve</Button>
 																				<Button
 																					className="approvebtn"
 																					disabled={
-																						cvxBalance.isZero() || !isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(cvxBalance)
+																						cvxBalance.isZero() || !isConvertApproved ||
+																						parseFloat(convertAmount) === 0 || isNaN(parseFloat(convertAmount)) ||
+																						utils.parseUnits(convertAmount, 18).gt(cvxBalance)
 																					}
-																					onClick={convert}
+																					onClick={onConvert}
 																				>Convert</Button>
 																			</div>
 																			<div className="btnwrapper">
@@ -248,6 +331,96 @@ export const StakeBentCVX = (): React.ReactElement => {
 												</TabPane>
 												<TabPane tabId="2">
 													<Row>
+														<Col sm="6" className="inverse">
+															<Card body>
+																<CardText className="mt-0">
+																	Convert CVX to bentCVX. By staking bentCVX, you're earning the usual rewards from
+																	Convex (cvxCRV + any additional incentives) + 10% of the Bent Platform earnings + BENT tokens.<br /><br />
+																	Note: Converting CVX to bentCVX is irreversible. You may stake and unstake bentCVX tokens,
+																	but not convert them back to CVX.
+																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
+																</CardText>
+																{/* <div className="bent-rewards-container">
+																	<div className="imgText bent-rewards-item">
+																		<div className="d-flex">
+																			<img src={CvxLogo} alt="Icon" />
+																			<span className="small mt-1 mx-2">Earnings</span>
+																		</div>
+																		<p className="apr px-0 mt-1">100% APR</p>
+																	</div>
+																	<div className="imgText bent-rewards-item">
+																		<div className="d-flex">
+																			<img src={BentLogo} alt="Icon" />
+																			<span className="small mt-1 mx-2">Earnings</span>
+																		</div>
+																		<p className="apr px-0 mt-1">100% APR</p>
+																	</div>
+																	<div className="imgText bent-rewards-item">
+																		<div className="d-flex">
+																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
+																			<span className="small mt-1 mx-2">BENT</span>
+																		</div>
+																		<p className="apr px-0 mt-1">100% APR</p>
+																	</div>
+																</div> */}
+															</Card>
+														</Col>
+														<Col sm="6" className="divider-left">
+															<Card body>
+																<div className="card-text">
+																	<div className="amount-crv">
+																		<p className="labeltext">
+																			<Label>
+																				Amount of bentCvx to stake
+																			</Label>
+																			<Label>Available:{formatBigNumber(bentCvxBalance)}</Label>
+																		</p>
+																		<div className="amountinput">
+																			<Input
+																				type="number" placeholder="0"
+																				onChange={(e) => onStakeAmountChange(e.target.value)}
+																				value={stakeAmount}
+																			/>
+																			<img src={TOKEN_LOGO.BENTCVX} alt="input-logo" className="inputlogo" />
+																			<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
+																		</div>
+																		<div className="btnouter">
+																			<p className="lineup"></p>
+																			<div className="btnwrapper">
+																				<Button
+																					className="approvebtn"
+																					disabled={
+																						bentCvxBalance.isZero() || isStakeApproved ||
+																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
+																						utils.parseUnits(stakeAmount, 18).gt(bentCvxBalance)
+																					}
+																					onClick={onBentCvxApprove}
+																				>Approve</Button>
+																				<Button
+																					className="approvebtn"
+																					disabled={
+																						bentCvxBalance.isZero() || !isStakeApproved ||
+																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
+																						utils.parseUnits(stakeAmount, 18).gt(bentCvxBalance)
+																					}
+																					onClick={onStake}
+																				>Stake</Button>
+																			</div>
+																			<div className="btnwrapper">
+																				<Button
+																					className="approvebtn w-100 mt-3"
+																					onClick={onOpen}
+																				>bentCVX/CVX Curve LP</Button>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</Card>
+														</Col>
+													</Row>
+												</TabPane>
+												<TabPane tabId="3">
+													<Row>
 														<Col md="12" className="inverse">
 															<Card body>
 																<CardTitle>
@@ -263,9 +436,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>
-																				Amount of CVX to withdraw
+																				Amount of bentCvx to withdraw
 																			</Label>
-																			<Label>Deposited:{formatBigNumber(bentStaked)}</Label>
+																			<Label>Deposited:{formatBigNumber(bentCvxStaked)}</Label>
 																		</p>
 																		<div className="amountinput">
 																			<Input
@@ -273,7 +446,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																				onChange={(e) => onWithdrawAmountChange(e.target.value)}
 																				value={withdrawAmount}
 																			/>
-																			<img src={TOKENS['CVX'].LOGO} alt="input-logo" className="inputlogo" />
+																			<img src={TOKENS['BENTCVX'].LOGO} alt="input-logo" className="inputlogo" />
 																			<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 																		</div>
 																	</div>
@@ -286,11 +459,11 @@ export const StakeBentCVX = (): React.ReactElement => {
 																		<Button
 																			className="approvebtn"
 																			disabled={
-																				bentStaked.isZero() ||
+																				bentCvxStaked.isZero() ||
 																				parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-																				utils.parseUnits(withdrawAmount, 18).gt(bentStaked)
+																				utils.parseUnits(withdrawAmount, 18).gt(bentCvxStaked)
 																			}
-																			onClick={withdraw}
+																			onClick={onWithdraw}
 																		>Withdraw</Button>
 																	</div>
 																</div>
@@ -298,26 +471,60 @@ export const StakeBentCVX = (): React.ReactElement => {
 														</Col>
 													</Row>
 												</TabPane>
-												<TabPane tabId="3">
+												<TabPane tabId="4">
 													<Row>
-														<Col sm="6">
+														<Col sm="12">
 															<Card body>
-																<CardTitle>Special Title Treatment</CardTitle>
-																<CardText>
-																	With supporting text below as a natural lead-in to
-																	additional content.
-																</CardText>
-																<Button>Go somewhere</Button>
-															</Card>
-														</Col>
-														<Col sm="6">
-															<Card body>
-																<CardTitle>Special Title Treatment</CardTitle>
-																<CardText>
-																	With supporting text below as a natural lead-in to
-																	additional content.
-																</CardText>
-																<Button>Go somewhere</Button>
+																<div className="infoWrap">
+																	<Row>
+																		<Col md="3">
+																			<CardText className="mt-0">
+																				<b>CVX</b> token address:
+																			</CardText>
+																		</Col>
+																		<Col md="9">
+																			<a href={getEtherscanLink(TOKENS.CVX.ADDR)} target="_blank" rel="noreferrer">
+																				{TOKENS.CVX.ADDR}
+																			</a>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col md="3">
+																			<CardText className="mt-0">
+																				<b>bentCVX</b> token address:
+																			</CardText>
+																		</Col>
+																		<Col md="9">
+																			<a href={getEtherscanLink(TOKENS.BENTCVX.ADDR)} target="_blank" rel="noreferrer">
+																				{TOKENS.BENTCVX.ADDR}
+																			</a>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col md="3">
+																			<CardText className="mt-0">
+																				Deposit contract address:
+																			</CardText>
+																		</Col>
+																		<Col md="9">
+																			<a href={getEtherscanLink(POOLS.BentCvxStaking.BentCvxStaking)} target="_blank" rel="noreferrer">
+																				{POOLS.BentCvxStaking.BentCvxStaking}
+																			</a>
+																		</Col>
+																	</Row>
+																	<Row>
+																		<Col md="3">
+																			<CardText className="mt-0">
+																				Rewards contract address:
+																			</CardText>
+																		</Col>
+																		<Col md="9">
+																			<a href={getEtherscanLink(POOLS.BentCvxStaking.BentCvxStaking)} target="_blank" rel="noreferrer">
+																				{POOLS.BentCvxStaking.BentCvxStaking}
+																			</a>
+																		</Col>
+																	</Row>
+																</div>
 															</Card>
 														</Col>
 													</Row>

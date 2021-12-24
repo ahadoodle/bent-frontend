@@ -3,7 +3,7 @@ import AlusdLogo from 'assets/images/token/ALUSD.png';
 import FraxLogo from 'assets/images/token/FRAX.png';
 import TriCrypto2Logo from 'assets/images/token/TRICRYPTO2.png';
 import D3PoolLogo from 'assets/images/token/D3POOL.svg';
-import BentLogo from 'assets/images/token/BENT.svg';
+import BentLogo from 'assets/images/token/BENT_XMAS.svg';
 import CrvLogo from 'assets/images/token/CRV.svg';
 import CvxLogo from 'assets/images/token/CVX.svg';
 import EthLogo from 'assets/images/token/ETH.svg';

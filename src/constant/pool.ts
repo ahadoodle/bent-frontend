@@ -166,10 +166,27 @@ const BentStaking = {
 	RewardAssets: ['CRV', 'CVX', 'SPELL', 'ALCX', 'LDO']
 }
 
+const BentCvxStaking = {
+	BentCvxStaking: '0xe55C5069ED7F8fE2EA656aFf4551af52F8dbdeF7',
+	BentCvxRewarderCvx: {
+		Pool: '0xf7e8f63E453C5e2931AAdF263eD7FDB5F54eB4F2',
+		RewardsAssets: ['CVXCRV']
+	},
+	BentCvxRewarderBent: {
+		Pool: '0x6c4F65d3e7DA3bc1F00194AA81FC00Fc4916f229',
+		RewardsAssets: ['CVX', 'BENTCVX', 'SPELL', 'ALCX', 'LDO']
+	},
+	BentCvxRewarderMasterchef: {
+		Pool: '0xE644710aAc3c23bFE8cD22fFef003792e4b1c15d',
+		RewardsAssets: ['BENT']
+	}
+}
+
 export const POOLS = {
 	BentPools,
 	SushiPools,
 	BentStaking,
+	BentCvxStaking,
 	VlCvxLocker: '0xD18140b4B819b895A3dba5442F959fA44994AF50',
 	Multisig: '0xe001452BeC9e7AC34CA4ecaC56e7e95eD9C9aa3b',
 }

@@ -43,6 +43,26 @@ export const useBentStakingContract = (): Contract => {
 	return useMemo(() => new Contract(POOLS.BentStaking.POOL, ABIS.BentSingleStaking, library), [library]);
 }
 
+export const useBentCvxStakingContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxStaking, ABIS.BentCvxStaking, library), [library]);
+}
+
+export const useBentCvxRewarderCvxContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxRewarderCvx.Pool, ABIS.BentCvxRewarder, library), [library]);
+}
+
+export const useBentCvxRewarderBentContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxRewarderBent.Pool, ABIS.BentCvxStaking, library), [library]);
+}
+
+export const useBentCvxRewarderMCContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxRewarderMasterchef.Pool, ABIS.BentCvxRewarderMasterchef, library), [library]);
+}
+
 export const useCrvFiLp = (address: string): Web3Contract => {
 	const web3 = useWeb3();
 	return useMemo(() => getCrvFiLp(address, web3), [web3, address]);

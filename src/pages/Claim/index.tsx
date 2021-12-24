@@ -9,6 +9,7 @@ import BannerBlocks from "components/BannerBlocks";
 import { ClaimCurveLpTable } from "components/ClaimCurveLpTable";
 import { ClaimSushiLpTable } from "components/ClaimSushiLpTable";
 import { ClaimBent } from "components/ClaimBent";
+import { ClaimBentCVX } from "components/ClaimBentCvx";
 
 export const Claim = (): React.ReactElement => {
   // const [autoClaimStatus, setAutoClaimStatus] = useState(false);
@@ -144,6 +145,7 @@ export const Claim = (): React.ReactElement => {
       </div>
       <div className="contentSection">
         <ClaimBent />
+        <ClaimBentCVX />
         <ClaimCurveLpTable />
         <ClaimSushiLpTable />
         <Container>
