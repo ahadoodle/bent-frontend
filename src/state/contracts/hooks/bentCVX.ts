@@ -44,7 +44,7 @@ export const useBentCvxRewardsUsd = (poolKey: string): BigNumber[] => {
 }
 
 export const useBentCvxEarned = (poolKey: string): BigNumber => {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentCvxEarned[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.bentCvxEarned ? state.contracts.bentCvxEarned[poolKey] || ethers.constants.Zero : ethers.constants.Zero));
 }
 
 export const useBentCvxTotalEarned = (): BigNumber => {
