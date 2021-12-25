@@ -4,6 +4,7 @@ interface TokenInfo {
 	LOGO: string;
 	ADDR: string;
 	DECIMALS: number;
+	SYMBOL?: string;
 }
 
 export const TOKENS: Record<string, TokenInfo> = {
@@ -107,9 +108,16 @@ export const TOKENS: Record<string, TokenInfo> = {
 		ADDR: '0xae7ab96520de3a18e5e111b5eaab095312d7fe84',
 		DECIMALS: 18
 	},
+	CVXCRV: {
+		LOGO: TOKEN_LOGO.CRV,
+		ADDR: '0x62b9c7356a2dc64a1969e19c23e4f579f9810aa7',
+		DECIMALS: 18,
+		SYMBOL: 'cvxcrv'
+	},
 	BENTCVX: {
 		LOGO: TOKEN_LOGO.BENTCVX,
 		ADDR: '0x9e0441e084f5db0606565737158aa6ab6b970fe0',
-		DECIMALS: 18
+		DECIMALS: 18,
+		SYMBOL: 'bentcvx'
 	}
 }

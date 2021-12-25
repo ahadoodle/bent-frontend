@@ -4,7 +4,7 @@ import CardCoin from "assets/images/cardCoin.png";
 import DollorIcon from "assets/images/dollorIcon.png";
 import ClaimIcon from "assets/images/claimIcon.svg";
 import DepositIcon from "assets/images/depositIcon.svg";
-import { useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTvls, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
+import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTvls, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
 import { formatBigNumber, getSumBigNumbers } from "utils";
 import LockIcon from "assets/images/lockIcon.svg";
 // import DbIcon from "assets/images/dbIcon.svg";
@@ -13,23 +13,26 @@ const BannerBlocks = (): React.ReactElement => {
   const crvEarnings = useCrvPoolTotalEarned();
   const sushiEarnings = useSushiPoolTotalEarned();
   const bentEarnings = useBentEarnedUsd();
+  const bentCvxEarned = useBentCvxTotalEarned();
   const crvDeposits = useCrvPoolTotalDepositedUsds();
   const sushiDeposits = useSushiPoolTotalDepositedUsd();
   const bentDeposits = useBentStakedUsd();
+  const bentCvxDeposits = useBentCvxStakedUSD();
   const crvTvl = useCrvTvls();
   const sushiTvl = useSushiTotalTvl();
   const bentTvl = useBentTvl();
+  const bentCvxTvl = useBentCvxTvl();
 
   const totalTvl = (): string => {
-    return formatBigNumber(getSumBigNumbers(crvTvl).add(sushiTvl).add(bentTvl), 18, 2);
+    return formatBigNumber(getSumBigNumbers(crvTvl).add(sushiTvl).add(bentTvl).add(bentCvxTvl), 18, 2);
   }
 
   const totalEarnings = (): string => {
-    return formatBigNumber(crvEarnings.add(sushiEarnings).add(bentEarnings), 18, 2);
+    return formatBigNumber(crvEarnings.add(sushiEarnings).add(bentEarnings).add(bentCvxEarned), 18, 2);
   }
 
   const totalDeposits = (): string => {
-    return formatBigNumber(crvDeposits.add(sushiDeposits).add(bentDeposits), 18, 2)
+    return formatBigNumber(crvDeposits.add(sushiDeposits).add(bentDeposits).add(bentCvxDeposits), 18, 2)
   }
 
   return (

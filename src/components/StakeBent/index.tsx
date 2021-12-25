@@ -97,6 +97,10 @@ export const StakeBent = (): React.ReactElement => {
 		}
 	}
 
+	const onVote = () => {
+		window.open('https://snapshot.org/#/bentfinance.eth', '_blank');
+	}
+
 	return (
 		<Container className="stake-bent">
 			<Row>
@@ -242,6 +246,12 @@ export const StakeBent = (): React.ReactElement => {
 																					}
 																					onClick={stake}
 																				>Stake BENT</Button>
+																			</div>
+																			<div className="btnwrapper">
+																				<Button
+																					className="approvebtn w-100 mt-3"
+																					onClick={onVote}
+																				>Vote on Convex</Button>
 																			</div>
 																		</div>
 																	</div>

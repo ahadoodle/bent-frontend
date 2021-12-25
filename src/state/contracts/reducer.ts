@@ -31,6 +31,16 @@ export interface ContractsState {
 	// BentCVX Staking Pool States
 	bentCvxAllowance: BigNumber,
 	vlCvxBalance: BigNumber,
+	bentCvxStakingAllowance: BigNumber,
+	bentCvxStaked: BigNumber,
+	bentCvxTotalStaked: BigNumber,
+	bentCvxTvl: BigNumber,
+	bentCvxRewards: Record<string, BigNumber[]>,
+	bentCvxRewardsUsd: Record<string, BigNumber[]>,
+	bentCvxEarned: Record<string, BigNumber>,
+	bentCvxAprs: Record<string, number[]>,
+	bentCvxPoolAprs: Record<string, number>,
+	bentCvxAvgApr: number,
 
 	// Curve Pool States
 	crvTvl: Record<string, BigNumber>;
@@ -71,6 +81,16 @@ const initialState: ContractsState = {
 
 	bentCvxAllowance: ethers.constants.Zero,
 	vlCvxBalance: ethers.constants.Zero,
+	bentCvxStakingAllowance: ethers.constants.Zero,
+	bentCvxStaked: ethers.constants.Zero,
+	bentCvxTotalStaked: ethers.constants.Zero,
+	bentCvxTvl: ethers.constants.Zero,
+	bentCvxRewards: {},
+	bentCvxRewardsUsd: {},
+	bentCvxEarned: {},
+	bentCvxAprs: {},
+	bentCvxPoolAprs: {},
+	bentCvxAvgApr: 0,
 
 	crvTvl: {},
 	crvApr: {},
@@ -170,5 +190,30 @@ export default createReducer(initialState, (builder) =>
 			// bentCVX
 			state.bentCvxAllowance = action.payload.bentCvxAllowance;
 			state.vlCvxBalance = action.payload.vlCvxBalance;
+			state.bentCvxStakingAllowance = action.payload.bentCvxStakingAllowance
+			state.bentCvxStaked = action.payload.bentCvxStaked;
+			state.bentCvxTotalStaked = action.payload.bentCvxTotalStaked;
+			state.bentCvxTvl = action.payload.bentCvxTvl;
+			Object.keys(action.payload.bentCvxRewards).forEach(poolKey => {
+				if (!state.bentCvxRewards) state.bentCvxRewards = {}
+				state.bentCvxRewards[poolKey] = action.payload.bentCvxRewards[poolKey];
+			})
+			Object.keys(action.payload.bentCvxRewardsUsd).forEach(poolKey => {
+				if (!state.bentCvxRewardsUsd) state.bentCvxRewardsUsd = {}
+				state.bentCvxRewardsUsd[poolKey] = action.payload.bentCvxRewardsUsd[poolKey];
+			})
+			Object.keys(action.payload.bentCvxEarned).forEach(poolKey => {
+				if (!state.bentCvxEarned) state.bentCvxEarned = {}
+				state.bentCvxEarned[poolKey] = action.payload.bentCvxEarned[poolKey];
+			})
+			Object.keys(action.payload.bentCvxAprs).forEach(poolKey => {
+				if (!state.bentCvxAprs) state.bentCvxAprs = {}
+				state.bentCvxAprs[poolKey] = action.payload.bentCvxAprs[poolKey];
+			})
+			Object.keys(action.payload.bentCvxPoolAprs).forEach(poolKey => {
+				if (!state.bentCvxPoolAprs) state.bentCvxPoolAprs = {}
+				state.bentCvxPoolAprs[poolKey] = action.payload.bentCvxPoolAprs[poolKey];
+			})
+			state.bentCvxAvgApr = action.payload.bentCvxAvgApr;
 		})
 );
