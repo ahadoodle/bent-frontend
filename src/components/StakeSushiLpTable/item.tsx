@@ -81,8 +81,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await sushiLpToken.connect(signer).estimateGas.approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
-		const tx = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256, { gasLimit });
+		const tx = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
 		const res = await tx.wait();
 		if (res) {
 			setIsApproved(true);
@@ -92,8 +91,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await masterChef.connect(signer).estimateGas.deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
-		const tx = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18), { gasLimit });
+		const tx = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
@@ -104,8 +102,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await masterChef.connect(signer).estimateGas.withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
-		const tx = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18), { gasLimit });
+		const tx = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
