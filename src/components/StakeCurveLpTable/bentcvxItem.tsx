@@ -77,8 +77,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
-		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, { gasLimit });
+		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
 		const res = await tx.wait();
 		if (res) {
 			setIsApproved(true);
@@ -88,8 +87,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
-		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), { gasLimit })
+		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18))
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
@@ -100,8 +98,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
-		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), { gasLimit })
+		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18))
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
@@ -213,7 +210,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 														<Label>
 															Amount of {symbol} to stake
 														</Label>
-														<Label>Available:{formatBigNumber(lpBalance)}</Label>
+														<Label>Available: {formatBigNumber(lpBalance)}</Label>
 													</p>
 													<div className="amountinput">
 														<Input

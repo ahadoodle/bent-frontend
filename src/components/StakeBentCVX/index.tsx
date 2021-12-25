@@ -85,8 +85,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const onCvxApprove = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await cvxToken.connect(signer).estimateGas.approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256);
-		const tx = await cvxToken.connect(signer).approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256, { gasLimit });
+		const tx = await cvxToken.connect(signer).approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256);
 		const res = await tx.wait();
 		if (res) {
 			setIsConvertApproved(true);
@@ -96,8 +95,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const onConvert = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentCVX.connect(signer).estimateGas.deposit(utils.parseUnits(convertAmount, 18));
-		const tx = await bentCVX.connect(signer).deposit(utils.parseUnits(convertAmount, 18), { gasLimit });
+		const tx = await bentCVX.connect(signer).deposit(utils.parseUnits(convertAmount, 18));
 		const res = await tx.wait();
 		if (res) {
 			setConvertAmount('')
@@ -108,8 +106,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const onBentCvxApprove = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentCVX.connect(signer).estimateGas.approve(POOLS.BentCvxStaking.BentCvxStaking, ethers.constants.MaxUint256);
-		const tx = await bentCVX.connect(signer).approve(POOLS.BentCvxStaking.BentCvxStaking, ethers.constants.MaxUint256, { gasLimit });
+		const tx = await bentCVX.connect(signer).approve(POOLS.BentCvxStaking.BentCvxStaking, ethers.constants.MaxUint256);
 		const res = await tx.wait();
 		if (res) {
 			setIsStakeApproved(true);
@@ -119,8 +116,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const onStake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentCvxStaking.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
-		const tx = await bentCvxStaking.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), { gasLimit });
+		const tx = await bentCvxStaking.connect(signer).deposit(utils.parseUnits(stakeAmount, 18));
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
@@ -131,8 +127,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const onWithdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentCvxStaking.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
-		const tx = await bentCvxStaking.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), { gasLimit });
+		const tx = await bentCvxStaking.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18));
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
@@ -283,7 +278,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																			<Label>
 																				Amount of CVX to convert
 																			</Label>
-																			<Label>Available:{formatBigNumber(cvxBalance)}</Label>
+																			<Label>Available: {formatBigNumber(cvxBalance)}</Label>
 																		</p>
 																		<div className="amountinput">
 																			<Input
@@ -373,7 +368,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																			<Label>
 																				Amount of bentCvx to stake
 																			</Label>
-																			<Label>Available:{formatBigNumber(bentCvxBalance)}</Label>
+																			<Label>Available: {formatBigNumber(bentCvxBalance)}</Label>
 																		</p>
 																		<div className="amountinput">
 																			<Input

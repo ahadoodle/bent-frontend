@@ -60,8 +60,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const claim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentPool.connect(signer).estimateGas.harvest();
-		await bentPool.connect(signer).harvest({ gasLimit });
+		await bentPool.connect(signer).harvest();
 	}
 
 	return (
