@@ -50,8 +50,7 @@ export const ClaimBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		console.log(checkedIndexes());
 		const signer = await library.getSigner();
-		const gasLimit = await bentCvxStaking.connect(signer).estimateGas.claim(checkedIndexes());
-		await bentCvxStaking.connect(signer).claim(checkedIndexes(), { gasLimit });
+		await bentCvxStaking.connect(signer).claim(checkedIndexes());
 	}
 
 	return (

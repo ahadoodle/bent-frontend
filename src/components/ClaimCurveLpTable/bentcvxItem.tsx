@@ -61,8 +61,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const account = await signer.getAddress();
-		const gasLimit = await bentPool.connect(signer).estimateGas.claim(0, account);
-		await bentPool.connect(signer).claim(0, account, { gasLimit });
+		await bentPool.connect(signer).claim(0, account);
 	}
 
 	return (

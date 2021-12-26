@@ -184,7 +184,7 @@ const LockCvx = () => {
                                                 Amount of CRV to convert and
                                                 stake
                                               </Label>
-                                              <Label>Available:-</Label>
+                                              <Label>Available: -</Label>
                                             </p>
                                             <div className="amountinput">
                                               <Input

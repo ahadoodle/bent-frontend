@@ -46,11 +46,9 @@ export const ClaimBent = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		if (checkAll) {
-			const gasLimit = await bentStakingContract.connect(signer).estimateGas.claimAll();
-			await bentStakingContract.connect(signer).claimAll({ gasLimit });
+			await bentStakingContract.connect(signer).claimAll();
 		} else {
-			const gasLimit = await bentStakingContract.connect(signer).estimateGas.claim(checkedIndexes());
-			await bentStakingContract.connect(signer).claim(checkedIndexes(), { gasLimit });
+			await bentStakingContract.connect(signer).claim(checkedIndexes());
 		}
 	}
 

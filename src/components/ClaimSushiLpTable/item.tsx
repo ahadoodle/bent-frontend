@@ -37,8 +37,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 	const claim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await masterChef.connect(signer).estimateGas.claim(props.poolInfo.PoolId, account);
-		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account, { gasLimit })
+		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account);
 	}
 
 	const haveRewards = () => {

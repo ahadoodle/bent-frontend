@@ -69,8 +69,7 @@ export const StakeBent = (): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentToken.connect(signer).estimateGas.approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
-		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256, { gasLimit });
+		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
 		if (res) {
 			setIsApproved(true);
 		}
@@ -79,8 +78,7 @@ export const StakeBent = (): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentStakingContract.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
-		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), { gasLimit });
+		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18));
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -90,8 +88,7 @@ export const StakeBent = (): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentStakingContract.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18));
-		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), { gasLimit });
+		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18));
 		if (res) {
 			setWithdrawAmount('')
 		}
@@ -214,7 +211,7 @@ export const StakeBent = (): React.ReactElement => {
 																			<Label>
 																				Amount of BENT to stake
 																			</Label>
-																			<Label>Available:{formatBigNumber(bentBalance)}</Label>
+																			<Label>Available: {formatBigNumber(bentBalance)}</Label>
 																		</p>
 																		<div className="amountinput">
 																			<Input
