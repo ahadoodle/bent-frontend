@@ -131,11 +131,11 @@ export const getEtherscanLink = (addr: string): string => {
 	return `https://etherscan.io/address/${addr}`;
 }
 
-export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenPrice: number): BigNumber => {
+export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenPrice: number, extraDecimal = true): BigNumber => {
 	if (!tokenPrice) return ethers.constants.Zero;
 	return rewardRate.mul(6400).mul(365)
 		.mul(utils.parseUnits(tokenPrice.toString()))
-		.div(BigNumber.from(10).pow(36 + getTokenDecimals(tokenAddr)));
+		.div(BigNumber.from(10).pow((extraDecimal ? 36 : 0) + getTokenDecimals(tokenAddr)));
 }
 
 export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {

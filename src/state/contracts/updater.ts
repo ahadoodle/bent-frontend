@@ -303,7 +303,7 @@ export default function Updater(): null {
 				bentCvxRewards['MC'] = results[startIndex++];
 				bentCvxEarned['MC'] = bentPriceBN.mul(bentCvxRewards['MC'][0]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
 				const bentCvxMCRewardPerBlock = results[startIndex++];
-				const bentCvxMCAnnualReward = getAnnualReward(bentCvxMCRewardPerBlock, TOKENS.BENT.ADDR, bentPrice);
+				const bentCvxMCAnnualReward = getAnnualReward(bentCvxMCRewardPerBlock, TOKENS.BENT.ADDR, bentPrice, false);
 				bentCvxPoolAprs['MC'] = (bentCvxTvl.isZero() ? 0 : bentCvxMCAnnualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100;
 				totalBentCvxAnnualReward = totalBentCvxAnnualReward.add(bentCvxMCAnnualReward);
 				bentCvxAvgApr = (bentCvxTvl.isZero() ? 0 : totalBentCvxAnnualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100;
@@ -381,7 +381,7 @@ export default function Updater(): null {
 						const poolLpBalance = crvPoolLpBalances[poolKey]
 						const tvl = totalUsd.mul(poolLpBalance).div(lpTotalSupply)
 						const lpPrice = totalUsd.div(lpTotalSupply);
-						crvTvl[poolKey] = tvl;
+						crvTvl[poolKey] = POOLS.BentPools[poolKey].disabled ? ethers.constants.Zero : tvl;
 						crvDepositedUsd[poolKey] = totalUsd.mul(depositedLpBalance[poolKey]).div(lpTotalSupply)
 
 						if (POOLS.BentPools[poolKey].isBentCvx) {
