@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
-import { formatBigNumber, formatMillionsBigNumber, getSumBigNumbers } from "utils";
-import { useCrvAverageApr, useCrvPoolDepositedUsds, useCrvPoolEarns, useCrvTvls, useSortedCrvPoolKeys } from "hooks";
+import { formatBigNumber, formatMillionsBigNumber } from "utils";
+import { useCrvAverageApr, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useSortedCrvPoolKeys } from "hooks";
 import { MorePoolsRow } from "components/MorePoolsRow";
 import { SwitchSlider } from "components/Switch";
 import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
 import { utils } from "ethers";
+import { DecimalSpan } from "components/DecimalSpan";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
 	const [showNew, setShowNew] = useState(true);
 	const [sortField, setSortField] = useState('');
 	const [sortOrder, setSortOrder] = useState(1);
-	const tvls = useCrvTvls();
-	const earns = useCrvPoolEarns();
-	const depostedUsd = useCrvPoolDepositedUsds();
+	const tvl = useCrvTotalTvl();
+	const earn = useCrvPoolTotalEarned();
+	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();
 	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
 
@@ -56,8 +57,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">Total Earned (USD)</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									{formatBigNumber(getSumBigNumbers(earns), 18, 2).split('.')[0]}.
-									<span className="small">{formatBigNumber(getSumBigNumbers(earns), 18, 2).split('.')[1]}</span>
+									<DecimalSpan value={formatBigNumber(earn, 18, 2)} />
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -72,8 +72,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">My Total Deposits</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									{formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2).split('.')[0]}.
-									<span className="small">{formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2).split('.')[1]}</span>
+									<DecimalSpan value={formatBigNumber(depostedUsd, 18, 2)} />
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -83,7 +82,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 								</span><br />
 								<b>
 									<span className="small">$</span>
-									{formatMillionsBigNumber(getSumBigNumbers(tvls), 18, 2)}
+									{formatMillionsBigNumber(tvl, 18, 2)}
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
