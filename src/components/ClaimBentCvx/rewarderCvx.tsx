@@ -8,16 +8,20 @@ import {
 	useBentCvxRewardsUsd,
 	useBentCvxEarned,
 	useBentCvxPoolApr,
-	useBentCvxAprs
+	useBentCvxAprs,
+	useTheme
 } from "hooks";
 import {
 	formatBigNumber,
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { DecimalSpan } from "components/DecimalSpan";
-import ConvexLogo from 'assets/images/cvx-logo-color-black.svg';
+import CvxLogo from 'assets/images/cvx-logo-color-black.svg';
+import CvxLogoLight from 'assets/images/cvx-logo-color.svg';
 import BentLogo from 'assets/images/logo-dark.svg';
+import BentLogoLight from 'assets/images/logo-light.svg';
 import { ClaimBentCvxRewardItem } from "./item";
+import { Theme } from "state/application/reducer";
 
 interface Props {
 	poolKey: string
@@ -37,6 +41,7 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 	const earned = useBentCvxEarned(props.poolKey);
 	const apr = useBentCvxPoolApr(props.poolKey);
 	const rewardAprs = useBentCvxAprs(props.poolKey);
+	const theme = useTheme();
 
 	const onClaimCheckChange = (index: number, add: boolean) => {
 		if (!add) setCheckAll(false);
@@ -71,7 +76,12 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 				<Row className="align-items-center" style={{ padding: '0 10px' }}>
 					<Col>
 						<div className="imgText">
-							<PoolLogo src={props.poolKey === 'CVX' ? ConvexLogo : BentLogo} alt="" />
+							<PoolLogo
+								src={props.poolKey === 'CVX' ?
+									(theme === Theme.Dark ? CvxLogoLight : CvxLogo) :
+									(theme === Theme.Dark ? BentLogoLight : BentLogo)}
+								alt=""
+							/>
 							<h4>Earnings</h4>
 						</div>
 					</Col>

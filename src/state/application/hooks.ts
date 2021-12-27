@@ -12,6 +12,7 @@ import { useActiveWeb3React } from 'hooks';
 import { BigNumber } from 'ethers';
 import { ChainId } from 'constant';
 import { ContractsState } from 'state/contracts/reducer';
+import { Theme } from './reducer';
 
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React();
@@ -71,4 +72,8 @@ export function useRemovePopup(): (key: string) => void {
 export function useActivePopups(): AppState['application']['popupList'] {
   const list = useSelector((state: AppState) => state.application.popupList);
   return useMemo(() => list.filter((item) => item.show), [list]);
+}
+
+export function useTheme(): Theme {
+  return useSelector((state: AppState) => state.application.theme);
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POOLS, TOKENS } from 'constant';
+import { CrvFactoryPool, POOLS, TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 import web3NoAccount from './web3';
 
@@ -91,6 +91,24 @@ export const getPrice = async (contract_addresses: string[], vsCoin = 'usd'): Pr
 		console.error(error);
 		await sleep(3000);
 		return getPrice(contract_addresses, vsCoin);
+	}
+}
+
+export const getCrvFactoryInfo = async (): Promise<Record<string, CrvFactoryPool>> => {
+	const url = `https://api.curve.fi/api/getFactoryV2Pools`;
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		if (!res.data.success) return {};
+		const poolData = res.data.data.poolData;
+		const result: Record<string, CrvFactoryPool> = {};
+		poolData.forEach(pool => {
+			result[pool.address.toLowerCase()] = pool;
+		});
+		return result;
+	} catch (error) {
+		console.error(error);
+		return {}
 	}
 }
 

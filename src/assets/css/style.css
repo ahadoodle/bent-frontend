@@ -1235,6 +1235,7 @@ div.climBtn {
 .tokentable.table .card .card-body .innerWrap:hover,
 .tokentable.table .card .card-body .innerWrap.open {
     background: #CAB8FF;
+    overflow: hidden;
 }
 .innerWrap .card {
     border-top: none;

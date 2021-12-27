@@ -14,17 +14,17 @@ import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";
 import BentDetails from "assets/images/bent-details.png";
 import ConnectWallet from "components/ConnectWallet";
-import { useActiveWeb3React, useBentCirculatingSupply, useBentTotalStaked, useLocalStorage, useTokenPrice, useVlCvxBalance } from "hooks";
+import { useActiveWeb3React, useBentCirculatingSupply, useBentTotalStaked, useTheme, useTokenPrice, useVlCvxBalance } from "hooks";
 import { TOKENS } from "constant";
 import styled from "styled-components";
 import { formatBigNumber, formatMillionsBigNumber } from "utils";
 import { BigNumber, utils } from "ethers";
+import { useDispatch } from "react-redux";
+import { updateTheme } from "state/application/actions";
+import { Theme } from "state/application/reducer";
 
-interface Props {
-  handleTheme: (theme) => void
-}
-
-const Header = (props: Props): React.ReactElement => {
+const Header = (): React.ReactElement => {
+  const dispatch = useDispatch();
   const [customClass, setCustomClass] = useState("removesidenavmenu");
   const closeNav = () => {
     setCustomClass("removesidenavmenu");
@@ -32,7 +32,7 @@ const Header = (props: Props): React.ReactElement => {
   const openNav = () => {
     setCustomClass("sidenavmenu");
   };
-  const [theme, setTheme] = useLocalStorage('theme');
+  const theme = useTheme();
   const [userBalance, setUserBalance] = useState<unknown>(0);
   const [showBentDetails, setShowBentDetails] = useState(false);
   const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
@@ -48,17 +48,11 @@ const Header = (props: Props): React.ReactElement => {
   // Toggle for Modal
   const toggle = () => setModal(!modal);
 
-  useEffect(() => {
-    if (!theme) setTheme('Light');
-  }, [theme, setTheme]);
-
   const selectTheme = () => {
-    if (theme === "Light") {
-      setTheme('Dark');
-      props.handleTheme('Dark');
+    if (theme === Theme.Light) {
+      dispatch(updateTheme(Theme.Dark));
     } else {
-      setTheme('Light');
-      props.handleTheme('Light');
+      dispatch(updateTheme(Theme.Light));
     }
   }
 
@@ -158,7 +152,7 @@ const Header = (props: Props): React.ReactElement => {
                 </VotingPowerContainer>
               </Tooltip>
               <span className="theme-icon" onClick={selectTheme}>
-                <img src={theme === 'Dark' ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
+                <img src={theme === Theme.Dark ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
               </span>
               <ConnectWallet />
               <div className="mobileHeader">

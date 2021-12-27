@@ -1,19 +1,20 @@
 import React from "react";
-import { useLocalStorage } from "hooks";
+import { useTheme } from "hooks";
 import Footer from "components/Footer";
 import Header from "components/Header";
+import { Theme } from "state/application/reducer";
 
 interface Props {
   children: React.ReactElement
 }
 
 const Page = (props: Props): React.ReactElement => {
-  const [theme, setTheme] = useLocalStorage('theme');
+  const theme = useTheme();
 
   return (
     <React.Fragment>
-      <div className={"Wrapper " + theme}>
-        <Header handleTheme={(theme) => setTheme(theme)} />
+      <div className={"Wrapper " + (theme === Theme.Dark ? 'Dark' : '')}>
+        <Header />
         {props.children}
         <Footer />
       </div>
