@@ -11,6 +11,7 @@ import CvxLocker from './CvxLocker.json';
 import BentCvxStaking from './BentCvxStaking.json';
 import BentCvxRewarder from './BentCvxRewarder.json';
 import BentCvxRewarderMasterchef from './BentCvxRewarderMasterchef.json';
+import TricryptoLpPrice from './TricryptoLpPrice.json';
 
 export const ABIS = {
 	BentBasePool,
@@ -26,4 +27,5 @@ export const ABIS = {
 	BentCvxStaking,
 	BentCvxRewarder,
 	BentCvxRewarderMasterchef,
+	TricryptoLpPrice,
 }

@@ -20,9 +20,16 @@ import {
 	useERC20Contract,
 	useBentCvxAvgApr,
 	useBentCvxTotalEarned,
+	useTheme,
+	useBentCvxPoolApr,
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
+import CvxLogo from 'assets/images/cvx-logo-color-black.svg';
+import CvxLogoLight from 'assets/images/cvx-logo-color.svg';
+import BentLogo from 'assets/images/logo-dark.svg';
+import BentLogoLight from 'assets/images/logo-light.svg';
+import { Theme } from "state/application/reducer";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -31,6 +38,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [isConvertApproved, setIsConvertApproved] = useState<boolean>(false);
 	const [isStakeApproved, setIsStakeApproved] = useState<boolean>(false);
+	const theme = useTheme();
 	const cvxBalance = useBalance(TOKENS['CVX'].ADDR);
 	const cvxAllowance = useBentCvxAllowance();
 	const bentCvxBalance = useBalance(TOKENS['BENTCVX'].ADDR);
@@ -41,6 +49,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const avgApr = useBentCvxAvgApr();
 	const earnedUsd = useBentCvxTotalEarned();
 	const tvl = useBentCvxTvl();
+	const cvxPoolApr = useBentCvxPoolApr('CVX');
+	const bentPoolApr = useBentCvxPoolApr('BENT');
+	const mcPoolApr = useBentCvxPoolApr('MC');
 	const { library } = useActiveWeb3React();
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
 	const bentCVX = useBentCVXContract();
@@ -149,7 +160,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 				<Col md="12">
 					<div className="convert-up">
 						<h2 className="section-header">
-							Convert CVX
+							Convert CVX and Stake bentCVX
 						</h2>
 						<div className="toggleWrap tokentable table">
 							<Row className="align-items-center thead p-0 pt-2 pb-2">
@@ -239,35 +250,35 @@ export const StakeBentCVX = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Convert CVX to bentCVX. By staking bentCVX, you're earning the usual rewards from
-																	Convex (cvxCRV + any additional incentives) + 10% of the Bent Platform earnings + BENT tokens.<br /><br />
+																	Convert CVX to bentCVX. By staking bentCVX, you're earning the usual rewards from Convex
+																	(cvxcrv + any additional incentives) + 10% of  Bent Platform earnings + BENT tokens.<br /><br />
 																	Note: Converting CVX to bentCVX is irreversible. You may stake and unstake bentCVX tokens,
 																	but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																{/* <div className="bent-rewards-container">
+																<div className="bent-rewards-container">
 																	<div className="imgText bent-rewards-item">
 																		<div className="d-flex">
-																			<img src={CvxLogo} alt="Icon" />
+																			<img src={theme === Theme.Dark ? CvxLogoLight : CvxLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
-																		<p className="apr px-0 mt-1">100% APR</p>
+																		<p className="apr px-0 mt-1">{cvxPoolApr}% APR</p>
 																	</div>
 																	<div className="imgText bent-rewards-item">
 																		<div className="d-flex">
-																			<img src={BentLogo} alt="Icon" />
+																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
-																		<p className="apr px-0 mt-1">100% APR</p>
+																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
 																	</div>
 																	<div className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
 																			<span className="small mt-1 mx-2">BENT</span>
 																		</div>
-																		<p className="apr px-0 mt-1">100% APR</p>
+																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
 																	</div>
-																</div> */}
+																</div>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">
@@ -329,35 +340,35 @@ export const StakeBentCVX = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Convert CVX to bentCVX. By staking bentCVX, you're earning the usual rewards from
-																	Convex (cvxCRV + any additional incentives) + 10% of the Bent Platform earnings + BENT tokens.<br /><br />
+																	Convert CVX to bentCVX. By staking bentCVX, you're earning the usual rewards from Convex
+																	(cvxcrv + any additional incentives) + 10% of  Bent Platform earnings + BENT tokens.<br /><br />
 																	Note: Converting CVX to bentCVX is irreversible. You may stake and unstake bentCVX tokens,
 																	but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																{/* <div className="bent-rewards-container">
+																<div className="bent-rewards-container">
 																	<div className="imgText bent-rewards-item">
 																		<div className="d-flex">
-																			<img src={CvxLogo} alt="Icon" />
+																			<img src={theme === Theme.Dark ? CvxLogoLight : CvxLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
-																		<p className="apr px-0 mt-1">100% APR</p>
+																		<p className="apr px-0 mt-1">{cvxPoolApr}% APR</p>
 																	</div>
 																	<div className="imgText bent-rewards-item">
 																		<div className="d-flex">
-																			<img src={BentLogo} alt="Icon" />
+																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
-																		<p className="apr px-0 mt-1">100% APR</p>
+																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
 																	</div>
 																	<div className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
 																			<span className="small mt-1 mx-2">BENT</span>
 																		</div>
-																		<p className="apr px-0 mt-1">100% APR</p>
+																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
 																	</div>
-																</div> */}
+																</div>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">
@@ -400,12 +411,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					}
 																					onClick={onStake}
 																				>Stake</Button>
-																			</div>
-																			<div className="btnwrapper">
-																				<Button
-																					className="approvebtn w-100 mt-3"
-																					onClick={onOpen}
-																				>bentCVX/CVX Curve LP</Button>
 																			</div>
 																		</div>
 																	</div>

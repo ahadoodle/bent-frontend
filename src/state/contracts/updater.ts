@@ -5,7 +5,6 @@ import { useActiveWeb3React, useBlockNumber, useCrvFiLps, useMulticallProvider }
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-	CrvFiLp,
 	getMultiBentPool,
 	getMultiCvxRewardPool,
 	getMultiERC20Contract,
@@ -15,7 +14,6 @@ import {
 	getMultiBentMasterChef,
 	getPrice,
 	getTokenPrice,
-	getEthBalanceOf,
 	getMultiBentSingleStaking,
 	getCirculatingSupply,
 	getMultiCvxLocker,
@@ -23,6 +21,8 @@ import {
 	getMultiBentCvxRewarderCvx,
 	getMultiBentCvxRewarderBent,
 	getMultiBentCvxRewarderMC,
+	getCrvFactoryInfo,
+	getMultiTricryptiLpPrice,
 } from 'utils';
 import {
 	// updateStakingPoolApr,
@@ -48,7 +48,8 @@ export default function Updater(): null {
 		Promise.all([
 			getPrice(tokenAddrs),
 			getCirculatingSupply(),
-		]).then(([tokenPrices, bentCirculatingSupply]) => {
+			getCrvFactoryInfo(),
+		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
 			const balances: Record<string, BigNumber> = {};
@@ -97,6 +98,9 @@ export default function Updater(): null {
 
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
+
+			const tricryptoLpContract = getMultiTricryptiLpPrice();
+			contractCalls.push(tricryptoLpContract.lp_price());
 
 			const vlCvxLocker = getMultiCvxLocker();
 			contractCalls.push(vlCvxLocker.lockedBalanceOf(POOLS.Multisig))
@@ -189,6 +193,7 @@ export default function Updater(): null {
 				const rewardsInfo = {};
 				let startIndex = 0;
 
+				const tricryptoLpPrice = BigNumber.from(results[startIndex++]);
 				vlCvxBalance = results[startIndex++];
 
 				// Update Sushi Pool Infos
@@ -351,102 +356,86 @@ export default function Updater(): null {
 					startIndex += 9;
 				});
 
-				const lpFiContractCalls: any[] = [];
 				Object.keys(POOLS.BentPools).forEach(poolKey => {
-					const lpFiContract = crvDepositLps[poolKey];
-					for (let i = 0; i < POOLS.BentPools[poolKey].CrvCoinsLength; i++) {
-						lpFiContractCalls.push(CrvFiLp.getCoins(lpFiContract, i));
-						lpFiContractCalls.push(CrvFiLp.getBalances(lpFiContract, i));
-						lpFiContractCalls.push(getEthBalanceOf(lpFiContract.options.address));
+					const poolData = crvPoolsInfo[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()];
+					let tvl = ethers.constants.Zero;
+					if (POOLS.BentPools[poolKey].DepositAsset.toLowerCase() === '0xc4AD29ba4B3c580e6D59105FFf484999997675Ff'.toLowerCase()) {
+						// tricrypto
+						tvl = tricryptoLpPrice.mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
+						crvDepositedUsd[poolKey] = tricryptoLpPrice.mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
+					} else if (POOLS.BentPools[poolKey].isBentCvx) {
+						// bentCvx pool (calculating tvl info here because bentCvx price is zero on crv api)
+						tvl = BigNumber.from(poolData.coins[0].poolBalance).add(BigNumber.from(poolData.coins[1].poolBalance))
+							.mul(utils.parseEther(poolData.coins[0].usdPrice.toString())).div(BigNumber.from(10).pow(18));
+						crvDepositedUsd[poolKey] = tvl.mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
+					} else {
+						if (!poolData) return;
+						tvl = utils.parseEther(poolData.usdTotal.toString()).mul(crvPoolLpBalances[poolKey]).div(poolData.totalSupply);
+						crvDepositedUsd[poolKey] = utils.parseEther(poolData.usdTotal.toString()).mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
+					}
+					crvTvl[poolKey] = POOLS.BentPools[poolKey].disabled ? ethers.constants.Zero : tvl;
+					if (POOLS.BentPools[poolKey].isBentCvx) {
+						const apr = (tvl.isZero()) ? 0 :
+							bentPriceBN.mul(bentCvxChefRewardPerBlock[poolKey]).mul(6400).mul(365).mul(10000)
+								.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
+						crvApr[poolKey] = apr;
+					} else {
+						const [rewardsInfo1, rewardsInfo2, rewardsInfo3] = rewardsInfo[poolKey];
+						let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
+						annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+						if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
+							annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+
+						// Bent Rewards
+						const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
+						const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
+						annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
+						const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
+						crvApr[poolKey] = apr;
 					}
 				})
-
-				// Calculate TVL of each crv pools
-				// Can't use multicall for crv contracts (due to invalid ABI of Vyper contracts)
-				Promise.all(lpFiContractCalls).then((lpFiResults) => {
-					let lpResIndex = 0;
-					Object.keys(POOLS.BentPools).forEach(poolKey => {
-						const lpTotalSupply = lpTotalSupplies[poolKey];
-						if (BigNumber.from(lpTotalSupply).isZero()) {
-							return;
-						}
-						let totalUsd = ethers.constants.Zero;
-						for (let i = 0; i < POOLS.BentPools[poolKey].CrvCoinsLength; i++) {
-							const addr = lpFiResults[lpResIndex++];
-							const bal = addr === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' ? lpFiResults[lpResIndex++ + 1] : lpFiResults[lpResIndex++];
-							const tokenPrice = getTokenPrice(tokenPrices, addr);
-							totalUsd = tokenPrice.mul(bal).div(BigNumber.from(10).pow(getTokenDecimals(addr))).add(totalUsd);
-							lpResIndex++;
-						}
-						const poolLpBalance = crvPoolLpBalances[poolKey]
-						const tvl = totalUsd.mul(poolLpBalance).div(lpTotalSupply)
-						const lpPrice = totalUsd.div(lpTotalSupply);
-						crvTvl[poolKey] = POOLS.BentPools[poolKey].disabled ? ethers.constants.Zero : tvl;
-						crvDepositedUsd[poolKey] = totalUsd.mul(depositedLpBalance[poolKey]).div(lpTotalSupply)
-
-						if (POOLS.BentPools[poolKey].isBentCvx) {
-							const apr = (BigNumber.from(poolLpBalance).isZero() || lpPrice.isZero()) ? 0 :
-								bentPriceBN.mul(bentCvxChefRewardPerBlock[poolKey]).mul(6400).mul(365).mul(10000)
-									.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
-							crvApr[poolKey] = apr;
-						} else {
-							const [rewardsInfo1, rewardsInfo2, rewardsInfo3] = rewardsInfo[poolKey];
-							let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
-							annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
-							if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
-								annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
-
-							// Bent Rewards
-							const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
-							const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
-							annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
-							const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
-							crvApr[poolKey] = apr;
-						}
-					})
-					dispatch(updateContractInfo({
-						tokenPrices,
-						bentCirculatingSupply,
-						totalSupplies,
-						balances,
-						bentAllowance,
-						bentAprs,
-						bentAvgApr,
-						bentEarnedUsd,
-						bentPoolRewardsInfo,
-						bentRewards,
-						bentRewardsUsd,
-						bentStaked,
-						bentStakedUsd,
-						bentTotalStaked,
-						bentTvl,
-						crvDepositedUsd,
-						crvEarnedUsd,
-						crvPoolRewards,
-						crvTvl,
-						crvDeposit,
-						crvLpAllowance,
-						crvApr,
-						sushiApr,
-						sushiDepositedUsd,
-						sushiEarnedUsd,
-						sushiLpDeposited,
-						sushiRewards,
-						sushiTvl,
-						vlCvxBalance,
-						bentCvxAllowance,
-						bentCvxStakingAllowance,
-						bentCvxStaked,
-						bentCvxTotalStaked,
-						bentCvxTvl,
-						bentCvxRewards,
-						bentCvxRewardsUsd,
-						bentCvxEarned,
-						bentCvxAprs,
-						bentCvxPoolAprs,
-						bentCvxAvgApr,
-					}));
-				})
+				dispatch(updateContractInfo({
+					tokenPrices,
+					bentCirculatingSupply,
+					totalSupplies,
+					balances,
+					bentAllowance,
+					bentAprs,
+					bentAvgApr,
+					bentEarnedUsd,
+					bentPoolRewardsInfo,
+					bentRewards,
+					bentRewardsUsd,
+					bentStaked,
+					bentStakedUsd,
+					bentTotalStaked,
+					bentTvl,
+					crvDepositedUsd,
+					crvEarnedUsd,
+					crvPoolRewards,
+					crvTvl,
+					crvDeposit,
+					crvLpAllowance,
+					crvApr,
+					sushiApr,
+					sushiDepositedUsd,
+					sushiEarnedUsd,
+					sushiLpDeposited,
+					sushiRewards,
+					sushiTvl,
+					vlCvxBalance,
+					bentCvxAllowance,
+					bentCvxStakingAllowance,
+					bentCvxStaked,
+					bentCvxTotalStaked,
+					bentCvxTvl,
+					bentCvxRewards,
+					bentCvxRewardsUsd,
+					bentCvxEarned,
+					bentCvxAprs,
+					bentCvxPoolAprs,
+					bentCvxAvgApr,
+				}));
 			})
 		})
 	}, [dispatch, blockNumber, account, multicall, crvDepositLps])
