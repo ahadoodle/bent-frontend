@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CrvFactoryPool, POOLS, TOKENS } from 'constant';
+import { CrvFactoryPool, TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 import web3NoAccount from './web3';
 
@@ -159,7 +159,6 @@ export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenP
 export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 	let total = ethers.constants.Zero;
 	Object.keys(bns).forEach(key => {
-		if (POOLS.BentPools[key] && POOLS.BentPools[key].disabled) return;
 		total = total.add(bns[key]);
 	})
 	return total;
