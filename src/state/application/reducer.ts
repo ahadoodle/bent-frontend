@@ -8,6 +8,7 @@ import {
   toggleSettingsMenu,
   updateBlockNumber,
   updateGasPrice,
+  updateTheme,
 } from './actions';
 
 type PopupList = Array<{
@@ -16,6 +17,11 @@ type PopupList = Array<{
   content: PopupContent;
   removeAfterMs: number | null;
 }>;
+
+export enum Theme {
+  'Dark',
+  'Light',
+}
 
 export interface ApplicationState {
   blockNumber: { [chainId: number]: number };
@@ -26,6 +32,8 @@ export interface ApplicationState {
   gasPrice: BigNumber;
   maxFeePerGas: BigNumber;
   maxPriorityFeePerGas: BigNumber;
+
+  theme: Theme;
 }
 
 export type GasFeeData = {
@@ -43,6 +51,8 @@ const initialState: ApplicationState = {
   gasPrice: ethers.constants.Zero,
   maxFeePerGas: ethers.constants.Zero,
   maxPriorityFeePerGas: ethers.constants.Zero,
+
+  theme: Theme.Dark
 };
 
 export default createReducer(initialState, (builder) =>
@@ -86,5 +96,8 @@ export default createReducer(initialState, (builder) =>
       state.gasPrice = gasPrice;
       state.maxFeePerGas = maxFeePerGas;
       state.maxPriorityFeePerGas = maxPriorityFeePerGas;
+    })
+    .addCase(updateTheme, (state, action) => {
+      state.theme = action.payload;
     })
 );
