@@ -9,7 +9,6 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../index';
 import { useActiveWeb3React } from 'hooks';
-import { BigNumber } from 'ethers';
 import { ChainId } from 'constant';
 import { ContractsState } from 'state/contracts/reducer';
 import { Theme } from './reducer';
@@ -17,10 +16,6 @@ import { Theme } from './reducer';
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React();
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? ChainId.Mainnet]);
-}
-
-export function useGasPrice(): BigNumber {
-  return useSelector((state: AppState) => state.application.gasPrice);
 }
 
 export function useContractState(): ContractsState {

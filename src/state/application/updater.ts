@@ -1,12 +1,11 @@
-import { ethers } from 'ethers';
 import { useDebounce, useActiveWeb3React } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getDefaultProvider } from 'utils';
-import { updateBlockNumber, updateGasPrice } from './actions';
+import { updateBlockNumber } from './actions';
 
 export default function Updater(): null {
-  const { chainId, library } = useActiveWeb3React();
+  const { chainId } = useActiveWeb3React();
   const dispatch = useDispatch();
 
   const [state, setState] = useState<{
@@ -58,12 +57,7 @@ export default function Updater(): null {
         }),
       );
     }
-    library?.getFeeData().then(gasFeeData => dispatch(updateGasPrice({
-      gasPrice: gasFeeData.gasPrice || ethers.constants.Zero,
-      maxFeePerGas: gasFeeData.maxFeePerGas || ethers.constants.Zero,
-      maxPriorityFeePerGas: gasFeeData.maxPriorityFeePerGas || ethers.constants.Zero
-    })));
-  }, [dispatch, debouncedState.blockNumber, debouncedState.chainId, library]);
+  }, [dispatch, debouncedState.blockNumber, debouncedState.chainId]);
 
   return null;
 }

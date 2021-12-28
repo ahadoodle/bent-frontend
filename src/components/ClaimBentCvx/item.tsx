@@ -17,7 +17,7 @@ interface Props {
 export const ClaimBentCvxRewardItem = (props: Props): React.ReactElement => {
 	const { tokenKey } = props
 	return (
-		<div className="imgText bent-rewards-item">
+		<div className={`imgText bent-rewards-item ${tokenKey === 'WLUNA' ? 'd-none' : ''}`}>
 			<img src={TOKENS[tokenKey].LOGO} alt="Icon" width="28" />
 			<div style={{ minWidth: 100 }}>
 				<h4 className="mb-0">{TOKENS[tokenKey].SYMBOL ?? tokenKey}</h4>
@@ -25,7 +25,7 @@ export const ClaimBentCvxRewardItem = (props: Props): React.ReactElement => {
 			</div>
 			<div style={{ minWidth: 100 }}>
 				<h4 className="mb-0"><span className="small">$</span>{formatBigNumber(props.rewardUsd, 18, 2)}</h4>
-				<p className="rewards-token">{formatBigNumber(props.reward)} {tokenKey}</p>
+				<p className="rewards-token">{formatBigNumber(props.reward)} {TOKENS[tokenKey].SYMBOL ?? tokenKey}</p>
 			</div>
 			<div className="claim-reward">
 				<Input type="checkbox" checked={props.checked} onChange={e => props.onChange(props.index, e.target.checked)} />

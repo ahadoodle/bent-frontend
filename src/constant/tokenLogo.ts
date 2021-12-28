@@ -16,24 +16,32 @@ import LdoLogo from 'assets/images/token/LDO.svg';
 import StethLogo from 'assets/images/token/STETH.svg';
 import BentCvx from 'assets/images/token/BENTCVX.svg';
 import UstLogo from 'assets/images/token/UST.svg';
+import OusdLogo from 'assets/images/token/OUSD.svg';
+import OgnLogo from 'assets/images/token/OGN.svg';
+import LunaLogo from 'assets/images/token/LUNA.svg';
+import BtcLogo from 'assets/images/token/BTC.svg';
 
 export const TOKEN_LOGO = {
 	ALCX: AlcxLogo,
 	ALUSD: AlusdLogo,
 	BENT: BentLogo,
+	BENTCVX: BentCvx,
+	BTC: BtcLogo,
 	CRV: CrvLogo,
 	CVX: CvxLogo,
+	DAI: DaiLogo,
+	D3POOL: D3PoolLogo,
 	ETH: EthLogo,
 	FRAX: FraxLogo,
+	FXS: FxsLogo,
+	LDO: LdoLogo,
+	LUNA: LunaLogo,
 	MIM: MimLogo,
+	OGN: OgnLogo,
+	OUSD: OusdLogo,
+	SPELL: SpellLogo,
+	STETH: StethLogo,
 	SUSHI: SushiLogo,
 	TRICRYPTO2: TriCrypto2Logo,
-	D3POOL: D3PoolLogo,
-	SPELL: SpellLogo,
-	FXS: FxsLogo,
-	DAI: DaiLogo,
-	LDO: LdoLogo,
-	STETH: StethLogo,
-	BENTCVX: BentCvx,
 	UST: UstLogo,
 }

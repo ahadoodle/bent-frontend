@@ -1,5 +1,4 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit';
-import { BigNumber, ethers } from 'ethers';
 import {
   addPopup,
   PopupContent,
@@ -7,7 +6,6 @@ import {
   toggleWalletModal,
   toggleSettingsMenu,
   updateBlockNumber,
-  updateGasPrice,
   updateTheme,
 } from './actions';
 
@@ -29,17 +27,7 @@ export interface ApplicationState {
   walletModalOpen: boolean;
   settingsMenuOpen: boolean;
 
-  gasPrice: BigNumber;
-  maxFeePerGas: BigNumber;
-  maxPriorityFeePerGas: BigNumber;
-
   theme: Theme;
-}
-
-export type GasFeeData = {
-  gasPrice: BigNumber;
-  maxFeePerGas: BigNumber;
-  maxPriorityFeePerGas: BigNumber;
 }
 
 const initialState: ApplicationState = {
@@ -47,10 +35,6 @@ const initialState: ApplicationState = {
   popupList: [],
   walletModalOpen: false,
   settingsMenuOpen: false,
-
-  gasPrice: ethers.constants.Zero,
-  maxFeePerGas: ethers.constants.Zero,
-  maxPriorityFeePerGas: ethers.constants.Zero,
 
   theme: Theme.Dark
 };
@@ -90,12 +74,6 @@ export default createReducer(initialState, (builder) =>
       } else {
         state.blockNumber[chainId] = Math.max(blockNumber, state.blockNumber[chainId]);
       }
-    })
-    .addCase(updateGasPrice, (state, action) => {
-      const { gasPrice, maxFeePerGas, maxPriorityFeePerGas } = action.payload;
-      state.gasPrice = gasPrice;
-      state.maxFeePerGas = maxFeePerGas;
-      state.maxPriorityFeePerGas = maxPriorityFeePerGas;
     })
     .addCase(updateTheme, (state, action) => {
       state.theme = action.payload;
