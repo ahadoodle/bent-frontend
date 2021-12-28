@@ -63,9 +63,9 @@ export const useBentCvxRewarderMCContract = (): Contract => {
 	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxRewarderMasterchef.Pool, ABIS.BentCvxRewarderMasterchef, library), [library]);
 }
 
-export const useCrvFiLp = (address: string): Web3Contract => {
+export const useCrvFiLp = (poolKey: string): Web3Contract => {
 	const web3 = useWeb3();
-	return useMemo(() => getCrvFiLp(address, web3), [web3, address]);
+	return useMemo(() => getCrvFiLp(POOLS.BentPools[poolKey].CrvMinter ?? POOLS.BentPools[poolKey].DepositAsset, web3), [web3, poolKey]);
 }
 
 export const useCrvFiLps = (): Record<string, Web3Contract> => {

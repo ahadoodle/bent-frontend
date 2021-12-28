@@ -4,6 +4,9 @@
 .text-right {
     text-align: right;
 }
+.cursor-pointer {
+    cursor: pointer;
+}
 a,button {
     transition: 0.5s all ease;
 }
