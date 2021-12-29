@@ -3,8 +3,8 @@ import { Row, Col, Card, CardBody, Container } from "reactstrap";
 import { POOLS } from "constant";
 import CrvLogo from 'assets/images/token/CRV.svg';
 import { ClaimCurveLpItem } from "./item";
-import { useCrvPoolEarns, useCrvPoolDepositedUsds, useCrvAverageApr, useSortedCrvPoolKeys } from "hooks";
-import { formatBigNumber, getSumBigNumbers } from "utils";
+import { useCrvPoolTotalDepositedUsds, useCrvAverageApr, useSortedCrvPoolKeys, useCrvPoolTotalEarned } from "hooks";
+import { formatBigNumber } from "utils";
 import { MorePoolsRow } from "components/MorePoolsRow";
 import { DecimalSpan } from "components/DecimalSpan";
 import { SwitchSlider } from "components/Switch";
@@ -16,8 +16,8 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [showNew, setShowNew] = useState(true);
 	const [sortField, setSortField] = useState('');
 	const [sortOrder, setSortOrder] = useState(1);
-	const earns = useCrvPoolEarns();
-	const depostedUsd = useCrvPoolDepositedUsds();
+	const earns = useCrvPoolTotalEarned();
+	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();
 	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
 
@@ -52,7 +52,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								</span><br />
 								<b>
 									<span className="small">$</span>
-									<DecimalSpan value={formatBigNumber(getSumBigNumbers(earns), 18, 2)} />
+									<DecimalSpan value={formatBigNumber(earns, 18, 2)} />
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
@@ -67,7 +67,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								<span className="small p-0">My Total Deposits</span><br />
 								<b className="p-0">
 									<span className="small">$</span>
-									<DecimalSpan value={formatBigNumber(getSumBigNumbers(depostedUsd), 18, 2)} />
+									<DecimalSpan value={formatBigNumber(depostedUsd, 18, 2)} />
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>

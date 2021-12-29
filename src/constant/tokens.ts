@@ -69,7 +69,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		DECIMALS: 18,
 	},
 	MIM: {
-		LOGO: '',
+		LOGO: TOKEN_LOGO.MIM,
 		ADDR: '0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3',
 		DECIMALS: 18,
 	},
@@ -89,12 +89,12 @@ export const TOKENS: Record<string, TokenInfo> = {
 		DECIMALS: 6,
 	},
 	WBTC: {
-		LOGO: '',
+		LOGO: TOKEN_LOGO.BTC,
 		ADDR: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
 		DECIMALS: 8,
 	},
 	WETH: {
-		LOGO: '',
+		LOGO: TOKEN_LOGO.ETH,
 		ADDR: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 		DECIMALS: 18,
 	},
@@ -112,12 +112,36 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.CRV,
 		ADDR: '0x62b9c7356a2dc64a1969e19c23e4f579f9810aa7',
 		DECIMALS: 18,
-		SYMBOL: 'cvxcrv'
+		SYMBOL: 'cvxCrv'
 	},
 	BENTCVX: {
 		LOGO: TOKEN_LOGO.BENTCVX,
 		ADDR: '0x9e0441e084f5db0606565737158aa6ab6b970fe0',
 		DECIMALS: 18,
-		SYMBOL: 'bentcvx'
+		SYMBOL: 'bentCvx'
+	},
+	OUSD: {
+		LOGO: TOKEN_LOGO.OUSD,
+		ADDR: '0x2a8e1e676ec238d8a992307b495b45b3feaa5e86',
+		DECIMALS: 18,
+		SYMBOL: 'OUSD'
+	},
+	OGN: {
+		LOGO: TOKEN_LOGO.OGN,
+		ADDR: '0x8207c1ffc5b6804f6024322ccf34f29c3541ae26',
+		DECIMALS: 18,
+		SYMBOL: 'OGN'
+	},
+	WLUNA: {
+		LOGO: TOKEN_LOGO.LUNA,
+		ADDR: '0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9',
+		DECIMALS: 18,
+		SYMBOL: 'LUNA'
+	},
+	LUNAWORM: {
+		LOGO: TOKEN_LOGO.LUNA,
+		ADDR: '0xbd31ea8212119f94a611fa969881cba3ea06fa3d',
+		DECIMALS: 6,
+		SYMBOL: 'LUNA'
 	}
 }

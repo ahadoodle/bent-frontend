@@ -4,8 +4,8 @@ import CardCoin from "assets/images/cardCoin.png";
 import DollorIcon from "assets/images/dollorIcon.png";
 import ClaimIcon from "assets/images/claimIcon.svg";
 import DepositIcon from "assets/images/depositIcon.svg";
-import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTvls, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
-import { formatBigNumber, getSumBigNumbers } from "utils";
+import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
+import { formatBigNumber } from "utils";
 import LockIcon from "assets/images/lockIcon.svg";
 // import DbIcon from "assets/images/dbIcon.svg";
 
@@ -18,13 +18,13 @@ const BannerBlocks = (): React.ReactElement => {
   const sushiDeposits = useSushiPoolTotalDepositedUsd();
   const bentDeposits = useBentStakedUsd();
   const bentCvxDeposits = useBentCvxStakedUSD();
-  const crvTvl = useCrvTvls();
+  const crvTvl = useCrvTotalTvl();
   const sushiTvl = useSushiTotalTvl();
   const bentTvl = useBentTvl();
   const bentCvxTvl = useBentCvxTvl();
 
   const totalTvl = (): string => {
-    return formatBigNumber(getSumBigNumbers(crvTvl).add(sushiTvl).add(bentTvl).add(bentCvxTvl), 18, 2);
+    return formatBigNumber(crvTvl.add(sushiTvl).add(bentTvl).add(bentCvxTvl), 18, 2);
   }
 
   const totalEarnings = (): string => {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CrvFactoryPool, POOLS, TOKENS } from 'constant';
+import { CrvFactoryPool, TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 import web3NoAccount from './web3';
 
@@ -86,6 +86,7 @@ export const getPrice = async (contract_addresses: string[], vsCoin = 'usd'): Pr
 				res.data[key][vsCoin.toLowerCase()] = 0;
 			priceData[key.toLowerCase()] = isNaN(res.data[key][vsCoin.toLowerCase()]) ? 0 : res.data[key][vsCoin.toLowerCase()];
 		})
+		priceData[TOKENS.LUNAWORM.ADDR.toLowerCase()] = priceData[TOKENS.WLUNA.ADDR.toLowerCase()];
 		return priceData;
 	} catch (error) {
 		console.error(error);
@@ -135,7 +136,7 @@ export const getTokenDecimals = (addr: string): number => {
 }
 
 export const getTokenPrice = (tokenPrices: Record<string, number>, addr: string): BigNumber => {
-	if (addr === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE') // Black Hole
+	if (addr === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' || addr === 'ETH') // Black Hole
 		addr = TOKENS['WETH'].ADDR;
 	else if (addr.toLowerCase() === TOKENS['BENTCVX'].ADDR.toLowerCase()) {
 		addr = TOKENS['CVX'].ADDR;
@@ -159,7 +160,6 @@ export const getAnnualReward = (rewardRate: BigNumber, tokenAddr: string, tokenP
 export const getSumBigNumbers = (bns: Record<string, BigNumber>): BigNumber => {
 	let total = ethers.constants.Zero;
 	Object.keys(bns).forEach(key => {
-		if (POOLS.BentPools[key] && POOLS.BentPools[key].disabled) return;
 		total = total.add(bns[key]);
 	})
 	return total;
