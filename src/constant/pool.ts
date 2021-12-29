@@ -131,30 +131,30 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'alusdCrv',
 		crvPoolLink: 'https://curve.fi/alusd/deposit',
 	},
-	OUSD: {
-		LOGO: TOKEN_LOGO.OUSD,
-		Name: 'ousd',
-		POOL: '0x519590c576D4e0aA49B7614492B64ADB8669F52A',
-		DepositAsset: '0x87650d7bbfc3a9f10587d7778206671719d9910d', // Curve.fi ousdCrv
-		CvxRewardsAddr: '0x7D536a737C13561e0D2Decf1152a653B4e615158',
-		RewardsAssets: ['BENT', 'CRV', 'CVX', 'OGN'],
-		CrvCoinsLength: 2,
-		CrvLpSYMBOL: 'ousdCrv',
-		crvPoolLink: 'https://curve.fi/factory/9/deposit',
-	},
-	CVXETH: {
-		LOGO: TOKEN_LOGO.CVX,
-		Name: 'cvxeth',
-		POOL: '0xADe08F43C0bA6eAF8F7a100A8f773285b39caBb5',
-		DepositAsset: '0x3A283D9c08E8b55966afb64C515f5143cf907611', // Curve.fi cvxeth/Crv
-		CvxRewardsAddr: '0xb1fb0ba0676a1ffa83882c7f4805408ba232c1fa',
-		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvCoinsLength: 2,
-		CrvLpSYMBOL: 'cvxethCrv',
-		crvPoolLink: 'https://curve.fi/cvxeth/deposit',
-		CrvMinter: '0xb576491f1e6e5e62f1d8f26062ee822b40b0e0d4',
-		crvReserveAssets: ['ETH', 'CVX']
-	},
+	// OUSD: {
+	// 	LOGO: TOKEN_LOGO.OUSD,
+	// 	Name: 'ousd',
+	// 	POOL: '0x519590c576D4e0aA49B7614492B64ADB8669F52A',
+	// 	DepositAsset: '0x87650d7bbfc3a9f10587d7778206671719d9910d', // Curve.fi ousdCrv
+	// 	CvxRewardsAddr: '0x7D536a737C13561e0D2Decf1152a653B4e615158',
+	// 	RewardsAssets: ['BENT', 'CRV', 'CVX', 'OGN'],
+	// 	CrvCoinsLength: 2,
+	// 	CrvLpSYMBOL: 'ousdCrv',
+	// 	crvPoolLink: 'https://curve.fi/factory/9/deposit',
+	// },
+	// CVXETH: {
+	// 	LOGO: TOKEN_LOGO.CVX,
+	// 	Name: 'cvxeth',
+	// 	POOL: '0xADe08F43C0bA6eAF8F7a100A8f773285b39caBb5',
+	// 	DepositAsset: '0x3A283D9c08E8b55966afb64C515f5143cf907611', // Curve.fi cvxeth/Crv
+	// 	CvxRewardsAddr: '0xb1fb0ba0676a1ffa83882c7f4805408ba232c1fa',
+	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
+	// 	CrvCoinsLength: 2,
+	// 	CrvLpSYMBOL: 'cvxethCrv',
+	// 	crvPoolLink: 'https://curve.fi/cvxeth/deposit',
+	// 	CrvMinter: '0xb576491f1e6e5e62f1d8f26062ee822b40b0e0d4',
+	// 	crvReserveAssets: ['ETH', 'CVX']
+	// },
 	// CRV: {
 	// 	LOGO: TOKEN_LOGO.CRV,
 	// 	Name: 'cvxcrv',
