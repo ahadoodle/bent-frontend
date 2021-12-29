@@ -17,7 +17,7 @@ import OusdLogo from 'assets/images/token/OUSD.svg';
 import OgnLogo from 'assets/images/token/OGN.svg';
 import SpellLogo from 'assets/images/token/SPELL.svg';
 import StethLogo from 'assets/images/token/STETH.svg';
-import SushiLogo from 'assets/images/token/SUSHI.png';
+import SushiLogo from 'assets/images/token/SUSHI.svg';
 import TriCrypto2Logo from 'assets/images/token/TRICRYPTO2.png';
 import UstLogo from 'assets/images/token/UST.svg';
 
