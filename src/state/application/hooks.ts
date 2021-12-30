@@ -13,9 +13,9 @@ import { ChainId } from 'constant';
 import { ContractsState } from 'state/contracts/reducer';
 import { Theme } from './reducer';
 
-export function useBlockNumber(): number | undefined {
+export function useBlockNumber(): number {
   const { chainId } = useActiveWeb3React();
-  return useSelector((state: AppState) => state.application.blockNumber[chainId ?? ChainId.Mainnet]);
+  return useSelector((state: AppState) => state.application.blockNumber[chainId ?? ChainId.Mainnet] || 0);
 }
 
 export function useContractState(): ContractsState {

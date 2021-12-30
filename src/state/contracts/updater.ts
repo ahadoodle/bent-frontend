@@ -170,6 +170,7 @@ export default function Updater(): null {
 					contractCalls.push(bentPoolMC.rewardPools(0));
 					contractCalls.push(bentPoolMC.rewardPools(1));
 					contractCalls.push(bentPoolMC.rewardPools(2));
+					contractCalls.push(bentPoolMC.endRewardBlock());
 
 					if (POOLS.BentPools[poolKey].crvReserveAssets) {
 						POOLS.BentPools[poolKey].crvReserveAssets?.forEach((key, rIndex) => {
@@ -321,6 +322,7 @@ export default function Updater(): null {
 				const bentCvxChefTotalAllocPoint = {};
 				const bentCvxChefRewardPerBlock = {};
 				const bentCvxChefPoolInfo = {};
+				const endRewardBlock = {};
 
 				Object.keys(POOLS.BentPools).forEach((poolKey, index) => {
 					balances[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = results[startIndex];
@@ -342,6 +344,7 @@ export default function Updater(): null {
 							results[startIndex + 7],
 							results[startIndex + 8]
 						];
+						endRewardBlock[poolKey] = results[startIndex + 9];
 					}
 					totalSupplies[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = lpTotalSupplies[poolKey];
 					crvDeposit[poolKey] = depositedLpBalance[poolKey];
@@ -355,7 +358,7 @@ export default function Updater(): null {
 							tokenPrice.mul(pendingRewards[index]).add(curvePoolEarned) : curvePoolEarned
 					});
 					crvEarnedUsd[poolKey] = curvePoolEarned.div(BigNumber.from(10).pow(18))
-					startIndex += 9;
+					startIndex += POOLS.BentPools[poolKey].isBentCvx ? 9 : 10;
 				});
 				Promise.all(crvReserveCalls).then(crvResults => {
 					let crvRIndex = 0;
@@ -393,6 +396,10 @@ export default function Updater(): null {
 									.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
 							crvApr[poolKey] = apr;
 						} else {
+							if (blockNumber > endRewardBlock[poolKey]) {
+								crvApr[poolKey] = 0;
+								return;
+							}
 							const [rewardsInfo1, rewardsInfo2, rewardsInfo3] = rewardsInfo[poolKey];
 							let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
 							annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
