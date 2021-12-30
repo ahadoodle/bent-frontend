@@ -17,3 +17,13 @@ export type CrvFactoryPool = {
 	totalSupply: string;
 	usdTotal: string;
 }
+
+export type CrvCryptoFactoryPool = {
+	address: string;
+	token: string;
+	coins: number;
+	keys: string[];
+	decimals: string[];
+	tvl: string;
+	lpPrice: string;
+}
