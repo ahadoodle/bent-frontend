@@ -88,12 +88,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b>
 							<span className="small">$</span>
-							<DecimalSpan value={props.poolInfo.disabled ? '--' : formatBigNumber(earnedUsd, 18, 2)} />
+							<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
 						</b>
 					</Col>
 					<Col>
 						<b>
-							{props.poolInfo.disabled ? 'TBC' : apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>

@@ -369,7 +369,7 @@ export default function Updater(): null {
 							crvDepositedUsd[poolKey] = utils.parseEther(poolData.usdTotal.toString()).mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
 						}
 					}
-					crvTvl[poolKey] = POOLS.BentPools[poolKey].disabled ? ethers.constants.Zero : tvl;
+					crvTvl[poolKey] = tvl;
 					if (POOLS.BentPools[poolKey].isBentCvx) {
 						const apr = (tvl.isZero()) ? 0 :
 							bentPriceBN.mul(bentCvxChefRewardPerBlock[poolKey]).mul(6400).mul(365).mul(10000)
