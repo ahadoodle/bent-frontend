@@ -9,7 +9,6 @@ export interface BentPool {
 	CrvLpSYMBOL: string;
 	isBentCvx?: boolean;
 	crvPoolLink: string;
-	disabled?: boolean;
 	isLegacy?: boolean;
 	isCryptoPool?: boolean;
 }
@@ -52,6 +51,26 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'fraxCrv',
 		crvPoolLink: 'https://curve.fi/frax/deposit',
 	},
+	CVXETH: {
+		LOGO: TOKEN_LOGO.CVX,
+		Name: 'cvxeth',
+		POOL: '0xade08f43c0ba6eaf8f7a100a8f773285b39cabb5',
+		DepositAsset: '0x3A283D9c08E8b55966afb64C515f5143cf907611', // Curve.fi cvxeth/Crv
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'cvxethCrv',
+		crvPoolLink: 'https://curve.fi/cvxeth/deposit',
+		isCryptoPool: true,
+	},
+	CRVETH: {
+		LOGO: TOKEN_LOGO.CRV,
+		Name: 'crveth',
+		POOL: '0x5D77b731803916cbcdec2BBdb3Ad0649C6a6EA17',
+		DepositAsset: '0xed4064f376cb8d68f770fb1ff088a3d0f3ff5c4d',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'crvethCrv',
+		crvPoolLink: 'https://curve.fi/crveth/deposit',
+		isCryptoPool: true,
+	},
 	NEW_D3POOL: {
 		LOGO: TOKEN_LOGO.D3POOL,
 		Name: 'd3pool',
@@ -70,14 +89,14 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'mimustCrv',
 		crvPoolLink: 'https://curve.fi/factory/48/deposit',
 	},
-	NEW_USTWORMHOLE: {
-		LOGO: TOKEN_LOGO.UST,
-		Name: 'ust-wormhole',
-		POOL: '0x7c325F13395334a376D7D388FD3450d38488a1AF',
-		DepositAsset: '0xceaf7747579696a2f0bb206a14210e3c9e6fb269', // Curve.fi USD-BTC-ETH (crv3crypto)
+	DOLA: {
+		LOGO: TOKEN_LOGO.DOLA,
+		Name: 'dola',
+		POOL: '0xD6B8580a39A17b9fBea427fD50593970f4Ac31b6',
+		DepositAsset: '0xaa5a67c256e27a5d80712c51971408db3370927d',
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvLpSYMBOL: 'ustwCrv',
-		crvPoolLink: 'https://curve.fi/factory/53/deposit',
+		CrvLpSYMBOL: 'dolaCrv',
+		crvPoolLink: 'https://curve.fi/factory/27/deposit',
 	},
 	NEW_TRICRYPTO2: {
 		LOGO: TOKEN_LOGO.TRICRYPTO2,
@@ -89,15 +108,6 @@ const BentPools: Record<string, BentPool> = {
 		crvPoolLink: 'https://curve.fi/tricrypto2/deposit',
 		isCryptoPool: true,
 	},
-	NEW_STETH: {
-		LOGO: TOKEN_LOGO.STETH,
-		Name: 'steth',
-		POOL: '0x9a50F371B262d8eE84879EEE70B8d41CBC904dd0',
-		DepositAsset: '0x06325440d014e39736583c165c2963ba99faf14e', // Curve.fi ETH/stETH
-		RewardsAssets: ['BENT', 'CRV', 'CVX', 'LDO'],
-		CrvLpSYMBOL: 'stethCrv',
-		crvPoolLink: 'https://curve.fi/steth/deposit',
-	},
 	NEW_ALUSD: {
 		LOGO: TOKEN_LOGO.ALUSD,
 		Name: 'alusd',
@@ -107,43 +117,32 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'alusdCrv',
 		crvPoolLink: 'https://curve.fi/alusd/deposit',
 	},
-	// OUSD: {
-	// 	LOGO: TOKEN_LOGO.OUSD,
-	// 	Name: 'ousd',
-	// 	POOL: '0x519590c576D4e0aA49B7614492B64ADB8669F52A',
-	// 	DepositAsset: '0x87650d7bbfc3a9f10587d7778206671719d9910d',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX', 'OGN'],
-	// 	CrvLpSYMBOL: 'ousdCrv',
-	// 	crvPoolLink: 'https://curve.fi/factory/9/deposit',
-	// },
-	CVXETH: {
-		LOGO: TOKEN_LOGO.CVX,
-		Name: 'cvxeth',
-		POOL: '0xade08f43c0ba6eaf8f7a100a8f773285b39cabb5',
-		DepositAsset: '0x3A283D9c08E8b55966afb64C515f5143cf907611', // Curve.fi cvxeth/Crv
-		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvLpSYMBOL: 'cvxethCrv',
-		crvPoolLink: 'https://curve.fi/cvxeth/deposit',
-		isCryptoPool: true,
+	OUSD: {
+		LOGO: TOKEN_LOGO.OUSD,
+		Name: 'ousd',
+		POOL: '0x519590c576D4e0aA49B7614492B64ADB8669F52A',
+		DepositAsset: '0x87650d7bbfc3a9f10587d7778206671719d9910d',
+		RewardsAssets: ['BENT', 'CRV', 'CVX', 'OGN'],
+		CrvLpSYMBOL: 'ousdCrv',
+		crvPoolLink: 'https://curve.fi/factory/9/deposit',
 	},
-	DOLA: {
-		LOGO: TOKEN_LOGO.DOLA,
-		Name: 'dola',
-		POOL: '0xD6B8580a39A17b9fBea427fD50593970f4Ac31b6',
-		DepositAsset: '0xaa5a67c256e27a5d80712c51971408db3370927d',
+	NEW_USTWORMHOLE: {
+		LOGO: TOKEN_LOGO.UST,
+		Name: 'ust-wormhole',
+		POOL: '0x7c325F13395334a376D7D388FD3450d38488a1AF',
+		DepositAsset: '0xceaf7747579696a2f0bb206a14210e3c9e6fb269', // Curve.fi USD-BTC-ETH (crv3crypto)
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvLpSYMBOL: 'dolaCrv',
-		crvPoolLink: 'https://curve.fi/factory/27/deposit',
+		CrvLpSYMBOL: 'ustwCrv',
+		crvPoolLink: 'https://curve.fi/factory/53/deposit',
 	},
-	CRVETH: {
-		LOGO: TOKEN_LOGO.CRV,
-		Name: 'crveth',
-		POOL: '0x5D77b731803916cbcdec2BBdb3Ad0649C6a6EA17',
-		DepositAsset: '0xed4064f376cb8d68f770fb1ff088a3d0f3ff5c4d',
-		RewardsAssets: ['BENT', 'CRV', 'CVX'],
-		CrvLpSYMBOL: 'crvethCrv',
-		crvPoolLink: 'https://curve.fi/crveth/deposit',
-		isCryptoPool: true,
+	NEW_STETH: {
+		LOGO: TOKEN_LOGO.STETH,
+		Name: 'steth',
+		POOL: '0x9a50F371B262d8eE84879EEE70B8d41CBC904dd0',
+		DepositAsset: '0x06325440d014e39736583c165c2963ba99faf14e', // Curve.fi ETH/stETH
+		RewardsAssets: ['BENT', 'CRV', 'CVX', 'LDO'],
+		CrvLpSYMBOL: 'stethCrv',
+		crvPoolLink: 'https://curve.fi/steth/deposit',
 	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,

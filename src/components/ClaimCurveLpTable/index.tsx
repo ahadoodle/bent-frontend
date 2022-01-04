@@ -99,7 +99,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 											key={poolName}
 											visible={index < 5 || showAll}
 										/> :
-										!POOLS.BentPools[poolName].disabled && <ClaimCurveLpItem
+										<ClaimCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}
 											poolKey={poolName}
 											key={poolName}
