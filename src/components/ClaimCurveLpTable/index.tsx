@@ -14,8 +14,8 @@ import { utils } from "ethers";
 export const ClaimCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
 	const [showNew, setShowNew] = useState(true);
-	const [sortField, setSortField] = useState('');
-	const [sortOrder, setSortOrder] = useState(1);
+	const [sortField, setSortField] = useState('apr');
+	const [sortOrder, setSortOrder] = useState(-1);
 	const earns = useCrvPoolTotalEarned();
 	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();

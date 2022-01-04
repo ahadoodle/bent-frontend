@@ -13,8 +13,8 @@ import { DecimalSpan } from "components/DecimalSpan";
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
 	const [showNew, setShowNew] = useState(true);
-	const [sortField, setSortField] = useState('');
-	const [sortOrder, setSortOrder] = useState(1);
+	const [sortField, setSortField] = useState('apr');
+	const [sortOrder, setSortOrder] = useState(-1);
 	const tvl = useCrvTotalTvl();
 	const earn = useCrvPoolTotalEarned();
 	const depostedUsd = useCrvPoolTotalDepositedUsds();
@@ -65,7 +65,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									{utils.commify(avgApr)}%
+									{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>
