@@ -115,7 +115,11 @@ export const useSortedCrvPoolKeys = (field: string, order: number): string[] => 
 	} else if (field === 'earned') {
 		return keys.sort((a, b) => sortCrvPool(earns[a], earns[b], field, order));
 	} else if (field === 'apr') {
-		return keys.sort((a, b) => sortCrvPool(utils.parseEther(aprs[a].toString()), utils.parseEther(aprs[b].toString()), field, order));
+		return keys.sort((a, b) => sortCrvPool(
+			utils.parseEther(aprs[a] ? aprs[a].toString() : '0'),
+			utils.parseEther(aprs[b] ? aprs[b].toString() : '0'),
+			field, order
+		));
 	} else if (field === 'deposit') {
 		return keys.sort((a, b) => sortCrvPool(deposits[a], deposits[b], field, order));
 	} else if (field === 'tvl') {
