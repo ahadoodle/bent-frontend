@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any*/
 import { ethers, BigNumber, utils } from 'ethers';
 import { POOLS, TOKENS } from 'constant';
-import { useActiveWeb3React, useBlockNumber, useMulticallProvider, useCrvFiLps } from 'hooks';
+import { useActiveWeb3React, useBlockNumber, useMulticallProvider } from 'hooks';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
 	getMultiBentPool,
-	getMultiCvxRewardPool,
 	getMultiERC20Contract,
 	getTokenDecimals,
 	getAnnualReward,
@@ -22,8 +21,7 @@ import {
 	getMultiBentCvxRewarderBent,
 	getMultiBentCvxRewarderMC,
 	getCrvFactoryInfo,
-	getMultiTricryptiLpPrice,
-	CrvFiLp,
+	getCrvCryptoFactoryInfo,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -35,7 +33,6 @@ export default function Updater(): null {
 	const blockNumber = useBlockNumber();
 	const multicall = useMulticallProvider();
 	const { account } = useActiveWeb3React();
-	const crvDepositLps = useCrvFiLps();
 
 	useEffect(() => {
 		const tokenAddrs = Object.keys(TOKENS).map(token => TOKENS[token].ADDR);
@@ -43,7 +40,8 @@ export default function Updater(): null {
 			getPrice(tokenAddrs),
 			getCirculatingSupply(),
 			getCrvFactoryInfo(),
-		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo]) => {
+			getCrvCryptoFactoryInfo(),
+		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
 			const balances: Record<string, BigNumber> = {};
@@ -92,9 +90,6 @@ export default function Updater(): null {
 
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
-
-			const tricryptoLpContract = getMultiTricryptiLpPrice();
-			contractCalls.push(tricryptoLpContract.lp_price());
 
 			const vlCvxLocker = getMultiCvxLocker();
 			contractCalls.push(vlCvxLocker.lockedBalanceOf(POOLS.Multisig))
@@ -154,7 +149,6 @@ export default function Updater(): null {
 
 			// Add Curve contract calls
 			contractCalls.push(bentToken.totalSupply());
-			const crvReserveCalls: any[] = [];
 			Object.keys(POOLS.BentPools).forEach(poolKey => {
 				const lpTokenContract = getMultiERC20Contract(POOLS.BentPools[poolKey].DepositAsset);
 				contractCalls.push(lpTokenContract.balanceOf(accAddr));
@@ -162,23 +156,16 @@ export default function Updater(): null {
 				contractCalls.push(lpTokenContract.totalSupply());
 				if (!POOLS.BentPools[poolKey].isBentCvx) {
 					const bentPoolMC = getMultiBentPool(poolKey);
-					const cvxRewardPool = getMultiCvxRewardPool(POOLS.BentPools[poolKey].CvxRewardsAddr);
 
-					contractCalls.push(cvxRewardPool.balanceOf(POOLS.BentPools[poolKey].POOL))
+					contractCalls.push(bentPoolMC.totalSupply());
 					contractCalls.push(bentPoolMC.balanceOf(accAddr));
 					contractCalls.push(bentPoolMC.pendingReward(accAddr));
 					contractCalls.push(bentPoolMC.rewardPools(0));
 					contractCalls.push(bentPoolMC.rewardPools(1));
 					contractCalls.push(bentPoolMC.rewardPools(2));
-
-					if (POOLS.BentPools[poolKey].crvReserveAssets) {
-						POOLS.BentPools[poolKey].crvReserveAssets?.forEach((key, rIndex) => {
-							crvReserveCalls.push(CrvFiLp.getBalances(crvDepositLps[poolKey], rIndex));
-						})
-					}
+					contractCalls.push(bentPoolMC.endRewardBlock());
 				} else {
 					const masterChef = getMultiBentMasterChef(POOLS.BentPools[poolKey].POOL);
-					// contractCalls.push(cvxRewardPool.balanceOf(POOLS.BentPools[poolKey].POOL))
 					contractCalls.push(lpTokenContract.balanceOf(POOLS.BentPools[poolKey].POOL));
 					contractCalls.push(masterChef.userInfo(0, accAddr));
 					contractCalls.push(masterChef.pendingReward(0, accAddr));
@@ -194,7 +181,6 @@ export default function Updater(): null {
 				const rewardsInfo = {};
 				let startIndex = 0;
 
-				const tricryptoLpPrice = BigNumber.from(results[startIndex++]);
 				vlCvxBalance = results[startIndex++];
 
 				// Update Sushi Pool Infos
@@ -321,6 +307,7 @@ export default function Updater(): null {
 				const bentCvxChefTotalAllocPoint = {};
 				const bentCvxChefRewardPerBlock = {};
 				const bentCvxChefPoolInfo = {};
+				const endRewardBlock = {};
 
 				Object.keys(POOLS.BentPools).forEach((poolKey, index) => {
 					balances[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = results[startIndex];
@@ -342,6 +329,7 @@ export default function Updater(): null {
 							results[startIndex + 7],
 							results[startIndex + 8]
 						];
+						endRewardBlock[poolKey] = results[startIndex + 9];
 					}
 					totalSupplies[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = lpTotalSupplies[poolKey];
 					crvDeposit[poolKey] = depositedLpBalance[poolKey];
@@ -355,104 +343,102 @@ export default function Updater(): null {
 							tokenPrice.mul(pendingRewards[index]).add(curvePoolEarned) : curvePoolEarned
 					});
 					crvEarnedUsd[poolKey] = curvePoolEarned.div(BigNumber.from(10).pow(18))
-					startIndex += 9;
+					startIndex += POOLS.BentPools[poolKey].isBentCvx ? 9 : 10;
 				});
-				Promise.all(crvReserveCalls).then(crvResults => {
-					let crvRIndex = 0;
-					Object.keys(POOLS.BentPools).forEach(poolKey => {
-						const poolData = crvPoolsInfo[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()];
-						let tvl = ethers.constants.Zero;
-						if (POOLS.BentPools[poolKey].crvReserveAssets) {
-							// crv api doesn't return pool info here. have to fetch them manually.
-							let totalUsd = ethers.constants.Zero;
-							POOLS.BentPools[poolKey].crvReserveAssets?.forEach(asset => {
-								totalUsd = getTokenPrice(tokenPrices, asset === 'ETH' ? 'ETH' : TOKENS[asset].ADDR)
-									.mul(crvResults[crvRIndex++]).div(BigNumber.from(10).pow(asset === 'ETH' ? 18 : TOKENS[asset].DECIMALS))
-									.add(totalUsd);
-							})
-							tvl = totalUsd.mul(crvPoolLpBalances[poolKey]).div(lpTotalSupplies[poolKey]);
-							crvDepositedUsd[poolKey] = tvl.mul(depositedLpBalance[poolKey]).div(lpTotalSupplies[poolKey]);
-						} else if (POOLS.BentPools[poolKey].DepositAsset.toLowerCase() === '0xc4AD29ba4B3c580e6D59105FFf484999997675Ff'.toLowerCase()) {
-							// tricrypto
-							tvl = tricryptoLpPrice.mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
-							crvDepositedUsd[poolKey] = tricryptoLpPrice.mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
-						} else if (POOLS.BentPools[poolKey].isBentCvx) {
-							// bentCvx pool (calculating tvl info here because bentCvx price is zero on crv api)
-							tvl = BigNumber.from(poolData.coins[0].poolBalance).add(BigNumber.from(poolData.coins[1].poolBalance))
-								.mul(utils.parseEther(poolData.coins[0].usdPrice.toString())).div(BigNumber.from(10).pow(18));
-							crvDepositedUsd[poolKey] = tvl.mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
-						} else {
+				Object.keys(POOLS.BentPools).forEach(poolKey => {
+					const poolData = crvPoolsInfo[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()];
+					let tvl = ethers.constants.Zero;
+					if (POOLS.BentPools[poolKey].isCryptoPool) {
+						const lpPrice = utils.parseEther(crvCryptoPoolsInfo[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()].lpPrice.toString());
+						tvl = lpPrice.mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
+						crvDepositedUsd[poolKey] = lpPrice.mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
+					} else if (POOLS.BentPools[poolKey].isBentCvx) {
+						// bentCvx pool (calculating tvl info here because bentCvx price is zero on crv api)
+						tvl = BigNumber.from(poolData.coins[0].poolBalance).add(BigNumber.from(poolData.coins[1].poolBalance))
+							.mul(utils.parseEther(poolData.coins[0].usdPrice.toString())).div(BigNumber.from(10).pow(18));
+						crvDepositedUsd[poolKey] = tvl.mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
+					} else {
+						if (POOLS.BentPools[poolKey].DepositAsset === '0x06325440d014e39736583c165c2963ba99faf14e') {
+							// STETH Pool
+							tvl = getTokenPrice(tokenPrices, 'ETH').mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
+							crvDepositedUsd[poolKey] = getTokenPrice(tokenPrices, 'ETH').mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
+						}
+						else {
 							if (!poolData) return;
 							tvl = utils.parseEther(poolData.usdTotal.toString()).mul(crvPoolLpBalances[poolKey]).div(poolData.totalSupply);
 							crvDepositedUsd[poolKey] = utils.parseEther(poolData.usdTotal.toString()).mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
 						}
-						crvTvl[poolKey] = POOLS.BentPools[poolKey].disabled ? ethers.constants.Zero : tvl;
-						if (POOLS.BentPools[poolKey].isBentCvx) {
-							const apr = (tvl.isZero()) ? 0 :
-								bentPriceBN.mul(bentCvxChefRewardPerBlock[poolKey]).mul(6400).mul(365).mul(10000)
-									.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
-							crvApr[poolKey] = apr;
-						} else {
-							const [rewardsInfo1, rewardsInfo2, rewardsInfo3] = rewardsInfo[poolKey];
-							let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
-							annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
-							if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
-								annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
-
-							// Bent Rewards
-							const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
-							const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
-							annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
-							const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
-							crvApr[poolKey] = apr;
+					}
+					crvTvl[poolKey] = tvl;
+					if (POOLS.BentPools[poolKey].isBentCvx) {
+						const apr = (tvl.isZero()) ? 0 :
+							bentPriceBN.mul(bentCvxChefRewardPerBlock[poolKey]).mul(6400).mul(365).mul(10000)
+								.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
+						crvApr[poolKey] = apr;
+					} else {
+						if (blockNumber > endRewardBlock[poolKey]) {
+							crvApr[poolKey] = 0;
+							return;
 						}
-					})
-					dispatch(updateContractInfo({
-						tokenPrices,
-						bentCirculatingSupply,
-						totalSupplies,
-						balances,
-						bentAllowance,
-						bentAprs,
-						bentAvgApr,
-						bentEarnedUsd,
-						bentPoolRewardsInfo,
-						bentRewards,
-						bentRewardsUsd,
-						bentStaked,
-						bentStakedUsd,
-						bentTotalStaked,
-						bentTvl,
-						crvDepositedUsd,
-						crvEarnedUsd,
-						crvPoolRewards,
-						crvTvl,
-						crvDeposit,
-						crvLpAllowance,
-						crvApr,
-						sushiApr,
-						sushiDepositedUsd,
-						sushiEarnedUsd,
-						sushiLpDeposited,
-						sushiRewards,
-						sushiTvl,
-						vlCvxBalance,
-						bentCvxAllowance,
-						bentCvxStakingAllowance,
-						bentCvxStaked,
-						bentCvxTotalStaked,
-						bentCvxTvl,
-						bentCvxRewards,
-						bentCvxRewardsUsd,
-						bentCvxEarned,
-						bentCvxAprs,
-						bentCvxPoolAprs,
-						bentCvxAvgApr,
-					}));
+						const [rewardsInfo1, rewardsInfo2, rewardsInfo3] = rewardsInfo[poolKey];
+						let annualRewardsUsd = getAnnualReward(rewardsInfo1.rewardRate, rewardsInfo1.rewardToken, tokenPrices[rewardsInfo1.rewardToken.toLowerCase()]);
+						annualRewardsUsd = getAnnualReward(rewardsInfo2.rewardRate, rewardsInfo2.rewardToken, tokenPrices[rewardsInfo2.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+						if (rewardsInfo3.rewardToken !== ethers.constants.AddressZero)
+							annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
+
+						// Bent Rewards
+						const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
+						const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
+						annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
+						const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
+						crvApr[poolKey] = apr;
+					}
 				})
+				dispatch(updateContractInfo({
+					tokenPrices,
+					bentCirculatingSupply,
+					totalSupplies,
+					balances,
+					bentAllowance,
+					bentAprs,
+					bentAvgApr,
+					bentEarnedUsd,
+					bentPoolRewardsInfo,
+					bentRewards,
+					bentRewardsUsd,
+					bentStaked,
+					bentStakedUsd,
+					bentTotalStaked,
+					bentTvl,
+					crvDepositedUsd,
+					crvEarnedUsd,
+					crvPoolRewards,
+					crvTvl,
+					crvDeposit,
+					crvLpAllowance,
+					crvApr,
+					sushiApr,
+					sushiDepositedUsd,
+					sushiEarnedUsd,
+					sushiLpDeposited,
+					sushiRewards,
+					sushiTvl,
+					vlCvxBalance,
+					bentCvxAllowance,
+					bentCvxStakingAllowance,
+					bentCvxStaked,
+					bentCvxTotalStaked,
+					bentCvxTvl,
+					bentCvxRewards,
+					bentCvxRewardsUsd,
+					bentCvxEarned,
+					bentCvxAprs,
+					bentCvxPoolAprs,
+					bentCvxAvgApr,
+				}));
 			})
 		})
-	}, [dispatch, blockNumber, account, multicall, crvDepositLps])
+	}, [dispatch, blockNumber, account, multicall])
 
 	return null;
 }

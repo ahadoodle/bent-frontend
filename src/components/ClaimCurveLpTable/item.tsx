@@ -46,6 +46,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 		return enable;
 	}
 
+	const visible = () => {
+		if (!props.visible) return 'd-none';
+		if (props.poolInfo.isLegacy && depositedLp.isZero()) return 'd-none'
+		return '';
+	}
+
 	useEffect(() => {
 		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
 			const addr = TOKENS[key].ADDR.toLowerCase();
@@ -64,7 +70,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
@@ -82,12 +88,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b>
 							<span className="small">$</span>
-							<DecimalSpan value={props.poolInfo.disabled ? '--' : formatBigNumber(earnedUsd, 18, 2)} />
+							<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
 						</b>
 					</Col>
 					<Col>
 						<b>
-							{props.poolInfo.disabled ? 'TBC' : apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>

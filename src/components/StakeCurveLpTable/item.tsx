@@ -54,6 +54,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
 
+	const visible = () => {
+		if (!props.visible) return 'd-none';
+		if (props.poolInfo.isLegacy && depositedLp.isZero()) return 'd-none'
+		return '';
+	}
+
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
 		if (isNaN(parseFloat(value))) return;
@@ -106,7 +112,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}
@@ -124,12 +130,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b>
 							<span className="small">$</span>
-							<DecimalSpan value={props.poolInfo.disabled ? '--' : formatBigNumber(earnedUsd, 18, 2)} />
+							<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
 						</b>
 					</Col>
 					<Col>
 						<b>
-							{props.poolInfo.disabled ? 'TBC' : (apr ? <>{utils.commify(apr)}%</> : 'TBC')}
+							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -146,7 +152,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						<div className="tvlText">
 							<b>
 								<span className="small">$</span>
-								{props.poolInfo.disabled ? '--' : formatMillionsBigNumber(tvl, 18, 2)}
+								{formatMillionsBigNumber(tvl, 18, 2)}
 							</b>
 							<i className="fa fa-caret-down" aria-hidden="true" />
 						</div>
@@ -327,34 +333,30 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 													</a>
 												</Col>
 											</Row>
-											{props.poolInfo.disabled ? '' :
-												<>
-													<Row>
-														<Col md="3">
-															<CardText className="mt-0">
-																Deposit contract address:
-															</CardText>
-														</Col>
-														<Col md="9">
-															<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
-																{POOLS.BentPools[props.poolKey].POOL}
-															</a>
-														</Col>
-													</Row>
-													<Row>
-														<Col md="3">
-															<CardText className="mt-0">
-																Rewards contract address:
-															</CardText>
-														</Col>
-														<Col md="9">
-															<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
-																{POOLS.BentPools[props.poolKey].POOL}
-															</a>
-														</Col>
-													</Row>
-												</>
-											}
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														Deposit contract address:
+													</CardText>
+												</Col>
+												<Col md="9">
+													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
+														{POOLS.BentPools[props.poolKey].POOL}
+													</a>
+												</Col>
+											</Row>
+											<Row>
+												<Col md="3">
+													<CardText className="mt-0">
+														Rewards contract address:
+													</CardText>
+												</Col>
+												<Col md="9">
+													<a href={getEtherscanLink(POOLS.BentPools[props.poolKey].POOL)} target="_blank" rel="noreferrer">
+														{POOLS.BentPools[props.poolKey].POOL}
+													</a>
+												</Col>
+											</Row>
 										</Card>
 									</Col>
 								</Row>

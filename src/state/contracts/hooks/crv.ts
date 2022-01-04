@@ -50,6 +50,15 @@ export const useCrvDeposit = (poolKey: string): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvDeposit[poolKey] || ethers.constants.Zero));
 }
 
+export const useHasLegacyCrvDeposit = (): boolean => {
+	const crvDeposits = useSelector((state: AppState) => state.contracts.crvDeposit || {});
+	let hasDeposit = false;
+	Object.keys(POOLS.BentPools).filter(key => POOLS.BentPools[key].isLegacy).forEach(key => {
+		hasDeposit = hasDeposit || !BigNumber.from(crvDeposits[key] || ethers.constants.Zero).isZero()
+	})
+	return hasDeposit;
+}
+
 export const useCrvPoolRewards = (poolKey: string): BigNumber[] => {
 	return useSelector((state: AppState) => state.contracts.crvPoolRewards ? state.contracts.crvPoolRewards[poolKey] ?? [] : []);
 }
