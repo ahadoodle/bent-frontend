@@ -54,6 +54,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
 
+	const visible = () => {
+		if (!props.visible) return 'd-none';
+		if (props.poolInfo.isLegacy && depositedLp.isZero()) return 'd-none'
+		return '';
+	}
+
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
 		if (isNaN(parseFloat(value))) return;
@@ -106,7 +112,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}
