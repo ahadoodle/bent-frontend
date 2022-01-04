@@ -113,7 +113,7 @@ const BentPools: Record<string, BentPool> = {
 		LOGO: TOKEN_LOGO.STETH,
 		Name: 'steth',
 		POOL: '0x9a50F371B262d8eE84879EEE70B8d41CBC904dd0',
-		DepositAsset: '0x06325440D014e39736583c165C2963BA99fAf14E', // Curve.fi ETH/stETH
+		DepositAsset: '0x06325440d014e39736583c165c2963ba99faf14e', // Curve.fi ETH/stETH
 		CvxRewardsAddr: '0x0a760466e1b4621579a82a39cb56dda2f4e70f03',
 		RewardsAssets: ['BENT', 'CRV', 'CVX', 'LDO'],
 		CrvMinter: '0xDC24316b9AE028F1497c275EB9192a3Ea0f67022',
@@ -143,19 +143,19 @@ const BentPools: Record<string, BentPool> = {
 	// 	CrvLpSYMBOL: 'ousdCrv',
 	// 	crvPoolLink: 'https://curve.fi/factory/9/deposit',
 	// },
-	// CVXETH: {
-	// 	LOGO: TOKEN_LOGO.CVX,
-	// 	Name: 'cvxeth',
-	// 	POOL: '0xADe08F43C0bA6eAF8F7a100A8f773285b39caBb5',
-	// 	DepositAsset: '0x3A283D9c08E8b55966afb64C515f5143cf907611', // Curve.fi cvxeth/Crv
-	// 	CvxRewardsAddr: '0xb1fb0ba0676a1ffa83882c7f4805408ba232c1fa',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
-	// 	CrvCoinsLength: 2,
-	// 	CrvLpSYMBOL: 'cvxethCrv',
-	// 	crvPoolLink: 'https://curve.fi/cvxeth/deposit',
-	// 	CrvMinter: '0xb576491f1e6e5e62f1d8f26062ee822b40b0e0d4',
-	// 	isCryptoPool: true,
-	// },
+	CVXETH: {
+		LOGO: TOKEN_LOGO.CVX,
+		Name: 'cvxeth',
+		POOL: '0xade08f43c0ba6eaf8f7a100a8f773285b39cabb5',
+		DepositAsset: '0x3A283D9c08E8b55966afb64C515f5143cf907611', // Curve.fi cvxeth/Crv
+		CvxRewardsAddr: '0xb1fb0ba0676a1ffa83882c7f4805408ba232c1fa',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvCoinsLength: 2,
+		CrvLpSYMBOL: 'cvxethCrv',
+		crvPoolLink: 'https://curve.fi/cvxeth/deposit',
+		CrvMinter: '0xb576491f1e6e5e62f1d8f26062ee822b40b0e0d4',
+		isCryptoPool: true,
+	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
 		Name: 'frax',
@@ -198,7 +198,7 @@ const BentPools: Record<string, BentPool> = {
 		LOGO: TOKEN_LOGO.STETH,
 		Name: 'steth',
 		POOL: '0xEAC2c97A6Fcd488617a7f1B00bC76CB03aD70b26',
-		DepositAsset: '0x06325440D014e39736583c165C2963BA99fAf14E', // Curve.fi ETH/stETH
+		DepositAsset: '0x06325440d014e39736583c165c2963ba99faf14e', // Curve.fi ETH/stETH
 		CvxRewardsAddr: '0x0a760466e1b4621579a82a39cb56dda2f4e70f03',
 		RewardsAssets: ['BENT', 'CRV', 'CVX', 'LDO'],
 		CrvMinter: '0xDC24316b9AE028F1497c275EB9192a3Ea0f67022',

@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
 	getMultiBentPool,
-	getMultiCvxRewardPool,
 	getMultiERC20Contract,
 	getTokenDecimals,
 	getAnnualReward,
@@ -157,9 +156,8 @@ export default function Updater(): null {
 				contractCalls.push(lpTokenContract.totalSupply());
 				if (!POOLS.BentPools[poolKey].isBentCvx) {
 					const bentPoolMC = getMultiBentPool(poolKey);
-					const cvxRewardPool = getMultiCvxRewardPool(POOLS.BentPools[poolKey].CvxRewardsAddr);
 
-					contractCalls.push(cvxRewardPool.balanceOf(POOLS.BentPools[poolKey].POOL))
+					contractCalls.push(bentPoolMC.totalSupply());
 					contractCalls.push(bentPoolMC.balanceOf(accAddr));
 					contractCalls.push(bentPoolMC.pendingReward(accAddr));
 					contractCalls.push(bentPoolMC.rewardPools(0));
@@ -168,7 +166,6 @@ export default function Updater(): null {
 					contractCalls.push(bentPoolMC.endRewardBlock());
 				} else {
 					const masterChef = getMultiBentMasterChef(POOLS.BentPools[poolKey].POOL);
-					// contractCalls.push(cvxRewardPool.balanceOf(POOLS.BentPools[poolKey].POOL))
 					contractCalls.push(lpTokenContract.balanceOf(POOLS.BentPools[poolKey].POOL));
 					contractCalls.push(masterChef.userInfo(0, accAddr));
 					contractCalls.push(masterChef.pendingReward(0, accAddr));
@@ -361,9 +358,16 @@ export default function Updater(): null {
 							.mul(utils.parseEther(poolData.coins[0].usdPrice.toString())).div(BigNumber.from(10).pow(18));
 						crvDepositedUsd[poolKey] = tvl.mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
 					} else {
-						if (!poolData) return;
-						tvl = utils.parseEther(poolData.usdTotal.toString()).mul(crvPoolLpBalances[poolKey]).div(poolData.totalSupply);
-						crvDepositedUsd[poolKey] = utils.parseEther(poolData.usdTotal.toString()).mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
+						if (POOLS.BentPools[poolKey].DepositAsset === '0x06325440d014e39736583c165c2963ba99faf14e') {
+							// STETH Pool
+							tvl = getTokenPrice(tokenPrices, 'ETH').mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
+							crvDepositedUsd[poolKey] = getTokenPrice(tokenPrices, 'ETH').mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
+						}
+						else {
+							if (!poolData) return;
+							tvl = utils.parseEther(poolData.usdTotal.toString()).mul(crvPoolLpBalances[poolKey]).div(poolData.totalSupply);
+							crvDepositedUsd[poolKey] = utils.parseEther(poolData.usdTotal.toString()).mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
+						}
 					}
 					crvTvl[poolKey] = POOLS.BentPools[poolKey].disabled ? ethers.constants.Zero : tvl;
 					if (POOLS.BentPools[poolKey].isBentCvx) {

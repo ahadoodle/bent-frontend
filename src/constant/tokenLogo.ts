@@ -1,12 +1,13 @@
 import AlcxLogo from 'assets/images/token/ALCX.svg';
 import AlusdLogo from 'assets/images/token/ALUSD.png';
 import BentCvx from 'assets/images/token/BENTCVX.svg';
-import BentLogo from 'assets/images/token/BENT_XMAS.svg';
+import BentLogo from 'assets/images/token/BENT.svg';
 import BtcLogo from 'assets/images/token/BTC.svg';
 import CrvLogo from 'assets/images/token/CRV.svg';
 import CvxLogo from 'assets/images/token/CVX.svg';
 import DaiLogo from 'assets/images/token/DAI.svg';
 import D3PoolLogo from 'assets/images/token/D3POOL.svg';
+import DolaLogo from 'assets/images/token/DOLA.svg';
 import EthLogo from 'assets/images/token/ETH.svg';
 import FraxLogo from 'assets/images/token/FRAX.svg';
 import FxsLogo from 'assets/images/token/FXS.svg';
@@ -31,6 +32,7 @@ export const TOKEN_LOGO = {
 	CVX: CvxLogo,
 	DAI: DaiLogo,
 	D3POOL: D3PoolLogo,
+	DOLA: DolaLogo,
 	ETH: EthLogo,
 	FRAX: FraxLogo,
 	FXS: FxsLogo,
