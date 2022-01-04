@@ -22,6 +22,7 @@ import {
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
+import { StakeBentRewardItem } from "./rewardsItem";
 
 export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -192,13 +193,12 @@ export const StakeBent = (): React.ReactElement => {
 																</CardText>
 																<div className="bent-rewards-container">
 																	{POOLS.BentStaking.RewardAssets.map(key =>
-																		<div className="imgText bent-rewards-item" key={key}>
-																			<img src={TOKENS[key].LOGO} alt="Icon" width="28" />
-																			<div className="">
-																				<h4 className="mb-0">{key}</h4>
-																				<p className="apr">{rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}% APR</p>
-																			</div>
-																		</div>
+																		<StakeBentRewardItem
+																			key={key}
+																			logo={TOKENS[key].LOGO}
+																			title={key}
+																			apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}
+																		/>
 																	)}
 																</div>
 															</Card>
