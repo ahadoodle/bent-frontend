@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CrvFactoryPool, TOKENS } from 'constant';
+import { CrvCryptoFactoryPool, CrvFactoryPool, TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 import web3NoAccount from './web3';
 
@@ -106,6 +106,24 @@ export const getCrvFactoryInfo = async (): Promise<Record<string, CrvFactoryPool
 		poolData.forEach(pool => {
 			result[pool.address.toLowerCase()] = pool;
 		});
+		return result;
+	} catch (error) {
+		console.error(error);
+		return {}
+	}
+}
+
+export const getCrvCryptoFactoryInfo = async (): Promise<Record<string, CrvCryptoFactoryPool>> => {
+	const url = 'https://api.curve.fi/api/getTVLCrypto';
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		if (!res.data.success) return {};
+		const poolData = res.data.data.cryptoPools;
+		const result: Record<string, CrvCryptoFactoryPool> = {};
+		Object.keys(poolData).forEach(key => {
+			result[poolData[key].token.toLowerCase()] = poolData[key];
+		})
 		return result;
 	} catch (error) {
 		console.error(error);
