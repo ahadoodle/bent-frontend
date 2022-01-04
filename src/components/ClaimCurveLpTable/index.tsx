@@ -3,7 +3,7 @@ import { Row, Col, Card, CardBody, Container } from "reactstrap";
 import { POOLS } from "constant";
 import CrvLogo from 'assets/images/token/CRV.svg';
 import { ClaimCurveLpItem } from "./item";
-import { useCrvPoolTotalDepositedUsds, useCrvAverageApr, useSortedCrvPoolKeys, useCrvPoolTotalEarned } from "hooks";
+import { useCrvPoolTotalDepositedUsds, useCrvAverageApr, useSortedCrvPoolKeys, useCrvPoolTotalEarned, useHasLegacyCrvDeposit } from "hooks";
 import { formatBigNumber } from "utils";
 import { MorePoolsRow } from "components/MorePoolsRow";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -20,6 +20,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();
 	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
+	const hasOldDeposits = useHasLegacyCrvDeposit();
 
 	const onSort = (field: string) => {
 		if (field === sortField) {
@@ -75,6 +76,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								<div className="clmBtn">
 									<SwitchSlider
 										label="V2 Pools"
+										className={hasOldDeposits ? '' : 'd-none'}
 										labelClassName="text-black"
 										defaultValue={true}
 										onChange={showNew => setShowNew(showNew)}
@@ -89,7 +91,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 						</Row>
 						<Card>
 							<CardBody>
-								{keys.filter(key => showNew ? !POOLS.BentPools[key].isLegacy : POOLS.BentPools[key].isLegacy).map((poolName, index) =>
+								{keys.filter(key => (showNew || !hasOldDeposits) ? !POOLS.BentPools[key].isLegacy : POOLS.BentPools[key].isLegacy).map((poolName, index) =>
 									POOLS.BentPools[poolName].isBentCvx ?
 										<ClaimBentCvxCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}

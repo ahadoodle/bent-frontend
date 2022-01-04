@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber } from "utils";
-import { useCrvAverageApr, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useSortedCrvPoolKeys } from "hooks";
+import { useCrvAverageApr, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useHasLegacyCrvDeposit, useSortedCrvPoolKeys } from "hooks";
 import { MorePoolsRow } from "components/MorePoolsRow";
 import { SwitchSlider } from "components/Switch";
 import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
@@ -20,6 +20,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();
 	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
+	const hasOldDeposits = useHasLegacyCrvDeposit();
 
 	const onSort = (field: string) => {
 		if (field === sortField) {
@@ -42,7 +43,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 						<h2 className="section-header">Stake Curve LP Tokens</h2>
 						<SwitchSlider
 							label="V2 Pools"
-							className="ml-auto"
+							className={`ml-auto ${hasOldDeposits ? '' : 'd-none'}`}
 							defaultValue={true}
 							onChange={showNew => setShowNew(showNew)}
 						/>
@@ -89,7 +90,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 						</Row>
 						<Card>
 							<CardBody>
-								{keys.filter(key => showNew ? !POOLS.BentPools[key].isLegacy : POOLS.BentPools[key].isLegacy).map((poolName, index) =>
+								{keys.filter(key => (showNew || !hasOldDeposits) ? !POOLS.BentPools[key].isLegacy : POOLS.BentPools[key].isLegacy).map((poolName, index) =>
 									POOLS.BentPools[poolName].isBentCvx ?
 										<StakeBentCvxCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}
