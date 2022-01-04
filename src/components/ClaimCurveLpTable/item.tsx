@@ -46,6 +46,12 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 		return enable;
 	}
 
+	const visible = () => {
+		if (!props.visible) return 'd-none';
+		if (props.poolInfo.isLegacy && depositedLp.isZero()) return 'd-none'
+		return '';
+	}
+
 	useEffect(() => {
 		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
 			const addr = TOKENS[key].ADDR.toLowerCase();
@@ -64,7 +70,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
