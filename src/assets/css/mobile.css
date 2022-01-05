@@ -1,0 +1,6 @@
+@media only screen and (max-width: 800px) {
+.boxwrap h2 b {
+	font-size: 30px;
+	line-height: unset;
+}
+}
