@@ -30,6 +30,7 @@ import CvxLogoLight from 'assets/images/cvx-logo-color.svg';
 import BentLogo from 'assets/images/logo-dark.svg';
 import BentLogoLight from 'assets/images/logo-light.svg';
 import { Theme } from "state/application/reducer";
+import { SwitchSlider } from "components/Switch";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -424,13 +425,12 @@ export const StakeBentCVX = (): React.ReactElement => {
 														<Col md="12" className="inverse">
 															<Card body>
 																<CardTitle>
-																	<div className="advance-btn">
-																		<Label className="switch">
-																			<Input type="checkbox" />
-																			<span className="slider"></span>
-																		</Label>
-																		<span className="textadvance">Advanced</span>
-																	</div>
+																	<SwitchSlider
+																		label="Advanced"
+																		onChange={() => {
+																			// 
+																		}}
+																	/>
 																</CardTitle>
 																<div className="card-text mt-4 d-flex">
 																	<div className="amount-crv col-md-5">

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any*/
 import { ethers, BigNumber, utils } from 'ethers';
 import { POOLS, TOKENS } from 'constant';
-import { useActiveWeb3React, useBlockNumber, useMulticallProvider } from 'hooks';
+import { useActiveWeb3React, useBlockNumber } from 'hooks';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
@@ -22,6 +22,7 @@ import {
 	getMultiBentCvxRewarderMC,
 	getCrvFactoryInfo,
 	getCrvCryptoFactoryInfo,
+	MulticallProvider,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -31,7 +32,7 @@ import { BentPoolReward } from './reducer';
 export default function Updater(): null {
 	const dispatch = useDispatch();
 	const blockNumber = useBlockNumber();
-	const multicall = useMulticallProvider();
+	const multicall = MulticallProvider;
 	const { account } = useActiveWeb3React();
 
 	useEffect(() => {

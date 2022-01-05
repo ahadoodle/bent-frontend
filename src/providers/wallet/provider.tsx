@@ -89,13 +89,8 @@ export function WalletProvider({ children }: Props): React.ReactElement {
   // wait for confirmation of active status
   useEffect(() => {
     if (!completedInitialLoad && active) setCompletedInitialLoad(true)
-  }, [completedInitialLoad, active])
-
-  // connection inactive,
-  // fallback to defaultConnector (only after we've run initial load sequence)
-  useEffect(() => {
     if (!active && completedInitialLoad) handleDefaultConnect()
-  }, [active, completedInitialLoad])
+  }, [completedInitialLoad, active])
 
   // watch for unsupported chain connection
   useEffect(() => {

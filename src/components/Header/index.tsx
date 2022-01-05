@@ -68,9 +68,9 @@ const Header = (): React.ReactElement => {
     <React.Fragment>
       <div className="header">
         <Container>
-          <div className="DesktopHeader" id="mySidenav">
+          <div className="DesktopHeader">
             <Navbar light expand="md">
-              <Link to="/">
+              <Link to="/#">
                 <img src={LogoIcon} alt="" />
               </Link>
               <ul className="primaryMenu">

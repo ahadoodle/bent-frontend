@@ -62,6 +62,12 @@ ul.primaryMenu {
 .tokentable.table tr:hover .tvlText i.fa.fa-caret-down {
     opacity: 1;
 }
+.wallet-connect .dropdown-menu {
+    background-color: rgb(23, 23, 23, 0);
+}
+.wallet-connect .wallet.btn {
+    margin-top: 10px;
+}
 ul.primaryMenu li a {
     color: #8D99AB;
     font-style: normal;
