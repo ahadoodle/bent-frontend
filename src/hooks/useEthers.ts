@@ -15,24 +15,24 @@ export const useActiveWeb3React = (): Web3ReactContextInterface<Web3Provider> =>
   const { library, chainId, ...web3React } = useWeb3React()
   const initProvider = () => {
     if (library === undefined) {
-      const { ethereum } = window as any;
-      if (!ethereum) return simpleRpcProvider;
-      return new ethers.providers.Web3Provider(ethereum) || simpleRpcProvider;
-    } else {
+      return simpleRpcProvider;
+    } else if (chainId === ChainId.Mainnet) {
       return new ethers.providers.Web3Provider(library) || simpleRpcProvider;
+    } else {
+      return simpleRpcProvider;
     }
   }
   const [provider, setProvider] = useState<any>(initProvider());
 
   useEffect(() => {
     if (library === undefined) {
-      const { ethereum } = window as any;
-      if (!ethereum) setProvider(simpleRpcProvider);
-      else setProvider(new ethers.providers.Web3Provider(ethereum) || simpleRpcProvider);
-    } else {
+      setProvider(simpleRpcProvider);
+    } else if (chainId === ChainId.Mainnet) {
       setProvider(new ethers.providers.Web3Provider(library) || simpleRpcProvider);
+    } else {
+      setProvider(simpleRpcProvider);
     }
-  }, [library])
+  }, [library, chainId])
 
   return { library: provider, chainId: chainId ?? ChainId.Mainnet, ...web3React }
 }

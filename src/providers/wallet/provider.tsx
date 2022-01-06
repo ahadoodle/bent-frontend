@@ -20,12 +20,11 @@ const injected = new InjectedConnector({
   supportedChainIds: SUPPORTED_CHAINS
 })
 
-const walletConnectConnector = (chainId: number) => {
+const walletConnectConnector = () => {
   return new WalletConnectConnector({
-    rpc: { [chainId]: NETWORK_CONNECTIONS[chainId] },
-    bridge: 'https://bridge.walletconnect.org',
-    qrcode: true,
-    pollingInterval: 10000
+    rpc: { [ChainId.Mainnet]: NETWORK_CONNECTIONS[ChainId.Mainnet] },
+    supportedChainIds: [ChainId.Mainnet],
+    qrcode: true
   })
 }
 
@@ -73,7 +72,7 @@ export function WalletProvider({ children }: Props): React.ReactElement {
         return setCompletedInitialLoad(true)
       }
 
-      const wc = walletConnectConnector(connectToChainId)
+      const wc = walletConnectConnector()
       activate(wc, undefined, true).catch(() => setCompletedInitialLoad(true))
     } else {
       // else attempt to activate metamask
@@ -89,13 +88,8 @@ export function WalletProvider({ children }: Props): React.ReactElement {
   // wait for confirmation of active status
   useEffect(() => {
     if (!completedInitialLoad && active) setCompletedInitialLoad(true)
-  }, [completedInitialLoad, active])
-
-  // connection inactive,
-  // fallback to defaultConnector (only after we've run initial load sequence)
-  useEffect(() => {
     if (!active && completedInitialLoad) handleDefaultConnect()
-  }, [active, completedInitialLoad])
+  }, [completedInitialLoad, active])
 
   // watch for unsupported chain connection
   useEffect(() => {
@@ -112,7 +106,7 @@ export function WalletProvider({ children }: Props): React.ReactElement {
         async () => {
           const chain = await connector.getChainId()
           if (chain === ChainId.Mainnet || chain === ChainId.LocalHost) {
-            handleWalletConnect(chain)
+            handleWalletConnect()
           } else {
             handleDisconnect()
             setUnsupportedChain(true)
@@ -167,7 +161,7 @@ export function WalletProvider({ children }: Props): React.ReactElement {
   }
 
   // load WC connector
-  function handleWalletConnect(connectToChainId: number = ChainId.Mainnet) {
+  function handleWalletConnect() {
     setUnsupportedChain(false)
 
     if (
@@ -178,8 +172,13 @@ export function WalletProvider({ children }: Props): React.ReactElement {
     }
 
     // activate wc connection
-    const wc = walletConnectConnector(connectToChainId)
-    activate(wc)
+    const wc = walletConnectConnector()
+    activate(wc, undefined, true).then(async () => {
+      const walletAddress = await wc.getAccount();
+      console.log(walletAddress);
+    }).catch(error => {
+      console.log(error);
+    })
   }
 
   // disconnect connector

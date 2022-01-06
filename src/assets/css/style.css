@@ -62,6 +62,12 @@ ul.primaryMenu {
 .tokentable.table tr:hover .tvlText i.fa.fa-caret-down {
     opacity: 1;
 }
+.wallet-connect .dropdown-menu {
+    background-color: rgb(23, 23, 23, 0);
+}
+.wallet-connect .wallet.btn {
+    margin-top: 10px;
+}
 ul.primaryMenu li a {
     color: #8D99AB;
     font-style: normal;
@@ -387,7 +393,7 @@ table.tokentable.table td span {
     overflow: hidden;
     font-style: normal;
     font-weight: 500;
-    font-size: 20px;
+    font-size: 9px;
     height: 70px;
     line-height: 14px;
     letter-spacing: -0.005em;
@@ -1722,9 +1728,6 @@ button.btn.btn-secondary.wallet {
     line-height: 17px;
     padding: 0.275rem 0.75rem 0.375rem;
 }
-.banner {
-    padding-top: 40px;
-}
 .table-Wrapper {
     width: 100%;
     overflow: auto;
@@ -1734,9 +1737,6 @@ button.btn.btn-secondary.wallet {
     border: 3px solid #10151D;
     border-radius: 8px;
     margin-right: 12px;
-}
-.text-center.btnwrap {
-    text-align: left !important;
 }
 .convert-table {
     margin-right: 12px;
@@ -1783,11 +1783,6 @@ h2.white {
     padding-right: 8px;
     position: relative;
     padding-bottom: 25px;
-}
-.boldText {
-    position: absolute;
-    bottom: 0;
-    left: 8px;
 }
 .converttabs a.nav-link, .converttabs a.active.nav-link {
     font-size: 12px;

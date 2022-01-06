@@ -30,6 +30,7 @@ import CvxLogoLight from 'assets/images/cvx-logo-color.svg';
 import BentLogo from 'assets/images/logo-dark.svg';
 import BentLogoLight from 'assets/images/logo-light.svg';
 import { Theme } from "state/application/reducer";
+import { SwitchSlider } from "components/Switch";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -256,29 +257,29 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<div className="bent-rewards-container">
-																	<div className="imgText bent-rewards-item">
+																<Row className="bent-rewards-container" dir="flex-row">
+																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? CvxLogoLight : CvxLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{cvxPoolApr}% APR</p>
-																	</div>
-																	<div className="imgText bent-rewards-item">
+																	</Col>
+																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
-																	</div>
-																	<div className="imgText bent-rewards-item">
+																	</Col>
+																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
 																			<span className="small mt-1 mx-2">BENT</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
-																	</div>
-																</div>
+																	</Col>
+																</Row>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">
@@ -346,29 +347,29 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<div className="bent-rewards-container">
-																	<div className="imgText bent-rewards-item">
+																<Row className="bent-rewards-container" dir="flex-row">
+																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? CvxLogoLight : CvxLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{cvxPoolApr}% APR</p>
-																	</div>
-																	<div className="imgText bent-rewards-item">
+																	</Col>
+																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
-																	</div>
-																	<div className="imgText bent-rewards-item">
+																	</Col>
+																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
 																			<span className="small mt-1 mx-2">BENT</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
-																	</div>
-																</div>
+																	</Col>
+																</Row>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">
@@ -424,13 +425,12 @@ export const StakeBentCVX = (): React.ReactElement => {
 														<Col md="12" className="inverse">
 															<Card body>
 																<CardTitle>
-																	<div className="advance-btn">
-																		<Label className="switch">
-																			<Input type="checkbox" />
-																			<span className="slider"></span>
-																		</Label>
-																		<span className="textadvance">Advanced</span>
-																	</div>
+																	<SwitchSlider
+																		label="Advanced"
+																		onChange={() => {
+																			// 
+																		}}
+																	/>
 																</CardTitle>
 																<div className="card-text mt-4 d-flex">
 																	<div className="amount-crv col-md-5">
