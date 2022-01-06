@@ -51,7 +51,7 @@ export const useBentCvxRewarderCvxContract = (): Contract => {
 
 export const useBentCvxRewarderBentContract = (): Contract => {
 	const { library } = useActiveWeb3React();
-	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxRewarderBent.Pool, ABIS.BentCvxStaking, library), [library]);
+	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxRewarderBent.Pool, ABIS.BentCvxRewarder, library), [library]);
 }
 
 export const useBentCvxRewarderMCContract = (): Contract => {
