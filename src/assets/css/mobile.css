@@ -4,3 +4,41 @@
 	line-height: unset;
 }
 }
+
+@media only screen and (max-width: 767px) {
+	h2.section-header {
+		font-size: 16.1641px;
+		line-height: 27px;
+	}
+	.tokentable.table .thead {
+		height: unset;
+	}
+	.converttabs ul {
+		margin-bottom: 15px;
+	}
+	.converttabs a.nav-link, .converttabs a.active.nav-link {
+		font-size: 14px;
+		line-height: 14px;
+	}
+	.tokentable.table .thead {
+		font-size: 14px;
+	}
+	.tokentable.table .thead .small {
+		font-size: 10px;
+		line-height: 11px;
+		letter-spacing: 0.2px;
+	}
+	.tokentable.table b {
+		font-size: 14px;
+		line-height: 14px;
+	}
+	.tokentable.table .thead b .small {
+		font-size: 10px;
+	}
+	.section, .convert-up.cvxSection {
+		margin-top: 50px;
+	}
+	.bent-rewards-container {
+		grid-template-columns: auto;
+	}
+}

@@ -109,54 +109,46 @@ export const StakeBent = (): React.ReactElement => {
 							Stake your BENT
 						</h2>
 						<div className="toggleWrap tokentable table">
-							<Row className="align-items-center thead p-0 pt-2 pb-2">
-								<Col>
+							<Row className="align-items-center thead">
+								<Col className="px-0">
 									<div className="imgText">
 										<img src={TOKEN_LOGO.BENT} alt="" width="28" />
 										<h2>BENT</h2>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>Earned (USD)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">Earned (USD)</span><br />
+										<b className="p-0">
+											<span className="small">$</span>
+											<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+										</b>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>APR</p>
-										<div className="boldText">
-											<b>
-												{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">APR</span><br />
+										<b className="p-0">
+											{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
+										</b>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>My Staked ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)} BENT)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">My Staked ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)} BENT)</span><br />
+										<b className="p-0">
+											<span className="small">$</span>
+											<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
+										</b>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>TVL ({formatBigNumber(bentTotalStaked, 18, 2)} BENT)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												{formatMillionsBigNumber(tvl, 18, 2)}
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">TVL ({formatBigNumber(bentTotalStaked, 18, 2)} BENT)</span><br />
+										<b className="p-0">
+											<span className="small">$</span>
+											{formatMillionsBigNumber(tvl, 18, 2)}
+										</b>
 									</div>
 								</Col>
 							</Row>
@@ -192,7 +184,7 @@ export const StakeBent = (): React.ReactElement => {
 																<CardText className="mt-0">
 																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms earnings in:
 																</CardText>
-																<div className="bent-rewards-container">
+																<div className="bent-rewards-container mb-4">
 																	{POOLS.BentStaking.RewardAssets.map(key =>
 																		<StakeBentRewardItem
 																			key={key}
@@ -262,15 +254,13 @@ export const StakeBent = (): React.ReactElement => {
 													<Row>
 														<Col md="12" className="inverse">
 															<Card body>
-																<CardTitle>
-																	<SwitchSlider
-																		label="Advanced"
-																		onChange={() => {
-																			// 
-																		}}
-																	/>
-																</CardTitle>
-																<div className="card-text mt-4 d-flex">
+																<SwitchSlider
+																	label="Advanced"
+																	onChange={() => {
+																		// 
+																	}}
+																/>
+																<div className="card-text mt-4 d-flex row">
 																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>
@@ -288,7 +278,7 @@ export const StakeBent = (): React.ReactElement => {
 																			<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 																		</div>
 																	</div>
-																	<div className="amount-crv" style={{ marginLeft: 20 }}>
+																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>
 																				&nbsp;

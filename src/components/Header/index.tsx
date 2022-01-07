@@ -4,7 +4,7 @@ import {
   Navbar,
   Container,
   Button,
-  Modal, ModalBody, Tooltip, Row, Col,
+  Modal, ModalBody
   // Dropdown,
   // DropdownToggle,
 } from "reactstrap";
@@ -14,14 +14,12 @@ import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";
 import BentDetails from "assets/images/bent-details.png";
 import ConnectWallet from "components/ConnectWallet";
-import { useActiveWeb3React, useBentCirculatingSupply, useBentTotalStaked, useTheme, useTokenPrice, useVlCvxBalance } from "hooks";
-import { TOKENS } from "constant";
-import styled from "styled-components";
-import { formatBigNumber, formatMillionsBigNumber } from "utils";
-import { BigNumber, utils } from "ethers";
+import { useActiveWeb3React, useTheme } from "hooks";
 import { useDispatch } from "react-redux";
 import { updateTheme } from "state/application/actions";
 import { Theme } from "state/application/reducer";
+import { BentPowerToolTip } from "./bentDetails";
+import { NavLink } from 'react-router-dom';
 
 const Header = (): React.ReactElement => {
   const dispatch = useDispatch();
@@ -35,11 +33,6 @@ const Header = (): React.ReactElement => {
   const theme = useTheme();
   const [userBalance, setUserBalance] = useState<unknown>(0);
   const [showBentDetails, setShowBentDetails] = useState(false);
-  const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
-  const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);
-  const bentCirculatingSupply = useBentCirculatingSupply();
-  const bentStaked = useBentTotalStaked();
-  const vlCvxBalance = useVlCvxBalance();
   const { library, account } = useActiveWeb3React();
 
   // Modal open state
@@ -75,10 +68,10 @@ const Header = (): React.ReactElement => {
               </Link>
               <ul className="primaryMenu">
                 <li>
-                  <Link to="/stake">Stake</Link>
+                  <NavLink to="/stake" activeStyle={{ color: '#C1FFD7' }}>Stake</NavLink>
                 </li>
                 <li>
-                  <Link to="/claim">Claim</Link>
+                  <NavLink to="/claim" activeStyle={{ color: '#C1FFD7' }}>Claim</NavLink>
                 </li>
                 {/* <li>
                   <Link to="/lock-cvx">Lock CVX</Link>
@@ -98,59 +91,7 @@ const Header = (): React.ReactElement => {
               <span className="theme-icon ml-auto" id="bent-details" onClick={() => setShowBentDetails(!showBentDetails)}>
                 <img src={BentDetails} alt="" width="40" height="40" />
               </span>
-              <Tooltip className="bent-details" target="bent-details" isOpen={showBentDetails}>
-                <div style={{ padding: 15 }}>
-                  <Row>
-                    <Col md="5">BENT Price:</Col>
-                    <Col md="7" className="text-right">
-                      <b>
-                        ${bentPrice.toString()}&nbsp;
-                        <a className="text-white" href="https://www.coingecko.com/en/coins/bent-finance" target="_blank" rel="noreferrer" >(Coingecko)</a>
-                      </b>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="5">Marketcap:</Col>
-                    <Col md="7" className="text-right"><b>${
-                      formatMillionsBigNumber(utils.parseEther(bentPrice.toString()).mul(bentCirculatingSupply).div(BigNumber.from(10).pow(18)))
-                    }</b></Col>
-                  </Row>
-                  <Row>
-                    <Col md="5">Circulating Supply:</Col>
-                    <Col md="7" className="text-right"><b>{formatBigNumber(bentCirculatingSupply, 18, 2)} BENT</b></Col>
-                  </Row>
-                  <Row>
-                    <Col md="5">Staked BENT:</Col>
-                    <Col md="7" className="text-right">
-                      <b>
-                        {formatBigNumber(bentStaked, 18, 2)} BENT&nbsp;
-                        (${formatMillionsBigNumber(utils.parseEther(bentPrice.toString()).mul(bentStaked).div(BigNumber.from(10).pow(18)))})
-                      </b>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="5">vlCVX:</Col>
-                    <Col md="7" className="text-right">
-                      <b>
-                        {formatBigNumber(vlCvxBalance, 18, 2)}&nbsp;
-                        (${formatMillionsBigNumber(utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(18)))})
-                      </b>
-                    </Col>
-                  </Row>
-                </div>
-                <VotingPowerContainer>
-                  <Row>
-                    <Col md="5"><b>Voting Power</b></Col>
-                    <Col md="7" className="text-right">
-                      $1 Staked BENT = ${
-                        bentStaked.isZero() ? '--' :
-                          ((utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(16)).div(
-                            utils.parseEther(bentPrice.toString()).mul(bentStaked).div(BigNumber.from(10).pow(18))
-                          )).toNumber() / 100).toFixed(2)} vlCVX
-                    </Col>
-                  </Row>
-                </VotingPowerContainer>
-              </Tooltip>
+              <BentPowerToolTip target="bent-details" show={showBentDetails} />
               <span className="theme-icon" onClick={selectTheme}>
                 <img src={theme === Theme.Dark ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
               </span>
@@ -193,9 +134,3 @@ const Header = (): React.ReactElement => {
 };
 
 export default Header;
-
-const VotingPowerContainer = styled.div`
-  background: #C1FFD7;
-  padding: 15px;
-  color: black;
-`;
