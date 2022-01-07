@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
-	Card, CardTitle, CardText, Input, Label, CardBody,
+	Card, CardText, Input, Label, CardBody,
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
