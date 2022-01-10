@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
-	Card, CardTitle, CardText, Input, Label, CardBody
+	Card, CardText, Input, Label, CardBody
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
@@ -164,54 +164,46 @@ export const StakeBentCVX = (): React.ReactElement => {
 							Convert CVX and Stake bentCVX
 						</h2>
 						<div className="toggleWrap tokentable table">
-							<Row className="align-items-center thead p-0 pt-2 pb-2">
-								<Col>
+							<Row className="align-items-center thead">
+								<Col className="px-0">
 									<div className="imgText">
 										<img src={TOKEN_LOGO.CVX} alt="" width="28" />
 										<h2>CVX</h2>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>Earned (USD)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">Earned (USD)</span><br />
+										<b className="p-0">
+											<span className="small">$</span>
+											<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+										</b>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>APR</p>
-										<div className="boldText">
-											<b>
-												{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">APR</span><br />
+										<b className="p-0">
+											{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+										</b>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>My Staked ({bentCvxStaked.isZero() ? '--' : formatBigNumber(bentCvxStaked, 18, 2)} bentCVX)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												<DecimalSpan value={formatBigNumber(bentCvxStakedUsd, 18, 2)} />
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">My Staked ({bentCvxStaked.isZero() ? '--' : formatBigNumber(bentCvxStaked, 18, 2)} bentCVX)</span><br />
+										<b className="p-0">
+											<span className="small">$</span>
+											<DecimalSpan value={formatBigNumber(bentCvxStakedUsd, 18, 2)} />
+										</b>
 									</div>
 								</Col>
 								<Col>
-									<div className="tableTitle">
-										<p>TVL ({formatBigNumber(bentCvxTotalStaked, 18, 2)} bentCVX)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												{formatMillionsBigNumber(tvl, 18, 2)}
-											</b>
-										</div>
+									<div>
+										<span className="small p-0">TVL ({formatBigNumber(bentCvxTotalStaked, 18, 2)} bentCVX)</span><br />
+										<b className="p-0">
+											<span className="small">$</span>
+											{formatMillionsBigNumber(tvl, 18, 2)}
+										</b>
 									</div>
 								</Col>
 							</Row>
@@ -257,7 +249,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container" dir="flex-row">
+																<Row className="bent-rewards-container mb-4" dir="flex-row">
 																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? CvxLogoLight : CvxLogo} alt="Icon" />
@@ -347,7 +339,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container" dir="flex-row">
+																<Row className="bent-rewards-container mb-4" dir="flex-row">
 																	<Col className="imgText bent-rewards-item">
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? CvxLogoLight : CvxLogo} alt="Icon" />
@@ -424,15 +416,13 @@ export const StakeBentCVX = (): React.ReactElement => {
 													<Row>
 														<Col md="12" className="inverse">
 															<Card body>
-																<CardTitle>
-																	<SwitchSlider
-																		label="Advanced"
-																		onChange={() => {
-																			// 
-																		}}
-																	/>
-																</CardTitle>
-																<div className="card-text mt-4 d-flex">
+																<SwitchSlider
+																	label="Advanced"
+																	onChange={() => {
+																		// 
+																	}}
+																/>
+																<div className="card-text mt-4 d-flex row">
 																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>
@@ -450,7 +440,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																			<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
 																		</div>
 																	</div>
-																	<div className="amount-crv" style={{ marginLeft: 20 }}>
+																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>
 																				&nbsp;

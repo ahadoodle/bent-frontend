@@ -51,31 +51,37 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 					<div className="toggleWrap tokentable table sortable">
 						<Row className="align-items-center thead">
 							<Col onClick={() => onSort('name')} className={sortOrderClass('name')}>
-								Pool Name{" "}
+								Pool Name&nbsp;
 								<i className="fa fa-caret-down" aria-hidden="true" />
 							</Col>
 							<Col onClick={() => onSort('earned')} className={sortOrderClass('earned')}>
-								<span className="small p-0">Total Earned (USD)</span><br />
-								<b className="p-0">
-									<span className="small">$</span>
-									<DecimalSpan value={formatBigNumber(earn, 18, 2)} />
-									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
-								</b>
+								<div>
+									<span className="small p-0">Total Earned (USD)</span><br />
+									<b className="p-0">
+										<span className="small">$</span>
+										<DecimalSpan value={formatBigNumber(earn, 18, 2)} />
+										&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+									</b>
+								</div>
 							</Col>
 							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
-								<span className="small p-0">My Average APR</span><br />
-								<b className="p-0">
-									{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
-									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
-								</b>
+								<div>
+									<span className="small p-0">My Average APR</span><br />
+									<b className="p-0">
+										{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+										&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+									</b>
+								</div>
 							</Col>
 							<Col onClick={() => onSort('deposit')} className={sortOrderClass('deposit')}>
-								<span className="small p-0">My Total Deposits</span><br />
-								<b className="p-0">
-									<span className="small">$</span>
-									<DecimalSpan value={formatBigNumber(depostedUsd, 18, 2)} />
-									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
-								</b>
+								<div>
+									<span className="small p-0">My Total Deposits</span><br />
+									<b className="p-0">
+										<span className="small">$</span>
+										<DecimalSpan value={formatBigNumber(depostedUsd, 18, 2)} />
+										&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
+									</b>
+								</div>
 							</Col>
 							<Col onClick={() => onSort('tvl')} className={sortOrderClass('tvl')}>
 								<span className="small">

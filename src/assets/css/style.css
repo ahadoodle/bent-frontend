@@ -1741,9 +1741,6 @@ button.btn.btn-secondary.wallet {
 .convert-table {
     margin-right: 12px;
 }
-.section, .convert-up.cvxSection {
-    margin-top: 80px;
-}
 .boxwrap h2, .bannerBlockWrap .boxwrap h2 {
     font-size: 26px;
     line-height: 31px;
@@ -1762,37 +1759,14 @@ button.btn.btn-secondary.wallet {
     box-shadow: 5px 5px 0px 0px #b9c7dd;
     padding: 10px;
 }
-h2.white {
-    font-size: 16.1641px;
-    line-height: 27px;
-}
-.tableTitle b {
-    font-size: 12px;
-    line-height: 14px;
-}
-.tableTitle p {
-    font-size: 9px;
-    line-height: 11px;
-    letter-spacing: 0.2px;
-}
-.tableTitle img {
-    width: 18px;
-}
 .convert-tableTitle .col {
     padding-left: 8px;
     padding-right: 8px;
     position: relative;
     padding-bottom: 25px;
 }
-.converttabs a.nav-link, .converttabs a.active.nav-link {
-    font-size: 12px;
-    line-height: 14px;
-}
 .converttabs {
     padding: 10px 15px 15px;
-}
-.converttabs ul {
-    margin-bottom: 0px;
 }
 ul.nav.nav-tabs li.nav-item:first-child a.nav-link {
     padding-left: 0px;
