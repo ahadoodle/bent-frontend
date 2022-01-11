@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-	Row, Col, Card, CardBody, UncontrolledCollapse, Button, CardText
+	Row, Col, Card, CardBody, UncontrolledCollapse, Button, CardText, UncontrolledTooltip
 } from "reactstrap";
 import {
 	useActiveWeb3React,
@@ -12,6 +12,7 @@ import {
 	useTokenPrices,
 	useCrvPoolRewards,
 	useCrvApr,
+	useCrvProjectedApr,
 } from "hooks";
 import {
 	formatBigNumber,
@@ -29,6 +30,7 @@ interface Props {
 
 export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
+	const [showBreakdown, setShowBreakdown] = useState(false);
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
 	const bentPool = useBentPoolContract(props.poolKey);
@@ -39,6 +41,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 	const rewards = useCrvPoolRewards(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
+	const projectedApr = useCrvProjectedApr(props.poolKey);
 
 	const haveRewards = () => {
 		let enable = false;
@@ -93,7 +96,34 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ?
+								<>
+									{utils.commify(apr)}%&nbsp;
+									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
+										onClick={(e) => {
+											setShowBreakdown(!showBreakdown)
+											e.stopPropagation();
+										}} />
+									<UncontrolledTooltip target={`crv-${props.poolKey}-apr-breakdown`} className="bent-details" placement="bottom">
+										<div style={{ padding: 15, lineHeight: '18px' }}>
+											Current APR: {utils.commify(apr)}%<br />
+											Projected APR: {formatBigNumber(BigNumber.from(projectedApr.baseCrvvApr).add(projectedApr.crvvApr).add(projectedApr.cvxvApr).add(projectedApr.bentApr).add(projectedApr.additionalRewardvApr), 2, 2)}%<br /><br />
+											Projected APR breakdown:<br />
+											- Base Curve APR: {formatBigNumber(projectedApr.baseCrvvApr, 2, 2)}%<br />
+											- CRV APR: {formatBigNumber(projectedApr.crvvApr, 2, 2)}%<br />
+											- CVX APR: {formatBigNumber(projectedApr.cvxvApr, 2, 2)}%<br />
+											- BENT APR: {formatBigNumber(projectedApr.bentApr, 2, 2)}%<br />
+											{props.poolInfo.RewardsAssets.length > 3 && <>
+												- Extras ({props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}) APR: {formatBigNumber(projectedApr.additionalRewardvApr, 2, 2)}%<br />
+											</>}
+											<br />
+											Fees (already deducted from all figures shown):<br />
+											- 10% distributed to bentCVX stakers<br />
+											- 6% distributed to BENT stakers<br />
+											- 1% operation fees for harvesters
+										</div>
+									</UncontrolledTooltip>
+								</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>

@@ -55,6 +55,7 @@ export interface ContractsState {
 		baseCrvvApr: BigNumber;
 		crvvApr: BigNumber;
 		cvxvApr: BigNumber;
+		bentApr: BigNumber;
 		additionalRewardvApr: BigNumber;
 	}>;
 

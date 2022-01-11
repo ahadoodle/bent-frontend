@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
-	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, Tooltip,
+	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, UncontrolledTooltip,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
@@ -143,21 +143,29 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								<>
 									{utils.commify(apr)}%&nbsp;
 									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
-										onClick={() => setShowBreakdown(!showBreakdown)} />
-									<Tooltip target={`crv-${props.poolKey}-apr-breakdown`} isOpen={showBreakdown} className="bent-details" placement="bottom">
+										onClick={(e) => {
+											setShowBreakdown(!showBreakdown)
+											e.stopPropagation();
+										}} />
+									<UncontrolledTooltip target={`crv-${props.poolKey}-apr-breakdown`} className="bent-details" placement="bottom">
 										<div style={{ padding: 15, lineHeight: '18px' }}>
-											Current APR: {utils.commify(apr)}%<br /><br />
+											Current APR: {utils.commify(apr)}%<br />
+											Projected APR: {formatBigNumber(BigNumber.from(projectedApr.baseCrvvApr).add(projectedApr.crvvApr).add(projectedApr.cvxvApr).add(projectedApr.bentApr).add(projectedApr.additionalRewardvApr), 2, 2)}%<br /><br />
 											Projected APR breakdown:<br />
 											- Base Curve APR: {formatBigNumber(projectedApr.baseCrvvApr, 2, 2)}%<br />
 											- CRV APR: {formatBigNumber(projectedApr.crvvApr, 2, 2)}%<br />
 											- CVX APR: {formatBigNumber(projectedApr.cvxvApr, 2, 2)}%<br />
+											- BENT APR: {formatBigNumber(projectedApr.bentApr, 2, 2)}%<br />
+											{props.poolInfo.RewardsAssets.length > 3 && <>
+												- Extras ({props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}) APR: {formatBigNumber(projectedApr.additionalRewardvApr, 2, 2)}%<br />
+											</>}
 											<br />
 											Fees (already deducted from all figures shown):<br />
 											- 10% distributed to bentCVX stakers<br />
 											- 6% distributed to BENT stakers<br />
 											- 1% operation fees for harvesters
 										</div>
-									</Tooltip>
+									</UncontrolledTooltip>
 								</> : 'TBC'}
 						</b>
 					</Col>
