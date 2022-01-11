@@ -27,6 +27,21 @@ export function useCrvApr(poolKey: string): number {
 	return useSelector((state: AppState) => state.contracts.crvApr ? state.contracts.crvApr[poolKey] ?? 0 : 0);
 }
 
+export function useCrvProjectedApr(poolKey: string): {
+	baseCrvvApr: BigNumber;
+	crvvApr: BigNumber;
+	cvxvApr: BigNumber;
+	additionalRewardvApr: BigNumber;
+} {
+	const defaultVal = {
+		baseCrvvApr: ethers.constants.Zero,
+		crvvApr: ethers.constants.Zero,
+		cvxvApr: ethers.constants.Zero,
+		additionalRewardvApr: ethers.constants.Zero,
+	}
+	return useSelector((state: AppState) => state.contracts.crvProjectedApr ? state.contracts.crvProjectedApr[poolKey] ?? defaultVal : defaultVal);
+}
+
 export const useCrvAprs = (): Record<string, number> => {
 	return useSelector((state: AppState) => state.contracts.crvApr || {});
 }

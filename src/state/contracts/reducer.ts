@@ -51,6 +51,12 @@ export interface ContractsState {
 	crvLpAllowance: Record<string, BigNumber>;
 	crvEarnedUsd: Record<string, BigNumber>;
 	crvDepositedUsd: Record<string, BigNumber>;
+	crvProjectedApr: Record<string, {
+		baseCrvvApr: BigNumber;
+		crvvApr: BigNumber;
+		cvxvApr: BigNumber;
+		additionalRewardvApr: BigNumber;
+	}>;
 
 	// Sushi Pool States
 	sushiTvl: Record<string, BigNumber>;
@@ -100,6 +106,7 @@ const initialState: ContractsState = {
 	crvLpAllowance: {},
 	crvEarnedUsd: {},
 	crvDepositedUsd: {},
+	crvProjectedApr: {},
 
 	sushiTvl: {},
 	sushiApr: {},
@@ -146,6 +153,10 @@ export default createReducer(initialState, (builder) =>
 			})
 			Object.keys(action.payload.crvDepositedUsd).forEach(poolKey => {
 				state.crvDepositedUsd[poolKey] = action.payload.crvDepositedUsd[poolKey];
+			})
+			Object.keys(action.payload.crvProjectedApr).forEach(poolKey => {
+				if (!state.crvProjectedApr) state.crvProjectedApr = {};
+				state.crvProjectedApr[poolKey] = action.payload.crvProjectedApr[poolKey];
 			})
 
 			// Sushi Pools

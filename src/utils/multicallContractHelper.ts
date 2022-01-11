@@ -1,5 +1,5 @@
 import { ABIS } from 'abis';
-import { POOLS } from 'constant';
+import { POOLS, TOKENS } from 'constant';
 import { Contract } from 'ethers-multicall';
 
 export const getMultiERC20Contract = (address: string): Contract => {
@@ -16,10 +16,6 @@ export const getMultiBentMasterChef = (address: string): Contract => {
 
 export const getMultiCrvFiLp = (address: string): Contract => {
 	return new Contract(address, ABIS.CrvFiLpMulti);
-}
-
-export const getMultiCvxRewardPool = (address: string): Contract => {
-	return new Contract(address, ABIS.CvxBaseRewardPool);
 }
 
 export const getMultiSushiPair = (address: string): Contract => {
@@ -52,4 +48,12 @@ export const getMultiBentCvxRewarderMC = (): Contract => {
 
 export const getMultiTricryptiLpPrice = (): Contract => {
 	return new Contract('0xE8b2989276E2Ca8FDEA2268E3551b2b4B2418950', ABIS.TricryptoLpPrice);
+}
+
+export const getMultiCvxToken = (): Contract => {
+	return new Contract(TOKENS['CVX'].ADDR, ABIS.CvxToken);
+}
+
+export const getMultiCvxRewardPool = (address: string): Contract => {
+	return new Contract(address, ABIS.CvxBaseRewardPool);
 }

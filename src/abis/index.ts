@@ -2,7 +2,7 @@ import BentBasePool from './BentBasePool.json';
 import ERC20 from './ERC20.json';
 import BentMasterChef from './BentMasterChef.json';
 import SushiPair from './IUniswapV2Pair.json';
-import CvxBaseRewardPool from './IBaseRewardPool.json';
+import CvxBaseRewardPool from './CvxBaseRewardPool.json';
 import CrvFiLpMulti from './ICurveFi.json';
 import CrvFiLp from './ICurveFi_2.json';
 import BentSingleStaking from './BentSingleStaking.json';
@@ -12,6 +12,7 @@ import BentCvxStaking from './BentCvxStaking.json';
 import BentCvxRewarder from './BentCvxRewarder.json';
 import BentCvxRewarderMasterchef from './BentCvxRewarderMasterchef.json';
 import TricryptoLpPrice from './TricryptoLpPrice.json';
+import CvxToken from './CvxToken.json';
 
 export const ABIS = {
 	BentBasePool,
@@ -28,4 +29,5 @@ export const ABIS = {
 	BentCvxRewarder,
 	BentCvxRewarderMasterchef,
 	TricryptoLpPrice,
+	CvxToken,
 }

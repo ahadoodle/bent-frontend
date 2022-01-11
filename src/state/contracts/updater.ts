@@ -23,6 +23,9 @@ import {
 	getCrvFactoryInfo,
 	getCrvCryptoFactoryInfo,
 	MulticallProvider,
+	getMultiCvxRewardPool,
+	getMultiCvxToken,
+	getCrvApys,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -42,7 +45,8 @@ export default function Updater(): null {
 			getCirculatingSupply(),
 			getCrvFactoryInfo(),
 			getCrvCryptoFactoryInfo(),
-		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo]) => {
+			getCrvApys(),
+		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo, crvApys]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
 			const balances: Record<string, BigNumber> = {};
@@ -55,6 +59,12 @@ export default function Updater(): null {
 			const crvPoolRewards: Record<string, BigNumber[]> = {};
 			const crvEarnedUsd: Record<string, BigNumber> = {};
 			const crvDepositedUsd: Record<string, BigNumber> = {};
+			const crvProjectedApr: Record<string, {
+				baseCrvvApr: BigNumber;
+				crvvApr: BigNumber;
+				cvxvApr: BigNumber;
+				additionalRewardvApr: BigNumber;
+			}> = {};
 
 			const sushiTvl: Record<string, BigNumber> = {};
 			const sushiApr: Record<string, number> = {};
@@ -125,7 +135,7 @@ export default function Updater(): null {
 			contractCalls.push(bentSingleStaking.pendingReward(accAddr));
 
 			// Add BentCVX staking calls
-			const cvxToken = getMultiERC20Contract(TOKENS['CVX'].ADDR);
+			const cvxToken = getMultiCvxToken();
 			const bentCvxToken = getMultiERC20Contract(TOKENS['BENTCVX'].ADDR);
 			const bentCvxStaking = getMultiBentCvxStaking();
 			const bentCvxRewarderCvx = getMultiBentCvxRewarderCvx();
@@ -150,6 +160,8 @@ export default function Updater(): null {
 
 			// Add Curve contract calls
 			contractCalls.push(bentToken.totalSupply());
+			contractCalls.push(cvxToken.maxSupply());
+			contractCalls.push(cvxToken.totalSupply());
 			Object.keys(POOLS.BentPools).forEach(poolKey => {
 				const lpTokenContract = getMultiERC20Contract(POOLS.BentPools[poolKey].DepositAsset);
 				contractCalls.push(lpTokenContract.balanceOf(accAddr));
@@ -165,6 +177,11 @@ export default function Updater(): null {
 					contractCalls.push(bentPoolMC.rewardPools(1));
 					contractCalls.push(bentPoolMC.rewardPools(2));
 					contractCalls.push(bentPoolMC.endRewardBlock());
+
+					const cvxRewardPool = getMultiCvxRewardPool(POOLS.BentPools[poolKey].CvxRewardsPool);
+					contractCalls.push(cvxRewardPool.rewardRate());
+					contractCalls.push(cvxRewardPool.rewardToken());
+					contractCalls.push(cvxRewardPool.totalSupply());
 				} else {
 					const masterChef = getMultiBentMasterChef(POOLS.BentPools[poolKey].POOL);
 					contractCalls.push(lpTokenContract.balanceOf(POOLS.BentPools[poolKey].POOL));
@@ -303,12 +320,17 @@ export default function Updater(): null {
 
 				// Update Curve Pool Infos
 				const bentSupply = results[startIndex++];
+				const cvxMaxSupply = results[startIndex++];
+				const cvxTotalSupply = results[startIndex++];
 				const crvPoolLpBalances = {};
 				let pendingRewards: BigNumber[] = [];
 				const bentCvxChefTotalAllocPoint = {};
 				const bentCvxChefRewardPerBlock = {};
 				const bentCvxChefPoolInfo = {};
 				const endRewardBlock = {};
+				const cvxPoolRewardRate = {};
+				const cvxPoolRewardToken = {};
+				const cvxPoolTotalSupply = {};
 
 				Object.keys(POOLS.BentPools).forEach((poolKey, index) => {
 					balances[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = results[startIndex];
@@ -331,6 +353,9 @@ export default function Updater(): null {
 							results[startIndex + 8]
 						];
 						endRewardBlock[poolKey] = results[startIndex + 9];
+						cvxPoolRewardRate[poolKey] = results[startIndex + 10];
+						cvxPoolRewardToken[poolKey] = results[startIndex + 11];
+						cvxPoolTotalSupply[poolKey] = results[startIndex + 12];
 					}
 					totalSupplies[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = lpTotalSupplies[poolKey];
 					crvDeposit[poolKey] = depositedLpBalance[poolKey];
@@ -344,7 +369,7 @@ export default function Updater(): null {
 							tokenPrice.mul(pendingRewards[index]).add(curvePoolEarned) : curvePoolEarned
 					});
 					crvEarnedUsd[poolKey] = curvePoolEarned.div(BigNumber.from(10).pow(18))
-					startIndex += POOLS.BentPools[poolKey].isBentCvx ? 9 : 10;
+					startIndex += POOLS.BentPools[poolKey].isBentCvx ? 9 : 13;
 				});
 				Object.keys(POOLS.BentPools).forEach(poolKey => {
 					const poolData = crvPoolsInfo[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()];
@@ -394,7 +419,27 @@ export default function Updater(): null {
 						const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
 						crvApr[poolKey] = apr;
 					}
+
+					// Projected APR = Current APR of Convex
+					if (!POOLS.BentPools[poolKey].isBentCvx && !POOLS.BentPools[poolKey].isLegacy) {
+						const cvxPoolTvl = tvl.mul(BigNumber.from(10).pow(18)).div(crvPoolLpBalances[poolKey]).mul(cvxPoolTotalSupply[poolKey]);
+
+						const crv_vApr = getTokenPrice(tokenPrices, cvxPoolRewardToken[poolKey].toLowerCase()).mul(cvxPoolRewardRate[poolKey]).mul(86400).mul(3650000)
+							.div(cvxPoolTvl);
+						const cvxRewardRate = BigNumber.from(cvxPoolRewardRate[poolKey]).mul(BigNumber.from(cvxMaxSupply).sub(cvxTotalSupply)).div(cvxMaxSupply);
+						const cvx_vApr = getTokenPrice(tokenPrices, TOKENS['CVX'].ADDR).mul(cvxRewardRate).mul(86400).mul(3650000)
+							.div(cvxPoolTvl);
+
+						console.log(POOLS.BentPools[poolKey].CrvLpSYMBOL, crv_vApr.toString(), cvx_vApr.toString(), crvApys[POOLS.BentPools[poolKey].CrvLpSYMBOL]);
+						crvProjectedApr[poolKey] = {
+							baseCrvvApr: crvApys[POOLS.BentPools[poolKey].CrvLpSYMBOL] ?? ethers.constants.Zero,
+							crvvApr: crv_vApr,
+							cvxvApr: cvx_vApr,
+							additionalRewardvApr: ethers.constants.Zero,
+						}
+					}
 				})
+
 				dispatch(updateContractInfo({
 					tokenPrices,
 					bentCirculatingSupply,
@@ -418,6 +463,7 @@ export default function Updater(): null {
 					crvDeposit,
 					crvLpAllowance,
 					crvApr,
+					crvProjectedApr,
 					sushiApr,
 					sushiDepositedUsd,
 					sushiEarnedUsd,
