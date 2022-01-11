@@ -68,16 +68,17 @@ export const formatMillionsBigNumber = (value?: BigNumber, units = 18, displayDe
 }
 
 export const getCrvApys = async (): Promise<Record<string, BigNumber>> => {
-	const url = 'https://www.convexfinance.com/api/curve-apys';
+	const url = 'https://cors-anywhere.herokuapp.com/https://www.convexfinance.com/api/curve-apys';
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const res: any = await axios.get(url);
 		const apys: Record<string, BigNumber> = {};
 		Object.keys(res.data.apys).forEach(key => {
-			apys[key] = BigNumber.from((parseFloat(res.data.apys[key].baseApy) * 100).toString());
+			apys[key] = BigNumber.from(Math.floor(parseFloat(res.data.apys[key].baseApy) * 100).toString());
 		})
 		return apys;
 	} catch (error) {
+		console.error(error);
 		return {};
 	}
 }

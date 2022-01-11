@@ -31,12 +31,14 @@ export function useCrvProjectedApr(poolKey: string): {
 	baseCrvvApr: BigNumber;
 	crvvApr: BigNumber;
 	cvxvApr: BigNumber;
+	bentApr: BigNumber;
 	additionalRewardvApr: BigNumber;
 } {
 	const defaultVal = {
 		baseCrvvApr: ethers.constants.Zero,
 		crvvApr: ethers.constants.Zero,
 		cvxvApr: ethers.constants.Zero,
+		bentApr: ethers.constants.Zero,
 		additionalRewardvApr: ethers.constants.Zero,
 	}
 	return useSelector((state: AppState) => state.contracts.crvProjectedApr ? state.contracts.crvProjectedApr[poolKey] ?? defaultVal : defaultVal);
