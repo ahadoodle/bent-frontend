@@ -32,6 +32,7 @@ export const formatBigNumber = (value?: BigNumber, units = 18, displayDec = 3): 
 	if (!value) {
 		value = ethers.constants.Zero
 	}
+	value = BigNumber.from(value);
 
 	const valString = utils.formatUnits(value, units)
 	const decimalTrimmed = (() => {
@@ -66,13 +67,19 @@ export const formatMillionsBigNumber = (value?: BigNumber, units = 18, displayDe
 	return formatMillions(formatBigNumber(value, units, displayDec));
 }
 
-export const getCrvDepositLink = (tokenName: string): string => {
-	if (tokenName === 'cvxcrv')
-		return `https://curve.fi/factory/22/deposit`;
-	else if (tokenName === 'bentcvx')
-		return 'https://curve.fi/factory/76/deposit';
-	else
-		return `https://curve.fi/${tokenName}/deposit`;
+export const getCrvApys = async (): Promise<Record<string, BigNumber>> => {
+	const url = 'https://www.convexfinance.com/api/curve-apys';
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		const apys: Record<string, BigNumber> = {};
+		Object.keys(res.data.apys).forEach(key => {
+			apys[key] = BigNumber.from((parseFloat(res.data.apys[key].baseApy) * 100).toString());
+		})
+		return apys;
+	} catch (error) {
+		return {};
+	}
 }
 
 export const getPrice = async (contract_addresses: string[], vsCoin = 'usd'): Promise<Record<string, number>> => {

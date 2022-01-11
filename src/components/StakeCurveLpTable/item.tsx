@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
-	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
+	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, Tooltip,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
@@ -22,6 +22,7 @@ import {
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
 	useERC20Contract,
+	useCrvProjectedApr,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -36,6 +37,7 @@ interface Props {
 export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [showBreakdown, setShowBreakdown] = useState(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -48,6 +50,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const allowance = usePoolAllowance(props.poolKey);
 	const tvl = useCrvTvl(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
+	const projectedApr = useCrvProjectedApr(props.poolKey);
 	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 
@@ -136,7 +139,26 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ?
+								<>
+									{utils.commify(apr)}%&nbsp;
+									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
+										onClick={() => setShowBreakdown(!showBreakdown)} />
+									<Tooltip target={`crv-${props.poolKey}-apr-breakdown`} isOpen={showBreakdown} className="bent-details" placement="bottom">
+										<div style={{ padding: 15, lineHeight: '18px' }}>
+											Current APR: {utils.commify(apr)}%<br /><br />
+											Projected APR breakdown:<br />
+											- Base Curve APR: {formatBigNumber(projectedApr.baseCrvvApr, 2, 2)}%<br />
+											- CRV APR: {formatBigNumber(projectedApr.crvvApr, 2, 2)}%<br />
+											- CVX APR: {formatBigNumber(projectedApr.cvxvApr, 2, 2)}%<br />
+											<br />
+											Fees (already deducted from all figures shown):<br />
+											- 10% distributed to bentCVX stakers<br />
+											- 6% distributed to BENT stakers<br />
+											- 1% operation fees for harvesters
+										</div>
+									</Tooltip>
+								</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
