@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-	Row, Col, Card, CardBody, UncontrolledCollapse, Button, CardText, UncontrolledTooltip
+	Row, Col, Card, CardBody, UncontrolledCollapse, Button, CardText
 } from "reactstrap";
 import {
 	useActiveWeb3React,
@@ -21,6 +21,7 @@ import {
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
+import { CvxProjectedAprTooltip } from "components/CvxProjectedAprTooltip";
 
 interface Props {
 	poolInfo: BentPool
@@ -78,7 +79,6 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
 				id={`toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
-				onClick={() => setCollapsed(!collapsed)}
 				collapsed={collapsed}
 			>
 				<Row className="align-items-center" style={{ padding: '0 10px' }}>
@@ -104,25 +104,13 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 											setShowBreakdown(!showBreakdown)
 											e.stopPropagation();
 										}} />
-									<UncontrolledTooltip target={`crv-${props.poolKey}-apr-breakdown`} className="bent-details" placement="bottom">
-										<div style={{ padding: 15, lineHeight: '18px' }}>
-											Current APR: {utils.commify(apr)}%<br />
-											Projected APR: {formatBigNumber(BigNumber.from(projectedApr.baseCrvvApr).add(projectedApr.crvvApr).add(projectedApr.cvxvApr).add(projectedApr.bentApr).add(projectedApr.additionalRewardvApr), 2, 2)}%<br /><br />
-											Projected APR breakdown:<br />
-											- Base Curve APR: {formatBigNumber(projectedApr.baseCrvvApr, 2, 2)}%<br />
-											- CRV APR: {formatBigNumber(projectedApr.crvvApr, 2, 2)}%<br />
-											- CVX APR: {formatBigNumber(projectedApr.cvxvApr, 2, 2)}%<br />
-											- BENT APR: {formatBigNumber(projectedApr.bentApr, 2, 2)}%<br />
-											{props.poolInfo.RewardsAssets.length > 3 && <>
-												- Extras ({props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}) APR: {formatBigNumber(projectedApr.additionalRewardvApr, 2, 2)}%<br />
-											</>}
-											<br />
-											Fees (already deducted from all figures shown):<br />
-											- 10% distributed to bentCVX stakers<br />
-											- 6% distributed to BENT stakers<br />
-											- 1% operation fees for harvesters
-										</div>
-									</UncontrolledTooltip>
+									<CvxProjectedAprTooltip
+										target={`crv-${props.poolKey}-apr-breakdown`}
+										apr={apr}
+										projectedApr={projectedApr}
+										hasExtra={props.poolInfo.RewardsAssets.length > 3}
+										extraSymbol={props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}
+									/>
 								</> : 'TBC'}
 						</b>
 					</Col>
@@ -154,6 +142,8 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 			<InnerWrapper
 				className="innerAccordian"
 				toggler={`#toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
+				onEntering={() => setCollapsed(false)}
+				onExit={() => setCollapsed(true)}
 			>
 				<Card className="splitter-horizontal" style={{ borderRadius: 0 }}>
 					<CardBody className="p-1 converttabs">
