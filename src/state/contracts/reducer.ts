@@ -9,6 +9,15 @@ export interface BentPoolReward {
 	rewardToken: string,
 }
 
+export interface CrvApy {
+	baseCrvvApr: BigNumber;
+	crvvApr: BigNumber;
+	cvxvApr: BigNumber;
+	bentApr: BigNumber;
+	additionalRewardvApr: BigNumber;
+	crvBoost: number;
+}
+
 export interface ContractsState {
 	bentCirculatingSupply: BigNumber,
 	tokenPrices: Record<string, number>
@@ -51,13 +60,7 @@ export interface ContractsState {
 	crvLpAllowance: Record<string, BigNumber>;
 	crvEarnedUsd: Record<string, BigNumber>;
 	crvDepositedUsd: Record<string, BigNumber>;
-	crvProjectedApr: Record<string, {
-		baseCrvvApr: BigNumber;
-		crvvApr: BigNumber;
-		cvxvApr: BigNumber;
-		bentApr: BigNumber;
-		additionalRewardvApr: BigNumber;
-	}>;
+	crvProjectedApr: Record<string, CrvApy>;
 
 	// Sushi Pool States
 	sushiTvl: Record<string, BigNumber>;

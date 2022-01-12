@@ -736,21 +736,30 @@ button.btn.btnshow i {
     font-size: 12px;
     line-height: 30px;
     padding: 0;
-    border: 1px solid #1E2735;
+    border: 1px solid #4E5769;
     text-align: left;
     border-radius: 8px;
     overflow: hidden;
 }
 .bent-details .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, .bs-tooltip-bottom .tooltip-arrow::before {
-    border-bottom-color: #1E2735;
+    border-bottom-color: #353C49;
+}
+.bent-details .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, .bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: #353C49;
+}
+.bent-details .green-color {
+    color: #3fee7c;
 }
 .tooltip-inner {
     font-family: 'Rubik';
     width: 368px;
     max-width: unset !important;
-    background: #171E29 !important;
-    border: 1px solid #1E2735;
+    background: #353C49 !important;
+    border: 1px solid #4E5769;
     border-radius: 8px;
+}
+.text-underline {
+    text-decoration: underline;
 }
 .Dark .contentSection {
     background: #253143;

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { BigNumber, ethers, utils } from 'ethers';
 import { AppState } from '../../index';
 import { sortCrvPool } from 'utils';
-import { BentPoolReward } from '../reducer';
+import { BentPoolReward, CrvApy } from '../reducer';
 
 export function useCrvTvls(): Record<string, BigNumber> {
 	return useSelector((state: AppState) => state.contracts.crvTvl || {});
@@ -27,19 +27,14 @@ export function useCrvApr(poolKey: string): number {
 	return useSelector((state: AppState) => state.contracts.crvApr ? state.contracts.crvApr[poolKey] ?? 0 : 0);
 }
 
-export function useCrvProjectedApr(poolKey: string): {
-	baseCrvvApr: BigNumber;
-	crvvApr: BigNumber;
-	cvxvApr: BigNumber;
-	bentApr: BigNumber;
-	additionalRewardvApr: BigNumber;
-} {
-	const defaultVal = {
+export function useCrvProjectedApr(poolKey: string): CrvApy {
+	const defaultVal: CrvApy = {
 		baseCrvvApr: ethers.constants.Zero,
 		crvvApr: ethers.constants.Zero,
 		cvxvApr: ethers.constants.Zero,
 		bentApr: ethers.constants.Zero,
 		additionalRewardvApr: ethers.constants.Zero,
+		crvBoost: 0
 	}
 	return useSelector((state: AppState) => state.contracts.crvProjectedApr ? state.contracts.crvProjectedApr[poolKey] ?? defaultVal : defaultVal);
 }

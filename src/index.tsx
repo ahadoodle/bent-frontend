@@ -6,10 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Providers from 'providers/Providers';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Providers>
-      <App />
-    </Providers>
-  </React.StrictMode>,
+  <Providers>
+    <App />
+  </Providers>,
   document.getElementById('root')
 );

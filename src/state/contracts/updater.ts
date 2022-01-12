@@ -2,7 +2,7 @@
 import { ethers, BigNumber, utils } from 'ethers';
 import { POOLS, TOKENS } from 'constant';
 import { useActiveWeb3React, useBlockNumber } from 'hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
 	getMultiBentPool,
@@ -30,23 +30,30 @@ import {
 import {
 	updateContractInfo,
 } from './actions';
-import { BentPoolReward } from './reducer';
+import { BentPoolReward, CrvApy } from './reducer';
 
 export default function Updater(): null {
 	const dispatch = useDispatch();
 	const blockNumber = useBlockNumber();
 	const multicall = MulticallProvider;
 	const { account } = useActiveWeb3React();
+	const [crvApys, setCrvApys] = useState({});
+	const [crvApysCount, setCrvApysCount] = useState(0);
+	useEffect(() => {
+		if (crvApysCount % 20 === 0) {
+			getCrvApys().then(res => setCrvApys(res));
+		}
+	}, [crvApysCount])
 
 	useEffect(() => {
+		setCrvApysCount(crvApysCount + 1);
 		const tokenAddrs = Object.keys(TOKENS).map(token => TOKENS[token].ADDR);
 		Promise.all([
 			getPrice(tokenAddrs),
 			getCirculatingSupply(),
 			getCrvFactoryInfo(),
 			getCrvCryptoFactoryInfo(),
-			getCrvApys(),
-		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo, crvApys]) => {
+		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
 			const balances: Record<string, BigNumber> = {};
@@ -59,13 +66,7 @@ export default function Updater(): null {
 			const crvPoolRewards: Record<string, BigNumber[]> = {};
 			const crvEarnedUsd: Record<string, BigNumber> = {};
 			const crvDepositedUsd: Record<string, BigNumber> = {};
-			const crvProjectedApr: Record<string, {
-				baseCrvvApr: BigNumber;
-				crvvApr: BigNumber;
-				cvxvApr: BigNumber;
-				bentApr: BigNumber;
-				additionalRewardvApr: BigNumber;
-			}> = {};
+			const crvProjectedApr: Record<string, CrvApy> = {};
 
 			const sushiTvl: Record<string, BigNumber> = {};
 			const sushiApr: Record<string, number> = {};
@@ -460,11 +461,12 @@ export default function Updater(): null {
 							.div(cvxPoolTvl);
 
 						crvProjectedApr[poolKey] = {
-							baseCrvvApr: crvApys[POOLS.BentPools[poolKey].Name] ?? ethers.constants.Zero,
+							baseCrvvApr: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].baseApy : ethers.constants.Zero,
 							crvvApr: crv_vApr.mul(83).div(100),
 							cvxvApr: cvx_vApr.mul(83).div(100),
 							bentApr: bentApr.mul(83).div(100),
 							additionalRewardvApr: ext_vApr,
+							crvBoost: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].crvBoost : 0
 						}
 					}
 				})
@@ -514,7 +516,7 @@ export default function Updater(): null {
 				}));
 			})
 		})
-	}, [dispatch, blockNumber, account, multicall])
+	}, [dispatch, blockNumber, account, multicall]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
-	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, UncontrolledTooltip,
+	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
@@ -27,6 +27,7 @@ import {
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
 import { SwitchSlider } from "components/Switch";
+import { CvxProjectedAprTooltip } from "components/CvxProjectedAprTooltip";
 
 interface Props {
 	poolInfo: BentPool
@@ -118,7 +119,6 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	return (
 		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
-				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
 				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
@@ -147,25 +147,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 											setShowBreakdown(!showBreakdown)
 											e.stopPropagation();
 										}} />
-									<UncontrolledTooltip target={`crv-${props.poolKey}-apr-breakdown`} className="bent-details" placement="bottom">
-										<div style={{ padding: 15, lineHeight: '18px' }}>
-											Current APR: {utils.commify(apr)}%<br />
-											Projected APR: {formatBigNumber(BigNumber.from(projectedApr.baseCrvvApr).add(projectedApr.crvvApr).add(projectedApr.cvxvApr).add(projectedApr.bentApr).add(projectedApr.additionalRewardvApr), 2, 2)}%<br /><br />
-											Projected APR breakdown:<br />
-											- Base Curve APR: {formatBigNumber(projectedApr.baseCrvvApr, 2, 2)}%<br />
-											- CRV APR: {formatBigNumber(projectedApr.crvvApr, 2, 2)}%<br />
-											- CVX APR: {formatBigNumber(projectedApr.cvxvApr, 2, 2)}%<br />
-											- BENT APR: {formatBigNumber(projectedApr.bentApr, 2, 2)}%<br />
-											{props.poolInfo.RewardsAssets.length > 3 && <>
-												- Extras ({props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}) APR: {formatBigNumber(projectedApr.additionalRewardvApr, 2, 2)}%<br />
-											</>}
-											<br />
-											Fees (already deducted from all figures shown):<br />
-											- 10% distributed to bentCVX stakers<br />
-											- 6% distributed to BENT stakers<br />
-											- 1% operation fees for harvesters
-										</div>
-									</UncontrolledTooltip>
+									<CvxProjectedAprTooltip
+										target={`crv-${props.poolKey}-apr-breakdown`}
+										apr={apr}
+										projectedApr={projectedApr}
+										hasExtra={props.poolInfo.RewardsAssets.length > 3}
+										extraSymbol={props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}
+									/>
 								</> : 'TBC'}
 						</b>
 					</Col>
@@ -193,6 +181,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			<InnerWrapper
 				className="innerAccordian"
 				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				onEntering={() => setCollapsed(false)}
+				onExit={() => setCollapsed(true)}
 			>
 				<div className="splitter-horizontal p-1">
 					<div className="converttabs" style={{ background: 'unset', borderRadius: 0 }}>
