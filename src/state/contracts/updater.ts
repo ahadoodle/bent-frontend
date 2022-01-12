@@ -451,7 +451,7 @@ export default function Updater(): null {
 							getTokenPrice(tokenPrices, cvxExtPoolRewardToken[poolKey].toLowerCase()).mul(cvxExtPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl)
 							: ethers.constants.Zero;
 						if (currentTimestamp > cvxExtPoolPeriodFinish[poolKey]) ext_vApr = ethers.constants.Zero;
-						if (currentTimestamp > cvxPoolPeriodFinish[poolKey]) cvx_vApr = ethers.constants.Zero;
+						// if (currentTimestamp > cvxPoolPeriodFinish[poolKey]) cvx_vApr = ethers.constants.Zero;
 						if (POOLS.BentPools[poolKey].RewardsAssets.length <= 3) {
 							cvx_vApr = cvx_vApr.add(ext_vApr);
 							ext_vApr = ethers.constants.Zero;
