@@ -4,8 +4,8 @@ import ContractsUpdater from './contracts/updater';
 
 const Updaters = (): React.ReactElement => (
   <>
-    <ContractsUpdater />
     <ApplicationUpdater />
+    <ContractsUpdater />
   </>
 );
 

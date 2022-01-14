@@ -421,7 +421,7 @@ export default function Updater(): null {
 								.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
 						crvApr[poolKey] = apr;
 					} else {
-						if (blockNumber > endRewardBlock[poolKey]) {
+						if (blockNumber > BigNumber.from(endRewardBlock[poolKey]).toNumber()) {
 							crvApr[poolKey] = 0;
 							return;
 						}

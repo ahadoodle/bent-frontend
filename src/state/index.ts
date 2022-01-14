@@ -5,7 +5,7 @@ import { save, load } from 'redux-localstorage-simple';
 import contracts from './contracts/reducer';
 import application from './application/reducer';
 
-const PERSISTED_KEYS: string[] = ['price', 'contracts'];
+const PERSISTED_KEYS: string[] = ['application', 'contracts'];
 
 const store = configureStore({
   reducer: {
