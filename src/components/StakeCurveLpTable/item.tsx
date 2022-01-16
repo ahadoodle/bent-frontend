@@ -22,9 +22,12 @@ import {
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
 	useERC20Contract,
+	useCrvProjectedApr,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
+import { SwitchSlider } from "components/Switch";
+import { CvxProjectedAprTooltip } from "components/CvxProjectedAprTooltip";
 
 interface Props {
 	poolInfo: BentPool
@@ -35,6 +38,7 @@ interface Props {
 export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [showBreakdown, setShowBreakdown] = useState(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -47,6 +51,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const allowance = usePoolAllowance(props.poolKey);
 	const tvl = useCrvTvl(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
+	const projectedApr = useCrvProjectedApr(props.poolKey);
 	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 
@@ -114,7 +119,6 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	return (
 		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
-				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
 				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
@@ -135,7 +139,22 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ?
+								<>
+									{utils.commify(apr)}%&nbsp;
+									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
+										onClick={(e) => {
+											setShowBreakdown(!showBreakdown)
+											e.stopPropagation();
+										}} />
+									<CvxProjectedAprTooltip
+										target={`crv-${props.poolKey}-apr-breakdown`}
+										apr={apr}
+										projectedApr={projectedApr}
+										hasExtra={props.poolInfo.RewardsAssets.length > 3}
+										extraSymbol={props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}
+									/>
+								</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -162,6 +181,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			<InnerWrapper
 				className="innerAccordian"
 				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				onEntering={() => setCollapsed(false)}
+				onExit={() => setCollapsed(true)}
 			>
 				<div className="splitter-horizontal p-1">
 					<div className="converttabs" style={{ background: 'unset', borderRadius: 0 }}>
@@ -203,13 +224,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									<Col md="6" className="divider-left">
 										<Card body>
 											<CardTitle>
-												<div className="advance-btn">
-													<Label className="switch">
-														<Input type="checkbox" />
-														<span className="slider"></span>
-													</Label>
-													<span className="textadvance">Advanced</span>
-												</div>
+												<SwitchSlider
+													label="Advanced"
+													onChange={() => {
+														// 
+													}}
+												/>
 											</CardTitle>
 											<div className="card-text mt-4">
 												<div className="amount-crv">
@@ -270,13 +290,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									<Col md="12" className="inverse">
 										<Card body>
 											<CardTitle>
-												<div className="advance-btn">
-													<Label className="switch">
-														<Input type="checkbox" />
-														<span className="slider"></span>
-													</Label>
-													<span className="textadvance">Advanced</span>
-												</div>
+												<SwitchSlider
+													label="Advanced"
+													onChange={() => {
+														// 
+													}}
+												/>
 											</CardTitle>
 											<div className="card-text mt-4 d-flex">
 												<div className="amount-crv col-md-5">

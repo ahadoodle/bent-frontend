@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
 import { authRoutes } from 'routes'
 import './assets/css/style.css';
+import './assets/css/mobile.css';
 import './assets/css/custom-input.css';
 import './App.css';
 import './assets/css/progress.css';

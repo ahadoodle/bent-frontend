@@ -9,6 +9,15 @@ export interface BentPoolReward {
 	rewardToken: string,
 }
 
+export interface CrvApy {
+	baseCrvvApr: BigNumber;
+	crvvApr: BigNumber;
+	cvxvApr: BigNumber;
+	bentApr: BigNumber;
+	additionalRewardvApr: BigNumber;
+	crvBoost: number;
+}
+
 export interface ContractsState {
 	bentCirculatingSupply: BigNumber,
 	tokenPrices: Record<string, number>
@@ -51,6 +60,7 @@ export interface ContractsState {
 	crvLpAllowance: Record<string, BigNumber>;
 	crvEarnedUsd: Record<string, BigNumber>;
 	crvDepositedUsd: Record<string, BigNumber>;
+	crvProjectedApr: Record<string, CrvApy>;
 
 	// Sushi Pool States
 	sushiTvl: Record<string, BigNumber>;
@@ -100,6 +110,7 @@ const initialState: ContractsState = {
 	crvLpAllowance: {},
 	crvEarnedUsd: {},
 	crvDepositedUsd: {},
+	crvProjectedApr: {},
 
 	sushiTvl: {},
 	sushiApr: {},
@@ -146,6 +157,10 @@ export default createReducer(initialState, (builder) =>
 			})
 			Object.keys(action.payload.crvDepositedUsd).forEach(poolKey => {
 				state.crvDepositedUsd[poolKey] = action.payload.crvDepositedUsd[poolKey];
+			})
+			Object.keys(action.payload.crvProjectedApr).forEach(poolKey => {
+				if (!state.crvProjectedApr) state.crvProjectedApr = {};
+				state.crvProjectedApr[poolKey] = action.payload.crvProjectedApr[poolKey];
 			})
 
 			// Sushi Pools

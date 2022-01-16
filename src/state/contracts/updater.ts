@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any*/
 import { ethers, BigNumber, utils } from 'ethers';
 import { POOLS, TOKENS } from 'constant';
-import { useActiveWeb3React, useBlockNumber, useMulticallProvider } from 'hooks';
-import { useEffect } from 'react';
+import { useActiveWeb3React, useBlockNumber } from 'hooks';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
 	getMultiBentPool,
@@ -22,19 +22,31 @@ import {
 	getMultiBentCvxRewarderMC,
 	getCrvFactoryInfo,
 	getCrvCryptoFactoryInfo,
+	MulticallProvider,
+	getMultiCvxRewardPool,
+	getMultiCvxToken,
+	getCrvApys,
 } from 'utils';
 import {
 	updateContractInfo,
 } from './actions';
-import { BentPoolReward } from './reducer';
+import { BentPoolReward, CrvApy } from './reducer';
 
 export default function Updater(): null {
 	const dispatch = useDispatch();
 	const blockNumber = useBlockNumber();
-	const multicall = useMulticallProvider();
+	const multicall = MulticallProvider;
 	const { account } = useActiveWeb3React();
+	const [crvApys, setCrvApys] = useState({});
+	const [crvApysCount, setCrvApysCount] = useState(0);
+	useEffect(() => {
+		if (crvApysCount % 20 === 0) {
+			getCrvApys().then(res => setCrvApys(res));
+		}
+	}, [crvApysCount])
 
 	useEffect(() => {
+		setCrvApysCount(crvApysCount + 1);
 		const tokenAddrs = Object.keys(TOKENS).map(token => TOKENS[token].ADDR);
 		Promise.all([
 			getPrice(tokenAddrs),
@@ -54,6 +66,7 @@ export default function Updater(): null {
 			const crvPoolRewards: Record<string, BigNumber[]> = {};
 			const crvEarnedUsd: Record<string, BigNumber> = {};
 			const crvDepositedUsd: Record<string, BigNumber> = {};
+			const crvProjectedApr: Record<string, CrvApy> = {};
 
 			const sushiTvl: Record<string, BigNumber> = {};
 			const sushiApr: Record<string, number> = {};
@@ -124,7 +137,7 @@ export default function Updater(): null {
 			contractCalls.push(bentSingleStaking.pendingReward(accAddr));
 
 			// Add BentCVX staking calls
-			const cvxToken = getMultiERC20Contract(TOKENS['CVX'].ADDR);
+			const cvxToken = getMultiCvxToken();
 			const bentCvxToken = getMultiERC20Contract(TOKENS['BENTCVX'].ADDR);
 			const bentCvxStaking = getMultiBentCvxStaking();
 			const bentCvxRewarderCvx = getMultiBentCvxRewarderCvx();
@@ -149,6 +162,8 @@ export default function Updater(): null {
 
 			// Add Curve contract calls
 			contractCalls.push(bentToken.totalSupply());
+			contractCalls.push(cvxToken.maxSupply());
+			contractCalls.push(cvxToken.totalSupply());
 			Object.keys(POOLS.BentPools).forEach(poolKey => {
 				const lpTokenContract = getMultiERC20Contract(POOLS.BentPools[poolKey].DepositAsset);
 				contractCalls.push(lpTokenContract.balanceOf(accAddr));
@@ -164,6 +179,18 @@ export default function Updater(): null {
 					contractCalls.push(bentPoolMC.rewardPools(1));
 					contractCalls.push(bentPoolMC.rewardPools(2));
 					contractCalls.push(bentPoolMC.endRewardBlock());
+
+					const cvxRewardPool = getMultiCvxRewardPool(POOLS.BentPools[poolKey].CvxRewardsPool);
+					contractCalls.push(cvxRewardPool.rewardRate());
+					contractCalls.push(cvxRewardPool.rewardToken());
+					contractCalls.push(cvxRewardPool.totalSupply());
+					contractCalls.push(cvxRewardPool.periodFinish());
+					if (POOLS.BentPools[poolKey].ExtCvxRewardPool) {
+						const cvxExtRewardPool = getMultiCvxRewardPool(POOLS.BentPools[poolKey].ExtCvxRewardPool || '');
+						contractCalls.push(cvxExtRewardPool.rewardRate());
+						contractCalls.push(cvxExtRewardPool.rewardToken());
+						contractCalls.push(cvxExtRewardPool.periodFinish());
+					}
 				} else {
 					const masterChef = getMultiBentMasterChef(POOLS.BentPools[poolKey].POOL);
 					contractCalls.push(lpTokenContract.balanceOf(POOLS.BentPools[poolKey].POOL));
@@ -302,34 +329,53 @@ export default function Updater(): null {
 
 				// Update Curve Pool Infos
 				const bentSupply = results[startIndex++];
+				const cvxMaxSupply = results[startIndex++];
+				const cvxTotalSupply = results[startIndex++];
 				const crvPoolLpBalances = {};
 				let pendingRewards: BigNumber[] = [];
 				const bentCvxChefTotalAllocPoint = {};
 				const bentCvxChefRewardPerBlock = {};
 				const bentCvxChefPoolInfo = {};
 				const endRewardBlock = {};
+				const cvxPoolRewardRate = {};
+				const cvxPoolRewardToken = {};
+				const cvxPoolTotalSupply = {};
+				const cvxPoolPeriodFinish = {};
+				const cvxExtPoolRewardRate = {};
+				const cvxExtPoolRewardToken = {};
+				const cvxExtPoolPeriodFinish = {};
+				const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
 
 				Object.keys(POOLS.BentPools).forEach((poolKey, index) => {
-					balances[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = results[startIndex];
-					crvLpAllowance[poolKey] = results[startIndex + 1];
-					lpTotalSupplies[poolKey] = results[startIndex + 2];
-					crvPoolLpBalances[poolKey] = results[startIndex + 3];
+					balances[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = results[startIndex++];
+					crvLpAllowance[poolKey] = results[startIndex++];
+					lpTotalSupplies[poolKey] = results[startIndex++];
+					crvPoolLpBalances[poolKey] = results[startIndex++];
 					if (POOLS.BentPools[poolKey].isBentCvx) {
-						depositedLpBalance[poolKey] = results[startIndex + 4].amount;
-						pendingRewards = [results[startIndex + 5]];
+						depositedLpBalance[poolKey] = results[startIndex++].amount;
+						pendingRewards = [results[startIndex++]];
 						rewardsInfo[poolKey] = [TOKENS['BENT'].ADDR.toLowerCase()];
-						bentCvxChefPoolInfo[poolKey] = results[startIndex + 6]
-						bentCvxChefRewardPerBlock[poolKey] = results[startIndex + 7]
-						bentCvxChefTotalAllocPoint[poolKey] = results[startIndex + 8]
+						bentCvxChefPoolInfo[poolKey] = results[startIndex++]
+						bentCvxChefRewardPerBlock[poolKey] = results[startIndex++]
+						bentCvxChefTotalAllocPoint[poolKey] = results[startIndex++]
 					} else {
-						depositedLpBalance[poolKey] = results[startIndex + 4];
-						pendingRewards = results[startIndex + 5]
+						depositedLpBalance[poolKey] = results[startIndex++];
+						pendingRewards = results[startIndex++]
 						rewardsInfo[poolKey] = [
-							results[startIndex + 6],
-							results[startIndex + 7],
-							results[startIndex + 8]
+							results[startIndex++],
+							results[startIndex++],
+							results[startIndex++]
 						];
-						endRewardBlock[poolKey] = results[startIndex + 9];
+						endRewardBlock[poolKey] = results[startIndex++];
+						cvxPoolRewardRate[poolKey] = results[startIndex++];
+						cvxPoolRewardToken[poolKey] = results[startIndex++];
+						cvxPoolTotalSupply[poolKey] = results[startIndex++];
+						cvxPoolPeriodFinish[poolKey] = results[startIndex++];
+						if (POOLS.BentPools[poolKey].ExtCvxRewardPool) {
+							cvxExtPoolRewardRate[poolKey] = results[startIndex++];
+							cvxExtPoolRewardToken[poolKey] = results[startIndex++];
+							cvxExtPoolPeriodFinish[poolKey] = results[startIndex++];
+						}
 					}
 					totalSupplies[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()] = lpTotalSupplies[poolKey];
 					crvDeposit[poolKey] = depositedLpBalance[poolKey];
@@ -343,7 +389,6 @@ export default function Updater(): null {
 							tokenPrice.mul(pendingRewards[index]).add(curvePoolEarned) : curvePoolEarned
 					});
 					crvEarnedUsd[poolKey] = curvePoolEarned.div(BigNumber.from(10).pow(18))
-					startIndex += POOLS.BentPools[poolKey].isBentCvx ? 9 : 10;
 				});
 				Object.keys(POOLS.BentPools).forEach(poolKey => {
 					const poolData = crvPoolsInfo[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()];
@@ -376,7 +421,7 @@ export default function Updater(): null {
 								.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
 						crvApr[poolKey] = apr;
 					} else {
-						if (blockNumber > endRewardBlock[poolKey]) {
+						if (blockNumber > BigNumber.from(endRewardBlock[poolKey]).toNumber()) {
 							crvApr[poolKey] = 0;
 							return;
 						}
@@ -387,13 +432,45 @@ export default function Updater(): null {
 							annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
 
 						// Bent Rewards
-						const bentMaxSupply = BigNumber.from(10).pow(8 + 18);
 						const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
 						annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
 						const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
 						crvApr[poolKey] = apr;
 					}
+
+					// Projected APR = Current APR of Convex
+					if (!POOLS.BentPools[poolKey].isBentCvx && !POOLS.BentPools[poolKey].isLegacy) {
+						const currentTimestamp = Date.now() / 1000;
+						const cvxPoolTvl = tvl.mul(BigNumber.from(10).pow(18)).div(crvPoolLpBalances[poolKey]).mul(cvxPoolTotalSupply[poolKey]);
+						const crv_vApr = getTokenPrice(tokenPrices, cvxPoolRewardToken[poolKey].toLowerCase()).mul(cvxPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl);
+
+						const cvxRewardRate = BigNumber.from(cvxPoolRewardRate[poolKey]).mul(BigNumber.from(cvxMaxSupply).sub(cvxTotalSupply)).div(cvxMaxSupply);
+						let cvx_vApr = getTokenPrice(tokenPrices, TOKENS['CVX'].ADDR).mul(cvxRewardRate).mul(86400).mul(3650000)
+							.div(cvxPoolTvl);
+						let ext_vApr = POOLS.BentPools[poolKey].ExtCvxRewardPool ?
+							getTokenPrice(tokenPrices, cvxExtPoolRewardToken[poolKey].toLowerCase()).mul(cvxExtPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl)
+							: ethers.constants.Zero;
+						if (currentTimestamp > cvxExtPoolPeriodFinish[poolKey]) ext_vApr = ethers.constants.Zero;
+						// if (currentTimestamp > cvxPoolPeriodFinish[poolKey]) cvx_vApr = ethers.constants.Zero;
+						if (POOLS.BentPools[poolKey].RewardsAssets.length <= 3) {
+							cvx_vApr = cvx_vApr.add(ext_vApr);
+							ext_vApr = ethers.constants.Zero;
+						}
+						const bentRewardRate = cvxRewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
+						const bentApr = getTokenPrice(tokenPrices, TOKENS['BENT'].ADDR).mul(bentRewardRate).mul(86400).mul(3650000)
+							.div(cvxPoolTvl);
+
+						crvProjectedApr[poolKey] = {
+							baseCrvvApr: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].baseApy : ethers.constants.Zero,
+							crvvApr: crv_vApr.mul(83).div(100),
+							cvxvApr: cvx_vApr.mul(83).div(100),
+							bentApr: bentApr.mul(83).div(100),
+							additionalRewardvApr: ext_vApr,
+							crvBoost: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].crvBoost : 0
+						}
+					}
 				})
+
 				dispatch(updateContractInfo({
 					tokenPrices,
 					bentCirculatingSupply,
@@ -417,6 +494,7 @@ export default function Updater(): null {
 					crvDeposit,
 					crvLpAllowance,
 					crvApr,
+					crvProjectedApr,
 					sushiApr,
 					sushiDepositedUsd,
 					sushiEarnedUsd,
@@ -438,7 +516,7 @@ export default function Updater(): null {
 				}));
 			})
 		})
-	}, [dispatch, blockNumber, account, multicall])
+	}, [dispatch, blockNumber, account, multicall]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	return null;
 }

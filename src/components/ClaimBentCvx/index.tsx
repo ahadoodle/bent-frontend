@@ -11,6 +11,9 @@ import {
 	useBentCvxStaked,
 	useBentCvxTotalEarned,
 	useBentCvxAvgApr,
+	useBentCvxRewarderCvxContract,
+	useBentCvxRewarderBentContract,
+	useBentCvxRewarderMCContract,
 } from 'hooks';
 import { utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -28,6 +31,9 @@ export const ClaimBentCVX = (): React.ReactElement => {
 
 	const { library } = useActiveWeb3React();
 	const bentCvxStaking = useBentCvxStakingContract();
+	const bentCvxRewarderCVX = useBentCvxRewarderCvxContract();
+	const bentCvxRewarderBent = useBentCvxRewarderBentContract();
+	const bentCvxRewarderMC = useBentCvxRewarderMCContract();
 
 	const checkedIndexes = () => {
 		const checkedIndexes: string[][] = [];
@@ -48,9 +54,19 @@ export const ClaimBentCVX = (): React.ReactElement => {
 
 	const onClaim = async () => {
 		if (!library) return;
-		console.log(checkedIndexes());
+		const indexes = checkedIndexes();
 		const signer = await library.getSigner();
-		await bentCvxStaking.connect(signer).claim(checkedIndexes());
+		const address = await signer.getAddress();
+		if (indexes[0].length > 0 && indexes[1].length === 0 && indexes[2].length === 0) {
+			await bentCvxRewarderCVX.connect(signer).claim(address, indexes[0]);
+		} else if (indexes[0].length === 0 && indexes[1].length > 0 && indexes[2].length === 0) {
+			console.log(indexes[1])
+			await bentCvxRewarderBent.connect(signer).claim(address, indexes[1]);
+		} else if (indexes[0].length === 0 && indexes[1].length === 0 && indexes[2].length > 0) {
+			await bentCvxRewarderMC.connect(signer).claim(address, [0]);
+		} else {
+			await bentCvxStaking.connect(signer).claim(checkedIndexes());
+		}
 	}
 
 	return (

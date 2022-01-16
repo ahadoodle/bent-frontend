@@ -1,3 +1,12 @@
+
+export enum ScreenType {
+	Mobile,
+	Tablet,
+	Laptop,
+	Desktop,
+	BigScreen,
+}
+
 export type CrvFactoryPool = {
 	id: string;
 	address: string;

@@ -12,6 +12,7 @@ import {
 	useTokenPrices,
 	useCrvPoolRewards,
 	useCrvApr,
+	useCrvProjectedApr,
 } from "hooks";
 import {
 	formatBigNumber,
@@ -20,6 +21,7 @@ import {
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
+import { CvxProjectedAprTooltip } from "components/CvxProjectedAprTooltip";
 
 interface Props {
 	poolInfo: BentPool
@@ -29,6 +31,7 @@ interface Props {
 
 export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
+	const [showBreakdown, setShowBreakdown] = useState(false);
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
 	const bentPool = useBentPoolContract(props.poolKey);
@@ -39,6 +42,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 	const rewards = useCrvPoolRewards(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
+	const projectedApr = useCrvProjectedApr(props.poolKey);
 
 	const haveRewards = () => {
 		let enable = false;
@@ -75,7 +79,6 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
 				id={`toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
-				onClick={() => setCollapsed(!collapsed)}
 				collapsed={collapsed}
 			>
 				<Row className="align-items-center" style={{ padding: '0 10px' }}>
@@ -93,7 +96,22 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ?
+								<>
+									{utils.commify(apr)}%&nbsp;
+									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
+										onClick={(e) => {
+											setShowBreakdown(!showBreakdown)
+											e.stopPropagation();
+										}} />
+									<CvxProjectedAprTooltip
+										target={`crv-${props.poolKey}-apr-breakdown`}
+										apr={apr}
+										projectedApr={projectedApr}
+										hasExtra={props.poolInfo.RewardsAssets.length > 3}
+										extraSymbol={props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}
+									/>
+								</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
@@ -124,6 +142,8 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 			<InnerWrapper
 				className="innerAccordian"
 				toggler={`#toggleInner-claim-curve-lp-${props.poolInfo.Name}`}
+				onEntering={() => setCollapsed(false)}
+				onExit={() => setCollapsed(true)}
 			>
 				<Card className="splitter-horizontal" style={{ borderRadius: 0 }}>
 					<CardBody className="p-1 converttabs">

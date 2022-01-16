@@ -26,6 +26,7 @@ import {
 	getEtherscanLink,
 } from "utils";
 import { DecimalSpan } from "components/DecimalSpan";
+import { SwitchSlider } from "components/Switch";
 
 
 interface Props {
@@ -205,13 +206,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 									<Col md="6" className="divider-left">
 										<Card body>
 											<CardTitle>
-												<div className="advance-btn">
-													<Label className="switch">
-														<Input type="checkbox" />
-														<span className="slider"></span>
-													</Label>
-													<span className="textadvance">Advanced</span>
-												</div>
+												<SwitchSlider
+													label="Advanced"
+													onChange={() => {
+														// 
+													}}
+												/>
 											</CardTitle>
 											<div className="card-text mt-4">
 												<div className="amount-crv">
@@ -265,13 +265,12 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 									<Col md="12" className="inverse">
 										<Card body>
 											<CardTitle>
-												<div className="advance-btn">
-													<Label className="switch">
-														<Input type="checkbox" />
-														<span className="slider"></span>
-													</Label>
-													<span className="textadvance">Advanced</span>
-												</div>
+												<SwitchSlider
+													label="Advanced"
+													onChange={() => {
+														// 
+													}}
+												/>
 											</CardTitle>
 											<div className="card-text mt-4 d-flex">
 												<div className="amount-crv col-md-5">

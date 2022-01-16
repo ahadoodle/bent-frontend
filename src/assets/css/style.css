@@ -62,6 +62,12 @@ ul.primaryMenu {
 .tokentable.table tr:hover .tvlText i.fa.fa-caret-down {
     opacity: 1;
 }
+.wallet-connect .dropdown-menu {
+    background-color: rgb(23, 23, 23, 0);
+}
+.wallet-connect .wallet.btn {
+    margin-top: 10px;
+}
 ul.primaryMenu li a {
     color: #8D99AB;
     font-style: normal;
@@ -730,21 +736,30 @@ button.btn.btnshow i {
     font-size: 12px;
     line-height: 30px;
     padding: 0;
-    border: 1px solid #1E2735;
+    border: 1px solid #4E5769;
     text-align: left;
     border-radius: 8px;
     overflow: hidden;
 }
 .bent-details .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow::before, .bs-tooltip-bottom .tooltip-arrow::before {
-    border-bottom-color: #1E2735;
+    border-bottom-color: #353C49;
+}
+.bent-details .bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, .bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: #353C49;
+}
+.bent-details .green-color {
+    color: #3fee7c;
 }
 .tooltip-inner {
     font-family: 'Rubik';
     width: 368px;
     max-width: unset !important;
-    background: #171E29 !important;
-    border: 1px solid #1E2735;
+    background: #353C49 !important;
+    border: 1px solid #4E5769;
     border-radius: 8px;
+}
+.text-underline {
+    text-decoration: underline;
 }
 .Dark .contentSection {
     background: #253143;
@@ -1722,9 +1737,6 @@ button.btn.btn-secondary.wallet {
     line-height: 17px;
     padding: 0.275rem 0.75rem 0.375rem;
 }
-.banner {
-    padding-top: 40px;
-}
 .table-Wrapper {
     width: 100%;
     overflow: auto;
@@ -1735,14 +1747,8 @@ button.btn.btn-secondary.wallet {
     border-radius: 8px;
     margin-right: 12px;
 }
-.text-center.btnwrap {
-    text-align: left !important;
-}
 .convert-table {
     margin-right: 12px;
-}
-.section, .convert-up.cvxSection {
-    margin-top: 80px;
 }
 .boxwrap h2, .bannerBlockWrap .boxwrap h2 {
     font-size: 26px;
@@ -1762,42 +1768,14 @@ button.btn.btn-secondary.wallet {
     box-shadow: 5px 5px 0px 0px #b9c7dd;
     padding: 10px;
 }
-h2.white {
-    font-size: 16.1641px;
-    line-height: 27px;
-}
-.tableTitle b {
-    font-size: 12px;
-    line-height: 14px;
-}
-.tableTitle p {
-    font-size: 9px;
-    line-height: 11px;
-    letter-spacing: 0.2px;
-}
-.tableTitle img {
-    width: 18px;
-}
 .convert-tableTitle .col {
     padding-left: 8px;
     padding-right: 8px;
     position: relative;
     padding-bottom: 25px;
 }
-.boldText {
-    position: absolute;
-    bottom: 0;
-    left: 8px;
-}
-.converttabs a.nav-link, .converttabs a.active.nav-link {
-    font-size: 12px;
-    line-height: 14px;
-}
 .converttabs {
     padding: 10px 15px 15px;
-}
-.converttabs ul {
-    margin-bottom: 0px;
 }
 ul.nav.nav-tabs li.nav-item:first-child a.nav-link {
     padding-left: 0px;

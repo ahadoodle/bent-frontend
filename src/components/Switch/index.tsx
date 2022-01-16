@@ -20,7 +20,7 @@ export const SwitchSlider = (props: Props): React.ReactElement => {
 	return (
 		<div className={`advance-btn ${props.className}`}>
 			<Label className="switch">
-				<Input type="checkbox" checked={check} onChange={onChange} />
+				<Input type="checkbox" checked={check} onChange={onChange} placeholder="" aria-label={props.label} title={props.label} />
 				<span className="slider"></span>
 			</Label>
 			<span className={`textadvance ${props.labelClassName}`}>{props.label}</span>

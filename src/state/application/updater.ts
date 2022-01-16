@@ -1,7 +1,7 @@
 import { useDebounce, useActiveWeb3React } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getDefaultProvider } from 'utils';
+import { simpleRpcProvider } from 'utils';
 import { updateBlockNumber } from './actions';
 
 export default function Updater(): null {
@@ -32,17 +32,16 @@ export default function Updater(): null {
     if (!chainId) return undefined;
     setState({ chainId, blockNumber: null });
 
-    const provider = getDefaultProvider();
-    provider
+    simpleRpcProvider
       .getBlockNumber()
       .then(blockNumberCallback)
       .catch((error) =>
         console.error(`Failed to get block number for chainId: ${chainId}`, error),
       );
 
-    provider.on('block', blockNumberCallback)
+    simpleRpcProvider.on('block', blockNumberCallback)
     return () => {
-      provider.removeListener('block', blockNumberCallback);
+      simpleRpcProvider.removeListener('block', blockNumberCallback);
     }
   }, [dispatch, chainId, blockNumberCallback]);
 
