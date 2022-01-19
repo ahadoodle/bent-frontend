@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
-	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
+	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, UncontrolledTooltip,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
@@ -36,6 +36,7 @@ interface Props {
 export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [showBreakdown, setShowBreakdown] = useState(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -130,7 +131,27 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{apr.toString()}%</> : 'TBC'}
+							{apr ?
+								<>
+									{utils.commify(apr)}%&nbsp;
+									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
+										onClick={(e) => {
+											setShowBreakdown(!showBreakdown)
+											e.stopPropagation();
+										}} />
+									<UncontrolledTooltip target={`crv-${props.poolKey}-apr-breakdown`} className="bent-details" placement="bottom">
+										<div style={{ padding: 15, lineHeight: '18px' }}>
+											<Row className="mb-3">
+												<Col>
+													<div className="text-underline">Current APR:</div>
+													<div className="green-color">{utils.commify(apr)}%</div>
+												</Col>
+											</Row>
+											Current APR breakdown:<br />
+											- BENT APR: {utils.commify(apr)}%<br />
+										</div>
+									</UncontrolledTooltip>
+								</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>

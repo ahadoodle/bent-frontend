@@ -26,6 +26,7 @@ import {
 	getMultiCvxRewardPool,
 	getMultiCvxToken,
 	getCrvApys,
+	getSushiTradingVolume,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -53,7 +54,8 @@ export default function Updater(): null {
 			getCirculatingSupply(),
 			getCrvFactoryInfo(),
 			getCrvCryptoFactoryInfo(),
-		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo]) => {
+			getSushiTradingVolume(),
+		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo, bentTradingVolume]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
 			const balances: Record<string, BigNumber> = {};
@@ -233,9 +235,12 @@ export default function Updater(): null {
 
 					// Update Sushi Pool APR
 					const poolAllocPoint = results[startIndex + 6].allocPoint;
-					sushiApr[poolKey] = (BigNumber.from(poolLpBalance).isZero() || BigNumber.from(totalAllocPoint).isZero() || lpPriceBN.isZero()) ? 0 :
+					const rewardApr = (BigNumber.from(poolLpBalance).isZero() || BigNumber.from(totalAllocPoint).isZero() || lpPriceBN.isZero()) ? 0 :
 						bentPriceBN.mul(rewardPerBlock).mul(poolAllocPoint).mul(6400).mul(365).mul(10000)
 							.div(lpPriceBN).div(poolLpBalance).div(totalAllocPoint).toNumber() / 100;
+					// Sushi swap trading fee = 0.3% of trading volume
+					const tradingFeeApr = utils.parseEther((bentTradingVolume * 0.003 * 365 * 100).toString()).div(sushiTvl[poolKey]).toNumber();
+					sushiApr[poolKey] = rewardApr + tradingFeeApr;
 
 					// Update Sushi Pool Rewards
 					const pendingRewards = results[startIndex + 7];

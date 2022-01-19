@@ -112,6 +112,21 @@ export const getPrice = async (contract_addresses: string[], vsCoin = 'usd'): Pr
 	}
 }
 
+export const getSushiTradingVolume = async (): Promise<number> => {
+	const url = 'https://api.coingecko.com/api/v3/coins/bent-finance';
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		const oneDayVolume = res.data.tickers.filter(element =>
+			element.base.toLowerCase() === TOKENS.BENT.ADDR.toLowerCase() &&
+			element.target.toLowerCase() === TOKENS.DAI.ADDR.toLowerCase()
+		)[0].converted_volume.usd;
+		return oneDayVolume;
+	} catch (error) {
+		return 0;
+	}
+}
+
 export const getCrvFactoryInfo = async (): Promise<Record<string, CrvFactoryPool>> => {
 	const url = `https://api.curve.fi/api/getFactoryV2Pools`;
 	try {
