@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
-	Row, Col, Card, CardBody, UncontrolledCollapse, Button, CardText
+	Row, Col, Card, CardBody, UncontrolledCollapse, Button, CardText, UncontrolledTooltip
 } from "reactstrap";
 import {
 	useActiveWeb3React,
@@ -29,6 +29,7 @@ interface Props {
 
 export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
+	const [showBreakdown, setShowBreakdown] = useState(false);
 	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const { library } = useActiveWeb3React();
 	const bentPool = useBentCvxMasterChefContract();
@@ -88,7 +89,27 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ?
+								<>
+									{utils.commify(apr)}%&nbsp;
+									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
+										onClick={(e) => {
+											setShowBreakdown(!showBreakdown)
+											e.stopPropagation();
+										}} />
+									<UncontrolledTooltip target={`crv-${props.poolKey}-apr-breakdown`} className="bent-details" placement="bottom">
+										<div style={{ padding: 15, lineHeight: '18px' }}>
+											<Row className="mb-3">
+												<Col>
+													<div className="text-underline">Current APR:</div>
+													<div className="green-color">{utils.commify(apr)}%</div>
+												</Col>
+											</Row>
+											Current APR breakdown:<br />
+											- BENT APR: {utils.commify(apr)}%<br />
+										</div>
+									</UncontrolledTooltip>
+								</> : 'TBC'}
 						</b>
 					</Col>
 					<Col>
