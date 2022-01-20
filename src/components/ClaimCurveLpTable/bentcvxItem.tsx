@@ -16,6 +16,7 @@ import {
 import {
 	formatBigNumber,
 	getTokenDecimals,
+	increaseGasLimit,
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
@@ -62,7 +63,8 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const account = await signer.getAddress();
-		await bentPool.connect(signer).claim(0, account);
+		const gasLimit = await bentPool.connect(signer).estimateGas.claim(0, account);
+		await bentPool.connect(signer).claim(0, account, { gasLimit: increaseGasLimit(gasLimit) });
 	}
 
 	return (

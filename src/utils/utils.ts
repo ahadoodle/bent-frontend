@@ -225,6 +225,10 @@ export const getEthBalanceOf = async (address: string): Promise<BigNumber> => {
 	}
 }
 
+export const increaseGasLimit = (gasLimit: BigNumber): BigNumber => {
+	return BigNumber.from(gasLimit).mul(120).div(100);
+}
+
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 // eslint-disable-next-line  @typescript-eslint/explicit-module-boundary-types
 export const sortCrvPool = (a, b, field: string, order: number): number => {

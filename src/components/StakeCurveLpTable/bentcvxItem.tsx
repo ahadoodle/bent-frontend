@@ -9,6 +9,7 @@ import {
 	formatBigNumber,
 	getEtherscanLink,
 	formatMillionsBigNumber,
+	increaseGasLimit,
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
@@ -79,7 +80,8 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
+		const gasLimit = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
+		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, { gasLimit: increaseGasLimit(gasLimit) });
 		const res = await tx.wait();
 		if (res) {
 			setIsApproved(true);
@@ -89,7 +91,8 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const stake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18))
+		const gasLimit = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
+		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), { gasLimit: increaseGasLimit(gasLimit) })
 		const res = await tx.wait();
 		if (res) {
 			setStakeAmount('')
@@ -100,7 +103,8 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const withdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18))
+		const gasLimit = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
+		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), { gasLimit: increaseGasLimit(gasLimit) })
 		const res = await tx.wait();
 		if (res) {
 			setWithdrawAmount('')
