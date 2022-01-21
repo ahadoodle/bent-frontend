@@ -177,6 +177,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 										<b className="p-0">
 											<span className="small">$</span>
 											<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
@@ -185,6 +186,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
 											{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
@@ -194,6 +196,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 										<b className="p-0">
 											<span className="small">$</span>
 											<DecimalSpan value={formatBigNumber(bentCvxStakedUsd, 18, 2)} />
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
@@ -203,6 +206,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 										<b className="p-0">
 											<span className="small">$</span>
 											{formatMillionsBigNumber(tvl, 18, 2)}
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>

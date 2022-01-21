@@ -9,90 +9,68 @@ import { formatBigNumber, formatMillionsBigNumber, getEtherscanLink } from "util
 import {
 	useActiveWeb3React,
 	useBalance,
-	useBentAllowance,
-	useBentAvgApr,
-	useBentEarnedUsd,
-	useBentRewardsAprs,
-	useBentStaked,
-	useBentStakedUsd,
-	useBentStakingContract,
-	useBentTotalStaked,
-	useBentTvl,
 	useERC20Contract,
+	useWeBentAllowance,
+	useWeBentBalance,
+	useWeBentBentBalance,
+	useWeBentContract,
+	useWeBentTvl,
+	useWeBentLocked,
+	useTokenPrice,
+	useWeBentTotalSupply,
 } from "hooks";
-import { ethers, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
-import { StakeBentRewardItem } from "./rewardsItem";
-import { SwitchSlider } from "components/Switch";
 
-export const StakeBent = (): React.ReactElement => {
+export const LockWeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
-	const [stakeAmount, setStakeAmount] = useState('');
-	const [withdrawAmount, setWithdrawAmount] = useState('');
+	const [lockAmount, setLockAmount] = useState('');
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const bentBalance = useBalance(TOKENS['BENT'].ADDR);
-	const tvl = useBentTvl();
-	const allowance = useBentAllowance();
-	const bentStaked = useBentStaked();
-	const bentstakedUsd = useBentStakedUsd();
-	const bentAvgApr = useBentAvgApr();
-	const rewardAprs = useBentRewardsAprs();
-	const earnedUsd = useBentEarnedUsd();
-	const bentTotalStaked = useBentTotalStaked();
+	const allowance = useWeBentAllowance();
+	const bentTotalStaked = useWeBentBentBalance();
+	const weBentTotalSupply = useWeBentTotalSupply();
+	const tvl = useWeBentTvl();
+	const weBentShare = useWeBentBalance();
+	const weBentBent = useWeBentLocked();
+	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
 
 	const { library } = useActiveWeb3React();
 	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
-	const bentStakingContract = useBentStakingContract();
+	const weBentContract = useWeBentContract();
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
 	};
 
-	const onStakeMax = () => {
-		setStakeAmount(formatBigNumber(bentBalance, 18, 18).replaceAll(',', ''));
+	const onLockMax = () => {
+		setLockAmount(formatBigNumber(bentBalance, 18, 18).replaceAll(',', ''));
 		setIsApproved(allowance.gte(bentBalance) && !bentBalance.isZero());
 	}
 
-	const onWithdrawMax = () => {
-		setWithdrawAmount(formatBigNumber(bentStaked, 18, 18).replaceAll(',', ''));
-	}
-
-	const onStakeAmountChange = (value) => {
-		setStakeAmount(value);
+	const onLockAmountChange = (value) => {
+		setLockAmount(value);
 		if (isNaN(parseFloat(value))) return;
 		const amountBN = utils.parseUnits(value, 18);
 		setIsApproved(allowance.gte(amountBN) && !amountBN.isZero());
 	}
 
-	const onWithdrawAmountChange = (value) => {
-		setWithdrawAmount(value);
-	}
-
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
+		const res = await bentToken.connect(signer).approve(POOLS.weBENT.Addr, ethers.constants.MaxUint256);
 		if (res) {
 			setIsApproved(true);
 		}
 	}
 
-	const stake = async () => {
+	const onLock = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18));
+		const res = await weBentContract.connect(signer).deposit(utils.parseUnits(lockAmount, 18));
 		if (res) {
-			setStakeAmount('')
+			setLockAmount('')
 			setIsApproved(false);
-		}
-	}
-
-	const withdraw = async () => {
-		if (!library) return;
-		const signer = await library.getSigner();
-		const res = await bentStakingContract.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18));
-		if (res) {
-			setWithdrawAmount('')
 		}
 	}
 
@@ -105,8 +83,8 @@ export const StakeBent = (): React.ReactElement => {
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
-						<h2 className="section-header">
-							Stake your BENT
+						<h2 className="white section-header">
+							Lock BENT to weBENT
 						</h2>
 						<div className="toggleWrap tokentable table">
 							<Row className="align-items-center thead">
@@ -121,7 +99,7 @@ export const StakeBent = (): React.ReactElement => {
 										<span className="small p-0">Earned (USD)</span><br />
 										<b className="p-0">
 											<span className="small">$</span>
-											<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+											<DecimalSpan value={'0'} />
 											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
@@ -130,17 +108,19 @@ export const StakeBent = (): React.ReactElement => {
 									<div>
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
-											{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
+											{'TBD'} %
 											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
 								<Col>
 									<div>
-										<span className="small p-0">My Staked ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)} BENT)</span><br />
+										<span className="small p-0">
+											{formatBigNumber(weBentShare, 18, 2)} weBENT = {formatBigNumber(weBentBent, 18, 2)} BENT
+										</span><br />
 										<b className="p-0">
 											<span className="small">$</span>
-											<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
+											<DecimalSpan value={formatBigNumber(utils.parseEther(bentPrice.toString()).mul(weBentBent), 18 * 2, 2)} />
 											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
@@ -165,18 +145,12 @@ export const StakeBent = (): React.ReactElement => {
 													<NavLink
 														className={classnames({ active: activeTab === "1" })}
 														onClick={() => toggle("1")}
-													>Stake</NavLink>
+													>Lock</NavLink>
 												</NavItem>
 												<NavItem>
 													<NavLink
 														className={classnames({ active: activeTab === "2" })}
 														onClick={() => toggle("2")}
-													>Unstake</NavLink>
-												</NavItem>
-												<NavItem>
-													<NavLink
-														className={classnames({ active: activeTab === "3" })}
-														onClick={() => toggle("3")}
 													>Info</NavLink>
 												</NavItem>
 											</Nav>
@@ -186,18 +160,11 @@ export const StakeBent = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms earnings in:
+																	Lock <b>BENT</b> for 8 weeks to receive a share in the <b>weBENT</b> pool.<br />
+																	Your claim on the <b>BENT</b> in the pool automatically increases by buying <b>BENT</b> at market using platform fees,
+																	then depositing into the pool, which means the <b>BENT</b> to <b>weBENT</b> ratio increases over time.<br /><br />
+																	<b>weBENT</b> also has voting rights for proposals and gauge weight voting Bents vlCVX.
 																</CardText>
-																<div className="bent-rewards-container mb-4">
-																	{POOLS.BentStaking.RewardAssets.map(key =>
-																		<StakeBentRewardItem
-																			key={key}
-																			logo={TOKENS[key].LOGO}
-																			title={key}
-																			apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}
-																		/>
-																	)}
-																</div>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">
@@ -206,18 +173,20 @@ export const StakeBent = (): React.ReactElement => {
 																	<div className="amount-crv">
 																		<p className="labeltext">
 																			<Label>
-																				Amount of BENT to stake
+																				Amount of BENT to lock. 1 weBENT = {
+																					weBentTotalSupply.isZero() ? 0 : BigNumber.from(bentTotalStaked).mul(100).div(weBentTotalSupply).toNumber() / 100
+																				} BENT
 																			</Label>
 																			<Label>Available: {formatBigNumber(bentBalance)}</Label>
 																		</p>
 																		<div className="amountinput">
 																			<Input
 																				type="number" placeholder="0"
-																				onChange={(e) => onStakeAmountChange(e.target.value)}
-																				value={stakeAmount}
+																				onChange={(e) => onLockAmountChange(e.target.value)}
+																				value={lockAmount}
 																			/>
 																			<img src={TOKEN_LOGO.BENT} alt="input-logo" className="inputlogo" />
-																			<Button className="maxbtn" onClick={onStakeMax} >Max</Button>
+																			<Button className="maxbtn" onClick={onLockMax} >Max</Button>
 																		</div>
 																		<div className="btnouter">
 																			<p className="lineup"></p>
@@ -226,8 +195,8 @@ export const StakeBent = (): React.ReactElement => {
 																					className="approvebtn"
 																					disabled={
 																						bentBalance.isZero() || isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentBalance)
+																						parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
+																						utils.parseUnits(lockAmount, 18).gt(bentBalance)
 																					}
 																					onClick={approve}
 																				>Approve</Button>
@@ -235,17 +204,17 @@ export const StakeBent = (): React.ReactElement => {
 																					className="approvebtn"
 																					disabled={
 																						bentBalance.isZero() || !isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentBalance)
+																						parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
+																						utils.parseUnits(lockAmount, 18).gt(bentBalance)
 																					}
-																					onClick={stake}
-																				>Stake BENT</Button>
+																					onClick={onLock}
+																				>Lock BENT</Button>
 																			</div>
 																			<div className="btnwrapper">
 																				<Button
 																					className="approvebtn w-100 mt-3"
 																					onClick={onVote}
-																				>Vote on Convex</Button>
+																				>My weBENT share</Button>
 																			</div>
 																		</div>
 																	</div>
@@ -255,55 +224,6 @@ export const StakeBent = (): React.ReactElement => {
 													</Row>
 												</TabPane>
 												<TabPane tabId="2">
-													<Row>
-														<Col md="12" className="inverse">
-															<Card body>
-																<SwitchSlider
-																	label="Advanced"
-																	onChange={() => {
-																		// 
-																	}}
-																/>
-																<div className="card-text mt-4 d-flex row">
-																	<div className="amount-crv col-md-5">
-																		<p className="labeltext">
-																			<Label>
-																				Amount of BENT to withdraw
-																			</Label>
-																			<Label>Deposited:{formatBigNumber(bentStaked)}</Label>
-																		</p>
-																		<div className="amountinput">
-																			<Input
-																				type="number" placeholder="0"
-																				onChange={(e) => onWithdrawAmountChange(e.target.value)}
-																				value={withdrawAmount}
-																			/>
-																			<img src={TOKENS['BENT'].LOGO} alt="input-logo" className="inputlogo" />
-																			<Button className="maxbtn" onClick={onWithdrawMax} >Max</Button>
-																		</div>
-																	</div>
-																	<div className="amount-crv col-md-5">
-																		<p className="labeltext">
-																			<Label>
-																				&nbsp;
-																			</Label>
-																		</p>
-																		<Button
-																			className="approvebtn"
-																			disabled={
-																				bentStaked.isZero() ||
-																				parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-																				utils.parseUnits(withdrawAmount, 18).gt(bentStaked)
-																			}
-																			onClick={withdraw}
-																		>Withdraw</Button>
-																	</div>
-																</div>
-															</Card>
-														</Col>
-													</Row>
-												</TabPane>
-												<TabPane tabId="3">
 													<Row>
 														<Col sm="12">
 															<Card body>
@@ -323,12 +243,12 @@ export const StakeBent = (): React.ReactElement => {
 																	<Row>
 																		<Col md="3">
 																			<CardText className="mt-0">
-																				Rewards contract address:
+																				<b>weBENT</b> address:
 																			</CardText>
 																		</Col>
 																		<Col md="9">
-																			<a href={getEtherscanLink(POOLS.BentStaking.POOL)} target="_blank" rel="noreferrer">
-																				{POOLS.BentStaking.POOL}
+																			<a href={getEtherscanLink(POOLS.weBENT.Addr)} target="_blank" rel="noreferrer">
+																				{POOLS.weBENT.Addr}
 																			</a>
 																		</Col>
 																	</Row>

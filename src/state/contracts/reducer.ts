@@ -18,12 +18,27 @@ export interface CrvApy {
 	crvBoost: number;
 }
 
+export interface WeBentLockedData {
+	amount: BigNumber;
+	unlockAt: BigNumber;
+}
+
 export interface ContractsState {
 	bentCirculatingSupply: BigNumber,
 	tokenPrices: Record<string, number>
 
 	balances: Record<string, BigNumber>;
 	totalSupplies: Record<string, BigNumber>;
+
+	// weBent Pool States
+	weBentAllowance: BigNumber;
+	weBentBalance: BigNumber;
+	weBentLocked: BigNumber;
+	weBentTotalSupply: BigNumber;
+	weBentBentBalance: BigNumber;
+	weBentTvl: BigNumber;
+	weBentLockedData: WeBentLockedData[];
+	weBentLockDuration: BigNumber;
 
 	// Bent Staking Pool States
 	bentTvl: BigNumber,
@@ -77,6 +92,15 @@ const initialState: ContractsState = {
 
 	balances: {},
 	totalSupplies: {},
+
+	weBentAllowance: ethers.constants.Zero,
+	weBentBalance: ethers.constants.Zero,
+	weBentLocked: ethers.constants.Zero,
+	weBentTotalSupply: ethers.constants.Zero,
+	weBentBentBalance: ethers.constants.Zero,
+	weBentTvl: ethers.constants.Zero,
+	weBentLockedData: [],
+	weBentLockDuration: ethers.constants.Zero,
 
 	bentTvl: ethers.constants.Zero,
 	bentStaked: ethers.constants.Zero,
@@ -230,5 +254,15 @@ export default createReducer(initialState, (builder) =>
 				state.bentCvxPoolAprs[poolKey] = action.payload.bentCvxPoolAprs[poolKey];
 			})
 			state.bentCvxAvgApr = action.payload.bentCvxAvgApr;
+
+			// weBent
+			state.weBentAllowance = action.payload.weBentAllowance;
+			state.weBentBalance = action.payload.weBentBalance;
+			state.weBentLocked = action.payload.weBentLocked;
+			state.weBentTotalSupply = action.payload.weBentTotalSupply;
+			state.weBentBentBalance = action.payload.weBentBentBalance;
+			state.weBentTvl = action.payload.weBentTvl;
+			state.weBentLockedData = action.payload.weBentLockedData;
+			state.weBentLockDuration = action.payload.weBentLockDuration;
 		})
 );

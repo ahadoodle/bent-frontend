@@ -73,6 +73,9 @@ const Header = (): React.ReactElement => {
                 <li>
                   <NavLink to="/claim" activeStyle={{ color: '#C1FFD7' }}>Claim</NavLink>
                 </li>
+                <li>
+                  <NavLink to="/lock" activeStyle={{ color: '#C1FFD7' }}>Lock</NavLink>
+                </li>
                 {/* <li>
                   <Link to="/lock-cvx">Lock CVX</Link>
                 </li>
@@ -103,6 +106,7 @@ const Header = (): React.ReactElement => {
                   </Button>
                   <Link to="/stake">Stake</Link>
                   <Link to="/claim">Claim</Link>
+                  <Link to="/lock">Lock</Link>
                 </div>
                 <span className="Menu" onClick={openNav}>
                   <img src={MenuIcon} alt="Menu" />

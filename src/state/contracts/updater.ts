@@ -27,11 +27,12 @@ import {
 	getMultiCvxToken,
 	getCrvApys,
 	getSushiTradingVolume,
+	getMultiweBent,
 } from 'utils';
 import {
 	updateContractInfo,
 } from './actions';
-import { BentPoolReward, CrvApy } from './reducer';
+import { BentPoolReward, CrvApy, WeBentLockedData } from './reducer';
 
 export default function Updater(): null {
 	const dispatch = useDispatch();
@@ -77,6 +78,15 @@ export default function Updater(): null {
 			const sushiEarnedUsd: Record<string, BigNumber> = {};
 			const sushiRewards: Record<string, BigNumber> = {};
 
+			let weBentAllowance: BigNumber = ethers.constants.Zero;
+			let weBentBalance: BigNumber = ethers.constants.Zero;
+			let weBentLocked: BigNumber = ethers.constants.Zero;
+			let weBentTotalSupply: BigNumber = ethers.constants.Zero;
+			let weBentBentBalance: BigNumber = ethers.constants.Zero;
+			let weBentTvl: BigNumber = ethers.constants.Zero;
+			let weBentLockedData: WeBentLockedData[] = [];
+			let weBentLockDuration: BigNumber = ethers.constants.Zero;
+
 			let bentStaked: BigNumber = ethers.constants.Zero;
 			let bentStakedUsd: BigNumber = ethers.constants.Zero;
 			let bentTvl: BigNumber = ethers.constants.Zero;
@@ -109,6 +119,18 @@ export default function Updater(): null {
 			const vlCvxLocker = getMultiCvxLocker();
 			contractCalls.push(vlCvxLocker.lockedBalanceOf(POOLS.Multisig))
 
+			// Add weBent contract calls
+			const bentToken = getMultiERC20Contract(TOKENS['BENT'].ADDR);
+			const weBentMC = getMultiweBent();
+			contractCalls.push(bentToken.allowance(accAddr, POOLS.weBENT.Addr));
+			contractCalls.push(weBentMC.balanceOf(accAddr));
+			contractCalls.push(weBentMC.bentBalanceOf(accAddr));
+			contractCalls.push(weBentMC.totalSupply());
+			contractCalls.push(bentToken.balanceOf(POOLS.weBENT.Addr));
+			contractCalls.push(weBentMC.lockedBalances(accAddr));
+			contractCalls.push(weBentMC.lockDurationInEpoch());
+			contractCalls.push(weBentMC.epochLength());
+
 			// Add Sushi contract calls
 			const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
 			contractCalls.push(bentMasterChefMC.rewardPerBlock());
@@ -127,7 +149,6 @@ export default function Updater(): null {
 			});
 
 			// Add Bent Single Staking Calls
-			const bentToken = getMultiERC20Contract(TOKENS['BENT'].ADDR);
 			const bentSingleStaking = getMultiBentSingleStaking(POOLS.BentStaking.POOL);
 			contractCalls.push(bentToken.balanceOf(accAddr));
 			contractCalls.push(bentToken.allowance(accAddr, POOLS.BentStaking.POOL));
@@ -211,6 +232,17 @@ export default function Updater(): null {
 				let startIndex = 0;
 
 				vlCvxBalance = results[startIndex++];
+
+				// Update weBent Info
+				weBentAllowance = results[startIndex++];
+				weBentBalance = results[startIndex++];
+				weBentLocked = results[startIndex++];
+				weBentTotalSupply = results[startIndex++];
+				weBentBentBalance = results[startIndex++];
+				weBentTvl = bentPriceBN.mul(weBentBentBalance).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
+				const weBentLockedBalances = results[startIndex++];
+				weBentLockedData = weBentLockedBalances.lockData;
+				weBentLockDuration = BigNumber.from(results[startIndex++]).sub(1).mul(results[startIndex++]);
 
 				// Update Sushi Pool Infos
 				const rewardPerBlock = results[startIndex++];
@@ -518,6 +550,15 @@ export default function Updater(): null {
 					bentCvxAprs,
 					bentCvxPoolAprs,
 					bentCvxAvgApr,
+					// weBent
+					weBentAllowance,
+					weBentBalance,
+					weBentLocked,
+					weBentTotalSupply,
+					weBentBentBalance,
+					weBentTvl,
+					weBentLockedData,
+					weBentLockDuration,
 				}));
 			})
 		})
