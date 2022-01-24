@@ -588,10 +588,15 @@ p.copyright {
     opacity: 0.4;
     margin-bottom: 0;
 }
+.divider-left {
+    min-width: 1px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-left: 3px solid #414C5C;
+}
 .converttabs .divider-left {
     padding-left: 30px;
     padding-right: 30px;
-    border-left: 3px solid rgba(41, 49, 60, 0.2);
 }
 .converttabs .inverse {
     padding-right: 30px;

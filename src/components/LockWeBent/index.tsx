@@ -17,9 +17,9 @@ import {
 	useWeBentTvl,
 	useWeBentLocked,
 	useTokenPrice,
-	useWeBentTotalSupply,
+	useWeBentRatio,
 } from "hooks";
-import { BigNumber, ethers, utils } from "ethers";
+import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 
 export const LockWeBent = (): React.ReactElement => {
@@ -29,10 +29,10 @@ export const LockWeBent = (): React.ReactElement => {
 	const bentBalance = useBalance(TOKENS['BENT'].ADDR);
 	const allowance = useWeBentAllowance();
 	const bentTotalStaked = useWeBentBentBalance();
-	const weBentTotalSupply = useWeBentTotalSupply();
 	const tvl = useWeBentTvl();
 	const weBentShare = useWeBentBalance();
 	const weBentBent = useWeBentLocked();
+	const weBentRatio = useWeBentRatio();
 	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
 
 	const { library } = useActiveWeb3React();
@@ -72,10 +72,6 @@ export const LockWeBent = (): React.ReactElement => {
 			setLockAmount('')
 			setIsApproved(false);
 		}
-	}
-
-	const onVote = () => {
-		window.open('https://snapshot.org/#/bentfinance.eth', '_blank');
 	}
 
 	return (
@@ -157,7 +153,7 @@ export const LockWeBent = (): React.ReactElement => {
 											<TabContent activeTab={activeTab}>
 												<TabPane tabId="1">
 													<Row>
-														<Col sm="6" className="inverse">
+														<Col sm="12" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
 																	Lock <b>BENT</b> for 8 weeks to receive a share in the <b>weBENT</b> pool.<br />
@@ -167,15 +163,15 @@ export const LockWeBent = (): React.ReactElement => {
 																</CardText>
 															</Card>
 														</Col>
-														<Col sm="6" className="divider-left">
+													</Row>
+													<Row className="mt-5">
+														<Col sm="6" className="">
 															<Card body>
 																<div className="card-text">
 																	<div className="amount-crv">
 																		<p className="labeltext">
 																			<Label>
-																				Amount of BENT to lock. 1 weBENT = {
-																					weBentTotalSupply.isZero() ? 0 : BigNumber.from(bentTotalStaked).mul(100).div(weBentTotalSupply).toNumber() / 100
-																				} BENT
+																				Amount of BENT to lock. 1 weBENT = {weBentRatio} BENT
 																			</Label>
 																			<Label>Available: {formatBigNumber(bentBalance)}</Label>
 																		</p>
@@ -188,36 +184,35 @@ export const LockWeBent = (): React.ReactElement => {
 																			<img src={TOKEN_LOGO.BENT} alt="input-logo" className="inputlogo" />
 																			<Button className="maxbtn" onClick={onLockMax} >Max</Button>
 																		</div>
-																		<div className="btnouter">
-																			<p className="lineup"></p>
-																			<div className="btnwrapper">
-																				<Button
-																					className="approvebtn"
-																					disabled={
-																						bentBalance.isZero() || isApproved ||
-																						parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
-																						utils.parseUnits(lockAmount, 18).gt(bentBalance)
-																					}
-																					onClick={approve}
-																				>Approve</Button>
-																				<Button
-																					className="approvebtn"
-																					disabled={
-																						bentBalance.isZero() || !isApproved ||
-																						parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
-																						utils.parseUnits(lockAmount, 18).gt(bentBalance)
-																					}
-																					onClick={onLock}
-																				>Lock BENT</Button>
-																			</div>
-																			<div className="btnwrapper">
-																				<Button
-																					className="approvebtn w-100 mt-3"
-																					onClick={onVote}
-																				>My weBENT share</Button>
-																			</div>
-																		</div>
 																	</div>
+																</div>
+															</Card>
+														</Col>
+														<Col sm="6" className="">
+															<Card body>
+																<div className="mt-2">
+																	<p className="lineup"></p>
+																	<div className="btnwrapper">
+																		<Button
+																			className="approvebtn"
+																			disabled={
+																				bentBalance.isZero() || isApproved ||
+																				parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
+																				utils.parseUnits(lockAmount, 18).gt(bentBalance)
+																			}
+																			onClick={approve}
+																		>Approve</Button>
+																		<Button
+																			className="approvebtn mx-2"
+																			disabled={
+																				bentBalance.isZero() || !isApproved ||
+																				parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
+																				utils.parseUnits(lockAmount, 18).gt(bentBalance)
+																			}
+																			onClick={onLock}
+																		>Lock BENT</Button>
+																	</div>
+																	<div className="btnwrapper"></div>
 																</div>
 															</Card>
 														</Col>

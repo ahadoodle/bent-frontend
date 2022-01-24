@@ -34,3 +34,9 @@ export const useWeBentLockedData = (): WeBentLockedData[] => {
 export const useWeBentLockDuration = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.weBentLockDuration || ethers.constants.Zero));
 }
+
+export const useWeBentRatio = (): number => {
+	const weBentTotalSupply = useWeBentTotalSupply();
+	const bentTotalStaked = useWeBentBentBalance();
+	return weBentTotalSupply.isZero() ? 0 : BigNumber.from(bentTotalStaked).mul(100).div(weBentTotalSupply).toNumber() / 100
+}
