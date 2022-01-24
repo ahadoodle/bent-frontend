@@ -86,6 +86,11 @@ export default function Updater(): null {
 			let weBentTvl: BigNumber = ethers.constants.Zero;
 			let weBentLockedData: WeBentLockedData[] = [];
 			let weBentLockDuration: BigNumber = ethers.constants.Zero;
+			let weBentAvgApr = 0;
+			let weBentEarnedUsd: BigNumber = ethers.constants.Zero;
+			const weBentAprs: Record<string, number> = {};
+			const weBentRewards: Record<string, BigNumber> = {};
+			const weBentRewardsUsd: Record<string, BigNumber> = {};
 
 			let bentStaked: BigNumber = ethers.constants.Zero;
 			let bentStakedUsd: BigNumber = ethers.constants.Zero;
@@ -130,6 +135,10 @@ export default function Updater(): null {
 			contractCalls.push(weBentMC.lockedBalances(accAddr));
 			contractCalls.push(weBentMC.lockDurationInEpoch());
 			contractCalls.push(weBentMC.epochLength());
+			contractCalls.push(weBentMC.pendingReward(accAddr));
+			POOLS.weBENT.RewardAssets.forEach((rewardToken, index) => {
+				contractCalls.push(weBentMC.rewardPools(index));
+			})
 
 			// Add Sushi contract calls
 			const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
@@ -243,6 +252,23 @@ export default function Updater(): null {
 				const weBentLockedBalances = results[startIndex++];
 				weBentLockedData = weBentLockedBalances.lockData;
 				weBentLockDuration = BigNumber.from(results[startIndex++]).sub(1).mul(results[startIndex++]);
+				const weBentPendingRewards = results[startIndex++];
+				let weBentTokenRewardsUsd = ethers.constants.Zero;
+				POOLS.weBENT.RewardAssets.forEach((rewardToken, index) => {
+					const rewardsInfo = results[startIndex++];
+					const tokenAddr = TOKENS[rewardToken].ADDR.toLowerCase();
+					const tokenPrice = tokenAddr === TOKENS.BENTCVX.ADDR.toLowerCase() ? bentPrice : tokenPrices[rewardsInfo.rewardToken.toLowerCase()];
+					const rewardUsd = getAnnualReward(rewardsInfo.rewardRate, rewardsInfo.rewardToken, tokenPrice);
+					weBentAprs[tokenAddr] = (weBentTvl.isZero() ? 0 : rewardUsd.mul(10000).div(weBentTvl).toNumber()) / 100;
+					weBentTokenRewardsUsd = weBentTokenRewardsUsd.add(rewardUsd);
+
+					const earnedUsd = utils.parseEther(tokenPrice.toString()).mul(weBentPendingRewards[index])
+						.div(BigNumber.from(10).pow(getTokenDecimals(tokenAddr)));
+					weBentEarnedUsd = weBentEarnedUsd.add(earnedUsd);
+					weBentRewardsUsd[tokenAddr] = earnedUsd;
+					weBentRewards[tokenAddr] = weBentPendingRewards[index];
+				})
+				weBentAvgApr = (weBentTvl.isZero() ? 0 : weBentTokenRewardsUsd.mul(10000).div(weBentTvl).toNumber()) / 100;
 
 				// Update Sushi Pool Infos
 				const rewardPerBlock = results[startIndex++];
@@ -559,6 +585,11 @@ export default function Updater(): null {
 					weBentTvl,
 					weBentLockedData,
 					weBentLockDuration,
+					weBentEarnedUsd,
+					weBentAprs,
+					weBentAvgApr,
+					weBentRewards,
+					weBentRewardsUsd
 				}));
 			})
 		})

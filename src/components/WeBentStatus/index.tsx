@@ -3,11 +3,12 @@ import styled from "styled-components";
 import {
 	Container, Button, Row, Col
 } from "reactstrap";
-import { useTheme, useTokenPrice, useVlCvxBalance, useWeBentBentBalance } from "hooks";
+import { useTheme, useTokenPrice, useVlCvxBalance, useWeBentAvgApr, useWeBentBentBalance } from "hooks";
 import { Theme } from "state/application/reducer";
 import { formatBigNumber } from "utils";
 import { TOKENS } from "constant";
 import { BigNumber, utils } from "ethers";
+import { useHistory } from "react-router";
 
 export const WeBentStatus = (): React.ReactElement => {
 	const theme = useTheme();
@@ -15,6 +16,12 @@ export const WeBentStatus = (): React.ReactElement => {
 	const bentTotalStaked = useWeBentBentBalance();
 	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
 	const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);
+	const avgApr = useWeBentAvgApr();
+	const history = useHistory();
+
+	const onBent = () => {
+		history.push('/lock');
+	}
 
 	return (
 		<Container className="stake-bent">
@@ -28,6 +35,7 @@ export const WeBentStatus = (): React.ReactElement => {
 					<StatusContainer theme={theme}>
 						<Button
 							className="approvebtn"
+							onClick={() => onBent()}
 						>BENT to weBENT</Button>
 						<div className="divider-left p-0"></div>
 						<StatusButton
@@ -45,7 +53,7 @@ export const WeBentStatus = (): React.ReactElement => {
 						<StatusButton
 							className="approvebtn px-4"
 							disabled={true}
-						>123 % APR</StatusButton>
+						>{avgApr ? utils.commify(avgApr) : 'TBC'} % APR</StatusButton>
 					</StatusContainer>
 				</Col>
 			</Row>

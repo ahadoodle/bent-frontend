@@ -18,6 +18,8 @@ import {
 	useWeBentLocked,
 	useTokenPrice,
 	useWeBentRatio,
+	useWeBentEarnedUsd,
+	useWeBentAvgApr,
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -34,6 +36,8 @@ export const LockWeBent = (): React.ReactElement => {
 	const weBentBent = useWeBentLocked();
 	const weBentRatio = useWeBentRatio();
 	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
+	const earnedUsd = useWeBentEarnedUsd();
+	const avgApr = useWeBentAvgApr();
 
 	const { library } = useActiveWeb3React();
 	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
@@ -95,7 +99,7 @@ export const LockWeBent = (): React.ReactElement => {
 										<span className="small p-0">Earned (USD)</span><br />
 										<b className="p-0">
 											<span className="small">$</span>
-											<DecimalSpan value={'0'} />
+											<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
 											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
@@ -104,8 +108,8 @@ export const LockWeBent = (): React.ReactElement => {
 									<div>
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
-											{'TBD'} %
-											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
+											{avgApr ? <>{utils.commify(avgApr)}</> : 'TBD'} %
+											&nbsp;<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>

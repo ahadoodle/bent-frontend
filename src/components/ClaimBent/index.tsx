@@ -78,93 +78,88 @@ export const ClaimBent = (): React.ReactElement => {
 	}
 
 	return (
-		<Container className="stake-bent claim">
+		<Container className="mt-5">
 			<Row>
 				<Col md="12">
-					<div className="convert-up">
-						<h2 className="white section-header">
-							Claim Earnings
-						</h2>
-						<div className="toggleWrap tokentable table">
-							<Row className="align-items-center thead p-0 pt-2 pb-2">
-								<Col>
-									<div className="imgText">
-										<img src={TOKEN_LOGO.BENT} alt="" width="28" />
-										<h2>Staked BENT</h2>
+					<div className="toggleWrap tokentable table">
+						<Row className="align-items-center thead p-0 pt-2 pb-2">
+							<Col>
+								<div className="imgText">
+									<img src={TOKEN_LOGO.BENT} alt="" width="28" />
+									<h2>Staked BENT</h2>
+								</div>
+							</Col>
+							<Col>
+								<div className="tableTitle">
+									<p>Earned (USD)</p>
+									<div className="boldText">
+										<b>
+											<span className="small">$</span>
+											<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+										</b>
 									</div>
-								</Col>
-								<Col>
-									<div className="tableTitle">
-										<p>Earned (USD)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
-											</b>
-										</div>
+								</div>
+							</Col>
+							<Col>
+								<div className="tableTitle">
+									<p>APR</p>
+									<div className="boldText">
+										<b>
+											{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
+										</b>
 									</div>
-								</Col>
-								<Col>
-									<div className="tableTitle">
-										<p>APR</p>
-										<div className="boldText">
-											<b>
-												{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
-											</b>
-										</div>
+								</div>
+							</Col>
+							<Col>
+								<div className="tableTitle">
+									<p>My Staked ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)} BENT)</p>
+									<div className="boldText">
+										<b>
+											<span className="small">$</span>
+											<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
+										</b>
 									</div>
-								</Col>
-								<Col>
-									<div className="tableTitle">
-										<p>My Staked ({bentStaked.isZero() ? '--' : formatBigNumber(bentStaked, 18, 2)} BENT)</p>
-										<div className="boldText">
-											<b>
-												<span className="small">$</span>
-												<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
-											</b>
-										</div>
+								</div>
+							</Col>
+							<Col>
+								<Button
+									className="claimbtn"
+									onClick={onClaim}
+									disabled={checkedIndexes().length === 0}
+								>{claimBtnText}</Button>
+							</Col>
+						</Row>
+						<Card>
+							<CardBody>
+								<div className="innerAccordian">
+									<div className="converttabs">
+										<Row>
+											<Col sm="6">
+												<CardText className="mt-0">
+													<span className="small">Breakdown of claimable earnings:</span>
+													<Input type="checkbox" className="mx-3" checked={checkAll} onChange={onCheckAll} />
+													<span className="small">Select All</span>
+												</CardText>
+												<div className="bent-rewards-container">
+													{POOLS.BentStaking.RewardAssets.map((key, index) =>
+														<ClaimBentRewardItem
+															key={key}
+															index={index}
+															tokenKey={key}
+															apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}
+															rewardUsd={bentRewardsUsd ? BigNumber.from(bentRewardsUsd[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
+															reward={bentRewards ? BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
+															checked={claimChecked[index] || false}
+															onChange={onClaimCheckChange}
+														/>
+													)}
+												</div>
+											</Col>
+										</Row>
 									</div>
-								</Col>
-								<Col>
-									<Button
-										className="claimbtn"
-										onClick={onClaim}
-										disabled={checkedIndexes().length === 0}
-									>{claimBtnText}</Button>
-								</Col>
-							</Row>
-							<Card>
-								<CardBody>
-									<div className="innerAccordian">
-										<div className="converttabs">
-											<Row>
-												<Col sm="6">
-													<CardText className="mt-0">
-														<span className="small">Breakdown of claimable earnings:</span>
-														<Input type="checkbox" className="mx-3" checked={checkAll} onChange={onCheckAll} />
-														<span className="small">Select All</span>
-													</CardText>
-													<div className="bent-rewards-container">
-														{POOLS.BentStaking.RewardAssets.map((key, index) =>
-															<ClaimBentRewardItem
-																key={key}
-																index={index}
-																tokenKey={key}
-																apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}
-																rewardUsd={bentRewardsUsd ? BigNumber.from(bentRewardsUsd[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
-																reward={bentRewards ? BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
-																checked={claimChecked[index] || false}
-																onChange={onClaimCheckChange}
-															/>
-														)}
-													</div>
-												</Col>
-											</Row>
-										</div>
-									</div>
-								</CardBody>
-							</Card>
-						</div>
+								</div>
+							</CardBody>
+						</Card>
 					</div>
 				</Col>
 			</Row>

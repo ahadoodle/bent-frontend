@@ -39,6 +39,11 @@ export interface ContractsState {
 	weBentTvl: BigNumber;
 	weBentLockedData: WeBentLockedData[];
 	weBentLockDuration: BigNumber;
+	weBentAvgApr: number,
+	weBentEarnedUsd: BigNumber,
+	weBentAprs: Record<string, number>,
+	weBentRewards: Record<string, BigNumber>,
+	weBentRewardsUsd: Record<string, BigNumber>,
 
 	// Bent Staking Pool States
 	bentTvl: BigNumber,
@@ -101,6 +106,11 @@ const initialState: ContractsState = {
 	weBentTvl: ethers.constants.Zero,
 	weBentLockedData: [],
 	weBentLockDuration: ethers.constants.Zero,
+	weBentAvgApr: 0,
+	weBentEarnedUsd: ethers.constants.Zero,
+	weBentAprs: {},
+	weBentRewards: {},
+	weBentRewardsUsd: {},
 
 	bentTvl: ethers.constants.Zero,
 	bentStaked: ethers.constants.Zero,
@@ -264,5 +274,19 @@ export default createReducer(initialState, (builder) =>
 			state.weBentTvl = action.payload.weBentTvl;
 			state.weBentLockedData = action.payload.weBentLockedData;
 			state.weBentLockDuration = action.payload.weBentLockDuration;
+			state.weBentEarnedUsd = action.payload.weBentEarnedUsd;
+			state.weBentAvgApr = action.payload.weBentAvgApr;
+			Object.keys(action.payload.weBentAprs).forEach(poolKey => {
+				if (!state.weBentAprs) state.weBentAprs = {};
+				state.weBentAprs[poolKey] = action.payload.weBentAprs[poolKey];
+			})
+			Object.keys(action.payload.weBentRewards).forEach(tokenAddr => {
+				if (!state.weBentRewards) state.weBentRewards = {};
+				state.weBentRewards[tokenAddr] = action.payload.weBentRewards[tokenAddr];
+			})
+			Object.keys(action.payload.weBentRewardsUsd).forEach(tokenAddr => {
+				if (!state.weBentRewardsUsd) state.weBentRewardsUsd = {};
+				state.weBentRewardsUsd[tokenAddr] = action.payload.weBentRewardsUsd[tokenAddr];
+			})
 		})
 );

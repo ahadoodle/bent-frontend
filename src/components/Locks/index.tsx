@@ -50,7 +50,7 @@ export const MyLocksTable = (): React.ReactElement => {
 						<Card>
 							<CardBody>
 								{lockedData.map((lockedData, index) =>
-									!BigNumber.from(lockedData.amount).isZero() &&
+									lockedData.amount && !BigNumber.from(lockedData.amount).isZero() &&
 									<MyLockItem
 										key={index}
 										lockedData={lockedData}

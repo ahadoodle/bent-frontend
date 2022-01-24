@@ -40,3 +40,27 @@ export const useWeBentRatio = (): number => {
 	const bentTotalStaked = useWeBentBentBalance();
 	return weBentTotalSupply.isZero() ? 0 : BigNumber.from(bentTotalStaked).mul(100).div(weBentTotalSupply).toNumber() / 100
 }
+
+export const useWeBentEarnedUsd = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.weBentEarnedUsd || ethers.constants.Zero));
+}
+
+export const useWeBentAvgApr = (): number => {
+	return useSelector((state: AppState) => state.contracts.weBentAvgApr || 0);
+}
+
+export const useWeBentRewardsAprs = (): Record<string, number> => {
+	return useSelector((state: AppState) => state.contracts.weBentAprs || {});
+}
+
+export const useWeBentRewardsApr = (token: string): number => {
+	return useSelector((state: AppState) => state.contracts.weBentAprs ? state.contracts.weBentAprs[token] || 0 : 0);
+}
+
+export const useWeBentRewards = (): Record<string, BigNumber> => {
+	return useSelector((state: AppState) => state.contracts.weBentRewards || {});
+}
+
+export const useWeBentRewardsUsd = (): Record<string, BigNumber> => {
+	return useSelector((state: AppState) => state.contracts.weBentRewardsUsd || {});
+}
