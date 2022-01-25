@@ -14,10 +14,12 @@ import {
 	useWeBentRewards,
 	useWeBentRewardsUsd,
 	useWeBentContract,
+	useWeBentBalance,
 } from 'hooks';
 import { ethers, BigNumber, utils } from "ethers";
 import { ClaimWeBentRewardItem } from "./item";
 import { DecimalSpan } from "components/DecimalSpan";
+import { WeBentAprTooltip } from "components/Tooltip";
 
 export const ClaimWeBent = (): React.ReactElement => {
 	const [claimBtnText, setClaimBtnText] = useState('Claim');
@@ -29,6 +31,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 	const bentRewards = useWeBentRewards();
 	const bentRewardsUsd = useWeBentRewardsUsd();
 	const weBentBent = useWeBentLocked();
+	const weBentShare = useWeBentBalance();
 	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
 
 	const { library } = useActiveWeb3React();
@@ -109,15 +112,16 @@ export const ClaimWeBent = (): React.ReactElement => {
 										<p>APR</p>
 										<div className="boldText">
 											<b>
-												{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
-												&nbsp;<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" />
+												{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}&nbsp;
+												<i className="fa fa-info-circle cursor-pointer text-small" id="webent-apr-info" aria-hidden="true" />
+												<WeBentAprTooltip />
 											</b>
 										</div>
 									</div>
 								</Col>
 								<Col>
 									<div className="tableTitle">
-										<p>My Locked weBENT ({weBentBent.isZero() ? '--' : formatBigNumber(weBentBent, 18, 2)} BENT)</p>
+										<p>{formatBigNumber(weBentShare, 18, 2)} weBENT = {formatBigNumber(weBentBent, 18, 2)} BENT</p>
 										<div className="boldText">
 											<b>
 												<span className="small">$</span>

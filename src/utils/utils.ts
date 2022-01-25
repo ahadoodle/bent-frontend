@@ -173,6 +173,18 @@ export const getCirculatingSupply = async (): Promise<BigNumber> => {
 	}
 }
 
+export const getWeBentApr = async (): Promise<number> => {
+	const url = 'https://getbent-api-supply.bentfinance.com/api/bent/weBentApr';
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		const apr: number = res.data.toString();
+		return parseFloat(apr.toString());
+	} catch (error) {
+		return 0;
+	}
+}
+
 export const sleep = (ms = 0): Promise<unknown> => {
 	return new Promise(resolve => {
 		setTimeout(resolve, ms);

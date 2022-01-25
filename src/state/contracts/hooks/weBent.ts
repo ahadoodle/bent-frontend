@@ -45,6 +45,10 @@ export const useWeBentEarnedUsd = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.weBentEarnedUsd || ethers.constants.Zero));
 }
 
+export const useWeBentApr = (): number => {
+	return useSelector((state: AppState) => state.contracts.weBentApr || 0);
+}
+
 export const useWeBentAvgApr = (): number => {
 	return useSelector((state: AppState) => state.contracts.weBentAvgApr || 0);
 }

@@ -28,7 +28,7 @@ import {
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
 import { SwitchSlider } from "components/Switch";
-import { CvxProjectedAprTooltip } from "components/CvxProjectedAprTooltip";
+import { CvxProjectedAprTooltip } from "components/Tooltip";
 
 interface Props {
 	poolInfo: BentPool

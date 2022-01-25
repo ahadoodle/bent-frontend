@@ -101,7 +101,7 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	return (
-		<Container className="stake-bent">
+		<Container className={`stake-bent ${bentStaked.isZero() ? 'd-none' : ''}`}>
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
@@ -224,20 +224,12 @@ export const StakeBent = (): React.ReactElement => {
 																			<div className="btnwrapper">
 																				<Button
 																					className="approvebtn"
-																					disabled={
-																						bentBalance.isZero() || isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentBalance)
-																					}
+																					disabled={true}
 																					onClick={approve}
 																				>Approve</Button>
 																				<Button
 																					className="approvebtn"
-																					disabled={
-																						bentBalance.isZero() || !isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentBalance)
-																					}
+																					disabled={true}
 																					onClick={stake}
 																				>Stake BENT</Button>
 																			</div>

@@ -28,6 +28,7 @@ import {
 	getCrvApys,
 	getSushiTradingVolume,
 	getMultiweBent,
+	getWeBentApr,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -56,7 +57,15 @@ export default function Updater(): null {
 			getCrvFactoryInfo(),
 			getCrvCryptoFactoryInfo(),
 			getSushiTradingVolume(),
-		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo, bentTradingVolume]) => {
+			getWeBentApr(),
+		]).then(([
+			tokenPrices,
+			bentCirculatingSupply,
+			crvPoolsInfo,
+			crvCryptoPoolsInfo,
+			bentTradingVolume,
+			weBentApr,
+		]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
 			const balances: Record<string, BigNumber> = {};
@@ -268,7 +277,8 @@ export default function Updater(): null {
 					weBentRewardsUsd[tokenAddr] = earnedUsd;
 					weBentRewards[tokenAddr] = weBentPendingRewards[index];
 				})
-				weBentAvgApr = (weBentTvl.isZero() ? 0 : weBentTokenRewardsUsd.mul(10000).div(weBentTvl).toNumber()) / 100;
+				weBentAvgApr = (weBentTvl.isZero() ? 0 : weBentTokenRewardsUsd.mul(10000).div(weBentTvl).toNumber()) / 100 + weBentApr;
+				weBentAvgApr = parseFloat(weBentAvgApr.toFixed(2));
 
 				// Update Sushi Pool Infos
 				const rewardPerBlock = results[startIndex++];
@@ -589,7 +599,8 @@ export default function Updater(): null {
 					weBentAprs,
 					weBentAvgApr,
 					weBentRewards,
-					weBentRewardsUsd
+					weBentRewardsUsd,
+					weBentApr,
 				}));
 			})
 		})

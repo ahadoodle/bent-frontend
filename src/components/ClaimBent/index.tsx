@@ -78,7 +78,7 @@ export const ClaimBent = (): React.ReactElement => {
 	}
 
 	return (
-		<Container className="mt-5">
+		<Container className={`mt-5 ${bentStaked.isZero() && earnedUsd.isZero() ? 'd-none' : ''}`}>
 			<Row>
 				<Col md="12">
 					<div className="toggleWrap tokentable table">
