@@ -31,6 +31,10 @@ export const useWeBentLockedData = (): WeBentLockedData[] => {
 	return useSelector((state: AppState) => state.contracts.weBentLockedData || []);
 }
 
+export const useWeBentUnlockable = (): BigNumber => {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.weBentUnlockable || ethers.constants.Zero));
+}
+
 export const useWeBentLockDuration = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.weBentLockDuration || ethers.constants.Zero));
 }

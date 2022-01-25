@@ -94,6 +94,7 @@ export default function Updater(): null {
 			let weBentBentBalance: BigNumber = ethers.constants.Zero;
 			let weBentTvl: BigNumber = ethers.constants.Zero;
 			let weBentLockedData: WeBentLockedData[] = [];
+			let weBentUnlockable: BigNumber = ethers.constants.Zero;
 			let weBentLockDuration: BigNumber = ethers.constants.Zero;
 			let weBentAvgApr = 0;
 			let weBentEarnedUsd: BigNumber = ethers.constants.Zero;
@@ -260,6 +261,7 @@ export default function Updater(): null {
 				weBentTvl = bentPriceBN.mul(weBentBentBalance).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
 				const weBentLockedBalances = results[startIndex++];
 				weBentLockedData = weBentLockedBalances.lockData;
+				weBentUnlockable = weBentLockedBalances.unlockable;
 				weBentLockDuration = BigNumber.from(results[startIndex++]).sub(1).mul(results[startIndex++]);
 				const weBentPendingRewards = results[startIndex++];
 				let weBentTokenRewardsUsd = ethers.constants.Zero;
@@ -594,6 +596,7 @@ export default function Updater(): null {
 					weBentBentBalance,
 					weBentTvl,
 					weBentLockedData,
+					weBentUnlockable,
 					weBentLockDuration,
 					weBentEarnedUsd,
 					weBentAprs,

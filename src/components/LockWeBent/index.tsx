@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
-	Card, CardText, Input, Label, CardBody, UncontrolledTooltip,
+	Card, CardText, Input, Label, CardBody
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
@@ -20,7 +20,6 @@ import {
 	useWeBentRatio,
 	useWeBentEarnedUsd,
 	useWeBentAvgApr,
-	useWeBentApr,
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -40,7 +39,6 @@ export const LockWeBent = (): React.ReactElement => {
 	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
 	const earnedUsd = useWeBentEarnedUsd();
 	const avgApr = useWeBentAvgApr();
-	const weBentApr = useWeBentApr();
 
 	const { library } = useActiveWeb3React();
 	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);

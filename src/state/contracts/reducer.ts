@@ -38,6 +38,7 @@ export interface ContractsState {
 	weBentBentBalance: BigNumber;
 	weBentTvl: BigNumber;
 	weBentLockedData: WeBentLockedData[];
+	weBentUnlockable: BigNumber;
 	weBentLockDuration: BigNumber;
 	weBentApr: number,
 	weBentAvgApr: number,
@@ -106,6 +107,7 @@ const initialState: ContractsState = {
 	weBentBentBalance: ethers.constants.Zero,
 	weBentTvl: ethers.constants.Zero,
 	weBentLockedData: [],
+	weBentUnlockable: ethers.constants.Zero,
 	weBentLockDuration: ethers.constants.Zero,
 	weBentAvgApr: 0,
 	weBentApr: 0,
@@ -275,6 +277,7 @@ export default createReducer(initialState, (builder) =>
 			state.weBentBentBalance = action.payload.weBentBentBalance;
 			state.weBentTvl = action.payload.weBentTvl;
 			state.weBentLockedData = action.payload.weBentLockedData;
+			state.weBentUnlockable = action.payload.weBentUnlockable;
 			state.weBentLockDuration = action.payload.weBentLockDuration;
 			state.weBentEarnedUsd = action.payload.weBentEarnedUsd;
 			state.weBentAvgApr = action.payload.weBentAvgApr;

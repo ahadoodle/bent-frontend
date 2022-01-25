@@ -4,15 +4,17 @@ import {
 } from "reactstrap";
 import { TOKENS, TOKEN_LOGO } from "constant";
 import { MyLockItem } from "./item";
-import { useWeBentLockedData, useWeBentLocked, useTokenPrice } from "hooks";
+import { useWeBentLockedData, useWeBentLocked, useTokenPrice, useWeBentUnlockable } from "hooks";
 import { BigNumber, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import { formatBigNumber } from "utils";
+import { MyLockUnlockableItem } from "./unlockItem";
 
 export const MyLocksTable = (): React.ReactElement => {
 	const lockedData = useWeBentLockedData();
 	const weBentBent = useWeBentLocked();
 	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
+	const unlockable = useWeBentUnlockable();
 
 	return (
 		<Container className="convert-up">
@@ -49,6 +51,9 @@ export const MyLocksTable = (): React.ReactElement => {
 						</Row>
 						<Card>
 							<CardBody>
+								{!unlockable.isZero() &&
+									<MyLockUnlockableItem unlockable={unlockable} />
+								}
 								{lockedData.map((lockedData, index) =>
 									lockedData.amount && !BigNumber.from(lockedData.amount).isZero() &&
 									<MyLockItem

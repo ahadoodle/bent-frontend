@@ -9,7 +9,6 @@ import { formatBigNumber, formatMillionsBigNumber, getEtherscanLink } from "util
 import {
 	useActiveWeb3React,
 	useBalance,
-	useBentAllowance,
 	useBentAvgApr,
 	useBentEarnedUsd,
 	useBentRewardsAprs,
@@ -18,9 +17,8 @@ import {
 	useBentStakingContract,
 	useBentTotalStaked,
 	useBentTvl,
-	useERC20Contract,
 } from "hooks";
-import { ethers, utils } from "ethers";
+import { utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import { StakeBentRewardItem } from "./rewardsItem";
 import { SwitchSlider } from "components/Switch";
@@ -29,10 +27,8 @@ export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const bentBalance = useBalance(TOKENS['BENT'].ADDR);
 	const tvl = useBentTvl();
-	const allowance = useBentAllowance();
 	const bentStaked = useBentStaked();
 	const bentstakedUsd = useBentStakedUsd();
 	const bentAvgApr = useBentAvgApr();
@@ -41,7 +37,6 @@ export const StakeBent = (): React.ReactElement => {
 	const bentTotalStaked = useBentTotalStaked();
 
 	const { library } = useActiveWeb3React();
-	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
 	const bentStakingContract = useBentStakingContract();
 
 	const toggle = (tab) => {
@@ -50,7 +45,6 @@ export const StakeBent = (): React.ReactElement => {
 
 	const onStakeMax = () => {
 		setStakeAmount(formatBigNumber(bentBalance, 18, 18).replaceAll(',', ''));
-		setIsApproved(allowance.gte(bentBalance) && !bentBalance.isZero());
 	}
 
 	const onWithdrawMax = () => {
@@ -59,32 +53,10 @@ export const StakeBent = (): React.ReactElement => {
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
-		if (isNaN(parseFloat(value))) return;
-		const amountBN = utils.parseUnits(value, 18);
-		setIsApproved(allowance.gte(amountBN) && !amountBN.isZero());
 	}
 
 	const onWithdrawAmountChange = (value) => {
 		setWithdrawAmount(value);
-	}
-
-	const approve = async () => {
-		if (!library) return;
-		const signer = await library.getSigner();
-		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
-		if (res) {
-			setIsApproved(true);
-		}
-	}
-
-	const stake = async () => {
-		if (!library) return;
-		const signer = await library.getSigner();
-		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18));
-		if (res) {
-			setStakeAmount('')
-			setIsApproved(false);
-		}
 	}
 
 	const withdraw = async () => {
@@ -225,12 +197,10 @@ export const StakeBent = (): React.ReactElement => {
 																				<Button
 																					className="approvebtn"
 																					disabled={true}
-																					onClick={approve}
 																				>Approve</Button>
 																				<Button
 																					className="approvebtn"
 																					disabled={true}
-																					onClick={stake}
 																				>Stake BENT</Button>
 																			</div>
 																			<div className="btnwrapper">
