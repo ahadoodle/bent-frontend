@@ -9,7 +9,6 @@ import { formatBigNumber, formatMillionsBigNumber, getEtherscanLink } from "util
 import {
 	useActiveWeb3React,
 	useBalance,
-	useBentAllowance,
 	useBentAvgApr,
 	useBentEarnedUsd,
 	useBentRewardsAprs,
@@ -18,9 +17,8 @@ import {
 	useBentStakingContract,
 	useBentTotalStaked,
 	useBentTvl,
-	useERC20Contract,
 } from "hooks";
-import { ethers, utils } from "ethers";
+import { utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import { StakeBentRewardItem } from "./rewardsItem";
 import { SwitchSlider } from "components/Switch";
@@ -29,10 +27,8 @@ export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
-	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const bentBalance = useBalance(TOKENS['BENT'].ADDR);
 	const tvl = useBentTvl();
-	const allowance = useBentAllowance();
 	const bentStaked = useBentStaked();
 	const bentstakedUsd = useBentStakedUsd();
 	const bentAvgApr = useBentAvgApr();
@@ -41,7 +37,6 @@ export const StakeBent = (): React.ReactElement => {
 	const bentTotalStaked = useBentTotalStaked();
 
 	const { library } = useActiveWeb3React();
-	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
 	const bentStakingContract = useBentStakingContract();
 
 	const toggle = (tab) => {
@@ -50,7 +45,6 @@ export const StakeBent = (): React.ReactElement => {
 
 	const onStakeMax = () => {
 		setStakeAmount(formatBigNumber(bentBalance, 18, 18).replaceAll(',', ''));
-		setIsApproved(allowance.gte(bentBalance) && !bentBalance.isZero());
 	}
 
 	const onWithdrawMax = () => {
@@ -59,32 +53,10 @@ export const StakeBent = (): React.ReactElement => {
 
 	const onStakeAmountChange = (value) => {
 		setStakeAmount(value);
-		if (isNaN(parseFloat(value))) return;
-		const amountBN = utils.parseUnits(value, 18);
-		setIsApproved(allowance.gte(amountBN) && !amountBN.isZero());
 	}
 
 	const onWithdrawAmountChange = (value) => {
 		setWithdrawAmount(value);
-	}
-
-	const approve = async () => {
-		if (!library) return;
-		const signer = await library.getSigner();
-		const res = await bentToken.connect(signer).approve(POOLS.BentStaking.POOL, ethers.constants.MaxUint256);
-		if (res) {
-			setIsApproved(true);
-		}
-	}
-
-	const stake = async () => {
-		if (!library) return;
-		const signer = await library.getSigner();
-		const res = await bentStakingContract.connect(signer).deposit(utils.parseUnits(stakeAmount, 18));
-		if (res) {
-			setStakeAmount('')
-			setIsApproved(false);
-		}
 	}
 
 	const withdraw = async () => {
@@ -101,11 +73,11 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	return (
-		<Container className="stake-bent">
+		<Container className={`stake-bent ${bentStaked.isZero() ? 'd-none' : ''}`}>
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
-						<h2 className="white section-header">
+						<h2 className="section-header">
 							Stake your BENT
 						</h2>
 						<div className="toggleWrap tokentable table">
@@ -122,6 +94,7 @@ export const StakeBent = (): React.ReactElement => {
 										<b className="p-0">
 											<span className="small">$</span>
 											<DecimalSpan value={formatBigNumber(earnedUsd, 18, 2)} />
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
@@ -130,6 +103,7 @@ export const StakeBent = (): React.ReactElement => {
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
 											{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
@@ -139,6 +113,7 @@ export const StakeBent = (): React.ReactElement => {
 										<b className="p-0">
 											<span className="small">$</span>
 											<DecimalSpan value={formatBigNumber(bentstakedUsd, 18, 2)} />
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
@@ -148,6 +123,7 @@ export const StakeBent = (): React.ReactElement => {
 										<b className="p-0">
 											<span className="small">$</span>
 											{formatMillionsBigNumber(tvl, 18, 2)}
+											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>
@@ -220,21 +196,11 @@ export const StakeBent = (): React.ReactElement => {
 																			<div className="btnwrapper">
 																				<Button
 																					className="approvebtn"
-																					disabled={
-																						bentBalance.isZero() || isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentBalance)
-																					}
-																					onClick={approve}
+																					disabled={true}
 																				>Approve</Button>
 																				<Button
 																					className="approvebtn"
-																					disabled={
-																						bentBalance.isZero() || !isApproved ||
-																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentBalance)
-																					}
-																					onClick={stake}
+																					disabled={true}
 																				>Stake BENT</Button>
 																			</div>
 																			<div className="btnwrapper">

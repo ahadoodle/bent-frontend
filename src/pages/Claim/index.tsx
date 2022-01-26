@@ -10,6 +10,7 @@ import { ClaimCurveLpTable } from "components/ClaimCurveLpTable";
 import { ClaimSushiLpTable } from "components/ClaimSushiLpTable";
 import { ClaimBent } from "components/ClaimBent";
 import { ClaimBentCVX } from "components/ClaimBentCvx";
+import { ClaimWeBent } from "components/ClaimWeBent";
 
 export const Claim = (): React.ReactElement => {
   // const [autoClaimStatus, setAutoClaimStatus] = useState(false);
@@ -144,6 +145,7 @@ export const Claim = (): React.ReactElement => {
         </div>
       </div>
       <div className="contentSection">
+        <ClaimWeBent />
         <ClaimBent />
         <ClaimBentCVX />
         <ClaimCurveLpTable />
