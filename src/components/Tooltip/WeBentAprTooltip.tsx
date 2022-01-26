@@ -18,7 +18,7 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 		POOLS.weBENT.RewardAssets.forEach(key => {
 			apr += key === 'BENTCVX' ? 0 : (bentAprs[TOKENS[key].ADDR.toLowerCase()] || 0);
 		})
-		return apr;
+		return parseFloat(apr.toFixed(2));
 	}
 
 	return (

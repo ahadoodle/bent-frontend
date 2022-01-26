@@ -9,7 +9,7 @@ import { BigNumber, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import { formatBigNumber } from "utils";
 import { MyLockUnlockableItem } from "./unlockItem";
-import { MorePoolsRow } from "components/MorePoolsRow";
+import VoteIcon from 'assets/images/vote.svg';
 
 export const MyLocksTable = (): React.ReactElement => {
 	const lockedData = useWeBentLockedData();
@@ -66,7 +66,13 @@ export const MyLocksTable = (): React.ReactElement => {
 										lockedData={lockedData}
 									/>
 								)}
-								<MorePoolsRow onShowMore={onVote} visible={true} title="Go to vote page" iconClass="fa-thumbs-up" iconPlacement="Start" />
+								<div className={`innerWrap p-0 rounded`} >
+									<div className="text-center btnwrap">
+										<button className="btn btnshow" onClick={onVote}>
+											<img src={VoteIcon} alt="VoteLogo" />&nbsp;Go to vote page
+										</button>
+									</div>
+								</div>
 							</CardBody>
 						</Card>
 					</div>

@@ -137,9 +137,9 @@ export const useSortedCrvPoolKeys = (field: string, order: number): string[] => 
 			field, order
 		));
 	} else if (field === 'deposit') {
-		return keys.sort((a, b) => sortCrvPool(deposits[a], deposits[b], field, order));
+		return keys.sort((a, b) => sortCrvPool(deposits[a] || ethers.constants.Zero, deposits[b] || ethers.constants.Zero, field, order));
 	} else if (field === 'tvl') {
-		return keys.sort((a, b) => sortCrvPool(tvls[a], tvls[b], field, order));
+		return keys.sort((a, b) => sortCrvPool(tvls[a] || ethers.constants.Zero, tvls[b] || ethers.constants.Zero, field, order));
 	}
 	return keys;
 }

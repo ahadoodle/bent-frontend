@@ -1806,7 +1806,7 @@ span.textadvance {
 button.approvebtn.btn.btn-secondary {
     width: 123px;
     height: 36px;
-    padding: 5px 5px 8px;
+    padding: 5px;
     font-size: 12.78px;
     line-height: 15px;
 }
