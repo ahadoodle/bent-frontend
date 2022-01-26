@@ -106,7 +106,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 											visible={index < 5 || showAll}
 										/>)
 								}
-								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} />
+								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} title="More Pools" />
 							</CardBody>
 						</Card>
 					</div>
