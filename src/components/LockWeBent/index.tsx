@@ -16,10 +16,10 @@ import {
 	useWeBentContract,
 	useWeBentTvl,
 	useWeBentLocked,
-	useTokenPrice,
 	useWeBentRatio,
 	useWeBentEarnedUsd,
 	useWeBentAvgApr,
+	useWeBentDepositsUsd,
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -36,7 +36,7 @@ export const LockWeBent = (): React.ReactElement => {
 	const weBentShare = useWeBentBalance();
 	const weBentBent = useWeBentLocked();
 	const weBentRatio = useWeBentRatio();
-	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
+	const depositUsd = useWeBentDepositsUsd();
 	const earnedUsd = useWeBentEarnedUsd();
 	const avgApr = useWeBentAvgApr();
 
@@ -122,7 +122,7 @@ export const LockWeBent = (): React.ReactElement => {
 										</span><br />
 										<b className="p-0">
 											<span className="small">$</span>
-											<DecimalSpan value={formatBigNumber(utils.parseEther(bentPrice.toString()).mul(weBentBent), 18 * 2, 2)} />
+											<DecimalSpan value={formatBigNumber(depositUsd, 18, 2)} />
 											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>

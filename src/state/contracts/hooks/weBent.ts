@@ -1,7 +1,9 @@
 import { useSelector } from 'react-redux';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { AppState } from '../../index';
 import { WeBentLockedData } from '../reducer';
+import { useTokenPrice } from '.';
+import { TOKENS } from 'constant';
 
 export const useWeBentAllowance = (): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.weBentAllowance || ethers.constants.Zero));
@@ -43,6 +45,12 @@ export const useWeBentRatio = (): number => {
 	const weBentTotalSupply = useWeBentTotalSupply();
 	const bentTotalStaked = useWeBentBentBalance();
 	return weBentTotalSupply.isZero() ? 0 : BigNumber.from(bentTotalStaked).mul(100).div(weBentTotalSupply).toNumber() / 100
+}
+
+export const useWeBentDepositsUsd = (): BigNumber => {
+	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
+	const weBentLocked = useWeBentLocked();
+	return utils.parseEther(bentPrice.toString()).mul(weBentLocked).div(BigNumber.from(10).pow(18));
 }
 
 export const useWeBentEarnedUsd = (): BigNumber => {

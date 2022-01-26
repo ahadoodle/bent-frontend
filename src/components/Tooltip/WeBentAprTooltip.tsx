@@ -9,6 +9,18 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 	const weBentApr = useWeBentApr();
 	const bentAprs = useWeBentRewardsAprs();
 
+	const bentCvxApr = () => {
+		return bentAprs[TOKENS.BENTCVX.ADDR.toLowerCase()];
+	}
+
+	const extraApr = () => {
+		let apr = 0;
+		POOLS.weBENT.RewardAssets.forEach(key => {
+			apr += key === 'BENTCVX' ? 0 : bentAprs[TOKENS[key].ADDR.toLowerCase()];
+		})
+		return apr;
+	}
+
 	return (
 		<UncontrolledTooltip target='webent-apr-info' className="bent-details" placement="bottom">
 			<div style={{ padding: 15, lineHeight: '18px' }}>
@@ -20,11 +32,8 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 				</Row>
 				APR breakdown:<br />
 				- weBENT APR: {utils.commify(weBentApr)}%<br />
-				{POOLS.weBENT.RewardAssets.map(key =>
-					<>
-						- {TOKENS[key].SYMBOL} APR: {utils.commify(bentAprs[TOKENS[key].ADDR.toLowerCase()])}%
-					</>
-				)}
+				- bentCVX APR: {utils.commify(bentCvxApr())}%<br />
+				- Extras APR: {utils.commify(extraApr())}%<br />
 			</div>
 		</UncontrolledTooltip>
 	)
