@@ -172,6 +172,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									<Button
 										className="claimbtn"
 										onClick={onHarvest}
+										style={{ width: 100 }}
 									>Harvest</Button>
 									: 'TBC')}
 						</b>

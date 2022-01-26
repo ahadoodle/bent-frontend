@@ -163,9 +163,8 @@ export const LockWeBent = (): React.ReactElement => {
 															<Card body>
 																<CardText className="mt-0">
 																	Lock <b>BENT</b> for 8 weeks to receive a share in the <b>weBENT</b> pool.<br />
-																	Your claim on the <b>BENT</b> in the pool automatically increases by buying <b>BENT</b> at market using platform fees,
-																	then depositing into the pool, which means the <b>BENT</b> to <b>weBENT</b> ratio increases over time.<br /><br />
-																	<b>weBENT</b> also has voting rights for proposals and gauge weight voting Bents vlCVX.
+																	Your claim on the <b>BENT</b> in the pool automatically increases from platform fees, which over time increases the <b>BENT</b> to <b>weBENT</b> ratio.<br /><br />
+																	<b>weBENT</b> also has voting rights for proposals and gauge weight voting using Bents vlCVX.
 																</CardText>
 															</Card>
 														</Col>
