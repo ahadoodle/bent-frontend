@@ -73,12 +73,12 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	return (
-		<Container className={`stake-bent ${bentStaked.isZero() ? 'd-none' : ''}`}>
+		<Container className={`stake-bent ${bentStaked.isZero() ? '' : ''}`}>
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
 						<h2 className="section-header">
-							Stake your BENT
+							Stake your BENT (closed pool)
 						</h2>
 						<div className="toggleWrap tokentable table">
 							<Row className="align-items-center thead">
@@ -158,7 +158,7 @@ export const StakeBent = (): React.ReactElement => {
 														<Col sm="6" className="inverse">
 															<Card body>
 																<CardText className="mt-0">
-																	Stake your <b>BENT</b> to vote on Convex & earn a portion of the platforms earnings in:
+																	This pool has migrated to <b>weBENT</b>, please withdraw and re-stake.
 																</CardText>
 																<div className="bent-rewards-container mb-4">
 																	{POOLS.BentStaking.RewardAssets.map(key =>
