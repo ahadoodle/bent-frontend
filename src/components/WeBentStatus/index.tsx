@@ -74,4 +74,5 @@ const StatusContainer = styled.div<{ theme: Theme }>`
 const StatusButton = styled(Button)`
 	min-width: 185px;
 	width: max-content !important;
+	background: transparent !important;
 `;
