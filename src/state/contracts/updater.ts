@@ -79,6 +79,7 @@ export default function Updater(): null {
 			const crvEarnedUsd: Record<string, BigNumber> = {};
 			const crvDepositedUsd: Record<string, BigNumber> = {};
 			const crvProjectedApr: Record<string, CrvApy> = {};
+			const crvEndRewardBlock: Record<string, BigNumber> = {};
 
 			const sushiTvl: Record<string, BigNumber> = {};
 			const sushiApr: Record<string, number> = {};
@@ -411,7 +412,6 @@ export default function Updater(): null {
 				const bentCvxChefTotalAllocPoint = {};
 				const bentCvxChefRewardPerBlock = {};
 				const bentCvxChefPoolInfo = {};
-				const endRewardBlock = {};
 				const cvxPoolRewardRate = {};
 				const cvxPoolRewardToken = {};
 				const cvxPoolTotalSupply = {};
@@ -441,7 +441,7 @@ export default function Updater(): null {
 							results[startIndex++],
 							results[startIndex++]
 						];
-						endRewardBlock[poolKey] = results[startIndex++];
+						crvEndRewardBlock[poolKey] = results[startIndex++];
 						cvxPoolRewardRate[poolKey] = results[startIndex++];
 						cvxPoolRewardToken[poolKey] = results[startIndex++];
 						cvxPoolTotalSupply[poolKey] = results[startIndex++];
@@ -496,7 +496,7 @@ export default function Updater(): null {
 								.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
 						crvApr[poolKey] = apr;
 					} else {
-						if (blockNumber > BigNumber.from(endRewardBlock[poolKey]).toNumber()) {
+						if (blockNumber > BigNumber.from(crvEndRewardBlock[poolKey]).toNumber()) {
 							crvApr[poolKey] = 0;
 							return;
 						}
@@ -570,6 +570,7 @@ export default function Updater(): null {
 					crvLpAllowance,
 					crvApr,
 					crvProjectedApr,
+					crvEndRewardBlock,
 					sushiApr,
 					sushiDepositedUsd,
 					sushiEarnedUsd,

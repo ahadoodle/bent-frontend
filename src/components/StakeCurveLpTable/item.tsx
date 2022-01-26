@@ -24,6 +24,8 @@ import {
 	useCrvTvl,
 	useERC20Contract,
 	useCrvProjectedApr,
+	useCrvEndRewardBlock,
+	useBlockNumber,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -55,6 +57,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const projectedApr = useCrvProjectedApr(props.poolKey);
 	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
+	const endRewardBlock = useCrvEndRewardBlock(props.poolKey);
+	const blockNumber = useBlockNumber();
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -120,6 +124,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		}
 	}
 
+	const onHarvest = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		await bentPool.connect(signer).harvestFromConvex();
+	}
+
 	return (
 		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
@@ -158,7 +168,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 										hasExtra={props.poolInfo.RewardsAssets.length > 3}
 										extraSymbol={props.poolInfo.RewardsAssets[props.poolInfo.RewardsAssets.length - 1]}
 									/>
-								</> : 'TBC'}
+								</> : (endRewardBlock.toNumber() < blockNumber ?
+									<Button
+										className="claimbtn"
+										onClick={onHarvest}
+									>Harvest</Button>
+									: 'TBC')}
 						</b>
 					</Col>
 					<Col>

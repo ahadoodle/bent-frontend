@@ -75,6 +75,10 @@ export const useCrvPoolRewards = (poolKey: string): BigNumber[] => {
 	return useSelector((state: AppState) => state.contracts.crvPoolRewards ? state.contracts.crvPoolRewards[poolKey] ?? [] : []);
 }
 
+export function useCrvEndRewardBlock(poolKey: string): BigNumber {
+	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvEndRewardBlock[poolKey] || ethers.constants.Zero));
+}
+
 export const usePoolAllowance = (poolKey: string): BigNumber => {
 	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvLpAllowance[poolKey] || ethers.constants.Zero));
 }
