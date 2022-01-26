@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import {
-	Container, Button, Row, Col
+	Container, Button, Row, Col, UncontrolledTooltip
 } from "reactstrap";
 import { useTheme, useTokenPrice, useVlCvxBalance, useWeBentAvgApr, useWeBentBentBalance } from "hooks";
 import { Theme } from "state/application/reducer";
@@ -45,15 +45,20 @@ export const WeBentStatus = (): React.ReactElement => {
 						<div className="divider-left p-0"></div>
 						<StatusButton
 							className="approvebtn px-5"
-							disabled={true}
+							id="webent-status-voting-power"
 						>1 weBENT = {votingPower()} vlCVX</StatusButton>
+						<UncontrolledTooltip
+							target="webent-status-voting-power"
+							className="bent-details p-3"
+							placement="bottom"
+						>
+							<div style={{ padding: 15, lineHeight: '10px', textAlign: 'center' }}>weBENT Voting Power</div>
+						</UncontrolledTooltip>
 						<StatusButton
 							className="approvebtn px-4"
-							disabled={true}
 						>{formatBigNumber(bentTotalStaked, 18, 2)} BENT Locked</StatusButton>
 						<StatusButton
 							className="approvebtn px-4"
-							disabled={true}
 						>{avgApr ? utils.commify(avgApr) : 'TBC'} % APR</StatusButton>
 					</StatusContainer>
 				</Col>
@@ -75,4 +80,7 @@ const StatusButton = styled(Button)`
 	min-width: 185px;
 	width: max-content !important;
 	background: transparent !important;
+	border: 2px solid #9BA2AC !important;
+	color: #FAFAFA !important;
+	opacity: .65;
 `;
