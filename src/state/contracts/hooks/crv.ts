@@ -10,7 +10,7 @@ export function useCrvTvls(): Record<string, BigNumber> {
 }
 
 export function useCrvTvl(poolKey: string): BigNumber {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvTvl[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.crvTvl ? BigNumber.from(state.contracts.crvTvl[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const useCrvTotalTvl = (): BigNumber => {
@@ -59,7 +59,7 @@ export const useCrvAverageApr = (): number => {
 }
 
 export const useCrvDeposit = (poolKey: string): BigNumber => {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvDeposit[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.crvDeposit ? BigNumber.from(state.contracts.crvDeposit[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const useHasLegacyCrvDeposit = (): boolean => {
@@ -76,11 +76,11 @@ export const useCrvPoolRewards = (poolKey: string): BigNumber[] => {
 }
 
 export function useCrvEndRewardBlock(poolKey: string): BigNumber {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvEndRewardBlock[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.crvEndRewardBlock ? BigNumber.from(state.contracts.crvEndRewardBlock[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const usePoolAllowance = (poolKey: string): BigNumber => {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvLpAllowance[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.crvLpAllowance ? BigNumber.from(state.contracts.crvLpAllowance[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const useCrvPoolEarnedUsd = (poolKey: string): BigNumber => {
