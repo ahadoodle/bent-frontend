@@ -19,6 +19,11 @@ export const WeBentStatus = (): React.ReactElement => {
 	const avgApr = useWeBentAvgApr();
 	const history = useHistory();
 
+	const votingPower = () => {
+		const bentTvl = utils.parseEther(bentPrice.toString()).mul(bentTotalStaked).div(BigNumber.from(10).pow(18));
+		return bentTvl.isZero() ? 0 : utils.commify(((utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(16)).div(bentTvl)).toNumber() / 100).toFixed(2))
+	}
+
 	const onBent = () => {
 		history.push('/lock');
 	}
@@ -41,11 +46,7 @@ export const WeBentStatus = (): React.ReactElement => {
 						<StatusButton
 							className="approvebtn px-5"
 							disabled={true}
-						>1 weBENT = {
-								utils.commify(((utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(16)).div(
-									utils.parseEther(bentPrice.toString()).mul(bentTotalStaked).div(BigNumber.from(10).pow(18))
-								)).toNumber() / 100).toFixed(2))
-							} vlCVX</StatusButton>
+						>1 weBENT = {votingPower()} vlCVX</StatusButton>
 						<StatusButton
 							className="approvebtn px-4"
 							disabled={true}
