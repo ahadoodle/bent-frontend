@@ -1,12 +1,12 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import CardCoin from "assets/images/cardCoin.png";
-import DollorIcon from "assets/images/dollorIcon.png";
 import ClaimIcon from "assets/images/claimIcon.svg";
+import DollorIcon from "assets/images/dollorIcon.png";
 import DepositIcon from "assets/images/depositIcon.svg";
+import LockIcon from "assets/images/lockIcon.svg";
 import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useIsMobile, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl, useWeBentDepositsUsd, useWeBentEarnedUsd, useWeBentTvl } from "hooks";
 import { formatBigNumber } from "utils";
-import LockIcon from "assets/images/lockIcon.svg";
 
 const BannerBlocks = (): React.ReactElement => {
   const crvEarnings = useCrvPoolTotalEarned();
