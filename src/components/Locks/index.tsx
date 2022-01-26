@@ -69,7 +69,7 @@ export const MyLocksTable = (): React.ReactElement => {
 								<div className={`innerWrap p-0 rounded`} >
 									<div className="text-center btnwrap">
 										<button className="btn btnshow" onClick={onVote}>
-											<img src={VoteIcon} />&nbsp;Go to vote page
+											<img src={VoteIcon} alt="VoteLogo" />&nbsp;Go to vote page
 										</button>
 									</div>
 								</div>
