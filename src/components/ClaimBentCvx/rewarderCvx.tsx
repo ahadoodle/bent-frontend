@@ -126,7 +126,7 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 											tokenKey={key}
 											apr={rewardAprs[index] || 0}
 											rewardUsd={rewardsUsd ? BigNumber.from(rewardsUsd[index] || ethers.constants.Zero) : ethers.constants.Zero}
-											reward={rewards ? BigNumber.from(rewards[index] || ethers.constants.Zero) : ethers.constants.Zero}
+											reward={rewards ? BigNumber.from(rewards[props.poolInfo.ClaimIndex[index]] || ethers.constants.Zero) : ethers.constants.Zero}
 											checked={claimChecked[props.poolInfo.ClaimIndex[index]] || false}
 											onChange={onClaimCheckChange}
 										/>

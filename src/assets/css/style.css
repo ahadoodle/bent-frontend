@@ -592,7 +592,7 @@ p.copyright {
     min-width: 1px;
     padding-left: 30px;
     padding-right: 30px;
-    border-left: 3px solid #414C5C;
+    border-left: 2px solid #414C5C;
 }
 .converttabs .divider-left {
     padding-left: 30px;
@@ -800,6 +800,23 @@ button.btn.btnshow i {
 .Dark .amountinput input {
     border: 3px solid #fff;
     background-color: transparent;
+}
+button.transBtn {
+    box-shadow: 2px 2px 0px 0px #c1ffd7;
+    background: transparent;
+    border: 2px solid #C1FFD7;
+    color: #C1FFD7;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 15px;
+    text-align: center;
+    letter-spacing: -0.24px;
+}
+button.transBtn:hover {
+    color: #C1FFD7;
+    background: transparent;
+    border: 2px solid #C1FFD7;
 }
 .Dark button.maxbtn {
     box-shadow: 2px 2px 0px 0px #c1ffd7;
