@@ -28,6 +28,7 @@ interface Props {
 	poolInfo: {
 		Pool: string,
 		RewardsAssets: string[],
+		ClaimIndex: number[],
 	}
 	onClaimCheckChange: (key, indexes) => void
 }
@@ -45,10 +46,9 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 
 	const onClaimCheckChange = (index: number, add: boolean) => {
 		if (!add) setCheckAll(false);
-		claimChecked[index] = add;
+		claimChecked[props.poolInfo.ClaimIndex[index]] = add;
 		setClaimChecked(Object.assign({}, claimChecked));
 		if (Object.keys(claimChecked).filter(key => claimChecked[key]).length === props.poolInfo.RewardsAssets.length) {
-
 			setCheckAll(true);
 		}
 		props.onClaimCheckChange(props.poolKey, claimChecked);
@@ -56,7 +56,7 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 
 	const onCheckAll = () => {
 		props.poolInfo.RewardsAssets.forEach((key, index) => {
-			claimChecked[index] = !checkAll;
+			claimChecked[props.poolInfo.ClaimIndex[index]] = !checkAll;
 		})
 		setClaimChecked(Object.assign({}, claimChecked));
 		setCheckAll(!checkAll);
@@ -127,7 +127,7 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 											apr={rewardAprs[index] || 0}
 											rewardUsd={rewardsUsd ? BigNumber.from(rewardsUsd[index] || ethers.constants.Zero) : ethers.constants.Zero}
 											reward={rewards ? BigNumber.from(rewards[index] || ethers.constants.Zero) : ethers.constants.Zero}
-											checked={claimChecked[index] || false}
+											checked={claimChecked[props.poolInfo.ClaimIndex[index]] || false}
 											onChange={onClaimCheckChange}
 										/>
 									)}
