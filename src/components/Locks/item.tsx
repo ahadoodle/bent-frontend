@@ -42,10 +42,18 @@ export const MyLockItem = (props: Props): React.ReactElement => {
 
 	const remaining = () => {
 		const oneDay = 60 * 60 * 24;
-		const days = Math.floor((lockDuration.add(props.lockedData.unlockAt).toNumber() - Date.now() / 1000) / oneDay);
-		const week = days >= 7 ? `${(Math.floor(days / 7))} week${days / 7 >= 2 ? 's  ' : '  '}` : '';
-		const day = days % 7 === 0 ? '' : `${days % 7} day${days % 7 > 1 ? 's' : ''}`;
-		return week + day;
+		const seconds = Math.floor(lockDuration.add(props.lockedData.unlockAt).toNumber() - Date.now() / 1000);
+		const days = Math.floor(seconds / oneDay);
+		if (days >= 1) {
+			const week = days >= 7 ? `${(Math.floor(days / 7))} week${days / 7 >= 2 ? 's  ' : '  '}` : '';
+			const day = days % 7 === 0 ? '' : `${days % 7} day${days % 7 > 1 ? 's' : ''}`;
+			return week + day;
+		} else {
+			const minutes = Math.floor(seconds / 60);
+			const hour = minutes >= 60 ? `${Math.floor(minutes / 60)} hour${minutes / 60 >= 2 ? 's ' : ' '}` : '';
+			const minute = minutes % 60 === 0 ? '' : `${minutes % 60} min${minutes % 60 > 1 ? 's' : ''}`;
+			return hour + minute;
+		}
 	}
 
 	return (
