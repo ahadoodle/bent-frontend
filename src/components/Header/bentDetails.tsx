@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Col, Row, Tooltip } from "reactstrap";
-import { useTokenPrice, useBentCirculatingSupply, useBentTotalStaked, useVlCvxBalance } from "hooks";
+import { useTokenPrice, useBentCirculatingSupply, useWeBentBentBalance, useVlCvxBalance, useVotingPower } from "hooks";
 import { TOKENS } from "constant";
 import { formatMillionsBigNumber, formatBigNumber } from "utils";
 import { utils, BigNumber } from "ethers";
@@ -15,8 +15,9 @@ export const BentPowerToolTip = (props: Props): React.ReactElement => {
 	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
 	const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);
 	const bentCirculatingSupply = useBentCirculatingSupply();
-	const bentStaked = useBentTotalStaked();
+	const bentStaked = useWeBentBentBalance();
 	const vlCvxBalance = useVlCvxBalance();
+	const votingPower = useVotingPower();
 
 	return (
 		<Tooltip className="bent-details" target={props.target} isOpen={props.show}>
@@ -63,11 +64,7 @@ export const BentPowerToolTip = (props: Props): React.ReactElement => {
 				<Row>
 					<Col md="5"><b>Voting Power</b></Col>
 					<Col md="7" className="text-right">
-						$1 Staked BENT = ${
-							bentStaked.isZero() ? '--' :
-								((utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance).div(BigNumber.from(10).pow(16)).div(
-									utils.parseEther(bentPrice.toString()).mul(bentStaked).div(BigNumber.from(10).pow(18))
-								)).toNumber() / 100).toFixed(2)} vlCVX
+						1 weBENT = {votingPower} vlCVX
 					</Col>
 				</Row>
 			</VotingPowerContainer>

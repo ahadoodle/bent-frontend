@@ -365,7 +365,8 @@ export default function Updater(): null {
 				POOLS.BentCvxStaking.BentCvxRewarderCvx.RewardsAssets.forEach((tokenKey, index) => {
 					const tokenPrice = tokenPrices[TOKENS[tokenKey].ADDR.toLowerCase()];
 					const rewardUsd = utils.parseEther(tokenPrice.toString())
-						.mul(bentCvxRewards['CVX'][index]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS[tokenKey].ADDR)));
+						.mul(bentCvxRewards['CVX'][POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex[index]])
+						.div(BigNumber.from(10).pow(getTokenDecimals(TOKENS[tokenKey].ADDR)));
 					bentCvxEarned['CVX'] = bentCvxEarned['CVX'].add(rewardUsd);
 					if (!bentCvxRewardsUsd['CVX']) bentCvxRewardsUsd['CVX'] = [];
 					bentCvxRewardsUsd['CVX'].push(rewardUsd);

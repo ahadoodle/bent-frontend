@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { BigNumber, ethers, utils } from 'ethers';
 import { AppState } from '../../index';
 import { WeBentLockedData } from '../reducer';
-import { useTokenPrice } from '.';
+import { useTokenPrice, useVlCvxBalance } from '.';
 import { TOKENS } from 'constant';
 
 export const useWeBentAllowance = (): BigNumber => {
@@ -79,4 +79,17 @@ export const useWeBentRewards = (): Record<string, BigNumber> => {
 
 export const useWeBentRewardsUsd = (): Record<string, BigNumber> => {
 	return useSelector((state: AppState) => state.contracts.weBentRewardsUsd || {});
+}
+
+export const useVotingPower = (): number => {
+	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
+	const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);
+	const vlCvxBalance = useVlCvxBalance();
+	const bentTotalStaked = useWeBentBentBalance();
+	const bentTvl = utils.parseEther(bentPrice.toString()).mul(bentTotalStaked).div(BigNumber.from(10).pow(18));
+	return bentTvl.isZero() ? 0 :
+		parseFloat(utils.commify(((
+			utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance)
+				.div(BigNumber.from(10).pow(16)).div(bentTvl)
+		).toNumber() / 100).toFixed(2)))
 }
