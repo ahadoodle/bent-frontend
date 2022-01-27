@@ -73,7 +73,7 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	return (
-		<Container className={`stake-bent ${bentStaked.isZero() ? '' : ''}`}>
+		<Container className={`stake-bent ${bentStaked.isZero() ? 'd-none' : ''}`}>
 			<Row>
 				<Col md="12">
 					<div className="convert-up">
