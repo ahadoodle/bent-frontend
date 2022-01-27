@@ -37,7 +37,7 @@ export const WeBentStatus = (): React.ReactElement => {
 						<StatusButton
 							className="approvebtn px-5"
 							id="webent-status-voting-power"
-						>1 weBENT = {votingPower} vlCVX votes</StatusButton>
+						>1 weBENT = {votingPower} vlCVX</StatusButton>
 						<UncontrolledTooltip
 							target="webent-status-voting-power"
 							className="bent-details p-3"
