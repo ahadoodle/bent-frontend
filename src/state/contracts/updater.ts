@@ -483,8 +483,10 @@ export default function Updater(): null {
 							// STETH Pool
 							tvl = getTokenPrice(tokenPrices, 'ETH').mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
 							crvDepositedUsd[poolKey] = getTokenPrice(tokenPrices, 'ETH').mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
-						}
-						else {
+						} else if (poolKey === 'THREEPOOL') {
+							tvl = getTokenPrice(tokenPrices, TOKENS.CURVE3.ADDR).mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
+							crvDepositedUsd[poolKey] = getTokenPrice(tokenPrices, TOKENS.CURVE3.ADDR).mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
+						} else {
 							if (!poolData) return;
 							tvl = utils.parseEther(poolData.usdTotal.toString()).mul(crvPoolLpBalances[poolKey]).div(poolData.totalSupply);
 							crvDepositedUsd[poolKey] = utils.parseEther(poolData.usdTotal.toString()).mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);

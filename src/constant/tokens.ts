@@ -35,7 +35,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		DECIMALS: 18,
 	},
 	CURVE3: {
-		LOGO: '',
+		LOGO: TOKEN_LOGO.CVX,
 		ADDR: '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490',
 		DECIMALS: 18,
 	},
