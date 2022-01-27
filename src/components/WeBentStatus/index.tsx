@@ -35,7 +35,7 @@ export const WeBentStatus = (): React.ReactElement => {
 							onClick={() => onBent()}
 						>BENT to weBENT</Button>
 						<StatusButton
-							className="approvebtn px-5"
+							className="px-5"
 							id="webent-status-voting-power"
 						>1 weBENT = {votingPower} vlCVX</StatusButton>
 						<UncontrolledTooltip
@@ -47,11 +47,12 @@ export const WeBentStatus = (): React.ReactElement => {
 						</UncontrolledTooltip>
 						<div className="divider-left p-0"></div>
 						<StatusButton
-							className="approvebtn px-4"
+							className="px-4"
 						>{formatBigNumber(bentTotalStaked, 18, 2)} BENT Locked</StatusButton>
 						<div className="divider-left p-0"></div>
 						<StatusButton
-							className="approvebtn px-4"
+							className="px-4"
+							style={{ color: '#C1FFD7 !important' }}
 						>{avgApr ? utils.commify(avgApr) : 'TBC'} % APR</StatusButton>
 					</StatusContainer>
 				</Col>
@@ -78,10 +79,10 @@ const StatusButton = styled.div`
 	text-align: center;
 	letter-spacing: -0.24px;
 	min-width: 185px;
-	width: max-content !important;
-	background: transparent !important;
-	border: none !important;
-	color: white !important;
+	width: max-content;
+	background: transparent;
+	border: none;
+	color: white;
 	height: 42px;
 	padding: 13px;
 `;
