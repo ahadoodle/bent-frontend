@@ -27,7 +27,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.BENTCVX,
 		ADDR: '0x9e0441e084f5db0606565737158aa6ab6b970fe0',
 		DECIMALS: 18,
-		SYMBOL: 'bentCvx'
+		SYMBOL: 'bentCVX'
 	},
 	CRV: {
 		LOGO: TOKEN_LOGO.CRV,
@@ -43,6 +43,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.CVX,
 		ADDR: '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B',
 		DECIMALS: 18,
+		SYMBOL: 'CVX'
 	},
 	CVXCRV: {
 		LOGO: TOKEN_LOGO.CRV,
@@ -75,6 +76,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.FXS,
 		ADDR: '0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0',
 		DECIMALS: 18,
+		SYMBOL: 'FXS'
 	},
 	LDO: {
 		LOGO: TOKEN_LOGO.LDO,
@@ -108,6 +110,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.SPELL,
 		ADDR: '0x090185f2135308BaD17527004364eBcC2D37e5F6',
 		DECIMALS: 18,
+		SYMBOL: 'SPELL'
 	},
 	STETH: {
 		LOGO: TOKEN_LOGO.STETH,

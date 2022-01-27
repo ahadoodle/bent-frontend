@@ -22,7 +22,7 @@ import {
 import { BigNumber, ethers, utils } from 'ethers';
 import { BentPool, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
-import { CvxProjectedAprTooltip } from "components/CvxProjectedAprTooltip";
+import { CvxProjectedAprTooltip } from "components/Tooltip";
 
 interface Props {
 	poolInfo: BentPool

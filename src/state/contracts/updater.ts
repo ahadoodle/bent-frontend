@@ -27,11 +27,13 @@ import {
 	getMultiCvxToken,
 	getCrvApys,
 	getSushiTradingVolume,
+	getMultiweBent,
+	getWeBentApr,
 } from 'utils';
 import {
 	updateContractInfo,
 } from './actions';
-import { BentPoolReward, CrvApy } from './reducer';
+import { BentPoolReward, CrvApy, WeBentLockedData } from './reducer';
 
 export default function Updater(): null {
 	const dispatch = useDispatch();
@@ -55,7 +57,15 @@ export default function Updater(): null {
 			getCrvFactoryInfo(),
 			getCrvCryptoFactoryInfo(),
 			getSushiTradingVolume(),
-		]).then(([tokenPrices, bentCirculatingSupply, crvPoolsInfo, crvCryptoPoolsInfo, bentTradingVolume]) => {
+			getWeBentApr(),
+		]).then(([
+			tokenPrices,
+			bentCirculatingSupply,
+			crvPoolsInfo,
+			crvCryptoPoolsInfo,
+			bentTradingVolume,
+			weBentApr,
+		]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
 			const balances: Record<string, BigNumber> = {};
@@ -69,6 +79,7 @@ export default function Updater(): null {
 			const crvEarnedUsd: Record<string, BigNumber> = {};
 			const crvDepositedUsd: Record<string, BigNumber> = {};
 			const crvProjectedApr: Record<string, CrvApy> = {};
+			const crvEndRewardBlock: Record<string, BigNumber> = {};
 
 			const sushiTvl: Record<string, BigNumber> = {};
 			const sushiApr: Record<string, number> = {};
@@ -76,6 +87,21 @@ export default function Updater(): null {
 			const sushiDepositedUsd: Record<string, BigNumber> = {};
 			const sushiEarnedUsd: Record<string, BigNumber> = {};
 			const sushiRewards: Record<string, BigNumber> = {};
+
+			let weBentAllowance: BigNumber = ethers.constants.Zero;
+			let weBentBalance: BigNumber = ethers.constants.Zero;
+			let weBentLocked: BigNumber = ethers.constants.Zero;
+			let weBentTotalSupply: BigNumber = ethers.constants.Zero;
+			let weBentBentBalance: BigNumber = ethers.constants.Zero;
+			let weBentTvl: BigNumber = ethers.constants.Zero;
+			let weBentLockedData: WeBentLockedData[] = [];
+			let weBentUnlockable: BigNumber = ethers.constants.Zero;
+			let weBentLockDuration: BigNumber = ethers.constants.Zero;
+			let weBentAvgApr = 0;
+			let weBentEarnedUsd: BigNumber = ethers.constants.Zero;
+			const weBentAprs: Record<string, number> = {};
+			const weBentRewards: Record<string, BigNumber> = {};
+			const weBentRewardsUsd: Record<string, BigNumber> = {};
 
 			let bentStaked: BigNumber = ethers.constants.Zero;
 			let bentStakedUsd: BigNumber = ethers.constants.Zero;
@@ -109,6 +135,22 @@ export default function Updater(): null {
 			const vlCvxLocker = getMultiCvxLocker();
 			contractCalls.push(vlCvxLocker.lockedBalanceOf(POOLS.Multisig))
 
+			// Add weBent contract calls
+			const bentToken = getMultiERC20Contract(TOKENS['BENT'].ADDR);
+			const weBentMC = getMultiweBent();
+			contractCalls.push(bentToken.allowance(accAddr, POOLS.weBENT.Addr));
+			contractCalls.push(weBentMC.balanceOf(accAddr));
+			contractCalls.push(weBentMC.bentBalanceOf(accAddr));
+			contractCalls.push(weBentMC.totalSupply());
+			contractCalls.push(bentToken.balanceOf(POOLS.weBENT.Addr));
+			contractCalls.push(weBentMC.lockedBalances(accAddr));
+			contractCalls.push(weBentMC.lockDurationInEpoch());
+			contractCalls.push(weBentMC.epochLength());
+			contractCalls.push(weBentMC.pendingReward(accAddr));
+			POOLS.weBENT.RewardAssets.forEach((rewardToken, index) => {
+				contractCalls.push(weBentMC.rewardPools(index));
+			})
+
 			// Add Sushi contract calls
 			const bentMasterChefMC = getMultiBentMasterChef(POOLS.SushiPools.MasterChef);
 			contractCalls.push(bentMasterChefMC.rewardPerBlock());
@@ -127,7 +169,6 @@ export default function Updater(): null {
 			});
 
 			// Add Bent Single Staking Calls
-			const bentToken = getMultiERC20Contract(TOKENS['BENT'].ADDR);
 			const bentSingleStaking = getMultiBentSingleStaking(POOLS.BentStaking.POOL);
 			contractCalls.push(bentToken.balanceOf(accAddr));
 			contractCalls.push(bentToken.allowance(accAddr, POOLS.BentStaking.POOL));
@@ -212,6 +253,36 @@ export default function Updater(): null {
 
 				vlCvxBalance = results[startIndex++];
 
+				// Update weBent Info
+				weBentAllowance = results[startIndex++];
+				weBentBalance = results[startIndex++];
+				weBentLocked = results[startIndex++];
+				weBentTotalSupply = results[startIndex++];
+				weBentBentBalance = results[startIndex++];
+				weBentTvl = bentPriceBN.mul(weBentBentBalance).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
+				const weBentLockedBalances = results[startIndex++];
+				weBentLockedData = weBentLockedBalances.lockData;
+				weBentUnlockable = weBentLockedBalances.unlockable;
+				weBentLockDuration = BigNumber.from(results[startIndex++]).sub(1).mul(results[startIndex++]);
+				const weBentPendingRewards = results[startIndex++];
+				let weBentTokenRewardsUsd = ethers.constants.Zero;
+				POOLS.weBENT.RewardAssets.forEach((rewardToken, index) => {
+					const rewardsInfo = results[startIndex++];
+					const tokenAddr = TOKENS[rewardToken].ADDR.toLowerCase();
+					const tokenPrice = tokenAddr === TOKENS.BENTCVX.ADDR.toLowerCase() ? bentPrice : tokenPrices[rewardsInfo.rewardToken.toLowerCase()];
+					const rewardUsd = getAnnualReward(rewardsInfo.rewardRate, rewardsInfo.rewardToken, tokenPrice);
+					weBentAprs[tokenAddr] = (weBentTvl.isZero() ? 0 : rewardUsd.mul(10000).div(weBentTvl).toNumber()) / 100;
+					weBentTokenRewardsUsd = weBentTokenRewardsUsd.add(rewardUsd);
+
+					const earnedUsd = utils.parseEther(tokenPrice.toString()).mul(weBentPendingRewards[index])
+						.div(BigNumber.from(10).pow(getTokenDecimals(tokenAddr)));
+					weBentEarnedUsd = weBentEarnedUsd.add(earnedUsd);
+					weBentRewardsUsd[tokenAddr] = earnedUsd;
+					weBentRewards[tokenAddr] = weBentPendingRewards[index];
+				})
+				weBentAvgApr = (weBentTvl.isZero() ? 0 : weBentTokenRewardsUsd.mul(10000).div(weBentTvl).toNumber()) / 100 + weBentApr;
+				weBentAvgApr = parseFloat(weBentAvgApr.toFixed(2));
+
 				// Update Sushi Pool Infos
 				const rewardPerBlock = results[startIndex++];
 				const totalAllocPoint = results[startIndex++];
@@ -294,7 +365,8 @@ export default function Updater(): null {
 				POOLS.BentCvxStaking.BentCvxRewarderCvx.RewardsAssets.forEach((tokenKey, index) => {
 					const tokenPrice = tokenPrices[TOKENS[tokenKey].ADDR.toLowerCase()];
 					const rewardUsd = utils.parseEther(tokenPrice.toString())
-						.mul(bentCvxRewards['CVX'][index]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS[tokenKey].ADDR)));
+						.mul(bentCvxRewards['CVX'][POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex[index]])
+						.div(BigNumber.from(10).pow(getTokenDecimals(TOKENS[tokenKey].ADDR)));
 					bentCvxEarned['CVX'] = bentCvxEarned['CVX'].add(rewardUsd);
 					if (!bentCvxRewardsUsd['CVX']) bentCvxRewardsUsd['CVX'] = [];
 					bentCvxRewardsUsd['CVX'].push(rewardUsd);
@@ -341,7 +413,6 @@ export default function Updater(): null {
 				const bentCvxChefTotalAllocPoint = {};
 				const bentCvxChefRewardPerBlock = {};
 				const bentCvxChefPoolInfo = {};
-				const endRewardBlock = {};
 				const cvxPoolRewardRate = {};
 				const cvxPoolRewardToken = {};
 				const cvxPoolTotalSupply = {};
@@ -371,7 +442,7 @@ export default function Updater(): null {
 							results[startIndex++],
 							results[startIndex++]
 						];
-						endRewardBlock[poolKey] = results[startIndex++];
+						crvEndRewardBlock[poolKey] = results[startIndex++];
 						cvxPoolRewardRate[poolKey] = results[startIndex++];
 						cvxPoolRewardToken[poolKey] = results[startIndex++];
 						cvxPoolTotalSupply[poolKey] = results[startIndex++];
@@ -426,7 +497,7 @@ export default function Updater(): null {
 								.div(tvl).div(BigNumber.from(10).pow(18)).toNumber() / 100;
 						crvApr[poolKey] = apr;
 					} else {
-						if (blockNumber > BigNumber.from(endRewardBlock[poolKey]).toNumber()) {
+						if (blockNumber > BigNumber.from(crvEndRewardBlock[poolKey]).toNumber()) {
 							crvApr[poolKey] = 0;
 							return;
 						}
@@ -500,6 +571,7 @@ export default function Updater(): null {
 					crvLpAllowance,
 					crvApr,
 					crvProjectedApr,
+					crvEndRewardBlock,
 					sushiApr,
 					sushiDepositedUsd,
 					sushiEarnedUsd,
@@ -518,6 +590,22 @@ export default function Updater(): null {
 					bentCvxAprs,
 					bentCvxPoolAprs,
 					bentCvxAvgApr,
+					// weBent
+					weBentAllowance,
+					weBentBalance,
+					weBentLocked,
+					weBentTotalSupply,
+					weBentBentBalance,
+					weBentTvl,
+					weBentLockedData,
+					weBentUnlockable,
+					weBentLockDuration,
+					weBentEarnedUsd,
+					weBentAprs,
+					weBentAvgApr,
+					weBentRewards,
+					weBentRewardsUsd,
+					weBentApr,
 				}));
 			})
 		})

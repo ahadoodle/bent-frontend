@@ -10,7 +10,7 @@ export function useCrvTvls(): Record<string, BigNumber> {
 }
 
 export function useCrvTvl(poolKey: string): BigNumber {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvTvl[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.crvTvl ? BigNumber.from(state.contracts.crvTvl[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const useCrvTotalTvl = (): BigNumber => {
@@ -59,7 +59,7 @@ export const useCrvAverageApr = (): number => {
 }
 
 export const useCrvDeposit = (poolKey: string): BigNumber => {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvDeposit[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.crvDeposit ? BigNumber.from(state.contracts.crvDeposit[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const useHasLegacyCrvDeposit = (): boolean => {
@@ -75,8 +75,12 @@ export const useCrvPoolRewards = (poolKey: string): BigNumber[] => {
 	return useSelector((state: AppState) => state.contracts.crvPoolRewards ? state.contracts.crvPoolRewards[poolKey] ?? [] : []);
 }
 
+export function useCrvEndRewardBlock(poolKey: string): BigNumber {
+	return useSelector((state: AppState) => state.contracts.crvEndRewardBlock ? BigNumber.from(state.contracts.crvEndRewardBlock[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
+}
+
 export const usePoolAllowance = (poolKey: string): BigNumber => {
-	return useSelector((state: AppState) => BigNumber.from(state.contracts.crvLpAllowance[poolKey] || ethers.constants.Zero));
+	return useSelector((state: AppState) => state.contracts.crvLpAllowance ? BigNumber.from(state.contracts.crvLpAllowance[poolKey] || ethers.constants.Zero) : ethers.constants.Zero);
 }
 
 export const useCrvPoolEarnedUsd = (poolKey: string): BigNumber => {
@@ -133,9 +137,9 @@ export const useSortedCrvPoolKeys = (field: string, order: number): string[] => 
 			field, order
 		));
 	} else if (field === 'deposit') {
-		return keys.sort((a, b) => sortCrvPool(deposits[a], deposits[b], field, order));
+		return keys.sort((a, b) => sortCrvPool(deposits[a] || ethers.constants.Zero, deposits[b] || ethers.constants.Zero, field, order));
 	} else if (field === 'tvl') {
-		return keys.sort((a, b) => sortCrvPool(tvls[a], tvls[b], field, order));
+		return keys.sort((a, b) => sortCrvPool(tvls[a] || ethers.constants.Zero, tvls[b] || ethers.constants.Zero, field, order));
 	}
 	return keys;
 }

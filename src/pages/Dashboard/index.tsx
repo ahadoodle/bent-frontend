@@ -7,6 +7,7 @@ import { StakeBentCVX } from 'components/StakeBentCVX';
 import { StakeBent } from 'components/StakeBent';
 import { StakeSushiLpTable } from "components/StakeSushiLpTable";
 import BannerBlocks from "components/BannerBlocks";
+import { WeBentStatus } from "components/WeBentStatus";
 
 const Dashboard = () => {
   return (
@@ -21,7 +22,10 @@ const Dashboard = () => {
       </div>
 
       <div className="contentSection">
-        <StakeBent />
+        <WeBentStatus />
+        <div className="section">
+          <StakeBent />
+        </div>
         <div className="section">
           <StakeBentCVX />
         </div>

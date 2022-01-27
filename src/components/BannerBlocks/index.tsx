@@ -1,38 +1,41 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import CardCoin from "assets/images/cardCoin.png";
-import DollorIcon from "assets/images/dollorIcon.png";
 import ClaimIcon from "assets/images/claimIcon.svg";
+import DollorIcon from "assets/images/dollorIcon.png";
 import DepositIcon from "assets/images/depositIcon.svg";
-import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useIsMobile, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl } from "hooks";
-import { formatBigNumber } from "utils";
 import LockIcon from "assets/images/lockIcon.svg";
+import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useIsMobile, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl, useWeBentDepositsUsd, useWeBentEarnedUsd, useWeBentTvl } from "hooks";
+import { formatBigNumber } from "utils";
 
 const BannerBlocks = (): React.ReactElement => {
   const crvEarnings = useCrvPoolTotalEarned();
   const sushiEarnings = useSushiPoolTotalEarned();
   const bentEarnings = useBentEarnedUsd();
   const bentCvxEarned = useBentCvxTotalEarned();
+  const weBentEarned = useWeBentEarnedUsd();
   const crvDeposits = useCrvPoolTotalDepositedUsds();
   const sushiDeposits = useSushiPoolTotalDepositedUsd();
   const bentDeposits = useBentStakedUsd();
   const bentCvxDeposits = useBentCvxStakedUSD();
+  const webentDeposits = useWeBentDepositsUsd();
   const crvTvl = useCrvTotalTvl();
   const sushiTvl = useSushiTotalTvl();
   const bentTvl = useBentTvl();
   const bentCvxTvl = useBentCvxTvl();
+  const weBentTvl = useWeBentTvl();
   const isMobile = useIsMobile();
 
   const totalTvl = (): string => {
-    return formatBigNumber(crvTvl.add(sushiTvl).add(bentTvl).add(bentCvxTvl), 18, 2);
+    return formatBigNumber(crvTvl.add(sushiTvl).add(bentTvl).add(bentCvxTvl).add(weBentTvl), 18, 2);
   }
 
   const totalEarnings = (): string => {
-    return formatBigNumber(crvEarnings.add(sushiEarnings).add(bentEarnings).add(bentCvxEarned), 18, 2);
+    return formatBigNumber(crvEarnings.add(sushiEarnings).add(bentEarnings).add(bentCvxEarned).add(weBentEarned), 18, 2);
   }
 
   const totalDeposits = (): string => {
-    return formatBigNumber(crvDeposits.add(sushiDeposits).add(bentDeposits).add(bentCvxDeposits), 18, 2)
+    return formatBigNumber(crvDeposits.add(sushiDeposits).add(bentDeposits).add(bentCvxDeposits).add(webentDeposits), 18, 2)
   }
 
   return (

@@ -58,3 +58,8 @@ export const useBentCvxRewarderMCContract = (): Contract => {
 	const { library } = useActiveWeb3React();
 	return useMemo(() => new Contract(POOLS.BentCvxStaking.BentCvxRewarderMasterchef.Pool, ABIS.BentCvxRewarderMasterchef, library), [library]);
 }
+
+export const useWeBentContract = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.weBENT.Addr, ABIS.weBENT, library), [library]);
+}

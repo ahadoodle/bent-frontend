@@ -454,13 +454,13 @@ table.tokentable.table td span {
 button.btn.btnshow {
     margin: auto;
     background: #C1FFD7;
-    border: 3px solid #10151D;
+    border: 2px solid #10151D;
     box-shadow: 4px 4px 0px #10151d;
     border-radius: 4px;
     font-style: normal;
     font-weight: bold;
     font-size: 16px;
-    line-height: 19px;
+    line-height: 20px;
     text-align: center;
     letter-spacing: -0.24px;
     color: #10151D;
@@ -588,10 +588,15 @@ p.copyright {
     opacity: 0.4;
     margin-bottom: 0;
 }
+.divider-left {
+    min-width: 1px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-left: 2px solid #414C5C;
+}
 .converttabs .divider-left {
     padding-left: 30px;
     padding-right: 30px;
-    border-left: 3px solid rgba(41, 49, 60, 0.2);
 }
 .converttabs .inverse {
     padding-right: 30px;
@@ -795,6 +800,23 @@ button.btn.btnshow i {
 .Dark .amountinput input {
     border: 3px solid #fff;
     background-color: transparent;
+}
+button.transBtn {
+    box-shadow: 2px 2px 0px 0px #c1ffd7;
+    background: transparent;
+    border: 2px solid #C1FFD7;
+    color: #C1FFD7;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 15px;
+    text-align: center;
+    letter-spacing: -0.24px;
+}
+button.transBtn:hover {
+    color: #C1FFD7;
+    background: transparent;
+    border: 2px solid #C1FFD7;
 }
 .Dark button.maxbtn {
     box-shadow: 2px 2px 0px 0px #c1ffd7;
@@ -1801,7 +1823,7 @@ span.textadvance {
 button.approvebtn.btn.btn-secondary {
     width: 123px;
     height: 36px;
-    padding: 5px 5px 8px;
+    padding: 5px;
     font-size: 12.78px;
     line-height: 15px;
 }

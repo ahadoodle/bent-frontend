@@ -18,12 +18,34 @@ export interface CrvApy {
 	crvBoost: number;
 }
 
+export interface WeBentLockedData {
+	amount: BigNumber;
+	unlockAt: BigNumber;
+}
+
 export interface ContractsState {
 	bentCirculatingSupply: BigNumber,
 	tokenPrices: Record<string, number>
 
 	balances: Record<string, BigNumber>;
 	totalSupplies: Record<string, BigNumber>;
+
+	// weBent Pool States
+	weBentAllowance: BigNumber;
+	weBentBalance: BigNumber;
+	weBentLocked: BigNumber;
+	weBentTotalSupply: BigNumber;
+	weBentBentBalance: BigNumber;
+	weBentTvl: BigNumber;
+	weBentLockedData: WeBentLockedData[];
+	weBentUnlockable: BigNumber;
+	weBentLockDuration: BigNumber;
+	weBentApr: number,
+	weBentAvgApr: number,
+	weBentEarnedUsd: BigNumber,
+	weBentAprs: Record<string, number>,
+	weBentRewards: Record<string, BigNumber>,
+	weBentRewardsUsd: Record<string, BigNumber>,
 
 	// Bent Staking Pool States
 	bentTvl: BigNumber,
@@ -61,6 +83,7 @@ export interface ContractsState {
 	crvEarnedUsd: Record<string, BigNumber>;
 	crvDepositedUsd: Record<string, BigNumber>;
 	crvProjectedApr: Record<string, CrvApy>;
+	crvEndRewardBlock: Record<string, BigNumber>;
 
 	// Sushi Pool States
 	sushiTvl: Record<string, BigNumber>;
@@ -77,6 +100,22 @@ const initialState: ContractsState = {
 
 	balances: {},
 	totalSupplies: {},
+
+	weBentAllowance: ethers.constants.Zero,
+	weBentBalance: ethers.constants.Zero,
+	weBentLocked: ethers.constants.Zero,
+	weBentTotalSupply: ethers.constants.Zero,
+	weBentBentBalance: ethers.constants.Zero,
+	weBentTvl: ethers.constants.Zero,
+	weBentLockedData: [],
+	weBentUnlockable: ethers.constants.Zero,
+	weBentLockDuration: ethers.constants.Zero,
+	weBentAvgApr: 0,
+	weBentApr: 0,
+	weBentEarnedUsd: ethers.constants.Zero,
+	weBentAprs: {},
+	weBentRewards: {},
+	weBentRewardsUsd: {},
 
 	bentTvl: ethers.constants.Zero,
 	bentStaked: ethers.constants.Zero,
@@ -111,6 +150,7 @@ const initialState: ContractsState = {
 	crvEarnedUsd: {},
 	crvDepositedUsd: {},
 	crvProjectedApr: {},
+	crvEndRewardBlock: {},
 
 	sushiTvl: {},
 	sushiApr: {},
@@ -161,6 +201,10 @@ export default createReducer(initialState, (builder) =>
 			Object.keys(action.payload.crvProjectedApr).forEach(poolKey => {
 				if (!state.crvProjectedApr) state.crvProjectedApr = {};
 				state.crvProjectedApr[poolKey] = action.payload.crvProjectedApr[poolKey];
+			})
+			Object.keys(action.payload.crvEndRewardBlock).forEach(poolKey => {
+				if (!state.crvEndRewardBlock) state.crvEndRewardBlock = {};
+				state.crvEndRewardBlock[poolKey] = action.payload.crvEndRewardBlock[poolKey];
 			})
 
 			// Sushi Pools
@@ -230,5 +274,31 @@ export default createReducer(initialState, (builder) =>
 				state.bentCvxPoolAprs[poolKey] = action.payload.bentCvxPoolAprs[poolKey];
 			})
 			state.bentCvxAvgApr = action.payload.bentCvxAvgApr;
+
+			// weBent
+			state.weBentAllowance = action.payload.weBentAllowance;
+			state.weBentBalance = action.payload.weBentBalance;
+			state.weBentLocked = action.payload.weBentLocked;
+			state.weBentTotalSupply = action.payload.weBentTotalSupply;
+			state.weBentBentBalance = action.payload.weBentBentBalance;
+			state.weBentTvl = action.payload.weBentTvl;
+			state.weBentLockedData = action.payload.weBentLockedData;
+			state.weBentUnlockable = action.payload.weBentUnlockable;
+			state.weBentLockDuration = action.payload.weBentLockDuration;
+			state.weBentEarnedUsd = action.payload.weBentEarnedUsd;
+			state.weBentAvgApr = action.payload.weBentAvgApr;
+			state.weBentApr = action.payload.weBentApr;
+			Object.keys(action.payload.weBentAprs).forEach(poolKey => {
+				if (!state.weBentAprs) state.weBentAprs = {};
+				state.weBentAprs[poolKey] = action.payload.weBentAprs[poolKey];
+			})
+			Object.keys(action.payload.weBentRewards).forEach(tokenAddr => {
+				if (!state.weBentRewards) state.weBentRewards = {};
+				state.weBentRewards[tokenAddr] = action.payload.weBentRewards[tokenAddr];
+			})
+			Object.keys(action.payload.weBentRewardsUsd).forEach(tokenAddr => {
+				if (!state.weBentRewardsUsd) state.weBentRewardsUsd = {};
+				state.weBentRewardsUsd[tokenAddr] = action.payload.weBentRewardsUsd[tokenAddr];
+			})
 		})
 );

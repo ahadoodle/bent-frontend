@@ -138,17 +138,27 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'alusdCrv',
 		crvPoolLink: 'https://curve.fi/alusd/deposit',
 	},
-	// OUSD: {
-	// 	LOGO: TOKEN_LOGO.OUSD,
-	// 	Name: 'ousd',
-	// 	POOL: '0x519590c576D4e0aA49B7614492B64ADB8669F52A',
-	// 	DepositAsset: '0x87650d7bbfc3a9f10587d7778206671719d9910d',
-	// 	CvxRewardsPool: '0x7D536a737C13561e0D2Decf1152a653B4e615158',
-	// 	ExtCvxRewardPool: '0x08EDE581D9B9ae55FA7deCc4E4331D191BbBF9dB',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX', 'OGN'],
-	// 	CrvLpSYMBOL: 'ousdCrv',
-	// 	crvPoolLink: 'https://curve.fi/factory/9/deposit',
-	// },
+	OUSD: {
+		LOGO: TOKEN_LOGO.OUSD,
+		Name: 'ousd',
+		POOL: '0x519590c576D4e0aA49B7614492B64ADB8669F52A',
+		DepositAsset: '0x87650d7bbfc3a9f10587d7778206671719d9910d',
+		CvxRewardsPool: '0x7D536a737C13561e0D2Decf1152a653B4e615158',
+		ExtCvxRewardPool: '0x08EDE581D9B9ae55FA7deCc4E4331D191BbBF9dB',
+		RewardsAssets: ['BENT', 'CRV', 'CVX', 'OGN'],
+		CrvLpSYMBOL: 'ousdCrv',
+		crvPoolLink: 'https://curve.fi/factory/9/deposit',
+	},
+	THREEPOOL: {
+		LOGO: TOKEN_LOGO.CRV,
+		Name: '3pool',
+		POOL: '0x9a9606a399c62d20d7ba11028ed1218ed3f8f244',
+		DepositAsset: '0x6c3f90f043a72fa612cbac8115ee7e52bde6e490',
+		CvxRewardsPool: '0x689440f2ff927e1f24c72f1087e1faf471ece1c8',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: '3poolCrv',
+		crvPoolLink: 'https://curve.fi/3pool/deposit',
+	},
 	NEW_USTWORMHOLE: {
 		LOGO: TOKEN_LOGO.UST,
 		Name: 'ust-wormhole',
@@ -275,12 +285,18 @@ const BentCvxStaking = {
 	},
 	BentCvxRewarderBent: {
 		Pool: '0x6c4F65d3e7DA3bc1F00194AA81FC00Fc4916f229',
-		RewardsAssets: ['CRV', 'BENTCVX', 'SPELL', 'ALCX', 'LDO']
+		RewardsAssets: ['CRV', 'BENTCVX', 'SPELL', 'ALCX', 'LDO'],
+		ClaimIndex: [0, 1, 2, 3, 4]
 	},
 	BentCvxRewarderMasterchef: {
 		Pool: '0xE644710aAc3c23bFE8cD22fFef003792e4b1c15d',
 		RewardsAssets: ['BENT']
 	}
+}
+
+const weBENT = {
+	Addr: '0x04637d61F538911929ff96E755B589C014fD9ce2',
+	RewardAssets: ['BENTCVX', 'SPELL', 'FXS', 'CVX']
 }
 
 export const POOLS = {
@@ -290,4 +306,5 @@ export const POOLS = {
 	BentCvxStaking,
 	VlCvxLocker: '0xD18140b4B819b895A3dba5442F959fA44994AF50',
 	Multisig: '0xe001452BeC9e7AC34CA4ecaC56e7e95eD9C9aa3b',
+	weBENT,
 }
