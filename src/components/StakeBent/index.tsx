@@ -69,7 +69,7 @@ export const StakeBent = (): React.ReactElement => {
 	}
 
 	const onVote = () => {
-		window.open('https://snapshot.org/#/bentfinance.eth', '_blank');
+		window.open('https://vote.bentfinance.com/#/', '_blank');
 	}
 
 	return (

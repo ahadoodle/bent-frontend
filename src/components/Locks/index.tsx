@@ -18,7 +18,7 @@ export const MyLocksTable = (): React.ReactElement => {
 	const unlockable = useWeBentUnlockable();
 
 	const onVote = () => {
-		window.open('https://snapshot.org/#/bentfinance.eth', '_blank');
+		window.open('https://vote.bentfinance.com/#/', '_blank');
 	}
 
 	return (
