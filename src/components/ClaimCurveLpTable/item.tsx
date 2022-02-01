@@ -166,7 +166,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 								</Col>
 								<Col>
 									<b>
-										{formatBigNumber(BigNumber.from(rewards[index] || 0))}
+										{formatBigNumber(BigNumber.from(rewards[index] || 0), TOKENS[tokenKey].DECIMALS)}
 										<span className="small text-bold"> {tokenKey}</span>
 									</b>
 									<span className="small text-muted"> ≈ ${

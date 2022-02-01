@@ -1,13 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { Col, Row, Tooltip } from "reactstrap";
+import { Col, Row, UncontrolledTooltip } from "reactstrap";
 import { useTokenPrice, useBentCirculatingSupply, useWeBentBentBalance, useVlCvxBalance, useVotingPower } from "hooks";
 import { TOKENS } from "constant";
 import { formatMillionsBigNumber, formatBigNumber } from "utils";
 import { utils, BigNumber } from "ethers";
 
 interface Props {
-	show: boolean;
 	target: string;
 }
 
@@ -20,7 +19,7 @@ export const BentPowerToolTip = (props: Props): React.ReactElement => {
 	const votingPower = useVotingPower();
 
 	return (
-		<Tooltip className="bent-details" target={props.target} isOpen={props.show}>
+		<UncontrolledTooltip className="bent-details" target={props.target} >
 			<div style={{ padding: 15 }}>
 				<Row>
 					<Col md="5">BENT Price:</Col>
@@ -64,11 +63,11 @@ export const BentPowerToolTip = (props: Props): React.ReactElement => {
 				<Row>
 					<Col md="5"><b>Voting Power</b></Col>
 					<Col md="7" className="text-right">
-						1 weBENT = {votingPower} vlCVX
+						$1 weBENT = ${votingPower} vlCVX
 					</Col>
 				</Row>
 			</VotingPowerContainer>
-		</Tooltip>
+		</UncontrolledTooltip>
 	)
 }
 
