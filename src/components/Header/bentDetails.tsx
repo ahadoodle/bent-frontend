@@ -63,7 +63,7 @@ export const BentPowerToolTip = (props: Props): React.ReactElement => {
 				<Row>
 					<Col md="5"><b>Voting Power</b></Col>
 					<Col md="7" className="text-right">
-						1 weBENT = {votingPower} vlCVX
+						$1 weBENT = ${votingPower} vlCVX
 					</Col>
 				</Row>
 			</VotingPowerContainer>
