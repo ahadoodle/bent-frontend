@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Navbar,
   Container,
   Button,
+  Modal, ModalBody
   // Dropdown,
   // DropdownToggle,
 } from "reactstrap";
@@ -13,7 +14,7 @@ import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";
 import BentDetails from "assets/images/bent-details.png";
 import ConnectWallet from "components/ConnectWallet";
-import { useTheme } from "hooks";
+import { useActiveWeb3React, useTheme } from "hooks";
 import { useDispatch } from "react-redux";
 import { updateTheme } from "state/application/actions";
 import { Theme } from "state/application/reducer";
@@ -30,6 +31,15 @@ const Header = (): React.ReactElement => {
     setCustomClass("sidenavmenu");
   };
   const theme = useTheme();
+  const [userBalance, setUserBalance] = useState<unknown>(0);
+  const [showBentDetails, setShowBentDetails] = useState(false);
+  const { library, account } = useActiveWeb3React();
+
+  // Modal open state
+  const [modal, setModal] = React.useState(false);
+
+  // Toggle for Modal
+  const toggle = () => setModal(!modal);
 
   const selectTheme = () => {
     if (theme === Theme.Light) {
@@ -39,6 +49,14 @@ const Header = (): React.ReactElement => {
     }
   }
 
+  useEffect(() => {
+    if (account && library) {
+      library.getBalance(account)
+        .then(balanceResult => {
+          setUserBalance(balanceResult);
+        })
+    }
+  }, [library, account]);
   return (
     <React.Fragment>
       <div className="header">
@@ -73,10 +91,10 @@ const Header = (): React.ReactElement => {
                   </Dropdown>
                 </li> */}
               </ul>
-              <span className="theme-icon ml-auto" id="bent-details" >
+              <span className="theme-icon ml-auto" id="bent-details" onClick={() => setShowBentDetails(!showBentDetails)}>
                 <img src={BentDetails} alt="" width="40" height="40" />
               </span>
-              <BentPowerToolTip target="bent-details" />
+              <BentPowerToolTip target="bent-details" show={showBentDetails} />
               <span className="theme-icon" onClick={selectTheme}>
                 <img src={theme === Theme.Dark ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
               </span>
@@ -98,6 +116,23 @@ const Header = (): React.ReactElement => {
           </div>
         </Container>
       </div>
+      <Modal isOpen={modal}
+        toggle={toggle}
+        modalTransition={{ timeout: 2000 }} className="custom-modal-style">
+        <ModalBody>
+          {/* {errorMessage != null ? (<h6>Error: {errorMessage} </h6>) : */}
+          (<>
+            <h6>MetaTask connected successfully</h6><br />
+            <div className='accountDisplay'>
+              <h6>Address: {account}</h6>
+            </div>
+            <div className='balanceDisplay' >
+              <h6>Balance: {userBalance}</h6>
+            </div>
+          </>)
+          {/* } */}
+        </ModalBody>
+      </Modal>
     </React.Fragment>
   );
 };

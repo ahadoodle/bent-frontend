@@ -25,7 +25,7 @@ export const ClaimWeBentRewardItem = (props: Props): React.ReactElement => {
 			</div>
 			<div style={{ minWidth: 100 }}>
 				<h4 className="mb-0"><span className="small">$</span>{formatBigNumber(props.rewardUsd, 18, 2)}</h4>
-				<p className="rewards-token">{formatBigNumber(props.reward, TOKENS[tokenKey].DECIMALS)} {TOKENS[tokenKey].SYMBOL}</p>
+				<p className="rewards-token">{formatBigNumber(props.reward)} {TOKENS[tokenKey].SYMBOL}</p>
 			</div>
 			<div className="claim-reward">
 				<Input type="checkbox" checked={props.checked} onChange={e => props.onChange(props.index, e.target.checked)} />

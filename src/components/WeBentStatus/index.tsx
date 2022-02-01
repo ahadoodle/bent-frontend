@@ -50,9 +50,10 @@ export const WeBentStatus = (): React.ReactElement => {
 							className="px-4"
 						>{formatBigNumber(bentTotalStaked, 18, 2)} BENT Locked</StatusButton>
 						<div className="divider-left p-0"></div>
-						<APRStatus
+						<StatusButton
 							className="px-4"
-						>{avgApr ? utils.commify(avgApr) : 'TBC'} % APR</APRStatus>
+							style={{ color: '#C1FFD7 !important' }}
+						>{avgApr ? utils.commify(avgApr) : 'TBC'} % APR</StatusButton>
 					</StatusContainer>
 				</Col>
 			</Row>
@@ -84,8 +85,4 @@ const StatusButton = styled.div`
 	color: white;
 	height: 42px;
 	padding: 13px;
-`;
-
-const APRStatus = styled(StatusButton)`
-	color: #C1FFD7;
 `;
