@@ -517,8 +517,10 @@ export default function Updater(): null {
 					}
 
 					// Projected APR = Current APR of Convex
-					if (!POOLS.BentPools[poolKey].isBentCvx && !POOLS.BentPools[poolKey].isLegacy) {
+					if (crvPoolLpBalances[poolKey] > 0 && !POOLS.BentPools[poolKey].isBentCvx && !POOLS.BentPools[poolKey].isLegacy) {
+						console.log(crvPoolLpBalances)
 						const currentTimestamp = Date.now() / 1000;
+						
 						const cvxPoolTvl = tvl.mul(BigNumber.from(10).pow(18)).div(crvPoolLpBalances[poolKey]).mul(cvxPoolTotalSupply[poolKey]);
 						const crv_vApr = getTokenPrice(tokenPrices, cvxPoolRewardToken[poolKey].toLowerCase()).mul(cvxPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl);
 
