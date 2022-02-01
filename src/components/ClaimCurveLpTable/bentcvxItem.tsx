@@ -162,7 +162,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 								</Col>
 								<Col>
 									<b>
-										{formatBigNumber(BigNumber.from(rewards[index] || 0), TOKENS[tokenKey].DECIMALS)}
+										{formatBigNumber(BigNumber.from(rewards[index] || 0))}
 										<span className="small text-bold"> {tokenKey}</span>
 									</b>
 									<span className="small text-muted"> ≈ ${
