@@ -517,12 +517,10 @@ export default function Updater(): null {
 					}
 
 					// Projected APR = Current APR of Convex
-					if (crvPoolLpBalances[poolKey] > 0 && !POOLS.BentPools[poolKey].isBentCvx && !POOLS.BentPools[poolKey].isLegacy) {
-						console.log(crvPoolLpBalances)
+					if (!POOLS.BentPools[poolKey].isBentCvx && !POOLS.BentPools[poolKey].isLegacy) {
 						const currentTimestamp = Date.now() / 1000;
-						
-						const cvxPoolTvl = tvl.mul(BigNumber.from(10).pow(18)).div(crvPoolLpBalances[poolKey]).mul(cvxPoolTotalSupply[poolKey]);
-						const crv_vApr = getTokenPrice(tokenPrices, cvxPoolRewardToken[poolKey].toLowerCase()).mul(cvxPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl);
+						const cvxPoolTvl = BigNumber.from(crvPoolLpBalances[poolKey]).isZero() ? ethers.constants.Zero : tvl.mul(BigNumber.from(10).pow(18)).div(crvPoolLpBalances[poolKey]).mul(cvxPoolTotalSupply[poolKey]);
+						const crv_vApr = cvxPoolTvl.isZero() ? ethers.constants.Zero : getTokenPrice(tokenPrices, cvxPoolRewardToken[poolKey].toLowerCase()).mul(cvxPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl);
 
 						const cvxRewardRate = BigNumber.from(cvxPoolRewardRate[poolKey]).mul(BigNumber.from(cvxMaxSupply).sub(cvxTotalSupply)).div(cvxMaxSupply);
 						let cvx_vApr = cvxPoolTvl.isZero() ? ethers.constants.Zero : getTokenPrice(tokenPrices, TOKENS['CVX'].ADDR).mul(cvxRewardRate).mul(86400).mul(3650000)
