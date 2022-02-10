@@ -128,7 +128,7 @@ export const LockWeBent = (): React.ReactElement => {
 									</div>
 								</Col>
 								<Col style={{ flex: '0.7 0' }}>
-									<div className="text-right">
+									<div className="text-right p-0">
 										<span className="small p-0">TVL ({formatBigNumber(bentTotalStaked, 18, 2)} BENT)</span><br />
 										<b className="p-0">
 											<span className="small">$</span>

@@ -3,17 +3,21 @@ import styled from "styled-components";
 import {
 	Container, Button, Row, Col, UncontrolledTooltip
 } from "reactstrap";
-import { useTheme, useVotingPower, useWeBentAvgApr, useWeBentBentBalance } from "hooks";
+import { useTheme, useTokenPrice, useVotingPower, useWeBentAvgApr, useWeBentBentBalance, useWeBentRatio } from "hooks";
 import { Theme } from "state/application/reducer";
 import { formatBigNumber } from "utils";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { useHistory } from "react-router";
+import { TOKENS } from "constant";
 
 export const WeBentStatus = (): React.ReactElement => {
 	const theme = useTheme();
 	const bentTotalStaked = useWeBentBentBalance();
 	const avgApr = useWeBentAvgApr();
 	const votingPower = useVotingPower();
+	const webentRatio = useWeBentRatio();
+	const cvxPrice = useTokenPrice(TOKENS.CVX.ADDR);
+	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
 	const history = useHistory();
 
 	const onBent = () => {
@@ -37,18 +41,27 @@ export const WeBentStatus = (): React.ReactElement => {
 						<StatusButton
 							className="px-5"
 							id="webent-status-voting-power"
-						>1 weBENT = {votingPower} vlCVX</StatusButton>
+						>
+							$1 weBENT ~ ${votingPower} vlCVX<br />
+						</StatusButton>
 						<UncontrolledTooltip
 							target="webent-status-voting-power"
 							className="bent-details p-3"
 							placement="bottom"
 						>
-							<div style={{ padding: 15, lineHeight: '10px', textAlign: 'center' }}>weBENT Voting Power</div>
+							<div style={{ padding: 15, lineHeight: '10px' }}>
+								<div style={{ textDecoration: 'underline' }}>weBENT Voting Power</div><br /><br />
+								<div>1 weBENT controls {votingPower} vlCVX (${formatBigNumber(utils.parseEther(cvxPrice.toString()).mul(utils.parseEther(votingPower.toString())), 36, 2)})</div><br />
+								<div>1 weBENT = {webentRatio} BENT (${formatBigNumber(utils.parseEther(bentPrice.toString()).mul(utils.parseEther(webentRatio.toString())), 36, 2)})</div>
+							</div>
 						</UncontrolledTooltip>
 						<div className="divider-left p-0"></div>
 						<StatusButton
 							className="px-4"
-						>{formatBigNumber(bentTotalStaked, 18, 2)} BENT Locked</StatusButton>
+						>
+							{formatBigNumber(bentTotalStaked, 18, 2)}&nbsp;
+							<span className="small">BENT Staked</span>
+						</StatusButton>
 						<div className="divider-left p-0"></div>
 						<APRStatus
 							className="px-4"
