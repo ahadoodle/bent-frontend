@@ -115,7 +115,7 @@ export const LockWeBent = (): React.ReactElement => {
 										</b>
 									</div>
 								</Col>
-								<Col>
+								<Col style={{ flex: '1.3 0' }}>
 									<div>
 										<span className="small p-0">
 											{formatBigNumber(weBentShare, 18, 2)} weBENT = {formatBigNumber(weBentBent, 18, 2)} BENT
@@ -127,13 +127,13 @@ export const LockWeBent = (): React.ReactElement => {
 										</b>
 									</div>
 								</Col>
-								<Col>
-									<div>
+								<Col style={{ flex: '0.7 0' }}>
+									<div className="text-right p-0">
 										<span className="small p-0">TVL ({formatBigNumber(bentTotalStaked, 18, 2)} BENT)</span><br />
 										<b className="p-0">
 											<span className="small">$</span>
 											{formatMillionsBigNumber(tvl, 18, 2)}
-											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
+											<i className="fa fa-caret-down invisible w-0" aria-hidden="true" />
 										</b>
 									</div>
 								</Col>

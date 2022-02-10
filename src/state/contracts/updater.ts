@@ -174,6 +174,7 @@ export default function Updater(): null {
 			contractCalls.push(bentToken.allowance(accAddr, POOLS.BentStaking.POOL));
 			contractCalls.push(bentSingleStaking.balanceOf(accAddr));
 			contractCalls.push(bentSingleStaking.totalSupply());
+			contractCalls.push(bentSingleStaking.endRewardBlock());
 			POOLS.BentStaking.RewardAssets.forEach((rewardToken, index) => {
 				contractCalls.push(bentSingleStaking.rewardPools(index));
 			})
@@ -328,15 +329,16 @@ export default function Updater(): null {
 				bentStakedUsd = bentPriceBN.mul(bentStaked).div(BigNumber.from(10).pow(18));
 				bentTotalStaked = results[startIndex++];
 				bentTvl = bentPriceBN.mul(bentTotalStaked).div(BigNumber.from(10).pow(18));
+				const bentEndRewardBlock = BigNumber.from(results[startIndex++]);
 
 				let bentTokenRewardsUsd = ethers.constants.Zero;
 				POOLS.BentStaking.RewardAssets.forEach((rewardToken, index) => {
 					const rewardsInfo = results[startIndex++];
 					const rewardUsd = getAnnualReward(rewardsInfo.rewardRate, rewardsInfo.rewardToken, tokenPrices[rewardsInfo.rewardToken.toLowerCase()]);
-					bentAprs[TOKENS[rewardToken].ADDR.toLowerCase()] = (bentTvl.isZero() ? 0 : rewardUsd.mul(10000).div(bentTvl).toNumber()) / 100;
+					bentAprs[TOKENS[rewardToken].ADDR.toLowerCase()] = ((bentTvl.isZero() || bentEndRewardBlock.lt(blockNumber)) ? 0 : rewardUsd.mul(10000).div(bentTvl).toNumber()) / 100;
 					bentTokenRewardsUsd = bentTokenRewardsUsd.add(rewardUsd);
 				})
-				bentAvgApr = (bentTvl.isZero() ? 0 : bentTokenRewardsUsd.mul(10000).div(bentTvl).toNumber()) / 100;
+				bentAvgApr = ((bentTvl.isZero() || bentEndRewardBlock.lt(blockNumber)) ? 0 : bentTokenRewardsUsd.mul(10000).div(bentTvl).toNumber()) / 100;
 
 				const bentPendingRewards = results[startIndex++];
 				POOLS.BentStaking.RewardAssets.forEach((rewardToken, index) => {
