@@ -6,7 +6,7 @@ import {
 import { useTheme, useTokenPrice, useVotingPower, useWeBentAvgApr, useWeBentBentBalance, useWeBentRatio } from "hooks";
 import { Theme } from "state/application/reducer";
 import { formatBigNumber } from "utils";
-import { BigNumber, utils } from "ethers";
+import { utils } from "ethers";
 import { useHistory } from "react-router";
 import { TOKENS } from "constant";
 
