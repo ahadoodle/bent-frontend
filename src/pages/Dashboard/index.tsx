@@ -1,4 +1,4 @@
-import React, { Props } from "react";
+import React from "react";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
@@ -6,22 +6,7 @@ import { Button, Col, Container, Row } from "reactstrap";
 import DashboardDiagram1 from 'assets/images/dashboard-diagram-1.png';
 import StakeIcon from 'assets/images/stake-icon.svg';
 import { DecimalSpan } from "components/DecimalSpan";
-import { formatBigNumber } from "utils";
 import { useTotalTvl } from "hooks";
-
-interface MetricsProps {
-	title: string;
-	children: React.ReactElement
-}
-
-const Metrics = (props: MetricsProps) => {
-	return (
-		<div className="text-white">
-			<span className="small">{props.title}</span><br />
-			{props.children}
-		</div>
-	)
-}
 
 const Dashboard = () => {
 	const totalTvl = useTotalTvl();
@@ -116,10 +101,6 @@ const TopDiagram = styled.img`
 const StakeButton = styled(Button)`
 	font-size: 22px !important;
 	line-height: 26px !important;
-`;
-
-const MetricsValue = styled.h4`
-	font-size: 20px;
 `;
 
 export default withRouter(Dashboard);
