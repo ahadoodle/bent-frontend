@@ -97,6 +97,6 @@ export const useVotingPower = (): number => {
 export const useVotingControl = (): number => {
 	const vlCvxBalance = useVlCvxBalance();
 	const weBentTotalSupply = useWeBentTotalSupply();
-	return vlCvxBalance.isZero() ? 0 :
-		parseFloat((weBentTotalSupply.mul(100).div(vlCvxBalance).toNumber() / 100).toFixed(2));
+	return weBentTotalSupply.isZero() ? 0 :
+		parseFloat((vlCvxBalance.mul(100).div(weBentTotalSupply).toNumber() / 100).toFixed(2));
 }
