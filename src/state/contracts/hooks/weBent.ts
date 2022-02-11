@@ -93,3 +93,10 @@ export const useVotingPower = (): number => {
 				.div(BigNumber.from(10).pow(16)).div(bentTvl)
 		).toNumber() / 100).toFixed(2)))
 }
+
+export const useVotingControl = (): number => {
+	const vlCvxBalance = useVlCvxBalance();
+	const weBentTotalSupply = useWeBentTotalSupply();
+	return vlCvxBalance.isZero() ? 0 :
+		parseFloat((weBentTotalSupply.mul(100).div(vlCvxBalance).toNumber() / 100).toFixed(2));
+}
