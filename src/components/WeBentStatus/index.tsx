@@ -51,7 +51,7 @@ export const WeBentStatus = (): React.ReactElement => {
 							className="px-5"
 							id="webent-status-voting-power"
 						>
-							$1 weBENT ~ ${votingPower} vlCVX<br />
+							$1 of weBENT ~ ${votingPower} vlCVX<br />
 						</StatusButton>
 						<UncontrolledTooltip
 							target="webent-status-voting-power"
@@ -60,7 +60,7 @@ export const WeBentStatus = (): React.ReactElement => {
 						>
 							<div style={{ padding: 15, lineHeight: '10px' }}>
 								<div style={{ textDecoration: 'underline' }}>weBENT Voting Power</div><br /><br />
-								<div>$1 of weBENT controls ~ ${votingPower} vlCVX</div><br /><br />
+								{/* <div>$1 of weBENT controls ~ ${votingPower} vlCVX</div><br /><br /> */}
 								<div>1 weBENT controls {votingControl} vlCVX (${formatBigNumber(utils.parseEther(cvxPrice.toString()).mul(utils.parseEther(votingControl.toString())), 36, 2)})</div><br />
 								<div>1 weBENT = {webentRatio} BENT (${formatBigNumber(utils.parseEther(bentPrice.toString()).mul(utils.parseEther(webentRatio.toString())), 36, 2)})</div>
 							</div>
