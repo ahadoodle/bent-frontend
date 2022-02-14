@@ -6,7 +6,7 @@ import { Button, Col, Container, Row } from "reactstrap";
 import DashboardDiagram1 from 'assets/images/dashboard-diagram-1.png';
 import DashboardDiagram2 from 'assets/images/dashboard-diagram-2.svg';
 import DashboardDiagram4 from 'assets/images/dashboard-diagram-4.png';
-import DashboardDiagram5 from 'assets/images/dashboard-diagram-5.svg';
+import DashboardDiagram5 from 'assets/images/dashboard-diagram-5.png';
 import DashboardDiagram6 from 'assets/images/dashboard-diagram-6.png';
 import DashboardDiagram7 from 'assets/images/dashboard-diagram-7.svg';
 import StakeIcon from 'assets/images/stake-icon.svg';
@@ -200,7 +200,7 @@ const EarnCrvDiagram = styled.img`
 	position: relative;
 	margin-left: 450px;
 	top: -120px;
-	width: 356px;
+	width: 600px;
 `;
 
 const PutCrvSection = styled.div`
