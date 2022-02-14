@@ -296,7 +296,7 @@ const BentCvxStaking = {
 
 const weBENT = {
 	Addr: '0x04637d61F538911929ff96E755B589C014fD9ce2',
-	RewardAssets: ['BENTCVX', 'SPELL', 'FXS', 'CVX']
+	RewardAssets: ['BENTCVX', 'SPELL', 'FXS', 'CVX', 'LUNAWORM']
 }
 
 export const POOLS = {
