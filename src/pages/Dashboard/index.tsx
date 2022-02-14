@@ -5,7 +5,10 @@ import { Helmet } from 'react-helmet-async';
 import { Button, Col, Container, Row } from "reactstrap";
 import DashboardDiagram1 from 'assets/images/dashboard-diagram-1.png';
 import DashboardDiagram2 from 'assets/images/dashboard-diagram-2.svg';
+import DashboardDiagram4 from 'assets/images/dashboard-diagram-4.png';
 import DashboardDiagram5 from 'assets/images/dashboard-diagram-5.svg';
+import DashboardDiagram6 from 'assets/images/dashboard-diagram-6.png';
+import DashboardDiagram7 from 'assets/images/dashboard-diagram-7.svg';
 import StakeIcon from 'assets/images/stake-icon.svg';
 import { DecimalSpan } from "components/DecimalSpan";
 import { useTotalTvl } from "hooks";
@@ -108,6 +111,42 @@ const Dashboard = () => {
 					</Row>
 				</Container>
 			</EarnCrvSection>
+			<BackgroundTop src={DashboardDiagram2} alt="BackgroundTop" />
+			<PutCrvSection>
+				<Container>
+					<Row>
+						<Col>
+							<PutCrvDiagram src={DashboardDiagram4} alt="Icon" />
+						</Col>
+						<Col>
+							<TitleSmall style={{ marginTop: 130 }}>CRV STAKERS</TitleSmall>
+							<EarnCrvTitle className="mt-4">Put your CVX<br />to work</EarnCrvTitle>
+							<EarnCrvDesc className="mt-4">
+								Stake and earn additional CRV on top of<br />CVX tokens and Curve trading fees.
+							</EarnCrvDesc>
+						</Col>
+					</Row>
+				</Container>
+			</PutCrvSection>
+			<BackgroundTop src={DashboardDiagram7} alt="BackgroundTop" />
+			<StakeBentSection>
+				<Container>
+					<Row>
+						<Col>
+							<TitleSmall style={{ marginTop: 90 }}>THE TOKEN</TitleSmall>
+							<EarnCrvTitle className="mt-4">Stake BENT, earn<br />more and vote</EarnCrvTitle>
+							<EarnCrvDesc className="mt-4">
+								Stake your BENT rewards back into the<br />
+								platform and earn platform fees and<br />
+								vote on your future yield
+							</EarnCrvDesc>
+						</Col>
+						<Col>
+							<StakeBentDiagram src={DashboardDiagram6} alt="Icon" />
+						</Col>
+					</Row>
+				</Container>
+			</StakeBentSection>
 		</React.Fragment>
 	);
 };
@@ -134,11 +173,9 @@ const StakeButton = styled(Button)`
 `;
 
 const EarnCrvSection = styled.div`
-	background: url(${DashboardDiagram2});
-	background-repeat: no-repeat;
-	background-size: cover;
-	padding-top: 160px;
-	padding-bottom: 160px;
+	background: #C5B3FF;
+	padding-top: 150px;
+	padding-bottom: 100px;
 `;
 
 const EarnCrvTitle = styled.div`
@@ -164,6 +201,31 @@ const EarnCrvDiagram = styled.img`
 	margin-left: 450px;
 	top: -120px;
 	width: 356px;
+`;
+
+const PutCrvSection = styled.div`
+	padding-top: 20px;
+	padding-bottom: 20px;
+`;
+
+const PutCrvDiagram = styled.img`
+	width: 470px;
+`;
+
+const StakeBentSection = styled.div`
+	background: #B5DEFF;
+	padding-top: 20px;
+	padding-bottom: 150px;
+`;
+
+const StakeBentDiagram = styled.img`
+	width: 356px;
+`;
+
+const BackgroundTop = styled.img`
+	background-repeat: no-repeat;
+	background-size: cover;
+	width: 100%;
 `;
 
 const TitleSmall = styled.div`
