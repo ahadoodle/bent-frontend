@@ -5,11 +5,19 @@ import { Helmet } from 'react-helmet-async';
 import { Button, Col, Container, Row } from "reactstrap";
 import DashboardDiagram1 from 'assets/images/dashboard-diagram-1.png';
 import DashboardDiagram2 from 'assets/images/dashboard-diagram-2.svg';
+import DashboardDiagram3 from 'assets/images/dashboard-diagram-3.svg';
 import DashboardDiagram4 from 'assets/images/dashboard-diagram-4.png';
 import DashboardDiagram5 from 'assets/images/dashboard-diagram-5.png';
 import DashboardDiagram6 from 'assets/images/dashboard-diagram-6.png';
 import DashboardDiagram7 from 'assets/images/dashboard-diagram-7.svg';
+import DashboardDiagram8 from 'assets/images/dashboard-diagram-8.svg';
+import DashboardDiagram9 from 'assets/images/dashboard-diagram-9.svg';
+import DashboardTwitter from 'assets/images/dashboard-twitter.png';
+import DashboardTelegram from 'assets/images/dashboard-telegram.png';
+import DashboardGithub from 'assets/images/dashboard-github.png';
+import DocIcon from 'assets/images/doc.svg';
 import StakeIcon from 'assets/images/stake-icon.svg';
+import StakeBlackIcon from 'assets/images/stake-black.svg';
 import { DecimalSpan } from "components/DecimalSpan";
 import { useTotalTvl } from "hooks";
 
@@ -129,7 +137,8 @@ const Dashboard = () => {
 				</Container>
 			</PutCrvSection>
 			<BackgroundTop src={DashboardDiagram7} alt="BackgroundTop" />
-			<StakeBentSection>
+			<StakeBentSection className="d-flex">
+				<StakeBentDiagram2 src={DashboardDiagram3} alt="DashboardDiagram" />
 				<Container>
 					<Row>
 						<Col>
@@ -147,6 +156,50 @@ const Dashboard = () => {
 					</Row>
 				</Container>
 			</StakeBentSection>
+			<AuditSection>
+				<Container>
+					<Row>
+						<Col>
+							<AuditTitle>AUDITS</AuditTitle>
+							<div className="d-flex">
+								<AuditDesc className="mt-4">
+									Hacken is a team of experienced developers<br />
+									providing top-notch blockchain solutions, smart<br />
+									contract security audits and tech advisory.
+								</AuditDesc>
+								<img src={DashboardDiagram8} alt="Icon" style={{ marginLeft: 28 }} />
+							</div>
+							<div>
+								<AuditButton onClick={() => window.open('https://hacken.io/audits/#bent_finance', '_blank')}>
+									<img src={DocIcon} />&nbsp;
+									View Report
+								</AuditButton>
+							</div>
+						</Col>
+					</Row>
+				</Container>
+			</AuditSection>
+			<BoostCrvSection>
+				<Container className="d-flex">
+					<BoostCrvTitle className="ml-auto">
+						Boost
+						<img src={DashboardDiagram9} alt="Icon" className="mx-2" />
+						CRV Rewards
+					</BoostCrvTitle>
+					<StakeButton className="btn btnshow">
+						<img src={StakeBlackIcon} alt="Icon" />
+						&nbsp;Stake Now
+					</StakeButton>
+				</Container>
+			</BoostCrvSection>
+			<CommunitySection>
+				<Container className="d-flex">
+					<CommunityTitle>JOIN OUR<br />COMMUNITY :</CommunityTitle>
+					<CommunityIcon src={DashboardTwitter} alt="CommunityIcon" />
+					<CommunityIcon src={DashboardTelegram} alt="CommunityIcon" />
+					<CommunityIcon src={DashboardGithub} alt="CommunityIcon" />
+				</Container>
+			</CommunitySection>
 		</React.Fragment>
 	);
 };
@@ -221,6 +274,78 @@ const StakeBentSection = styled.div`
 const StakeBentDiagram = styled.img`
 	width: 356px;
 `;
+
+const StakeBentDiagram2 = styled.img`
+	position: relative;
+	width: 70px;
+`;
+
+const AuditSection = styled.div`
+	margin-top: 150px;
+`;
+
+const AuditTitle = styled.div`
+	font-style: normal;
+	font-weight: 500;
+	font-size: 20px;
+	line-height: 24px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #85878B;
+`
+
+const AuditDesc = styled.div`
+	font-style: normal;
+	font-weight: 500;
+	font-size: 30px;
+	line-height: 38px;
+	letter-spacing: -0.2px;
+`;
+
+const AuditButton = styled.button`
+	font-style: normal;
+	font-weight: bold;
+	font-size: 22px;
+	line-height: 26px;
+	letter-spacing: -0.24px;
+	color: #10151D;
+	background: linear-gradient(0deg, #c1ffd7, rgba(255,0,0,0) 70.71%);
+	border: unset;
+`
+
+const BoostCrvSection = styled.div`
+	margin-top: 115px;
+`
+
+const BoostCrvTitle = styled.div`
+	text-align: center;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 48px;
+	line-height: 56px;
+	letter-spacing: -0.03em;
+	font-feature-settings: 'ss01' on;
+`
+
+const CommunitySection = styled.div`
+	margin-top: 144px;
+	margin-bottom: 144px;
+`
+
+const CommunityTitle = styled.div`
+	font-style: normal;
+	font-weight: 500;
+	font-size: 20px;
+	line-height: 28px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	margin-right: 100px;
+`
+
+const CommunityIcon = styled.img`
+	width: 56px;
+	margin-right: 32px;
+`
 
 const BackgroundTop = styled.img`
 	background-repeat: no-repeat;
