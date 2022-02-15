@@ -171,7 +171,7 @@ const Dashboard = () => {
 							</div>
 							<div>
 								<AuditButton onClick={() => window.open('https://hacken.io/audits/#bent_finance', '_blank')}>
-									<img src={DocIcon} />&nbsp;
+									<img src={DocIcon} alt="DocIcon" />&nbsp;
 									View Report
 								</AuditButton>
 							</div>
