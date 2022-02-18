@@ -81,6 +81,10 @@ export const useWeBentRewardsUsd = (): Record<string, BigNumber> => {
 	return useSelector((state: AppState) => state.contracts.weBentRewardsUsd || {});
 }
 
+export const useDelegationAddr = (): string => {
+	return useSelector((state: AppState) => state.contracts.delegationAddr || ethers.constants.AddressZero);
+}
+
 export const useVotingPower = (): number => {
 	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
 	const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);

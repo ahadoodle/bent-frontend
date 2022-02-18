@@ -5,6 +5,7 @@ import "font-awesome/css/font-awesome.min.css";
 import BannerBlocks from "components/BannerBlocks";
 import { LockWeBent } from "components/LockWeBent";
 import { MyLocksTable } from "components/Locks";
+import { DelegateVote } from "components/Delegate";
 
 const Lock = () => {
 	return (
@@ -22,6 +23,9 @@ const Lock = () => {
 				<LockWeBent />
 				<div className="section">
 					<MyLocksTable />
+				</div>
+				<div className="section">
+					<DelegateVote />
 				</div>
 			</div>
 		</React.Fragment>

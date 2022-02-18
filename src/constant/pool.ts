@@ -299,6 +299,11 @@ const weBENT = {
 	RewardAssets: ['BENTCVX', 'SPELL', 'FXS', 'CVX', 'LUNAWORM']
 }
 
+const SnapshotDelegation = {
+	Addr: '0x469788fE6E9E9681C6ebF3bF78e7Fd26Fc015446',
+	BentDelegator: '0x58F1CaC30786754d8128CA7a1e5Cf8F29A780044'
+};
+
 export const POOLS = {
 	BentPools,
 	SushiPools,
@@ -307,4 +312,5 @@ export const POOLS = {
 	VlCvxLocker: '0xD18140b4B819b895A3dba5442F959fA44994AF50',
 	Multisig: '0xe001452BeC9e7AC34CA4ecaC56e7e95eD9C9aa3b',
 	weBENT,
+	SnapshotDelegation,
 }
