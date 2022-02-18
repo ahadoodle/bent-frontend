@@ -276,6 +276,11 @@ h2.white {
     font-feature-settings: 'ss01' on;
     color: #10151D;
 }
+.contract-address {
+    color: #703FFF;
+    text-decoration: none;
+    font-style: italic;
+}
 .infoWrap a {
     color: #703FFF;
     text-decoration: none;
@@ -469,6 +474,9 @@ button.btn.btnshow {
     color: #10151D;
     width: 200px;
     height: 46px;
+}
+button.btn.btnshow.error {
+    background: #E98D9F;
 }
 .text-center.btnwrap {
     padding: 10px 0;

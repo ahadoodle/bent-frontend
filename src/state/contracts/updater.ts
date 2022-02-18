@@ -29,6 +29,8 @@ import {
 	getSushiTradingVolume,
 	getMultiweBent,
 	getWeBentApr,
+	getSnapshot,
+	bentFinanceHex,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -127,15 +129,21 @@ export default function Updater(): null {
 			const bentCvxPoolAprs: Record<string, number> = {};
 			let bentCvxAvgApr = 0;
 
+			let delegationAddr = ethers.constants.AddressZero;
+
 			console.log(`Updating contract states\nTime: ${Date.now()}\nAccount: ${account}\nBlockNumber: ${blockNumber}\nBent Price: ${bentPrice}`);
 
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
 
+			// Add Snapshot Delegation calls
+			const snapshotMC = getSnapshot();
+			contractCalls.push(snapshotMC.delegation(accAddr, bentFinanceHex));
+
+			// Add weBent contract calls
 			const vlCvxLocker = getMultiCvxLocker();
 			contractCalls.push(vlCvxLocker.lockedBalanceOf(POOLS.Multisig))
 
-			// Add weBent contract calls
 			const bentToken = getMultiERC20Contract(TOKENS['BENT'].ADDR);
 			const weBentMC = getMultiweBent();
 			contractCalls.push(bentToken.allowance(accAddr, POOLS.weBENT.Addr));
@@ -251,6 +259,8 @@ export default function Updater(): null {
 				const depositedLpBalance = {};
 				const rewardsInfo = {};
 				let startIndex = 0;
+
+				delegationAddr = results[startIndex++];
 
 				vlCvxBalance = results[startIndex++];
 
@@ -610,6 +620,7 @@ export default function Updater(): null {
 					weBentRewards,
 					weBentRewardsUsd,
 					weBentApr,
+					delegationAddr,
 				}));
 			})
 		})

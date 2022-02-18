@@ -14,6 +14,7 @@ import BentCvxRewarderMasterchef from './BentCvxRewarderMasterchef.json';
 import TricryptoLpPrice from './TricryptoLpPrice.json';
 import CvxToken from './CvxToken.json';
 import weBENT from './weBENT.json';
+import SnapshotDelegation from './SnapshotDelegation.json';
 
 export const ABIS = {
 	BentBasePool,
@@ -32,4 +33,5 @@ export const ABIS = {
 	TricryptoLpPrice,
 	CvxToken,
 	weBENT,
+	SnapshotDelegation,
 }

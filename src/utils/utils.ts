@@ -252,3 +252,6 @@ export const sortCrvPool = (a, b, field: string, order: number): number => {
 	}
 	return 0;
 }
+
+// bentfinance.eth
+export const bentFinanceHex = '0x62656e7466696e616e63652e6574680000000000000000000000000000000000';
