@@ -97,7 +97,7 @@ export const ClaimBentCVX = (): React.ReactElement => {
 									<p>APR</p>
 									<div className="boldText">
 										<b>
-											{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+											{avgApr ? <>{utils.commify(avgApr.toFixed(2))}%</> : 'TBC'}
 										</b>
 									</div>
 								</div>

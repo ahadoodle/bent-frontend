@@ -112,7 +112,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 										<p>APR</p>
 										<div className="boldText">
 											<b>
-												{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}&nbsp;
+												{avgApr ? <>{utils.commify(avgApr.toFixed(2))}%</> : 'TBC'}&nbsp;
 												<i className="fa fa-info-circle cursor-pointer text-small" id="webent-apr-info" aria-hidden="true" />
 												<WeBentAprTooltip />
 											</b>

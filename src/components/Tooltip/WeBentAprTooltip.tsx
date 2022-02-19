@@ -27,13 +27,13 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 				<Row className="mb-3">
 					<Col>
 						<div className="text-underline">Current APR:</div>
-						<div className="green-color">{utils.commify(avgApr)}%</div>
+						<div className="green-color">{utils.commify(avgApr.toFixed(2))}%</div>
 					</Col>
 				</Row>
 				APR breakdown:<br />
-				- weBENT APR: {utils.commify(weBentApr)}%<br />
-				- bentCVX APR: {utils.commify(bentCvxApr())}%<br />
-				- Extras APR: {utils.commify(extraApr())}%<br />
+				- weBENT APR: {utils.commify(weBentApr.toFixed(2))}%<br />
+				- bentCVX APR: {utils.commify(bentCvxApr().toFixed(2))}%<br />
+				- Extras APR: {utils.commify(extraApr().toFixed(2))}%<br />
 			</div>
 		</UncontrolledTooltip>
 	)

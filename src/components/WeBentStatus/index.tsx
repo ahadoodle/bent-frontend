@@ -75,7 +75,7 @@ export const WeBentStatus = (): React.ReactElement => {
 						<div className="divider-left p-0"></div>
 						<APRStatus
 							className="px-4"
-						>{avgApr ? utils.commify(avgApr) : 'TBC'} % APR</APRStatus>
+						>{avgApr ? utils.commify(avgApr.toFixed(2)) : 'TBC'} % APR</APRStatus>
 					</StatusContainer>
 				</Col>
 			</Row>

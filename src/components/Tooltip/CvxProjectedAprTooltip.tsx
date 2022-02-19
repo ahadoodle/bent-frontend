@@ -19,7 +19,7 @@ export const CvxProjectedAprTooltip = (props: Props): React.ReactElement => {
 				<Row className="mb-3">
 					<Col>
 						<div className="text-underline">Current APR:</div>
-						<div className="green-color">{utils.commify(props.apr)}%</div>
+						<div className="green-color">{utils.commify(props.apr.toFixed(2))}%</div>
 					</Col>
 					<Col>
 						<div className="text-underline">Projected APR:</div>
