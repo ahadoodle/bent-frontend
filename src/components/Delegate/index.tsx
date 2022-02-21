@@ -93,7 +93,7 @@ export const DelegateVote = (): React.ReactElement => {
 																<span className="small">
 																	You are currently delegating to:&nbsp;
 																	<a href={getEtherscanLink(delegatedAddr)} target="_blank" rel="noreferrer" className="contract-address">
-																		{delegatedAddr === POOLS.SnapshotDelegation.BentDelegator ? 'BENT Voting Address' : delegatedAddr}
+																		{delegatedAddr === POOLS.SnapshotDelegation.BentDelegator ? 'bentvote.eth (Bent Team)' : delegatedAddr}
 																	</a></span>
 															</CardText>
 															{
@@ -102,7 +102,12 @@ export const DelegateVote = (): React.ReactElement => {
 																		<button className="btn btnshow error" style={{ margin: '0 12px' }} onClick={onClearDelegate}>
 																			Clear Delegate
 																		</button>
-																		<button className="btn btnshow" style={{ margin: '0 12px' }} onClick={onDelegateToBent}>
+																		<button
+																			className="btn btnshow"
+																			style={{ margin: '0 12px' }}
+																			onClick={onDelegateToBent}
+																			disabled={delegatedAddr === POOLS.SnapshotDelegation.BentDelegator}
+																		>
 																			Delegate to Bent
 																		</button>
 																		<Splitter />
