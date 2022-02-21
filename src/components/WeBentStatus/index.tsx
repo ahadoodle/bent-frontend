@@ -7,7 +7,6 @@ import {
 	useIsMobile,
 	useTheme,
 	useTokenPrice,
-	useVotingControl,
 	useVotingPower,
 	useWeBentAvgApr,
 	useWeBentBentBalance,
