@@ -546,9 +546,10 @@ export default function Updater(): null {
 							cvx_vApr = cvx_vApr.add(ext_vApr);
 							ext_vApr = ethers.constants.Zero;
 						}
-						const bentRewardRate = cvxRewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
-						const bentApr = cvxPoolTvl.isZero() ? ethers.constants.Zero : getTokenPrice(tokenPrices, TOKENS['BENT'].ADDR).mul(bentRewardRate).mul(86400).mul(3650000)
-							.div(cvxPoolTvl);
+						const bentApr = cvx_vApr.mul(20).mul(bentMaxSupply.sub(bentSupply))
+							.mul(getTokenPrice(tokenPrices, TOKENS['BENT'].ADDR))
+							.div(getTokenPrice(tokenPrices, TOKENS['CVX'].ADDR))
+							.div(bentMaxSupply)
 
 						crvProjectedApr[poolKey] = {
 							baseCrvvApr: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].baseApy : ethers.constants.Zero,
