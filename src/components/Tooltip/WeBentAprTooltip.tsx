@@ -10,7 +10,7 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 	const bentAprs = useWeBentRewardsAprs();
 
 	const bentCvxApr = () => {
-		return bentAprs[TOKENS.BENTCVX.ADDR.toLowerCase()];
+		return parseFloat((bentAprs[TOKENS.BENTCVX.ADDR.toLowerCase()] || 0).toString());
 	}
 
 	const extraApr = () => {
