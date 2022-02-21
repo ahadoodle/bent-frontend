@@ -14,7 +14,7 @@ const ConnectWallet = (): React.ReactElement => {
 	useEffect(() => {
 		if (!library) return;
 		const ens = new ENS({ provider: library, ensAddress: getEnsAddress('1') })
-		ens.getName('0x09c6872649ce4f96d869e50a269e342333ae073a').then(name => {
+		ens.getName(account).then(name => {
 			console.log('ENS Name:', name.name)
 			setEnsName(name.name);
 		})
