@@ -109,7 +109,7 @@ export const LockWeBent = (): React.ReactElement => {
 									<div>
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
-											{avgApr ? <>{utils.commify(avgApr)}</> : 'TBD'} %&nbsp;
+											{avgApr ? <>{utils.commify(avgApr.toFixed(2))}</> : 'TBD'} %&nbsp;
 											<i className="fa fa-info-circle cursor-pointer" id="webent-apr-info" aria-hidden="true" />
 											<WeBentAprTooltip />
 										</b>

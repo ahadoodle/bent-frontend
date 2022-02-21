@@ -60,7 +60,7 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 							<Col onClick={() => onSort('apr')} className={sortOrderClass('apr')}>
 								<span className="small p-0">My Average APR</span><br />
 								<b className="p-0">
-									{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+									{avgApr ? <>{utils.commify(avgApr.toFixed(2))}%</> : 'TBC'}
 									&nbsp;<i className="fa fa-caret-down" aria-hidden="true" />
 								</b>
 							</Col>

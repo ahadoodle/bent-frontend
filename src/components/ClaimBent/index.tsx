@@ -105,7 +105,7 @@ export const ClaimBent = (): React.ReactElement => {
 									<p>APR</p>
 									<div className="boldText">
 										<b>
-											{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
+											{bentAvgApr ? <>{utils.commify(bentAvgApr.toFixed(2))}%</> : 'TBC'}
 										</b>
 									</div>
 								</div>

@@ -93,7 +93,7 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 					</Col>
 					<Col>
 						<b>
-							{apr ? <>{utils.commify(apr)}%</> : 'TBC'}
+							{apr ? <>{utils.commify(apr.toFixed(2))}%</> : 'TBC'}
 						</b>
 					</Col>
 					<Col></Col>

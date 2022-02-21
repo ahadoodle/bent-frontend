@@ -478,6 +478,11 @@ button.btn.btnshow {
 button.btn.btnshow.error {
     background: #E98D9F;
 }
+button.btn.btnshow:disabled {
+    color: #FAFAFA;
+    background: #9BA2AC;
+    border: 2px solid #9BA2AC;
+}
 .text-center.btnwrap {
     padding: 10px 0;
 }

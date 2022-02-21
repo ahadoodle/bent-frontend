@@ -522,7 +522,7 @@ export default function Updater(): null {
 							annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
 
 						// Bent Rewards
-						const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
+						const bentRewardRate = bentMaxSupply.sub(bentSupply).mul(rewardsInfo2.rewardRate).mul(20).div(bentMaxSupply);
 						annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
 						const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
 						crvApr[poolKey] = apr;

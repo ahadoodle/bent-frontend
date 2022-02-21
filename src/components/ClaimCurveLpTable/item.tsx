@@ -100,7 +100,7 @@ export const ClaimCurveLpItem = (props: Props): React.ReactElement => {
 						<b>
 							{apr ?
 								<>
-									{utils.commify(apr)}%&nbsp;
+									{utils.commify(apr.toFixed(2))}%&nbsp;
 									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
 										onClick={(e) => {
 											setShowBreakdown(!showBreakdown)
