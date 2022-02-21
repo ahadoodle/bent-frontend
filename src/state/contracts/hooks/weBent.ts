@@ -85,17 +85,20 @@ export const useDelegationAddr = (): string => {
 	return useSelector((state: AppState) => state.contracts.delegationAddr || ethers.constants.AddressZero);
 }
 
-export const useVotingPower = (): number => {
-	const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
-	const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);
+export const useVotingPower = (): BigNumber => {
 	const vlCvxBalance = useVlCvxBalance();
 	const bentTotalStaked = useWeBentBentBalance();
-	const bentTvl = utils.parseEther(bentPrice.toString()).mul(bentTotalStaked).div(BigNumber.from(10).pow(18));
-	return bentTvl.isZero() ? 0 :
-		parseFloat(utils.commify(((
-			utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance)
-				.div(BigNumber.from(10).pow(16)).div(bentTvl)
-		).toNumber() / 100).toFixed(2)))
+	return vlCvxBalance.mul(100).div(bentTotalStaked);
+	// const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
+	// const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);
+	// const vlCvxBalance = useVlCvxBalance();
+	// const bentTotalStaked = useWeBentBentBalance();
+	// const bentTvl = utils.parseEther(bentPrice.toString()).mul(bentTotalStaked).div(BigNumber.from(10).pow(18));
+	// return bentTvl.isZero() ? 0 :
+	// 	parseFloat(utils.commify(((
+	// 		utils.parseEther(cvxPrice.toString()).mul(vlCvxBalance)
+	// 			.div(BigNumber.from(10).pow(16)).div(bentTvl)
+	// 	).toNumber() / 100).toFixed(2)))
 }
 
 export const useVotingControl = (): number => {
