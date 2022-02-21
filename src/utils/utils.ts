@@ -71,7 +71,7 @@ export const getCrvApys = async (): Promise<Record<string, {
 	baseApy: BigNumber;
 	crvBoost: number;
 }>> => {
-	const url = 'https://justcors.com/tl_3938d48/https://www.convexfinance.com/api/curve-apys';
+	const url = 'https://getbent-api-supply.bentfinance.com/api/bent/curveApys';
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const res: any = await axios.get(url);
