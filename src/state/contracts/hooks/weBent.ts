@@ -88,7 +88,7 @@ export const useDelegationAddr = (): string => {
 export const useVotingPower = (): BigNumber => {
 	const vlCvxBalance = useVlCvxBalance();
 	const bentTotalStaked = useWeBentBentBalance();
-	return vlCvxBalance.mul(100).div(bentTotalStaked);
+	return bentTotalStaked.isZero() ? ethers.constants.Zero : vlCvxBalance.mul(100).div(bentTotalStaked);
 	// const bentPrice = useTokenPrice(TOKENS['BENT'].ADDR);
 	// const cvxPrice = useTokenPrice(TOKENS['CVX'].ADDR);
 	// const vlCvxBalance = useVlCvxBalance();
