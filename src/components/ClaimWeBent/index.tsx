@@ -119,7 +119,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 										</div>
 									</div>
 								</Col>
-								<Col>
+								<Col style={{ flex: '1.3 0' }}>
 									<div className="tableTitle">
 										<p>{formatBigNumber(weBentShare, 18, 2)} weBENT = {formatBigNumber(weBentBent, 18, 2)} BENT</p>
 										<div className="boldText">
@@ -130,7 +130,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 										</div>
 									</div>
 								</Col>
-								<Col>
+								<Col style={{ flex: '0.7 0' }}>
 									<Button
 										className="claimbtn"
 										onClick={onClaim}

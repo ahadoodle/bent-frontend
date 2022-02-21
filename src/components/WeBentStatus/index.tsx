@@ -24,7 +24,6 @@ export const WeBentStatus = (): React.ReactElement => {
 	const bentTotalStaked = useWeBentBentBalance();
 	const avgApr = useWeBentAvgApr();
 	const votingPower = useVotingPower();
-	const votingControl = useVotingControl();
 	const webentRatio = useWeBentRatio();
 	const cvxPrice = useTokenPrice(TOKENS.CVX.ADDR);
 	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
@@ -54,7 +53,7 @@ export const WeBentStatus = (): React.ReactElement => {
 							id="webent-status-voting-power"
 							mobile={isMobile}
 						>
-							$1 of weBENT ~ ${votingPower} vlCVX<br />
+							1 BENT = {formatBigNumber(votingPower, 2, 2)} CVX<br />
 						</StatusButton>
 						<UncontrolledTooltip
 							target="webent-status-voting-power"
@@ -62,10 +61,9 @@ export const WeBentStatus = (): React.ReactElement => {
 							placement="bottom"
 						>
 							<div style={{ padding: 15, lineHeight: '10px' }}>
-								<div style={{ textDecoration: 'underline' }}>weBENT Voting Power</div><br /><br />
-								{/* <div>$1 of weBENT controls ~ ${votingPower} vlCVX</div><br /><br /> */}
-								<div>1 weBENT controls {votingControl} vlCVX (${formatBigNumber(utils.parseEther(cvxPrice.toString()).mul(utils.parseEther(votingControl.toString())), 36, 2)})</div><br />
-								<div>1 weBENT = {webentRatio} BENT (${formatBigNumber(utils.parseEther(bentPrice.toString()).mul(utils.parseEther(webentRatio.toString())), 36, 2)})</div>
+								<div style={{ textDecoration: 'underline' }}>BENT Voting Power</div><br /><br />
+								<div>1 BENT (${bentPrice}) = {formatBigNumber(votingPower, 2, 2)} CVX (${formatBigNumber(utils.parseEther(cvxPrice.toString()).mul(votingPower), 20, 2)})</div><br />
+								<div>{webentRatio} BENT = 1 weBENT</div>
 							</div>
 						</UncontrolledTooltip>
 						<div className="divider-left p-0"></div>

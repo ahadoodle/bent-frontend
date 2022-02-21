@@ -44,7 +44,7 @@ export const BentPowerToolTip = (props: Props): React.ReactElement => {
 					<Col md="5">Staked BENT:</Col>
 					<Col md="7" className="text-right">
 						<b>
-							{formatBigNumber(bentStaked, 18, 2)} BENT&nbsp;
+							{formatBigNumber(bentStaked, 18, 2)}&nbsp;
 							(${formatMillionsBigNumber(utils.parseEther(bentPrice.toString()).mul(bentStaked).div(BigNumber.from(10).pow(18)))})
 						</b>
 					</Col>
@@ -61,9 +61,9 @@ export const BentPowerToolTip = (props: Props): React.ReactElement => {
 			</div>
 			<VotingPowerContainer>
 				<Row>
-					<Col md="5"><b>Voting Power</b></Col>
-					<Col md="7" className="text-right">
-						$1 weBENT = ${votingPower} vlCVX
+					<Col md="5" style={{ flex: '0.7 0' }}><b>Voting Power</b></Col>
+					<Col md="7" style={{ flex: '1.3 0' }} className="text-right">
+						1 BENT (${bentPrice}) = {formatBigNumber(votingPower, 2, 2)} CVX (${formatBigNumber(utils.parseEther(cvxPrice.toString()).mul(votingPower), 20, 2)})
 					</Col>
 				</Row>
 			</VotingPowerContainer>
