@@ -4,6 +4,7 @@ import {
 	Container, Button, Row, Col, UncontrolledTooltip
 } from "reactstrap";
 import {
+	useIsMobile,
 	useTheme,
 	useTokenPrice,
 	useVotingControl,
@@ -28,6 +29,7 @@ export const WeBentStatus = (): React.ReactElement => {
 	const cvxPrice = useTokenPrice(TOKENS.CVX.ADDR);
 	const bentPrice = useTokenPrice(TOKENS.BENT.ADDR);
 	const history = useHistory();
+	const isMobile = useIsMobile();
 
 	const onBent = () => {
 		history.push('/lock');
@@ -42,14 +44,15 @@ export const WeBentStatus = (): React.ReactElement => {
 							Stake BENT for weBENT
 						</h2>
 					</div>
-					<StatusContainer theme={theme}>
+					<StatusContainer theme={theme} mobile={isMobile}>
 						<Button
 							className="transBtn px-5"
 							onClick={() => onBent()}
 						>BENT to weBENT</Button>
 						<StatusButton
-							className="px-5"
+							className={`px-5 ${isMobile && 'mt-3'}`}
 							id="webent-status-voting-power"
+							mobile={isMobile}
 						>
 							$1 of weBENT ~ ${votingPower} vlCVX<br />
 						</StatusButton>
@@ -68,6 +71,7 @@ export const WeBentStatus = (): React.ReactElement => {
 						<div className="divider-left p-0"></div>
 						<StatusButton
 							className="px-4"
+							mobile={isMobile}
 						>
 							{formatBigNumber(bentTotalStaked, 18, 2)}&nbsp;
 							<span className="small">BENT Staked</span>
@@ -75,6 +79,7 @@ export const WeBentStatus = (): React.ReactElement => {
 						<div className="divider-left p-0"></div>
 						<APRStatus
 							className="px-4"
+							mobile={isMobile}
 						>{avgApr ? utils.commify(avgApr.toFixed(2)) : 'TBC'} % APR</APRStatus>
 					</StatusContainer>
 				</Col>
@@ -83,17 +88,18 @@ export const WeBentStatus = (): React.ReactElement => {
 	)
 }
 
-const StatusContainer = styled.div<{ theme: Theme }>`
+const StatusContainer = styled.div<{ theme: Theme, mobile: boolean }>`
 	border: 3px solid #414C5C;
 	border-radius: 8px;
 	background: #18202C;
 	display: flex;
+	flex-direction: ${props => props.mobile ? 'column' : 'row'};
 	padding: 21px;
 	justify-content: space-between;
 	box-shadow: 10px 15px 0px 0px #607390;
 `;
 
-const StatusButton = styled.div`
+const StatusButton = styled.div<{ mobile: boolean }>`
 	font-style: normal;
 	font-weight: bold;
 	font-size: 16px;
@@ -101,7 +107,7 @@ const StatusButton = styled.div`
 	text-align: center;
 	letter-spacing: -0.24px;
 	min-width: 185px;
-	width: max-content;
+	${props => !props.mobile && 'width: max-content;'}
 	background: transparent;
 	border: none;
 	color: white;

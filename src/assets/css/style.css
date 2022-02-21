@@ -828,6 +828,7 @@ button.transBtn {
     line-height: 15px;
     text-align: center;
     letter-spacing: -0.24px;
+    padding: 12px 20px;
 }
 button.transBtn:hover {
     color: #C1FFD7;
