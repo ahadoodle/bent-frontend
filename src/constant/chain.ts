@@ -5,9 +5,9 @@ export enum ChainId {
 
 export const SUPPORTED_CHAINS = [ChainId.Mainnet];
 
-export const INFURA_KEY = 'd242d48659e4423d9b2cf581e09774a2';
+export const RPC_NODE_KEY = 'p7zwMl-PuYfW0agQvcDzMo7bvnXX-Hqj';
 export const NETWORK_CONNECTIONS = {
-	[ChainId.Mainnet]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+	[ChainId.Mainnet]: `https://eth-mainnet.alchemyapi.io/v2/${RPC_NODE_KEY}`,
 }
 
 export const NETWORK_NAMES = {
