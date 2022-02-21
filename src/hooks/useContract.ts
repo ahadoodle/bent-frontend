@@ -63,3 +63,8 @@ export const useWeBentContract = (): Contract => {
 	const { library } = useActiveWeb3React();
 	return useMemo(() => new Contract(POOLS.weBENT.Addr, ABIS.weBENT, library), [library]);
 }
+
+export const useSnapshot = (): Contract => {
+	const { library } = useActiveWeb3React();
+	return useMemo(() => new Contract(POOLS.SnapshotDelegation.Addr, ABIS.SnapshotDelegation, library), [library]);
+}

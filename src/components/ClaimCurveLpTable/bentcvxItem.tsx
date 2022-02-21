@@ -93,7 +93,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 						<b>
 							{apr ?
 								<>
-									{utils.commify(apr)}%&nbsp;
+									{utils.commify(apr.toFixed(2))}%&nbsp;
 									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
 										onClick={(e) => {
 											setShowBreakdown(!showBreakdown)
@@ -104,11 +104,11 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 											<Row className="mb-3">
 												<Col>
 													<div className="text-underline">Current APR:</div>
-													<div className="green-color">{utils.commify(apr)}%</div>
+													<div className="green-color">{utils.commify(apr.toFixed(2))}%</div>
 												</Col>
 											</Row>
 											Current APR breakdown:<br />
-											- BENT APR: {utils.commify(apr)}%<br />
+											- BENT APR: {utils.commify(apr.toFixed(2))}%<br />
 										</div>
 									</UncontrolledTooltip>
 								</> : 'TBC'}

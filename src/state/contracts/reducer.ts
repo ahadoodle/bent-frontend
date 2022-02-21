@@ -46,6 +46,7 @@ export interface ContractsState {
 	weBentAprs: Record<string, number>,
 	weBentRewards: Record<string, BigNumber>,
 	weBentRewardsUsd: Record<string, BigNumber>,
+	delegationAddr: string;
 
 	// Bent Staking Pool States
 	bentTvl: BigNumber,
@@ -116,6 +117,7 @@ const initialState: ContractsState = {
 	weBentAprs: {},
 	weBentRewards: {},
 	weBentRewardsUsd: {},
+	delegationAddr: ethers.constants.AddressZero,
 
 	bentTvl: ethers.constants.Zero,
 	bentStaked: ethers.constants.Zero,
@@ -300,5 +302,6 @@ export default createReducer(initialState, (builder) =>
 				if (!state.weBentRewardsUsd) state.weBentRewardsUsd = {};
 				state.weBentRewardsUsd[tokenAddr] = action.payload.weBentRewardsUsd[tokenAddr];
 			})
+			state.delegationAddr = action.payload.delegationAddr;
 		})
 );

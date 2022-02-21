@@ -185,7 +185,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 									<div>
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
-											{avgApr ? <>{utils.commify(avgApr)}%</> : 'TBC'}
+											{avgApr ? <>{utils.commify(avgApr.toFixed(2))}%</> : 'TBC'}
 											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>

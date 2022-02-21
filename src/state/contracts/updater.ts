@@ -29,6 +29,8 @@ import {
 	getSushiTradingVolume,
 	getMultiweBent,
 	getWeBentApr,
+	getSnapshot,
+	bentFinanceHex,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -127,15 +129,21 @@ export default function Updater(): null {
 			const bentCvxPoolAprs: Record<string, number> = {};
 			let bentCvxAvgApr = 0;
 
+			let delegationAddr = ethers.constants.AddressZero;
+
 			console.log(`Updating contract states\nTime: ${Date.now()}\nAccount: ${account}\nBlockNumber: ${blockNumber}\nBent Price: ${bentPrice}`);
 
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
 
+			// Add Snapshot Delegation calls
+			const snapshotMC = getSnapshot();
+			contractCalls.push(snapshotMC.delegation(accAddr, bentFinanceHex));
+
+			// Add weBent contract calls
 			const vlCvxLocker = getMultiCvxLocker();
 			contractCalls.push(vlCvxLocker.lockedBalanceOf(POOLS.Multisig))
 
-			// Add weBent contract calls
 			const bentToken = getMultiERC20Contract(TOKENS['BENT'].ADDR);
 			const weBentMC = getMultiweBent();
 			contractCalls.push(bentToken.allowance(accAddr, POOLS.weBENT.Addr));
@@ -174,6 +182,7 @@ export default function Updater(): null {
 			contractCalls.push(bentToken.allowance(accAddr, POOLS.BentStaking.POOL));
 			contractCalls.push(bentSingleStaking.balanceOf(accAddr));
 			contractCalls.push(bentSingleStaking.totalSupply());
+			contractCalls.push(bentSingleStaking.endRewardBlock());
 			POOLS.BentStaking.RewardAssets.forEach((rewardToken, index) => {
 				contractCalls.push(bentSingleStaking.rewardPools(index));
 			})
@@ -250,6 +259,8 @@ export default function Updater(): null {
 				const depositedLpBalance = {};
 				const rewardsInfo = {};
 				let startIndex = 0;
+
+				delegationAddr = results[startIndex++];
 
 				vlCvxBalance = results[startIndex++];
 
@@ -328,15 +339,16 @@ export default function Updater(): null {
 				bentStakedUsd = bentPriceBN.mul(bentStaked).div(BigNumber.from(10).pow(18));
 				bentTotalStaked = results[startIndex++];
 				bentTvl = bentPriceBN.mul(bentTotalStaked).div(BigNumber.from(10).pow(18));
+				const bentEndRewardBlock = BigNumber.from(results[startIndex++]);
 
 				let bentTokenRewardsUsd = ethers.constants.Zero;
 				POOLS.BentStaking.RewardAssets.forEach((rewardToken, index) => {
 					const rewardsInfo = results[startIndex++];
 					const rewardUsd = getAnnualReward(rewardsInfo.rewardRate, rewardsInfo.rewardToken, tokenPrices[rewardsInfo.rewardToken.toLowerCase()]);
-					bentAprs[TOKENS[rewardToken].ADDR.toLowerCase()] = (bentTvl.isZero() ? 0 : rewardUsd.mul(10000).div(bentTvl).toNumber()) / 100;
+					bentAprs[TOKENS[rewardToken].ADDR.toLowerCase()] = ((bentTvl.isZero() || bentEndRewardBlock.lt(blockNumber)) ? 0 : rewardUsd.mul(10000).div(bentTvl).toNumber()) / 100;
 					bentTokenRewardsUsd = bentTokenRewardsUsd.add(rewardUsd);
 				})
-				bentAvgApr = (bentTvl.isZero() ? 0 : bentTokenRewardsUsd.mul(10000).div(bentTvl).toNumber()) / 100;
+				bentAvgApr = ((bentTvl.isZero() || bentEndRewardBlock.lt(blockNumber)) ? 0 : bentTokenRewardsUsd.mul(10000).div(bentTvl).toNumber()) / 100;
 
 				const bentPendingRewards = results[startIndex++];
 				POOLS.BentStaking.RewardAssets.forEach((rewardToken, index) => {
@@ -510,7 +522,7 @@ export default function Updater(): null {
 							annualRewardsUsd = getAnnualReward(rewardsInfo3.rewardRate, rewardsInfo3.rewardToken, tokenPrices[rewardsInfo3.rewardToken.toLowerCase()]).add(annualRewardsUsd);
 
 						// Bent Rewards
-						const bentRewardRate = rewardsInfo2.rewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
+						const bentRewardRate = bentMaxSupply.sub(bentSupply).mul(rewardsInfo2.rewardRate).mul(20).div(bentMaxSupply);
 						annualRewardsUsd = getAnnualReward(bentRewardRate, TOKENS['BENT'].ADDR, bentPrice).add(annualRewardsUsd);
 						const apr = (tvl.isZero() ? 0 : annualRewardsUsd.mul(10000).div(tvl).toNumber()) / 100;
 						crvApr[poolKey] = apr;
@@ -534,9 +546,10 @@ export default function Updater(): null {
 							cvx_vApr = cvx_vApr.add(ext_vApr);
 							ext_vApr = ethers.constants.Zero;
 						}
-						const bentRewardRate = cvxRewardRate.mul(20).mul(bentMaxSupply.sub(bentSupply)).div(bentMaxSupply);
-						const bentApr = cvxPoolTvl.isZero() ? ethers.constants.Zero : getTokenPrice(tokenPrices, TOKENS['BENT'].ADDR).mul(bentRewardRate).mul(86400).mul(3650000)
-							.div(cvxPoolTvl);
+						const bentApr = cvx_vApr.mul(20).mul(bentMaxSupply.sub(bentSupply))
+							.mul(getTokenPrice(tokenPrices, TOKENS['BENT'].ADDR))
+							.div(getTokenPrice(tokenPrices, TOKENS['CVX'].ADDR))
+							.div(bentMaxSupply)
 
 						crvProjectedApr[poolKey] = {
 							baseCrvvApr: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].baseApy : ethers.constants.Zero,
@@ -608,6 +621,7 @@ export default function Updater(): null {
 					weBentRewards,
 					weBentRewardsUsd,
 					weBentApr,
+					delegationAddr,
 				}));
 			})
 		})

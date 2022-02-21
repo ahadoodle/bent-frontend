@@ -1,3 +1,6 @@
+.w-0 {
+    width: 0;
+}
 .ml-auto {
     margin-left: auto;
 }
@@ -273,6 +276,11 @@ h2.white {
     font-feature-settings: 'ss01' on;
     color: #10151D;
 }
+.contract-address {
+    color: #703FFF;
+    text-decoration: none;
+    font-style: italic;
+}
 .infoWrap a {
     color: #703FFF;
     text-decoration: none;
@@ -466,6 +474,14 @@ button.btn.btnshow {
     color: #10151D;
     width: 200px;
     height: 46px;
+}
+button.btn.btnshow.error {
+    background: #E98D9F;
+}
+button.btn.btnshow:disabled {
+    color: #FAFAFA;
+    background: #9BA2AC;
+    border: 2px solid #9BA2AC;
 }
 .text-center.btnwrap {
     padding: 10px 0;
@@ -812,6 +828,7 @@ button.transBtn {
     line-height: 15px;
     text-align: center;
     letter-spacing: -0.24px;
+    padding: 12px 20px;
 }
 button.transBtn:hover {
     color: #C1FFD7;

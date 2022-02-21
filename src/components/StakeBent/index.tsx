@@ -102,7 +102,7 @@ export const StakeBent = (): React.ReactElement => {
 									<div>
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
-											{bentAvgApr ? <>{utils.commify(bentAvgApr)}%</> : 'TBC'}
+											{bentAvgApr ? <>{utils.commify(bentAvgApr.toFixed(2))}%</> : 'TBC'}
 											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
 										</b>
 									</div>
