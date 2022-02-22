@@ -6,23 +6,22 @@ import { Navbar } from "reactstrap";
 import ConnectWallet from "components/ConnectWallet";
 
 export const MobileSubHeader = (): React.ReactElement => {
-	const isMobile = useIsMobile();
-	return (
-		<Container mobile={isMobile}>
-			<GasContainer>
-				<img src={GasIcon} alt="Menu" /> 61
-			</GasContainer>
-			<ConnectWallet />
-		</Container>
-	)
+  const isMobile = useIsMobile();
+  return (
+    <Container style={!isMobile && { display: 'none' }}>
+      <GasContainer>
+        <img src={GasIcon} alt="Menu" /> 61
+      </GasContainer>
+      <ConnectWallet />
+    </Container>
+  )
 }
 
-const Container = styled(Navbar) <{ mobile: boolean }>`
+const Container = styled(Navbar)`
   background: #171E29;
   border: 1px solid #1E2735;
   border-radius: 34px;
   padding: 10px 0;
-	${props => !props.mobile && 'display: none;'}
 `
 
 const GasContainer = styled.div`
