@@ -181,6 +181,28 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'stethCrv',
 		crvPoolLink: 'https://curve.fi/steth/deposit',
 	},
+	SPELLETH: {
+		LOGO: TOKEN_LOGO.SPELL,
+		Name: 'spelleth',
+		POOL: '0xb8fbf1ecCDbB50a3E8838C5b4Cbb5575f1ee8288',
+		DepositAsset: '0x8282BD15dcA2EA2bDf24163E8f2781B30C43A2ef', // Curve.fi SPELL-ETH
+		CvxRewardsPool: '0xb2f0bB6352417c1Bf017862aC165E67623611aF3',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'spellethCrv',
+		crvPoolLink: 'https://curve.fi/spelleth/deposit',
+		isCryptoPool: true,
+	},
+	TETH: {
+		LOGO: TOKEN_LOGO.T,
+		Name: 'teth',
+		POOL: '0x5Ac451D745EFb91683090Fa9aEFf12fe22202C5A',
+		DepositAsset: '0xCb08717451aaE9EF950a2524E33B6DCaBA60147B',
+		CvxRewardsPool: '0x3E91E7c822AC8b4b7905d108c3faCF22A3ee5d2c',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'tethCrv',
+		crvPoolLink: 'https://curve.fi/teth/deposit',
+		isCryptoPool: true,
+	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
 		Name: 'frax',
