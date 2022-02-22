@@ -32,14 +32,15 @@ export const LogoContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 80px;
-	width: 80px;
+	height: 90px;
+	width: 90px;
 	margin: 16px auto 0;
 	border-radius: 50%;
 	img {
 		height: 80px;
 		width: 80px;
 	}
+	border: 3px solid #414C5C;
 `
 
 export const WalletMenu = styled.div`
@@ -92,6 +93,7 @@ export const LogoGroup = styled.div`
 	display: flex;
 	align-items: center;
 	color: white;
+	margin-right: 20px;
 	img {
 		height: 40px;
 		width: 40px;

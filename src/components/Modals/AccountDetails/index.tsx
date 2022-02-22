@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components'
-// import Avatar from 'components/Avatar'
 import { Modal } from 'components/Modal'
 import { useEthers } from 'hooks'
 import connectSvg from 'assets/images/connect.svg'
@@ -9,16 +8,15 @@ import Address from 'components/Address';
 import { ViewOnExp } from 'components/ViewOnExp';
 import { CopyAddress } from 'components/CopyAddress';
 import { AccountIcon } from 'components/Avatar';
-import { ethers } from 'ethers';
 
-interface AccountDetailModalProps {
+interface Props {
 	isShown: boolean
 	activeConnector?: string
 	onRequestClose: () => void
 	handleChangeConnector: (willChange: boolean) => void
 }
 
-export const AccountDetailsModal = (props: AccountDetailModalProps) => {
+export const AccountDetailsModal = (props: Props): React.ReactElement => {
 	const {
 		isShown,
 		onRequestClose,
@@ -38,7 +36,7 @@ export const AccountDetailsModal = (props: AccountDetailModalProps) => {
 		>
 			<ConnectContainer>
 				<FlexRow style={{ justifyContent: 'flex-start' }}>
-					<img src={connectSvg} style={{ margin: 0 }} />
+					<img src={connectSvg} style={{ margin: 0 }} alt="" />
 					&nbsp;Connected
 					<Button
 						style={{ padding: '5px 15px', fontSize: 14, marginLeft: 'auto' }}
@@ -114,8 +112,4 @@ const AccountAddress = styled.div`
   font-size: 18px;
   margin-top: 16px;
 	color: white;
-`
-
-const P = styled.p`
-  color: #C1EAF8;
 `

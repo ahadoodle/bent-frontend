@@ -1,25 +1,19 @@
 import React, { useEffect, useRef } from 'react'
 import Jazzicon from '@metamask/jazzicon'
 import styled from 'styled-components'
-
 import { useActiveWeb3React } from 'hooks'
-
-const AccountIconContainer = styled.div<{ size: number }>`
-  height: ${({ size }) => `${size}px`};
-  width: ${({ size }) => `${size}px`};
-	border-radius: 50%;
-`
 
 interface Props {
 	size?: number,
 	address?: string
 }
 
-function AccountIcon(props: Props) {
+const AccountIcon = (props: Props): React.ReactElement => {
 	const size = props.size || 20
 	const addressOverride = props.address
 
 	const { account } = useActiveWeb3React()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const accountIconRef = useRef<any>(null)
 
 	useEffect(() => {
@@ -47,6 +41,12 @@ const Container = styled.div`
   margin: 23px 0px;
   border-radius: 50%;
 	border: 3px solid #414C5C;
+`
+
+const AccountIconContainer = styled.div<{ size: number }>`
+  height: ${({ size }) => `${size}px`};
+  width: ${({ size }) => `${size}px`};
+	border-radius: 50%;
 `
 
 export { AccountIcon }

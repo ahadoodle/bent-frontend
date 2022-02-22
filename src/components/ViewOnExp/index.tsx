@@ -10,7 +10,7 @@ interface Props {
 	showTitle?: boolean
 }
 
-export const ViewOnExp = (props: Props) => {
+export const ViewOnExp = (props: Props): React.ReactElement => {
 	const [copySuccess, setCopySuccess] = useState(false)
 	const link = getEtherscanLink(props.address || ethers.constants.AddressZero);
 

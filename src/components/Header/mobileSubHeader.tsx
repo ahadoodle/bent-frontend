@@ -1,24 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import GasIcon from "assets/images/gas.svg";
-import AccountIcon from "assets/images/account.svg";
-import { useEthers, useIsMobile } from "hooks";
+import { useIsMobile } from "hooks";
 import { Navbar } from "reactstrap";
-import { formatAddress } from "utils";
 import ConnectWallet from "components/ConnectWallet";
 
 export const MobileSubHeader = (): React.ReactElement => {
 	const isMobile = useIsMobile();
-	const { account } = useEthers();
 	return (
 		<Container mobile={isMobile}>
 			<GasContainer>
 				<img src={GasIcon} alt="Menu" /> 61
 			</GasContainer>
-			{/* <AccountContainer>
-				<img src={AccountIcon} alt="Menu" />
-				<span className="mt-1">{formatAddress(account || '')}</span>
-			</AccountContainer> */}
 			<ConnectWallet />
 		</Container>
 	)
@@ -43,14 +36,3 @@ const GasContainer = styled.div`
   line-height: 14px;
   letter-spacing: -0.24px;
 `;
-
-const AccountContainer = styled.div`
-  margin-left: auto;
-	margin-right: 20px;
-	font-style: normal;
-	font-weight: 500;
-	font-size: 12px;
-	letter-spacing: -0.24px;
-
-	color: #FAFAFA;
-`

@@ -8,7 +8,7 @@ interface Props {
 	showTitle?: boolean
 }
 
-export const CopyAddress = (props: Props) => {
+export const CopyAddress = (props: Props): React.ReactElement => {
 	const [copySuccess, setCopySuccess] = useState(false)
 	const addressTextRef = useRef<HTMLTextAreaElement | null>(null)
 
@@ -38,15 +38,12 @@ export const CopyAddress = (props: Props) => {
 }
 
 export const CopyAccount = styled.div`
-  ${props => accountLinkStyle(props.theme)}
-`
-export const accountLinkStyle = (props) => (`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-  font-size: 14px;
-  color: #C1EAF8;
-  text-decoration: none;
-  cursor: pointer;
+	font-size: 14px;
+	color: #C1EAF8;
+	text-decoration: none;
+	cursor: pointer;
 	margin-left: 10px;
-`)
+`

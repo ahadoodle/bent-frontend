@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface IconProps {
-	iconSrc: any,
+	iconSrc: string,
 	to?: string,
 	borderType?: 'solid' | 'dashed' | 'none',
 	borderColor?: string,
@@ -10,7 +10,7 @@ interface IconProps {
 	style?: React.CSSProperties
 }
 
-export const Icon = (props: IconProps) => {
+export const Icon = (props: IconProps): React.ReactElement => {
 	return (
 		<Container
 			style={props.style}

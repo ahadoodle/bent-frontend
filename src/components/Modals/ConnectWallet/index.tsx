@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
 import { Modal } from 'components/Modal'
-import { useLocalStorage } from 'hooks'
 
 import arrowSvg from 'assets/images/arrowright.svg'
 import metamaskSvg from 'assets/images/metamask.svg'
-// import truefiSvg from 'assets/img/Blue_icon_hi_res.svg'
+import bentSvg from 'assets/images/token/BENT.svg'
 import walletconnectSvg from 'assets/images/walletconnect.svg'
 
 import {
@@ -16,9 +15,9 @@ import {
   DisconnectButton,
   LogoGroup
 } from './styles';
-import { Button } from 'reactstrap'
+import { Button } from 'components/Button'
 
-interface ConnectWalletModalProps {
+interface Props {
   isShown: boolean
   onRequestClose: () => void
   activeConnector?: string
@@ -29,7 +28,7 @@ interface ConnectWalletModalProps {
   unsupportedChainError: boolean
 }
 
-export const ConnectWalletModal = (props: ConnectWalletModalProps) => {
+export const ConnectWalletModal = (props: Props): React.ReactElement => {
   const {
     isShown,
     onRequestClose,
@@ -40,15 +39,8 @@ export const ConnectWalletModal = (props: ConnectWalletModalProps) => {
     handleChangeConnector,
     unsupportedChainError
   } = props
-  const [storage, setStorage] = useLocalStorage('acceptedTerms')
-  const [acceptedTerms, setAcceptedTerms] = useState(storage)
-
-  useEffect(() => {
-    setStorage(acceptedTerms)
-  }, [acceptedTerms, setStorage])
 
   const handleConnectWeb3 = (web3Wallet: string) => {
-    if (!acceptedTerms) return;
     if (activeConnector === web3Wallet.toUpperCase()) {
       return handleChangeConnector(false)
     }
@@ -57,7 +49,7 @@ export const ConnectWalletModal = (props: ConnectWalletModalProps) => {
 
   const disconnectButton = (
     <DisconnectButton
-      onClick={(e: any) => {
+      onClick={e => {
         e.stopPropagation()
         handleDisconnect()
       }}
@@ -76,14 +68,8 @@ export const ConnectWalletModal = (props: ConnectWalletModalProps) => {
     >
       <ConnectContainer>
         <LogoContainer>
-          {/* <img src={truefiSvg} alt="truefi" /> */}
+          <img src={bentSvg} alt="truefi" />
         </LogoContainer>
-        {/* <Checkbox label={
-          <p style={{ marginTop: 20, marginBottom: 0 }}>
-            By connecting my wallet, I accept<br /> the &nbsp;
-            <a href="/terms-of-use" target="_blank">Terms of Use</a>
-          </p>
-        } onChange={setAcceptedTerms} defaultValue={acceptedTerms} /> */}
         {
           unsupportedChainError &&
           <ErrorMsg>Unsupported Chain</ErrorMsg>
@@ -91,8 +77,6 @@ export const ConnectWalletModal = (props: ConnectWalletModalProps) => {
         <WalletMenu>
           <Button
             // isConnected={activeConnector === 'METAMASK'}
-            disabled={!acceptedTerms}
-            variant="outline"
             onClick={() => handleConnectWeb3('metamask')}
             style={{ height: 60, justifyContent: 'space-between', display: 'flex' }}
           >
@@ -108,10 +92,7 @@ export const ConnectWalletModal = (props: ConnectWalletModalProps) => {
           </Button>
           <Button
             // isConnected={activeConnector === 'METAMASK'}
-            disabled={!acceptedTerms}
-            variant="outline"
             onClick={() => {
-              if (!acceptedTerms) return;
               if (activeConnector === 'WALLETCONNECT') {
                 return handleChangeConnector(false)
               }

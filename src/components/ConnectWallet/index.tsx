@@ -46,7 +46,7 @@ const ConnectWallet = (): React.ReactElement => {
 
 	return (
 		<div>
-			<Button onClick={toggle}>
+			<Button onClick={toggle} variant="green">
 				{activeAccountAddress ? (!ensName ? formatAddress(activeAccountAddress) : ensName) : "Connect Wallet"}
 			</Button>
 			{

@@ -9,7 +9,7 @@ interface Props {
 	length?: number
 }
 
-const Address = (props: Props) => {
+const Address = (props: Props): React.ReactElement => {
 	return (
 		<Container color={props.color || 'white'}>
 			{props.address ? truncateMiddle(props.address, props.length || 15, '.....') : '0x00'}

@@ -61,13 +61,13 @@ export const Modal: FunctionComponent<ModalProps> = ({
 
 interface Props {
 	title: string;
-	secondTitle?: any;
-	children?: any;
+	secondTitle?: string;
+	children?: React.ReactElement;
 	style?: React.CSSProperties;
 	contentStyle?: React.CSSProperties;
 }
 
-export const BoxContainer = (props: Props) => {
+export const BoxContainer = (props: Props): React.ReactElement => {
 	const [hover, setHover] = useState<boolean>(false);
 
 	return (
@@ -147,8 +147,8 @@ const SecondTitle = styled.div`
 
 const TitleEcllipse = styled.div<{ hover: boolean }>`
 	transition: background .2s;
-	background: ${props => props.hover ? '#414C5C' : 'none'};
-	border: 1px solid #414C5C;
+	background: ${props => props.hover ? '#C1FFD7' : 'none'};
+	border: 1px solid #C1FFD7;
 	box-sizing: border-box;
 	border-radius: 50%;
 	width: 12px;
