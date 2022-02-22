@@ -12,7 +12,7 @@ const ConnectWallet = (): React.ReactElement => {
 	const [showDropdown, setShowDropdown] = useState(false);
 
 	useEffect(() => {
-		if (!library) return;
+		if (!library || !account) return;
 		const ens = new ENS({ provider: library, ensAddress: getEnsAddress('1') })
 		ens.getName(account).then(name => {
 			console.log('ENS Name:', name.name)
@@ -48,7 +48,7 @@ const ConnectWallet = (): React.ReactElement => {
 		<div className='d-flex justify-content-center'>
 			<Dropdown toggle={() => { setShowDropdown(!showDropdown) }} className='wallet-connect'>
 				<DropdownToggle caret className='wallet'>
-					{activeAccountAddress ? (ensName === '' ? formatAddress(activeAccountAddress) : ensName) : "Connect Wallet"}
+					{activeAccountAddress ? (!ensName ? formatAddress(activeAccountAddress) : ensName) : "Connect Wallet"}
 				</DropdownToggle>
 				<DropdownMenu container="body" className={showDropdown ? 'show' : ''}>
 					<DropdownItem onClick={() => { handleMetaMaskConnect('METAMASK') }} className={`wallet btn btn-secondary ${activeAccountAddress === '' ? '' : 'd-none'}`}>
