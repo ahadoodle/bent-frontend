@@ -95,11 +95,11 @@ const Container = styled.div`
 	color: white;
 	width: fit-content;
 	backdrop-filter: blur(10px);
-	background: linear-gradient(102.05deg, rgba(0, 191, 255, 0.15) -0.64%, rgba(0, 0, 0, 0) 98.13%);
+	background: linear-gradient(102.05deg, rgba(37, 49, 67, 0.15) -0.64%, rgba(0, 0, 0, 0) 98.13%);
 	border-radius: 20px;
-	border: 1px solid #33B6E1;
+	border: 1px solid #414C5C;
 	&:hover {
-		box-shadow: 0px 0px 30px rgb(51 182 225 / 40%);
+		box-shadow: 0px 0px 30px rgba(193, 255, 215, 0.4);
 	}
 	overflow: hidden;
 	position: relative;
@@ -115,9 +115,9 @@ const TitleContainer = styled.div`
 
 const Title = styled.div`
 	border-radius: 20px 0px;
-	background: #00000052;
+	background: #37455930;
 	backdrop-filter: blur(20px);
-	color: #33B6E1;
+	color: white;
 	// color: linear-gradient(269.89deg, #9DE5FF -2.43%, #33B6E1 98.9%);
 	height: 38px;
 	width: fit-content;
@@ -126,7 +126,7 @@ const Title = styled.div`
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	border: 1px #33B6E1;
+	border: 1px #414C5C;
 	border-style: none solid solid none;
 `;
 
@@ -147,8 +147,8 @@ const SecondTitle = styled.div`
 
 const TitleEcllipse = styled.div<{ hover: boolean }>`
 	transition: background .2s;
-	background: ${props => props.hover ? '#33B6E1' : 'none'};
-	border: 1px solid #33B6E1;
+	background: ${props => props.hover ? '#414C5C' : 'none'};
+	border: 1px solid #414C5C;
 	box-sizing: border-box;
 	border-radius: 50%;
 	width: 12px;
