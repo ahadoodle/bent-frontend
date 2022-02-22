@@ -38,8 +38,8 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light {
     background-image: url(../images/banner.jpg);
     background-repeat: no-repeat;
     background-size: cover;
+    padding-top: 160px;
     padding-bottom: 120px;
-    padding-top: 120px;
 }
 .header nav.navbar.navbar-expand-md {
     justify-content: space-between;
@@ -67,9 +67,6 @@ ul.primaryMenu {
 }
 .wallet-connect .dropdown-menu {
     background-color: rgb(23, 23, 23, 0);
-}
-.wallet-connect .wallet.btn {
-    margin-top: 10px;
 }
 ul.primaryMenu li a {
     color: #8D99AB;
