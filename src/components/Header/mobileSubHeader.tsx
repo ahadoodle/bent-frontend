@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import GasIcon from "assets/images/gas.svg";
 import { useIsMobile } from "hooks";
-import { Navbar } from "reactstrap";
 import ConnectWallet from "components/ConnectWallet";
 
 export const MobileSubHeader = (): React.ReactElement => {
