@@ -20,6 +20,7 @@ import SpellLogo from 'assets/images/token/SPELL.svg';
 import StethLogo from 'assets/images/token/STETH.svg';
 import SushiLogo from 'assets/images/token/SUSHI.svg';
 import TLogo from 'assets/images/token/T.svg';
+import TribeLogo from 'assets/images/token/TRIBE.png';
 import TriCrypto2Logo from 'assets/images/token/TRICRYPTO2.png';
 import UstLogo from 'assets/images/token/UST.svg';
 
@@ -46,6 +47,7 @@ export const TOKEN_LOGO = {
 	STETH: StethLogo,
 	SUSHI: SushiLogo,
 	T: TLogo,
+	TRIBE: TribeLogo,
 	TRICRYPTO2: TriCrypto2Logo,
 	UST: UstLogo,
 }
