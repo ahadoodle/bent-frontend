@@ -22,7 +22,6 @@ a,button {
     left: 0;
     right: 0;
     top: 0;
-    padding-top: 15px;
     backdrop-filter: blur(20px);
     background: linear-gradient(102.05deg, rgba(64, 76, 80, 0.15) -0.64%, rgba(0, 0, 0, 0) 98.13%);
     border-bottom: 1px solid #414C5C;
