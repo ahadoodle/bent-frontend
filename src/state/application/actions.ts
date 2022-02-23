@@ -28,3 +28,4 @@ export const removePopup = createAction<{ key: string }>('app/removePopup');
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('app/updateBlockNumber');
 export const updateTheme = createAction<Theme>('app/updateTheme');
+export const updateEnsName = createAction<string>('app/updateEnsName');

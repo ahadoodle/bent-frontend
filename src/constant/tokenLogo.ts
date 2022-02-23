@@ -9,6 +9,7 @@ import DaiLogo from 'assets/images/token/DAI.svg';
 import D3PoolLogo from 'assets/images/token/D3POOL.svg';
 import DolaLogo from 'assets/images/token/DOLA.svg';
 import EthLogo from 'assets/images/token/ETH.svg';
+import FeiLogo from 'assets/images/token/FEI.svg';
 import FraxLogo from 'assets/images/token/FRAX.svg';
 import FxsLogo from 'assets/images/token/FXS.svg';
 import LdoLogo from 'assets/images/token/LDO.svg';
@@ -19,6 +20,8 @@ import OgnLogo from 'assets/images/token/OGN.svg';
 import SpellLogo from 'assets/images/token/SPELL.svg';
 import StethLogo from 'assets/images/token/STETH.svg';
 import SushiLogo from 'assets/images/token/SUSHI.svg';
+import TLogo from 'assets/images/token/T.svg';
+import TribeLogo from 'assets/images/token/TRIBE.svg';
 import TriCrypto2Logo from 'assets/images/token/TRICRYPTO2.png';
 import UstLogo from 'assets/images/token/UST.svg';
 
@@ -34,6 +37,7 @@ export const TOKEN_LOGO = {
 	D3POOL: D3PoolLogo,
 	DOLA: DolaLogo,
 	ETH: EthLogo,
+	FEI: FeiLogo,
 	FRAX: FraxLogo,
 	FXS: FxsLogo,
 	LDO: LdoLogo,
@@ -44,6 +48,8 @@ export const TOKEN_LOGO = {
 	SPELL: SpellLogo,
 	STETH: StethLogo,
 	SUSHI: SushiLogo,
+	T: TLogo,
+	TRIBE: TribeLogo,
 	TRICRYPTO2: TriCrypto2Logo,
 	UST: UstLogo,
 }

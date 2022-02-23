@@ -8,6 +8,7 @@
   "dependencies": {
     "@ensdomains/ensjs": "^2.1.0",
     "@ethersproject/providers": "^5.0.9",
+    "@metamask/jazzicon": "^2.0.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
