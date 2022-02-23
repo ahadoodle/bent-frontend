@@ -8,7 +8,7 @@ import ConnectWallet from "components/ConnectWallet";
 export const MobileSubHeader = (): React.ReactElement => {
   const isMobile = useIsMobile();
   return (
-    <Container style={!isMobile && { display: 'none' }}>
+    <Container mobile={isMobile}>
       <GasContainer>
         <img src={GasIcon} alt="Menu" /> 61
       </GasContainer>
@@ -17,11 +17,13 @@ export const MobileSubHeader = (): React.ReactElement => {
   )
 }
 
-const Container = styled(Navbar)`
-  background: #171E29;
+const Container = styled.div<{ mobile: boolean }>`
+  display: ${props => props.mobile ? 'flex' : 'none'};
+  background: #171e2963;
   border: 1px solid #1E2735;
   border-radius: 34px;
-  padding: 10px 0;
+  padding: 10px;
+  margin-bottom: 10px;
 `
 
 const GasContainer = styled.div`
@@ -34,4 +36,5 @@ const GasContainer = styled.div`
   font-size: 12px;
   line-height: 14px;
   letter-spacing: -0.24px;
+  margin-right: auto;
 `;

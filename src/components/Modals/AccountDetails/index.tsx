@@ -41,7 +41,7 @@ export const AccountDetailsModal = (props: Props): React.ReactElement => {
 					<Button
 						style={{ padding: '5px 15px', fontSize: 14, marginLeft: 'auto' }}
 						onClick={() => handleChangeConnector(true)}
-					>Logout</Button>
+					>Disconnect</Button>
 				</FlexRow>
 				<Splitter />
 				<FlexRow>
