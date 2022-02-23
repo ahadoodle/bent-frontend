@@ -44,6 +44,9 @@ const Footer = (): React.ReactElement => {
                     <a href="https://twitter.com/BENT_Finance" target="_blank" rel="noreferrer">Twitter</a>
                   </li>
                   <li>
+                    <a href="https://discord.com/invite/vyhE8RQTeu" target="_blank" rel="noreferrer">Discord</a>
+                  </li>
+                  <li>
                     <a href="https://t.me/BentFi" target="_blank" rel="noreferrer">Telegram Group</a>
                   </li>
                   <li>

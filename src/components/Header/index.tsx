@@ -99,6 +99,7 @@ const Header = (): React.ReactElement => {
                   <Link to="/claim">Claim</Link>
                   <Link to="/lock">Lock</Link>
                   <a href="https://twitter.com/BENT_Finance" target="_blank" rel="noreferrer">Twitter</a>
+                  <a href="https://discord.com/invite/vyhE8RQTeu" target="_blank" rel="noreferrer">Discord</a>
                   <a href="https://t.me/BentFi" target="_blank" rel="noreferrer">Telegram Group</a>
                   <a href="https://docs.bentfinance.com/" target="_blank" rel="noreferrer">Documentation</a>
                 </div>
