@@ -195,6 +195,8 @@ export default function Updater(): null {
 			const bentCvxRewarderCvx = getMultiBentCvxRewarderCvx();
 			const bentCvxRewarderBent = getMultiBentCvxRewarderBent();
 			const bentCvxRewarderMC = getMultiBentCvxRewarderMC();
+			contractCalls.push(cvxToken.balanceOf(POOLS.BentPools['BENTCVX'].DepositAsset));
+			contractCalls.push(bentCvxToken.balanceOf(POOLS.BentPools['BENTCVX'].DepositAsset));
 			contractCalls.push(cvxToken.balanceOf(accAddr));
 			contractCalls.push(cvxToken.allowance(accAddr, TOKENS['BENTCVX'].ADDR));
 			contractCalls.push(bentCvxToken.balanceOf(accAddr));
@@ -359,6 +361,15 @@ export default function Updater(): null {
 					bentRewards[TOKENS[rewardToken].ADDR.toLowerCase()] = bentPendingRewards[index];
 				});
 
+				// Calculate bentCVX price from Crv pool reserves
+				const cvxReserveOfBentCvx = BigNumber.from(results[startIndex++]);
+				const bentcvxReserveOfBentCvx = BigNumber.from(results[startIndex++]);
+				const bentCvxPrice = bentcvxReserveOfBentCvx.isZero() ? 0 :
+					utils.parseEther(tokenPrices[TOKENS.CVX.ADDR.toLowerCase()].toString())
+						.mul(cvxReserveOfBentCvx).mul(10000).div(bentcvxReserveOfBentCvx)
+						.div(BigNumber.from(10).pow(18)).toNumber() / 10000;
+				tokenPrices[TOKENS.BENTCVX.ADDR.toLowerCase()] = bentCvxPrice;
+
 				// Update BentCVX Staking Pool Infos
 				balances[TOKENS['CVX'].ADDR.toLowerCase()] = results[startIndex++];
 				bentCvxAllowance = results[startIndex++];
@@ -366,8 +377,8 @@ export default function Updater(): null {
 				bentCvxStakingAllowance = results[startIndex++];
 				bentCvxStaked = results[startIndex++];
 				bentCvxTotalStaked = results[startIndex++];
-				bentCvxTvl = utils.parseEther(tokenPrices[TOKENS.CVX.ADDR.toLowerCase()].toString()).mul(bentCvxTotalStaked)
-					.div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENTCVX.ADDR)));
+				bentCvxTvl = utils.parseEther(tokenPrices[TOKENS.BENTCVX.ADDR.toLowerCase()].toString())
+					.mul(bentCvxTotalStaked).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENTCVX.ADDR)));
 				bentCvxRewards['CVX'] = results[startIndex++];
 				bentCvxRewards['BENT'] = results[startIndex++];
 				bentCvxEarned['CVX'] = ethers.constants.Zero;
