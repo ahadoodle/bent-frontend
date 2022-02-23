@@ -1,15 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 import GasIcon from "assets/images/gas.svg";
-import { useIsMobile } from "hooks";
+import { useGasPrice, useIsMobile } from "hooks";
 import ConnectWallet from "components/ConnectWallet";
+import { formatBigNumber } from "utils";
 
 export const MobileSubHeader = (): React.ReactElement => {
   const isMobile = useIsMobile();
+  const gasPrice = useGasPrice();
   return (
     <Container mobile={isMobile}>
       <GasContainer>
-        <img src={GasIcon} alt="Menu" /> 61
+        <img src={GasIcon} alt="Menu" style={{ width: 13 }} /> {formatBigNumber(gasPrice, 9, 1)}
       </GasContainer>
       <ConnectWallet />
     </Container>
@@ -26,14 +28,14 @@ const Container = styled.div<{ mobile: boolean }>`
 `
 
 const GasContainer = styled.div`
-  background: #242B37;
+  background: #242b3747;
+  border: 1px solid #242B37;
   border-radius: 13px;
   padding: 10px;
   color: #B5DEFF;
   font-style: normal;
   font-weight: 500;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 13px;
   letter-spacing: -0.24px;
   margin-right: auto;
 `;

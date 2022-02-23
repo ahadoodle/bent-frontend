@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { Link, NavLink } from "react-router-dom";
 import {
   Navbar,
@@ -8,30 +9,34 @@ import {
   // DropdownToggle,
 } from "reactstrap";
 import ConnectWallet from "components/ConnectWallet";
-import { useIsMobile, useTheme } from "hooks";
+import { useGasPrice, useIsMobile, useTheme } from "hooks";
 import { useDispatch } from "react-redux";
 import { updateTheme } from "state/application/actions";
 import { Theme } from "state/application/reducer";
 import { BentPowerToolTip } from "./bentDetails";
+import { MobileSubHeader } from "./mobileSubHeader";
+
 import LogoIcon from "assets/images/logo-light.svg";
 import MenuIcon from "assets/images/menu.svg";
 import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";
 import BentDetails from "assets/images/bent-details.png";
-import { MobileSubHeader } from "./mobileSubHeader";
+import GasIcon from "assets/images/gas.svg";
+import { formatBigNumber } from "utils";
 
 const Header = (): React.ReactElement => {
   const isMobile = useIsMobile();
   const dispatch = useDispatch();
   const [customClass, setCustomClass] = useState("removesidenavmenu");
+  const theme = useTheme();
+  const gasPrice = useGasPrice();
+
   const closeNav = () => {
     setCustomClass("removesidenavmenu");
   };
   const openNav = () => {
     setCustomClass("sidenavmenu");
   };
-  const theme = useTheme();
-
   const selectTheme = () => {
     if (theme === Theme.Light) {
       dispatch(updateTheme(Theme.Dark));
@@ -81,6 +86,9 @@ const Header = (): React.ReactElement => {
               <span className="theme-icon" onClick={selectTheme}>
                 <img src={theme === Theme.Dark ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
               </span>
+              {!isMobile && <GasContainer>
+                <img src={GasIcon} alt="Menu" style={{ width: 13 }} /> {formatBigNumber(gasPrice, 9, 1)}
+              </GasContainer>}
               {!isMobile && <ConnectWallet />}
               <div className="mobileHeader">
                 <div id="mySidenav" className={"sidenav " + customClass}>
@@ -106,5 +114,18 @@ const Header = (): React.ReactElement => {
     </React.Fragment>
   );
 };
+
+const GasContainer = styled.div`
+  background: #242b3747;
+  border: 1px solid #414C5C;
+  border-radius: 13px;
+  padding: 10px;
+  color: #B5DEFF;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.24px;
+  margin-right: 20px;
+`;
 
 export default Header;
