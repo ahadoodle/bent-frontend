@@ -31,6 +31,7 @@ import {
 	getWeBentApr,
 	getSnapshot,
 	bentFinanceHex,
+	getMultiCrvFiLp,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -195,8 +196,8 @@ export default function Updater(): null {
 			const bentCvxRewarderCvx = getMultiBentCvxRewarderCvx();
 			const bentCvxRewarderBent = getMultiBentCvxRewarderBent();
 			const bentCvxRewarderMC = getMultiBentCvxRewarderMC();
-			contractCalls.push(cvxToken.balanceOf(POOLS.BentPools['BENTCVX'].DepositAsset));
-			contractCalls.push(bentCvxToken.balanceOf(POOLS.BentPools['BENTCVX'].DepositAsset));
+			const bentCvxCrvPool = getMultiCrvFiLp(POOLS.BentPools.BENTCVX.DepositAsset);
+			contractCalls.push(bentCvxCrvPool.get_dy(1, 0, BigNumber.from(10).pow(18)));
 			contractCalls.push(cvxToken.balanceOf(accAddr));
 			contractCalls.push(cvxToken.allowance(accAddr, TOKENS['BENTCVX'].ADDR));
 			contractCalls.push(bentCvxToken.balanceOf(accAddr));
@@ -362,12 +363,9 @@ export default function Updater(): null {
 				});
 
 				// Calculate bentCVX price from Crv pool reserves
-				const cvxReserveOfBentCvx = BigNumber.from(results[startIndex++]);
-				const bentcvxReserveOfBentCvx = BigNumber.from(results[startIndex++]);
-				const bentCvxPrice = bentcvxReserveOfBentCvx.isZero() ? 0 :
-					utils.parseEther(tokenPrices[TOKENS.CVX.ADDR.toLowerCase()].toString())
-						.mul(cvxReserveOfBentCvx).mul(10000).div(bentcvxReserveOfBentCvx)
-						.div(BigNumber.from(10).pow(18)).toNumber() / 10000;
+				const bentCvxExchangeRate = BigNumber.from(results[startIndex++]);
+				const bentCvxPrice = utils.parseEther(tokenPrices[TOKENS.CVX.ADDR.toLowerCase()].toString())
+					.mul(bentCvxExchangeRate).div(BigNumber.from(10).pow(18 + 14)).toNumber() / 10000;
 				tokenPrices[TOKENS.BENTCVX.ADDR.toLowerCase()] = bentCvxPrice;
 
 				// Update BentCVX Staking Pool Infos
