@@ -122,6 +122,11 @@ export const TOKENS: Record<string, TokenInfo> = {
 		ADDR: '0xcdf7028ceab81fa0c6971208e83fa7872994bee5',
 		DECIMALS: 18
 	},
+	TRIBE: {
+		LOGO: TOKEN_LOGO.TRIBE,
+		ADDR: '0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B',
+		DECIMALS: 18
+	},
 	USDT: {
 		LOGO: '',
 		ADDR: '0xdac17f958d2ee523a2206206994597c13d831ec7',
