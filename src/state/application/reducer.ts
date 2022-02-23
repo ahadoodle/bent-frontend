@@ -7,6 +7,7 @@ import {
   toggleSettingsMenu,
   updateBlockNumber,
   updateTheme,
+  updateEnsName,
 } from './actions';
 
 type PopupList = Array<{
@@ -28,6 +29,7 @@ export interface ApplicationState {
   settingsMenuOpen: boolean;
 
   theme: Theme;
+  ensName: string;
 }
 
 const initialState: ApplicationState = {
@@ -36,7 +38,8 @@ const initialState: ApplicationState = {
   walletModalOpen: false,
   settingsMenuOpen: false,
 
-  theme: Theme.Dark
+  theme: Theme.Dark,
+  ensName: '',
 };
 
 export default createReducer(initialState, (builder) =>
@@ -77,5 +80,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateTheme, (state, action) => {
       state.theme = action.payload;
+    })
+    .addCase(updateEnsName, (state, action) => {
+      state.ensName = action.payload;
     })
 );

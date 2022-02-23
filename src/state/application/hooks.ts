@@ -72,3 +72,7 @@ export function useActivePopups(): AppState['application']['popupList'] {
 export function useTheme(): Theme {
   return useSelector((state: AppState) => state.application.theme);
 }
+
+export function useEnsName(): string {
+  return useSelector((state: AppState) => state.application.ensName);
+}

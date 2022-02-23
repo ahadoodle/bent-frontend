@@ -99,7 +99,7 @@ const Container = styled.div`
 	border-radius: 20px;
 	border: 1px solid #414C5C;
 	&:hover {
-		box-shadow: 0px 0px 30px rgba(193, 255, 215, 0.4);
+		box-shadow: 0px 0px 20px rgba(193, 255, 215, 0.4);
 	}
 	overflow: hidden;
 	position: relative;
