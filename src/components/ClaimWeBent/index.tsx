@@ -59,7 +59,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 		if (!add) setCheckAll(false);
 		claimChecked[index] = add;
 		setClaimChecked(Object.assign({}, claimChecked));
-		if (checkedIndexes().length === POOLS.BentStaking.RewardAssets.length) {
+		if (checkedIndexes().length === POOLS.weBENT.RewardAssets.length) {
 			setCheckAll(true);
 			setClaimBtnText('Claim All');
 		} else {
@@ -69,7 +69,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 
 	const onCheckAll = () => {
 		setCheckAll(!checkAll);
-		POOLS.BentStaking.RewardAssets.forEach((key, index) => {
+		POOLS.weBENT.RewardAssets.forEach((key, index) => {
 			claimChecked[index] = !checkAll;
 		})
 		setClaimChecked(Object.assign({}, claimChecked));
