@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import { Modal } from 'components/Modal'
-import { useEthers } from 'hooks'
+import { useEnsName, useEthers } from 'hooks'
 import connectSvg from 'assets/images/connect.svg'
 import { Button } from 'components/Button';
 import Address from 'components/Address';
@@ -24,6 +24,7 @@ export const AccountDetailsModal = (props: Props): React.ReactElement => {
 	} = props
 
 	const { account } = useEthers()
+	const ensName = useEnsName();
 
 	return (
 		<Modal
@@ -49,7 +50,10 @@ export const AccountDetailsModal = (props: Props): React.ReactElement => {
 						<div style={{ marginRight: 20 }}>
 							<AccountIcon size={50} />
 						</div>
-						<Address address={account} length={20}></Address>
+						<div style={{ textAlign: 'left' }}>
+							{ensName}
+							<Address address={account} length={20}></Address>
+						</div>
 					</AccountAddress>
 				</FlexRow>
 				<FlexRow style={{ justifyContent: 'flex-start' }}>

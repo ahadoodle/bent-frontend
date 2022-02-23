@@ -1,11 +1,12 @@
 import { useDebounce, useActiveWeb3React } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 import { simpleRpcProvider } from 'utils';
-import { updateBlockNumber } from './actions';
+import { updateBlockNumber, updateEnsName } from './actions';
 
 export default function Updater(): null {
-  const { chainId } = useActiveWeb3React();
+  const { chainId, account, library } = useActiveWeb3React();
   const dispatch = useDispatch();
 
   const [state, setState] = useState<{
@@ -57,6 +58,17 @@ export default function Updater(): null {
       );
     }
   }, [dispatch, debouncedState.blockNumber, debouncedState.chainId]);
+
+  useEffect(() => {
+    dispatch(updateEnsName(''));
+    if (account && library) {
+      const ens = new ENS({ provider: library, ensAddress: getEnsAddress('1') })
+      ens.getName(account).then(name => {
+        console.log('ENS Name:', name.name)
+        dispatch(updateEnsName(name.name));
+      })
+    }
+  }, [dispatch, account, library]);
 
   return null;
 }

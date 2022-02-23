@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { formatAddress } from 'utils';
-import { useActiveWeb3React, useModal } from 'hooks';
-import ENS, { getEnsAddress } from '@ensdomains/ensjs'
+import { useActiveWeb3React, useEnsName, useModal } from 'hooks';
 import { useWallet } from 'providers';
 import { AccountDetailsModal } from 'components/Modals/AccountDetails';
 import { ConnectWalletModal } from 'components/Modals/ConnectWallet';
 import { Button } from 'components/Button';
 
 const ConnectWallet = (): React.ReactElement => {
-	const { account, library } = useActiveWeb3React();
+	const { account } = useActiveWeb3React();
 	const { isShown, toggle } = useModal();
-
-	useEffect(() => {
-		if (!library || !account) return;
-		const ens = new ENS({ provider: library, ensAddress: getEnsAddress('1') })
-		ens.getName(account).then(name => {
-			console.log('ENS Name:', name.name)
-			setEnsName(name.name);
-		})
-	}, [account, library])
-
+	const ensName = useEnsName();
+	const [activeAccountAddress, setActiveAccountAddress] = useState<string>('');
+	const [willChangeConnector, setWillChangeConnector] = useState(false)
 	const {
 		handleMetaMaskConnect,
 		handleWalletConnect,
@@ -27,9 +19,6 @@ const ConnectWallet = (): React.ReactElement => {
 		unsupportedChain,
 		handleDisconnect,
 	} = useWallet()
-	const [activeAccountAddress, setActiveAccountAddress] = useState<string>('');
-	const [ensName, setEnsName] = useState<string>('');
-	const [willChangeConnector, setWillChangeConnector] = useState(false)
 
 	useEffect(() => {
 		if (account || !isShown) setWillChangeConnector(false)
@@ -47,7 +36,7 @@ const ConnectWallet = (): React.ReactElement => {
 	return (
 		<div>
 			<Button onClick={toggle} variant="green">
-				{activeAccountAddress ? (!ensName ? formatAddress(activeAccountAddress) : ensName) : "Connect Wallet"}
+				{activeAccountAddress ? (!ensName ? formatAddress(activeAccountAddress) : `${ensName}`) : "Connect Wallet"}
 			</Button>
 			{
 				(account && !willChangeConnector) ?
