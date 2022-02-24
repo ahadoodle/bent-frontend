@@ -60,7 +60,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	const currentApr = () => {
-		return apr + projectedApr.baseCrvvApr.toNumber() / 100
+		return apr + BigNumber.from(projectedApr.baseCrvvApr).toNumber() / 100
 	}
 
 	const onStakeAmountChange = (value) => {
