@@ -23,6 +23,7 @@ import {
 	useCrvPoolEarnedUsd,
 	useCrvTvl,
 	useERC20Contract,
+	useCrvProjectedApr,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -52,9 +53,14 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const apr = useCrvApr(props.poolKey);
 	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
+	const projectedApr = useCrvProjectedApr(props.poolKey);
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
+	}
+
+	const currentApr = () => {
+		return apr + projectedApr.baseCrvvApr.toNumber() / 100
 	}
 
 	const onStakeAmountChange = (value) => {
@@ -137,7 +143,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 						<b>
 							{apr ?
 								<>
-									{utils.commify(apr.toFixed(2))}%&nbsp;
+									{utils.commify(currentApr().toFixed(2))}%&nbsp;
 									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
 										onClick={(e) => {
 											setShowBreakdown(!showBreakdown)
@@ -148,10 +154,11 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 											<Row className="mb-3">
 												<Col>
 													<div className="text-underline">Current APR:</div>
-													<div className="green-color">{utils.commify(apr.toFixed(2))}%</div>
+													<div className="green-color">{utils.commify(currentApr().toFixed(2))}%</div>
 												</Col>
 											</Row>
 											Current APR breakdown:<br />
+											- Base Curve APR: {formatBigNumber(projectedApr.baseCrvvApr, 2, 2)}%<br />
 											- BENT APR: {utils.commify(apr.toFixed(2))}%<br />
 										</div>
 									</UncontrolledTooltip>
