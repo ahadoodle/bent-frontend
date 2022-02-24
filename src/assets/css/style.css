@@ -305,7 +305,7 @@ h2.section-header {
     background: #B5DEFF;
     vertical-align: middle;
     border: 3px solid #10151D;
-    border-radius: 8px;
+    border-radius: 20px;
     border-collapse: separate;
     border-spacing: 0;
     box-shadow: 10px 15px 0px 0px #10151d;
@@ -397,7 +397,7 @@ table.tokentable.table td span {
 .tokentable.table .thead {
     margin: 0;
     background: #B5DEFF;
-    border-radius: 8px;
+    border-radius: 20px;
     padding: 10px 15px;
     overflow: hidden;
     font-style: normal;
@@ -418,6 +418,9 @@ table.tokentable.table td span {
 }
 .tokentable.table b {
     font-weight: 500;
+}
+.tokentable.table .card {
+    border-radius: 16px;
 }
 .tokentable.table .card-body {
     padding: 0;
@@ -464,8 +467,7 @@ button.btn.btnshow {
     margin: auto;
     background: #C1FFD7;
     border: 2px solid #10151D;
-    box-shadow: 4px 4px 0px #10151d;
-    border-radius: 4px;
+    border-radius: 20px;
     font-style: normal;
     font-weight: bold;
     font-size: 16px;
@@ -635,12 +637,12 @@ p.copyright {
     padding-left: 50px;
     background-repeat: no-repeat;
     background-position: 6px center;
-    border: 3px solid #10151D;
-    border-radius: 4px;
+    border: 3px solid #414C5C;
+    border-radius: 20px;
 }
 .amountinput img.inputlogo {
     position: absolute;
-    left: 10px;
+    left: 8px;
     top: 7px;
     width: 28px;
 }
@@ -652,11 +654,11 @@ p.copyright {
 }
 button.maxbtn {
     position: absolute;
-    right: 15px;
-    top: 7px;
-    box-shadow: 2px 2px 0px 0px #10151d;
+    right: 8px;
+    top: 8px;
     padding: 5px 9px;
     background: #C1FFD7;
+    border-radius: 20px;
     border: 2px solid #10151d;
     font-style: normal;
     font-weight: bold;
@@ -683,7 +685,7 @@ button.approvebtn.btn.btn-secondary {
     letter-spacing: -0.24px;
     background-color: #C1FFD7;
     color: #10151D;
-    border-radius: 4px;
+    border-radius: 20px;
     border: 2px solid #9BA2AC;
     width: 185px;
     height: 42px;
@@ -816,13 +818,14 @@ button.btn.btnshow i {
 	color: #10151D;
 }
 .Dark .amountinput input {
-    border: 3px solid #fff;
+    border: 3px solid #606f85;
     background-color: transparent;
 }
 button.transBtn {
     box-shadow: 2px 2px 0px 0px #c1ffd7;
     background: transparent;
     border: 2px solid #C1FFD7;
+    border-radius: 20px;
     color: #C1FFD7;
     font-style: normal;
     font-weight: bold;
@@ -838,7 +841,6 @@ button.transBtn:hover {
     border: 2px solid #C1FFD7;
 }
 .Dark button.maxbtn {
-    box-shadow: 2px 2px 0px 0px #c1ffd7;
     background: transparent;
     border: 2px solid #C1FFD7;
     color: #C1FFD7;
@@ -1251,8 +1253,9 @@ button.claimbtn.btn.btn-secondary {
     letter-spacing: -0.24px;
     background-color: #C1FFD7;
     color: #10151D;
-    box-shadow: 4px 4px 0px 0px #10151d;
+    box-shadow: 4px 4px 0px 0px #10151da3;
     border: 2px solid #10151d;
+    border-radius: 20px;
     padding: 8.5px 20px;
     width: 120px;
 }
@@ -1295,6 +1298,7 @@ div.climBtn {
 .tokentable.table .card .card-body .innerWrap.open {
     background: #CAB8FF;
     overflow: hidden;
+    border-radius: 16px !important;
 }
 .innerWrap .card {
     border-top: none;

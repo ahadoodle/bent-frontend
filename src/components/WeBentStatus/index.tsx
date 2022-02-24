@@ -87,13 +87,13 @@ export const WeBentStatus = (): React.ReactElement => {
 
 const StatusContainer = styled.div<{ theme: Theme, mobile: boolean }>`
 	border: 3px solid #414C5C;
-	border-radius: 8px;
+	border-radius: 20px;
 	background: #18202C;
 	display: flex;
 	flex-direction: ${props => props.mobile ? 'column' : 'row'};
 	padding: 21px;
 	justify-content: space-between;
-	box-shadow: 10px 15px 0px 0px #607390;
+	box-shadow: 10px 10px 0px 0px #607390;
 `;
 
 const StatusButton = styled.div<{ mobile: boolean }>`

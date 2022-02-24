@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
 	Container, Row, Col, Card, CardBody, CardText, Input, Button, UncontrolledTooltip
 } from "reactstrap";
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import { bentFinanceHex, getEtherscanLink } from "utils";
 import { useActiveWeb3React, useDelegationAddr, useSnapshot } from "hooks";
 import styled from "styled-components";
@@ -23,7 +23,7 @@ export const DelegateVote = (): React.ReactElement => {
 	}
 
 	const onDelegate = async () => {
-		if (!library) return;
+		if (!library || !utils.isAddress(delegateAddr)) return;
 		const signer = await library.getSigner();
 		const tx = await snapshot.connect(signer).setDelegate(bentFinanceHex, delegateAddr);
 		await tx.wait();
