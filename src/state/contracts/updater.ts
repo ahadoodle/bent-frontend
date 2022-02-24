@@ -32,6 +32,7 @@ import {
 	getSnapshot,
 	bentFinanceHex,
 	getMultiCrvFiLp,
+	getBentCvxApy,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -61,6 +62,7 @@ export default function Updater(): null {
 			getCrvCryptoFactoryInfo(),
 			getSushiTradingVolume(),
 			getWeBentApr(),
+			getBentCvxApy(),
 		]).then(([
 			tokenPrices,
 			bentCirculatingSupply,
@@ -68,6 +70,7 @@ export default function Updater(): null {
 			crvCryptoPoolsInfo,
 			bentTradingVolume,
 			weBentApr,
+			bentcvxCrvApy,
 		]) => {
 			const bentPrice = tokenPrices[TOKENS['BENT'].ADDR.toLowerCase()];
 			const bentPriceBN = utils.parseUnits(bentPrice.toString());
@@ -567,6 +570,15 @@ export default function Updater(): null {
 							bentApr: bentApr.mul(83).div(100),
 							additionalRewardvApr: ext_vApr,
 							crvBoost: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].crvBoost : 0
+						}
+					} else if (poolKey === 'BENTCVX') {
+						crvProjectedApr[poolKey] = {
+							baseCrvvApr: BigNumber.from((bentcvxCrvApy * 100).toFixed(0)),
+							crvvApr: ethers.constants.Zero,
+							cvxvApr: ethers.constants.Zero,
+							bentApr: ethers.constants.Zero,
+							additionalRewardvApr: ethers.constants.Zero,
+							crvBoost: 0,
 						}
 					}
 				})

@@ -1,37 +1,42 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { Link, NavLink } from "react-router-dom";
 import {
   Navbar,
   Container,
   Button,
-  // Dropdown,
-  // DropdownToggle,
 } from "reactstrap";
 import ConnectWallet from "components/ConnectWallet";
-import { useIsMobile, useTheme } from "hooks";
+import { useGasPrice, useIsMobile, useModal, useTheme } from "hooks";
 import { useDispatch } from "react-redux";
 import { updateTheme } from "state/application/actions";
 import { Theme } from "state/application/reducer";
-import { BentPowerToolTip } from "./bentDetails";
+import { MobileSubHeader } from "./mobileSubHeader";
+
 import LogoIcon from "assets/images/logo-light.svg";
 import MenuIcon from "assets/images/menu.svg";
 import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";
 import BentDetails from "assets/images/bent-details.png";
-import { MobileSubHeader } from "./mobileSubHeader";
+import GasIcon from "assets/images/gas.svg";
+import { formatBigNumber } from "utils";
+import { MarketModal } from "components/Modals/Market";
+import { SOCIAL } from "constant";
 
 const Header = (): React.ReactElement => {
   const isMobile = useIsMobile();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const gasPrice = useGasPrice();
+  const { isShown, toggle } = useModal();
   const [customClass, setCustomClass] = useState("removesidenavmenu");
+
   const closeNav = () => {
     setCustomClass("removesidenavmenu");
   };
   const openNav = () => {
     setCustomClass("sidenavmenu");
   };
-  const theme = useTheme();
-
   const selectTheme = () => {
     if (theme === Theme.Light) {
       dispatch(updateTheme(Theme.Dark));
@@ -74,13 +79,15 @@ const Header = (): React.ReactElement => {
                   </Dropdown>
                 </li> */}
               </ul>
-              <span className="theme-icon ml-auto" id="bent-details" >
+              <span className="theme-icon ml-auto" onClick={toggle} >
                 <img src={BentDetails} alt="" width="40" height="40" />
               </span>
-              <BentPowerToolTip target="bent-details" />
               <span className="theme-icon" onClick={selectTheme}>
                 <img src={theme === Theme.Dark ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
               </span>
+              {!isMobile && <GasContainer>
+                <img src={GasIcon} alt="Menu" style={{ width: 13 }} /> {formatBigNumber(gasPrice, 9, 1)}
+              </GasContainer>}
               {!isMobile && <ConnectWallet />}
               <div className="mobileHeader">
                 <div id="mySidenav" className={"sidenav " + customClass}>
@@ -90,14 +97,19 @@ const Header = (): React.ReactElement => {
                   <Link to="/stake">Stake</Link>
                   <Link to="/claim">Claim</Link>
                   <Link to="/lock">Lock</Link>
-                  <a href="https://twitter.com/BENT_Finance" target="_blank" rel="noreferrer">Twitter</a>
-                  <a href="https://t.me/BentFi" target="_blank" rel="noreferrer">Telegram Group</a>
-                  <a href="https://docs.bentfinance.com/" target="_blank" rel="noreferrer">Documentation</a>
+                  <a href={SOCIAL.TWITTER} target="_blank" rel="noreferrer">Twitter</a>
+                  <a href={SOCIAL.DISCORD} target="_blank" rel="noreferrer">Discord</a>
+                  <a href={SOCIAL.TELEGRAM} target="_blank" rel="noreferrer">Telegram Group</a>
+                  <a href={SOCIAL.DOC} target="_blank" rel="noreferrer">Documentation</a>
                 </div>
                 <span className="Menu" onClick={openNav}>
                   <img src={MenuIcon} alt="Menu" />
                 </span>
               </div>
+              <MarketModal
+                isShown={isShown}
+                onRequestClose={toggle}
+              />
             </Navbar>
             <MobileSubHeader />
           </div>
@@ -106,5 +118,18 @@ const Header = (): React.ReactElement => {
     </React.Fragment>
   );
 };
+
+const GasContainer = styled.div`
+  background: #242b3747;
+  border: 1px solid #414C5C;
+  border-radius: 13px;
+  padding: 10px;
+  color: #B5DEFF;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.24px;
+  margin-right: 20px;
+`;
 
 export default Header;

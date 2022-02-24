@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CrvCryptoFactoryPool, CrvFactoryPool, TOKENS } from 'constant';
+import { CrvCryptoFactoryPool, CrvFactoryPool, POOLS, TOKENS } from 'constant';
 import { BigNumber, ethers, utils } from 'ethers'
 import web3NoAccount from './web3';
 
@@ -160,6 +160,21 @@ export const getCrvCryptoFactoryInfo = async (): Promise<Record<string, CrvCrypt
 	} catch (error) {
 		console.error(error);
 		return {}
+	}
+}
+
+export const getBentCvxApy = async (): Promise<number> => {
+	const url = 'https://api.curve.fi/api/getFactoryAPYs?version=2';
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		if (!res.data.success) return 0;
+		const poolInfo = res.data.data.poolDetails.filter(el => el.poolAddress.toLowerCase() === POOLS.BentPools['BENTCVX'].DepositAsset);
+		if (poolInfo.length === 0) return 0;
+		return parseFloat(poolInfo[0].apy.toFixed(2));
+	} catch (error) {
+		console.error(error);
+		return 0
 	}
 }
 

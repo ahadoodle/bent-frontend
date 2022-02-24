@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 import { simpleRpcProvider } from 'utils';
-import { updateBlockNumber, updateEnsName } from './actions';
+import { updateBlockNumber, updateEnsName, updateGas } from './actions';
 
 export default function Updater(): null {
   const { chainId, account, library } = useActiveWeb3React();
@@ -50,6 +50,9 @@ export default function Updater(): null {
 
   useEffect(() => {
     if (debouncedState.chainId && debouncedState.blockNumber) {
+      simpleRpcProvider.getGasPrice().then(gas => {
+        dispatch(updateGas(gas))
+      })
       dispatch(
         updateBlockNumber({
           chainId: debouncedState.chainId,

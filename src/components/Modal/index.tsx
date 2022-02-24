@@ -103,6 +103,7 @@ const Container = styled.div`
 	}
 	overflow: hidden;
 	position: relative;
+	font-family: 'Rubik';
 `;
 
 const TitleContainer = styled.div`

@@ -774,9 +774,10 @@ button.btn.btnshow i {
 }
 .tooltip-inner {
     font-family: 'Rubik';
-    width: 368px;
-    max-width: unset !important;
-    background: #353C49 !important;
+    width: fit-content;
+    max-width: 300px !important;
+    background: #353C4961 !important;
+    backdrop-filter: blur(20px);
     border: 1px solid #4E5769;
     border-radius: 8px;
 }
