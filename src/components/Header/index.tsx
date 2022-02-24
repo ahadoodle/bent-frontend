@@ -11,7 +11,6 @@ import { useGasPrice, useIsMobile, useModal, useTheme } from "hooks";
 import { useDispatch } from "react-redux";
 import { updateTheme } from "state/application/actions";
 import { Theme } from "state/application/reducer";
-import { BentPowerToolTip } from "./bentDetails";
 import { MobileSubHeader } from "./mobileSubHeader";
 
 import LogoIcon from "assets/images/logo-light.svg";
