@@ -8,7 +8,7 @@ import {
 	useVotingPower,
 	useWeBentBentBalance
 } from 'hooks';
-import { TOKENS } from 'constant';
+import { SOCIAL, TOKENS } from 'constant';
 import { BigNumber, utils } from 'ethers';
 import { formatBigNumber, formatMillionsBigNumber } from 'utils';
 import { Icon } from 'components/Icon';
@@ -34,6 +34,10 @@ export const MarketModal = (props: Props): React.ReactElement => {
 
 	const marketCap = () => {
 		return utils.parseEther(bentPrice.toString()).mul(bentCirculatingSupply).div(BigNumber.from(10).pow(18))
+	}
+
+	const directUrl = (url) => {
+		window.open(url, '_blank');
 	}
 
 	return (
@@ -80,19 +84,19 @@ export const MarketModal = (props: Props): React.ReactElement => {
 				</VotingPowerContainer>
 				<Splitter />
 				<FlexRow>
-					<IconContainer>
+					<IconContainer onClick={() => directUrl(SOCIAL.CMC)}>
 						<Icon iconSrc={cmcIcon} borderType="none" />
 					</IconContainer>
-					<IconContainer>
+					<IconContainer onClick={() => directUrl(SOCIAL.CGC)}>
 						<Icon iconSrc={cgcIcon} borderType="none" />
 					</IconContainer>
-					<IconContainer>
+					<IconContainer onClick={() => directUrl(SOCIAL.MEDIUM)}>
 						<Icon iconSrc={mediumIcon} borderColor="#CAB8FF" />
 					</IconContainer>
-					<IconContainer>
+					<IconContainer onClick={() => directUrl(SOCIAL.DISCORD)}>
 						<Icon iconSrc={discordIcon} borderColor="#CAB8FF" />
 					</IconContainer>
-					<IconContainer>
+					<IconContainer onClick={() => directUrl(SOCIAL.TELEGRAM)}>
 						<Icon iconSrc={telegramIcon} borderColor="#CAB8FF" />
 					</IconContainer>
 				</FlexRow>
