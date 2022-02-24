@@ -36,7 +36,7 @@ export function useCrvProjectedApr(poolKey: string): CrvApy {
 		additionalRewardvApr: ethers.constants.Zero,
 		crvBoost: 0
 	}
-	return useSelector((state: AppState) => state.contracts.crvProjectedApr ? state.contracts.crvProjectedApr[poolKey] ?? defaultVal : defaultVal);
+	return useSelector((state: AppState) => state.contracts.crvProjectedApr ? (state.contracts.crvProjectedApr[poolKey] ?? defaultVal) : defaultVal);
 }
 
 export const useCrvAprs = (): Record<string, number> => {

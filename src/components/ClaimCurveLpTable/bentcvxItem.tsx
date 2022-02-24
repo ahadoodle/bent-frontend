@@ -45,7 +45,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const projectedApr = useCrvProjectedApr(props.poolKey);
 
 	const currentApr = () => {
-		return apr + projectedApr.baseCrvvApr.toNumber() / 100
+		return apr + BigNumber.from(projectedApr.baseCrvvApr).toNumber() / 100
 	}
 
 	const haveRewards = () => {
