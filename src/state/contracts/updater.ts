@@ -573,7 +573,7 @@ export default function Updater(): null {
 						}
 					} else if (poolKey === 'BENTCVX') {
 						crvProjectedApr[poolKey] = {
-							baseCrvvApr: BigNumber.from(bentcvxCrvApy * 100),
+							baseCrvvApr: BigNumber.from((bentcvxCrvApy * 100).toFixed(0)),
 							crvvApr: ethers.constants.Zero,
 							cvxvApr: ethers.constants.Zero,
 							bentApr: ethers.constants.Zero,
