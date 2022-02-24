@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import LogoIcon from "assets/images/logo-light.svg";
 import { Container, Row, Col } from "reactstrap";
+import { SOCIAL } from "constant";
 
 const Footer = (): React.ReactElement => {
   return (
@@ -28,10 +29,10 @@ const Footer = (): React.ReactElement => {
                 <h3>Resources</h3>
                 <ul>
                   <li>
-                    <a href="https://hacken.io/audits/#bent_finance" target="_blank" rel="noreferrer" >Audit</a>
+                    <a href={SOCIAL.AUDIT} target="_blank" rel="noreferrer" >Audit</a>
                   </li>
                   <li>
-                    <a href="https://docs.bentfinance.com/" target="_blank" rel="noreferrer" >Documentation</a>
+                    <a href={SOCIAL.DOC} target="_blank" rel="noreferrer" >Documentation</a>
                   </li>
                 </ul>
               </div>
@@ -41,16 +42,16 @@ const Footer = (): React.ReactElement => {
                 <h3>Community</h3>
                 <ul>
                   <li>
-                    <a href="https://twitter.com/BENT_Finance" target="_blank" rel="noreferrer">Twitter</a>
+                    <a href={SOCIAL.TWITTER} target="_blank" rel="noreferrer">Twitter</a>
                   </li>
                   <li>
-                    <a href="https://discord.com/invite/vyhE8RQTeu" target="_blank" rel="noreferrer">Discord</a>
+                    <a href={SOCIAL.DISCORD} target="_blank" rel="noreferrer">Discord</a>
                   </li>
                   <li>
-                    <a href="https://t.me/BentFi" target="_blank" rel="noreferrer">Telegram Group</a>
+                    <a href={SOCIAL.TELEGRAM} target="_blank" rel="noreferrer">Telegram Group</a>
                   </li>
                   <li>
-                    <a href="https://bentfi.medium.com/" target="_blank" rel="noreferrer">Medium</a>
+                    <a href={SOCIAL.MEDIUM} target="_blank" rel="noreferrer">Medium</a>
                   </li>
                 </ul>
               </div>
