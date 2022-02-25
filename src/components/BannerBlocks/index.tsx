@@ -7,6 +7,8 @@ import DepositIcon from "assets/images/depositIcon.svg";
 import LockIcon from "assets/images/lockIcon.svg";
 import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useIsMobile, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl, useWeBentDepositsUsd, useWeBentEarnedUsd, useWeBentTvl } from "hooks";
 import { formatBigNumber } from "utils";
+import { AnimNumber } from "components/AnimNumber";
+import { BigNumber } from "ethers";
 
 const BannerBlocks = (): React.ReactElement => {
   const crvEarnings = useCrvPoolTotalEarned();
@@ -26,8 +28,8 @@ const BannerBlocks = (): React.ReactElement => {
   const weBentTvl = useWeBentTvl();
   const isMobile = useIsMobile();
 
-  const totalTvl = (): string => {
-    return formatBigNumber(crvTvl.add(sushiTvl).add(bentTvl).add(bentCvxTvl).add(weBentTvl), 18, 2);
+  const totalTvl = (): BigNumber => {
+    return crvTvl.add(sushiTvl).add(bentTvl).add(bentCvxTvl).add(weBentTvl);
   }
 
   const totalEarnings = (): string => {
@@ -52,8 +54,7 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalTvl().split('.')[0]}.
-                        <span className="small">{totalTvl().split('.')[1]}</span>
+                        <AnimNumber value={totalTvl()} decimals={2} precision={18} isDecimalSpan={true} />
                       </b>
                     </h2>
                   </div>
@@ -106,9 +107,7 @@ const BannerBlocks = (): React.ReactElement => {
                     <p>Bent TVL</p>
                     <h2>
                       <b>
-                        <span className="small">$</span>
-                        {totalTvl().split('.')[0]}.
-                        <span className="small">{totalTvl().split('.')[1]}</span>
+                        <AnimNumber value={totalTvl()} decimals={2} precision={18} isDecimalSpan={true} />
                       </b>
                     </h2>
                   </div>

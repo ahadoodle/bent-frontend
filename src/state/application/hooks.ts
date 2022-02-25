@@ -79,5 +79,5 @@ export function useEnsName(): string {
 }
 
 export function useGasPrice(): BigNumber {
-  return useSelector((state: AppState) => state.application.gas);
+  return useSelector((state: AppState) => BigNumber.from(state.application.gas));
 }
