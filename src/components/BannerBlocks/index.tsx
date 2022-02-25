@@ -1,14 +1,30 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
+import {
+  useBentCvxStakedUSD,
+  useBentCvxTotalEarned,
+  useBentCvxTvl,
+  useBentEarnedUsd,
+  useBentStakedUsd,
+  useBentTvl,
+  useCrvPoolTotalDepositedUsds,
+  useCrvPoolTotalEarned,
+  useCrvTotalTvl,
+  useIsMobile,
+  useSushiPoolTotalDepositedUsd,
+  useSushiPoolTotalEarned,
+  useSushiTotalTvl,
+  useWeBentDepositsUsd,
+  useWeBentEarnedUsd,
+  useWeBentTvl
+} from "hooks";
+import { AnimNumber } from "components/AnimNumber";
+import { BigNumber } from "ethers";
 import CardCoin from "assets/images/cardCoin.png";
 import ClaimIcon from "assets/images/claimIcon.svg";
 import DollorIcon from "assets/images/dollorIcon.png";
 import DepositIcon from "assets/images/depositIcon.svg";
 import LockIcon from "assets/images/lockIcon.svg";
-import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useIsMobile, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl, useWeBentDepositsUsd, useWeBentEarnedUsd, useWeBentTvl } from "hooks";
-import { formatBigNumber } from "utils";
-import { AnimNumber } from "components/AnimNumber";
-import { BigNumber } from "ethers";
 
 const BannerBlocks = (): React.ReactElement => {
   const crvEarnings = useCrvPoolTotalEarned();

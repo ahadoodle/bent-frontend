@@ -36,10 +36,6 @@ export const MarketModal = (props: Props): React.ReactElement => {
 		return utils.parseEther(bentPrice.toString()).mul(bentCirculatingSupply).div(BigNumber.from(10).pow(18))
 	}
 
-	const directUrl = (url) => {
-		window.open(url, '_blank');
-	}
-
 	return (
 		<Modal
 			isShown={isShown}
@@ -147,7 +143,3 @@ const VotingPowerContainer = styled.div`
   padding: 15px;
   margin-bottom: 10px;
 `;
-
-const IconContainer = styled.div`
-	cursor: pointer;
-`
