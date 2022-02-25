@@ -11,7 +11,7 @@ interface Props {
 	showTitle?: boolean
 }
 
-export const AddToMetamask = (props: Props) => {
+export const AddToMetamask = (props: Props): React.ReactElement => {
 	const { connector } = useActiveWeb3React()
 
 	function addToMetamask() {
