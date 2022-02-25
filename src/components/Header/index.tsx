@@ -12,6 +12,9 @@ import { useDispatch } from "react-redux";
 import { updateTheme } from "state/application/actions";
 import { Theme } from "state/application/reducer";
 import { MobileSubHeader } from "./mobileSubHeader";
+import { MarketModal } from "components/Modals/Market";
+import { AnimNumber } from "components/AnimNumber";
+import { SOCIAL } from "constant";
 
 import LogoIcon from "assets/images/logo-light.svg";
 import MenuIcon from "assets/images/menu.svg";
@@ -19,9 +22,6 @@ import ThemeDarkIcon from "assets/images/theme-dark.png";
 import ThemeLightIcon from "assets/images/theme-light.png";
 import BentDetails from "assets/images/bent-details.png";
 import GasIcon from "assets/images/gas.svg";
-import { formatBigNumber } from "utils";
-import { MarketModal } from "components/Modals/Market";
-import { SOCIAL } from "constant";
 
 const Header = (): React.ReactElement => {
   const isMobile = useIsMobile();
@@ -86,7 +86,8 @@ const Header = (): React.ReactElement => {
                 <img src={theme === Theme.Dark ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
               </span>
               {!isMobile && <GasContainer>
-                <img src={GasIcon} alt="Menu" style={{ width: 13 }} /> {formatBigNumber(gasPrice, 9, 1)}
+                <img src={GasIcon} alt="Menu" style={{ width: 13 }} />&nbsp;
+                <AnimNumber value={gasPrice} precision={9} decimals={1} duration={2} />
               </GasContainer>}
               {!isMobile && <ConnectWallet />}
               <div className="mobileHeader">
