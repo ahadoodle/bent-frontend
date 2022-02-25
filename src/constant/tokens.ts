@@ -2,6 +2,7 @@ import { TOKEN_LOGO } from 'constant';
 
 interface TokenInfo {
 	LOGO: string;
+	EXT_LOGO?: string;
 	ADDR: string;
 	DECIMALS: number;
 	SYMBOL?: string;
@@ -21,6 +22,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 	},
 	BENT: {
 		LOGO: TOKEN_LOGO.BENT,
+		EXT_LOGO: 'https://assets.coingecko.com/coins/images/21274/small/bent-logo-200x200.png?1638861325',
 		ADDR: '0x01597e397605bf280674bf292623460b4204c375',
 		DECIMALS: 18,
 	},
@@ -42,6 +44,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 	},
 	CVX: {
 		LOGO: TOKEN_LOGO.CVX,
+		EXT_LOGO: 'https://assets.coingecko.com/coins/images/15585/small/convex.png?1621256328',
 		ADDR: '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B',
 		DECIMALS: 18,
 		SYMBOL: 'CVX'
