@@ -8,7 +8,8 @@ interface Props {
 	precision: number,
 	decimals: number,
 	duration?: number,
-	isDecimalSpan?: boolean
+	isDecimalSpan?: boolean,
+	invalid?: string
 }
 
 export const AnimNumber = (props: Props): React.ReactElement => {
@@ -20,7 +21,10 @@ export const AnimNumber = (props: Props): React.ReactElement => {
 	}, [props.value])
 
 	useEffect(() => {
-		if (step >= 100) return;
+		if (step >= 100) {
+			setValue(props.value);
+			return;
+		}
 		const upDir = BigNumber.from(props.value).gt(value);
 		const delta = upDir ? BigNumber.from(props.value).sub(value) : BigNumber.from(value).sub(props.value);
 		const increment = delta.div(10);
@@ -37,7 +41,7 @@ export const AnimNumber = (props: Props): React.ReactElement => {
 		<>
 			{
 				props.isDecimalSpan ?
-					<DecimalSpan value={formatBigNumber(value, props.precision, props.decimals)} />
+					(value.isZero() && props.invalid ? (props.invalid) : <DecimalSpan value={formatBigNumber(value, props.precision, props.decimals)} />)
 					:
 					formatBigNumber(value, props.precision, props.decimals)
 			}

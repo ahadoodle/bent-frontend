@@ -32,19 +32,19 @@ const BannerBlocks = (): React.ReactElement => {
     return crvTvl.add(sushiTvl).add(bentTvl).add(bentCvxTvl).add(weBentTvl);
   }
 
-  const totalEarnings = (): string => {
-    return formatBigNumber(crvEarnings.add(sushiEarnings).add(bentEarnings).add(bentCvxEarned).add(weBentEarned), 18, 2);
+  const totalEarnings = (): BigNumber => {
+    return crvEarnings.add(sushiEarnings).add(bentEarnings).add(bentCvxEarned).add(weBentEarned);
   }
 
-  const totalDeposits = (): string => {
-    return formatBigNumber(crvDeposits.add(sushiDeposits).add(bentDeposits).add(bentCvxDeposits).add(webentDeposits), 18, 2)
+  const totalDeposits = (): BigNumber => {
+    return crvDeposits.add(sushiDeposits).add(bentDeposits).add(bentCvxDeposits).add(webentDeposits)
   }
 
   return (
     <React.Fragment>
       <Container>
         {isMobile ?
-          <div className="bannerBlockWrap">
+          <div className="bannerBlockWrap mt-5">
             <Row>
               <Col xs="12" className="mb-3">
                 <div className="boxwrap third">
@@ -54,7 +54,12 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        <AnimNumber value={totalTvl()} decimals={2} precision={18} isDecimalSpan={true} />
+                        <AnimNumber
+                          value={totalTvl()}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                        />
                       </b>
                     </h2>
                   </div>
@@ -71,8 +76,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalEarnings().split('.')[0]}.
-                        <span className="small">{totalEarnings().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalEarnings()}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>
@@ -89,8 +99,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalDeposits().split('.')[0]}.
-                        <span className="small">{totalDeposits().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalDeposits()}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>
@@ -124,8 +139,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalEarnings().split('.')[0]}.
-                        <span className="small">{totalEarnings().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalEarnings()}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>
@@ -140,8 +160,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalDeposits().split('.')[0]}.
-                        <span className="small">{totalDeposits().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalDeposits()}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>
