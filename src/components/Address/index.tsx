@@ -11,14 +11,18 @@ interface Props {
 
 const Address = (props: Props): React.ReactElement => {
 	return (
-		<Container color={props.color || 'white'}>
-			{props.address ? truncateMiddle(props.address, props.length || 15, '.....') : '0x00'}
+		<Container color={props.color || '#703FFF'}>
+			{props.address ? truncateMiddle(props.address, props.length || 20, '.....') : '0x00'}
 		</Container>
 	)
 }
 
 const Container = styled.div<Props>`
+	width: fit-content;
 	color: ${({ color }) => color};
+	&:hover {
+		color: ${({ color }) => color === 'white' ? color : '#0d6efd'};
+	}
 `;
 
 export default Address;

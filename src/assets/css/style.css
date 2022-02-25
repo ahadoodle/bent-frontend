@@ -42,7 +42,7 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light {
     background-image: url(../images/banner.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-    padding-top: 160px;
+    padding-top: 120px;
     padding-bottom: 120px;
 }
 .header nav.navbar.navbar-expand-md {
@@ -108,7 +108,7 @@ ul.primaryMenu li a:hover {
     width: 100%;
     padding: 25px;
     background: #fff;
-    border-radius: 12px;
+    border-radius: 20px;
     box-shadow: 10px 10px 0px 0px #b5deff;
     position: relative;
     overflow: hidden;
@@ -1296,6 +1296,7 @@ div.climBtn {
 }
 .tokentable.table .card .card-body .innerWrap:hover,
 .tokentable.table .card .card-body .innerWrap.open {
+    transition: background-color .2s;
     background: #CAB8FF;
     overflow: hidden;
     border-radius: 16px !important;

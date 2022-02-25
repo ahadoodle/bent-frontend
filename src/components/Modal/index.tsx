@@ -94,8 +94,8 @@ const Container = styled.div`
 	transition: box-shadow .2s;
 	color: white;
 	width: fit-content;
-	backdrop-filter: blur(10px);
-	background: linear-gradient(102.05deg, rgba(37, 49, 67, 0.15) -0.64%, rgba(0, 0, 0, 0) 98.13%);
+	backdrop-filter: blur(20px);
+	background: #353C4961;
 	border-radius: 20px;
 	border: 1px solid #414C5C;
 	&:hover {

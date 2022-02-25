@@ -36,10 +36,6 @@ export const MarketModal = (props: Props): React.ReactElement => {
 		return utils.parseEther(bentPrice.toString()).mul(bentCirculatingSupply).div(BigNumber.from(10).pow(18))
 	}
 
-	const directUrl = (url) => {
-		window.open(url, '_blank');
-	}
-
 	return (
 		<Modal
 			isShown={isShown}
@@ -84,21 +80,11 @@ export const MarketModal = (props: Props): React.ReactElement => {
 				</VotingPowerContainer>
 				<Splitter />
 				<FlexRow>
-					<IconContainer onClick={() => directUrl(SOCIAL.CMC)}>
-						<Icon iconSrc={cmcIcon} borderType="none" />
-					</IconContainer>
-					<IconContainer onClick={() => directUrl(SOCIAL.CGC)}>
-						<Icon iconSrc={cgcIcon} borderType="none" />
-					</IconContainer>
-					<IconContainer onClick={() => directUrl(SOCIAL.MEDIUM)}>
-						<Icon iconSrc={mediumIcon} borderColor="#CAB8FF" />
-					</IconContainer>
-					<IconContainer onClick={() => directUrl(SOCIAL.DISCORD)}>
-						<Icon iconSrc={discordIcon} borderColor="#CAB8FF" />
-					</IconContainer>
-					<IconContainer onClick={() => directUrl(SOCIAL.TELEGRAM)}>
-						<Icon iconSrc={telegramIcon} borderColor="#CAB8FF" />
-					</IconContainer>
+					<Icon iconSrc={cmcIcon} borderType="none" to={SOCIAL.CMC} />
+					<Icon iconSrc={cgcIcon} borderType="none" to={SOCIAL.CGC} />
+					<Icon iconSrc={mediumIcon} borderColor="#CAB8FF" to={SOCIAL.MEDIUM} />
+					<Icon iconSrc={discordIcon} borderColor="#CAB8FF" to={SOCIAL.DISCORD} />
+					<Icon iconSrc={telegramIcon} borderColor="#CAB8FF" to={SOCIAL.TELEGRAM} />
 				</FlexRow>
 			</ConnectContainer>
 		</Modal>
@@ -157,7 +143,3 @@ const VotingPowerContainer = styled.div`
   padding: 15px;
   margin-bottom: 10px;
 `;
-
-const IconContainer = styled.div`
-	cursor: pointer;
-`
