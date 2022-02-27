@@ -87,7 +87,7 @@ const Header = (): React.ReactElement => {
               </span>
               {!isMobile && <GasContainer>
                 <img src={GasIcon} alt="Menu" style={{ width: 13 }} />&nbsp;
-                <AnimNumber value={gasPrice} precision={9} decimals={1} duration={2} />
+                <AnimNumber value={gasPrice} precision={9} decimals={1} />
               </GasContainer>}
               {!isMobile && <ConnectWallet />}
               <div className="mobileHeader">
