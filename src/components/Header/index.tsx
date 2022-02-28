@@ -7,7 +7,7 @@ import {
   Button,
 } from "reactstrap";
 import ConnectWallet from "components/ConnectWallet";
-import { useGasPrice, useIsMobile, useModal, useTheme } from "hooks";
+import { useGasPrice, useIsMobile, useModal, useTheme, useTotalTvl } from "hooks";
 import { useDispatch } from "react-redux";
 import { updateTheme } from "state/application/actions";
 import { Theme } from "state/application/reducer";
@@ -15,6 +15,7 @@ import { MobileSubHeader } from "./mobileSubHeader";
 import { MarketModal } from "components/Modals/Market";
 import { AnimNumber } from "components/AnimNumber";
 import { SOCIAL } from "constant";
+import { formatMillionsBigNumber } from "utils";
 
 import LogoIcon from "assets/images/logo-light.svg";
 import MenuIcon from "assets/images/menu.svg";
@@ -28,6 +29,7 @@ const Header = (): React.ReactElement => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const gasPrice = useGasPrice();
+  const tvl = useTotalTvl();
   const { isShown, toggle } = useModal();
   const [customClass, setCustomClass] = useState("removesidenavmenu");
 
@@ -79,7 +81,10 @@ const Header = (): React.ReactElement => {
                   </Dropdown>
                 </li> */}
               </ul>
-              <span className="theme-icon ml-auto" onClick={toggle} >
+              <div className="ml-auto text-muted" style={{ marginRight: 20 }}>
+                TVL ${formatMillionsBigNumber(tvl, 18, 2)}
+              </div>
+              <span className="theme-icon" onClick={toggle} >
                 <img src={BentDetails} alt="" width="40" height="40" />
               </span>
               <span className="theme-icon" onClick={selectTheme}>
