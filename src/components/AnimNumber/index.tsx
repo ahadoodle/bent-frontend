@@ -31,7 +31,7 @@ export const AnimNumber = (props: Props): React.ReactElement => {
 		const newValue = upDir ? increment.add(value) : BigNumber.from(value).sub(increment)
 		setValue(newValue);
 
-		const duration = (props.duration || 1) * 1000;
+		const duration = (props.duration || 0.5) * 1000;
 		sleep(duration / 100).then(() => {
 			setStep(step + 1);
 		})

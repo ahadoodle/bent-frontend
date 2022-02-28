@@ -4,11 +4,12 @@ import {
 } from "reactstrap";
 import { ethers, utils } from "ethers";
 import { bentFinanceHex, getEtherscanLink } from "utils";
-import { useActiveWeb3React, useDelegationAddr, useSnapshot } from "hooks";
+import { useActiveWeb3React, useDelegationAddr, useIsMobile, useSnapshot } from "hooks";
 import styled from "styled-components";
 import { POOLS } from "constant";
 
 export const DelegateVote = (): React.ReactElement => {
+	const isMobile = useIsMobile();
 	const [isShowChange, showChange] = useState<boolean>(false);
 	const [delegateAddr, setDelegateAddr] = useState('');
 	const delegatedAddr = useDelegationAddr();
@@ -68,18 +69,20 @@ export const DelegateVote = (): React.ReactElement => {
 															<CardText className="mt-0">
 																<span className="small">You are not delegating your vote</span>
 															</CardText>
-															<Row>
-																<button className="btn btnshow" style={{ margin: 'unset' }} onClick={onDelegateToBent}>
-																	Delegate to Bent
-																</button>
-																<Splitter />
-																<Col>
+															<Row style={isMobile ? { flexDirection: 'column' } : {}}>
+																<DelegateButton
+																	className="btn btnshow"
+																	onClick={onDelegateToBent}
+																	mobile={isMobile}
+																>Delegate to Bent</DelegateButton>
+																{!isMobile && <Splitter />}
+																<Col className={`${isMobile && 'mt-2'}`}>
 																	<div className="amountinput">
 																		<Input
 																			type="text" placeholder="Delegate to any address"
 																			style={{ paddingLeft: 12 }}
-																		// onChange={(e) => onLockAmountChange(e.target.value)}
-																		// value={lockAmount}
+																			onChange={(e) => setDelegateAddr(e.target.value)}
+																			value={delegateAddr}
 																		/>
 																		<Button className="maxbtn" >Delegate</Button>
 																	</div>
@@ -99,19 +102,19 @@ export const DelegateVote = (): React.ReactElement => {
 															{
 																isShowChange ?
 																	<Row>
-																		<button className="btn btnshow error" style={{ margin: '0 12px' }} onClick={onClearDelegate}>
-																			Clear Delegate
-																		</button>
-																		<button
+																		<DelegateButton
+																			className="btn btnshow error"
+																			onClick={onClearDelegate}
+																			mobile={isMobile}
+																		>Clear Delegate</DelegateButton>
+																		<DelegateButton
 																			className="btn btnshow"
-																			style={{ margin: '0 12px' }}
 																			onClick={onDelegateToBent}
 																			disabled={delegatedAddr === POOLS.SnapshotDelegation.BentDelegator}
-																		>
-																			Delegate to Bent
-																		</button>
-																		<Splitter />
-																		<Col>
+																			mobile={isMobile}
+																		>Delegate to Bent</DelegateButton>
+																		{!isMobile && <Splitter />}
+																		<Col className={`${isMobile && 'mt-2'}`}>
 																			<div className="amountinput">
 																				<Input
 																					type="text" placeholder="Delegate to any address"
@@ -124,14 +127,16 @@ export const DelegateVote = (): React.ReactElement => {
 																		</Col>
 																	</Row>
 																	: <Row>
-																		<button className="btn btnshow error" style={{ margin: '0 12px' }} onClick={onClearDelegate}>
-																			Clear Delegate
-																		</button>
-																		<button
+																		<DelegateButton
+																			className="btn btnshow error"
+																			onClick={onClearDelegate}
+																			mobile={isMobile}
+																		>Clear Delegate</DelegateButton>
+																		<DelegateButton
 																			className="btn btnshow"
-																			style={{ margin: '0 12px' }}
 																			onClick={() => showChange(true)}
-																		>Change Delegate</button>
+																			mobile={isMobile}
+																		>Change Delegate</DelegateButton>
 																	</Row>
 															}
 														</Col>
@@ -156,3 +161,11 @@ const Splitter = styled.div`
 	margin: 0 40px;
 	padding: 0;
 `;
+
+const DelegateButton = styled.button<{ mobile: boolean }>`
+	width: calc(100% - 24px) !important;
+	margin: 6px 12px !important;
+	&:last-child {
+		margin-bottom: 0px !important;
+	}
+`

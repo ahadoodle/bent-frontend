@@ -23,7 +23,7 @@ a,button {
     right: 0;
     top: 0;
     backdrop-filter: blur(20px);
-    background: linear-gradient(102.05deg, rgba(64, 76, 80, 0.15) -0.64%, rgba(0, 0, 0, 0) 98.13%);
+    background: #353C49A0;
     border-bottom: 1px solid #414C5C;
 }
 .mobileHeader {
@@ -73,7 +73,7 @@ ul.primaryMenu {
     background-color: rgb(23, 23, 23, 0);
 }
 ul.primaryMenu li a {
-    color: #8D99AB;
+    color: white;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -778,7 +778,7 @@ button.btn.btnshow i {
     font-family: 'Rubik';
     width: fit-content;
     max-width: 300px !important;
-    background: #353C4961 !important;
+    background: #353C49A0 !important;
     backdrop-filter: blur(20px);
     border: 1px solid #4E5769;
     border-radius: 8px;
@@ -1956,7 +1956,7 @@ button.approvebtn.btn.btn-secondary, .lockContent button.approvebtn.btn.btn-seco
     padding-top: 10px;
   }
   
-  .sidenav a {
+.sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     display: block;
@@ -1966,10 +1966,10 @@ button.approvebtn.btn.btn-secondary, .lockContent button.approvebtn.btn.btn-seco
     letter-spacing: -0.24px;
     color: #8D99AB;
 }
-  .mobileHeader span {
+.mobileHeader span {
     color: #fff;
 }
-  .sidenav a:hover {
+.sidenav a:hover {
     color: #f1f1f1;
   }
   
