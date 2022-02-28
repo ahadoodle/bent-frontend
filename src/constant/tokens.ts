@@ -165,4 +165,11 @@ export const TOKENS: Record<string, TokenInfo> = {
 		DECIMALS: 18,
 		SYMBOL: 'LUNA'
 	},
+	YFI: {
+		LOGO: TOKEN_LOGO.YFI,
+		EXT_LOGO: 'https://assets.coingecko.com/coins/images/11849/small/yfi-192x192.png?1598325330',
+		ADDR: '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e',
+		DECIMALS: 18,
+		SYMBOL: 'YFI',
+	},
 }

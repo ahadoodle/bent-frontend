@@ -24,6 +24,7 @@ import TLogo from 'assets/images/token/T.svg';
 import TribeLogo from 'assets/images/token/TRIBE.svg';
 import TriCrypto2Logo from 'assets/images/token/TRICRYPTO2.png';
 import UstLogo from 'assets/images/token/UST.svg';
+import YfiLogo from 'assets/images/token/YFI.svg';
 
 export const TOKEN_LOGO = {
 	ALCX: AlcxLogo,
@@ -52,4 +53,5 @@ export const TOKEN_LOGO = {
 	TRIBE: TribeLogo,
 	TRICRYPTO2: TriCrypto2Logo,
 	UST: UstLogo,
+	YFI: YfiLogo,
 }

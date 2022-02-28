@@ -466,6 +466,7 @@ table.tokentable.table td span {
 button.btn.btnshow {
     margin: auto;
     background: #C1FFD7;
+    box-shadow: 4px 4px 0px 0px #10151da3;
     border: 2px solid #10151D;
     border-radius: 20px;
     font-style: normal;
