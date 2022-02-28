@@ -81,7 +81,7 @@ const Header = (): React.ReactElement => {
                   </Dropdown>
                 </li> */}
               </ul>
-              <div className="ml-auto text-muted" style={{ marginRight: 20 }}>
+              <div className="ml-auto text-white" style={{ marginRight: 20 }}>
                 TVL ${formatMillionsBigNumber(tvl, 18, 2)}
               </div>
               <span className="theme-icon" onClick={toggle} >
