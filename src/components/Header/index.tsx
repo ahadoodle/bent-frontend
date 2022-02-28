@@ -95,9 +95,9 @@ const Header = (): React.ReactElement => {
                   <Button className="closebtn" onClick={closeNav}>
                     &times;
                   </Button>
-                  <Link to="/stake">Stake</Link>
-                  <Link to="/claim">Claim</Link>
-                  <Link to="/lock">Lock</Link>
+                  <Link to="/stake" onClick={closeNav}>Stake</Link>
+                  <Link to="/claim" onClick={closeNav}>Claim</Link>
+                  <Link to="/lock" onClick={closeNav}>Lock</Link>
                   <a href={SOCIAL.TWITTER} target="_blank" rel="noreferrer">Twitter</a>
                   <a href={SOCIAL.DISCORD} target="_blank" rel="noreferrer">Discord</a>
                   <a href={SOCIAL.TELEGRAM} target="_blank" rel="noreferrer">Telegram Group</a>

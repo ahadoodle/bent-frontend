@@ -1956,7 +1956,7 @@ button.approvebtn.btn.btn-secondary, .lockContent button.approvebtn.btn.btn-seco
     padding-top: 10px;
   }
   
-  .sidenav a {
+.sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     display: block;
@@ -1966,10 +1966,10 @@ button.approvebtn.btn.btn-secondary, .lockContent button.approvebtn.btn.btn-seco
     letter-spacing: -0.24px;
     color: #8D99AB;
 }
-  .mobileHeader span {
+.mobileHeader span {
     color: #fff;
 }
-  .sidenav a:hover {
+.sidenav a:hover {
     color: #f1f1f1;
   }
   
