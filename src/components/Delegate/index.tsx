@@ -163,8 +163,8 @@ const Splitter = styled.div`
 `;
 
 const DelegateButton = styled.button<{ mobile: boolean }>`
-	width: calc(100% - 24px) !important;
-	margin: 6px 12px !important;
+	${props => props.mobile && 'width: calc(100% - 24px) !important;'}
+	margin: ${props => props.mobile ? '6px 12px' : '0 12px'} !important;
 	&:last-child {
 		margin-bottom: 0px !important;
 	}
