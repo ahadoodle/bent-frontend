@@ -12,7 +12,7 @@ import { useActiveWeb3React } from 'hooks';
 import { ChainId } from 'constant';
 import { ContractsState } from 'state/contracts/reducer';
 import { Theme } from './reducer';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 export function useBlockNumber(): number {
   const { chainId } = useActiveWeb3React();
@@ -79,5 +79,5 @@ export function useEnsName(): string {
 }
 
 export function useGasPrice(): BigNumber {
-  return useSelector((state: AppState) => BigNumber.from(state.application.gas));
+  return useSelector((state: AppState) => state.application.gas ? BigNumber.from(state.application.gas || ethers.constants.Zero) : ethers.constants.Zero);
 }
