@@ -37,7 +37,7 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 				Extras APR breakdown:<br />
 				{POOLS.weBENT.RewardAssets.map(key =>
 					key !== 'BENTCVX' && (<div key={key}>
-						- {key} APR: {utils.commify(parseFloat((bentAprs[TOKENS[key].ADDR.toLowerCase()] || 0).toFixed(2)))}%<br />
+						- {TOKENS[key].SYMBOL} APR: {utils.commify(parseFloat((bentAprs[TOKENS[key].ADDR.toLowerCase()] || 0).toFixed(2)))}%<br />
 					</div>)
 				)}
 			</div>
