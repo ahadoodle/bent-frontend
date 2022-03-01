@@ -1,5 +1,4 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit';
-import { BigNumber, ethers } from 'ethers';
 import {
   addPopup,
   PopupContent,
@@ -9,7 +8,6 @@ import {
   updateBlockNumber,
   updateTheme,
   updateEnsName,
-  updateGas,
 } from './actions';
 
 type PopupList = Array<{
@@ -32,7 +30,6 @@ export interface ApplicationState {
 
   theme: Theme;
   ensName: string;
-  gas: BigNumber;
 }
 
 const initialState: ApplicationState = {
@@ -43,7 +40,6 @@ const initialState: ApplicationState = {
 
   theme: Theme.Dark,
   ensName: '',
-  gas: ethers.constants.Zero,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -87,8 +83,5 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateEnsName, (state, action) => {
       state.ensName = action.payload;
-    })
-    .addCase(updateGas, (state, action) => {
-      state.gas = action.payload;
     })
 );
