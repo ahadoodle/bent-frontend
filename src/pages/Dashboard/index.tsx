@@ -19,11 +19,12 @@ import DocIcon from 'assets/images/doc.svg';
 import StakeIcon from 'assets/images/stake-icon.svg';
 import StakeBlackIcon from 'assets/images/stake-black.svg';
 import { DecimalSpan } from "components/DecimalSpan";
-import { useTotalTvl } from "hooks";
+import { useIsMobile, useTotalTvl } from "hooks";
 import { formatBigNumber } from "utils";
 import { SOCIAL } from "constant";
 
 const Dashboard = () => {
+	const isMobile = useIsMobile();
 	const totalTvl = useTotalTvl();
 	const history = useHistory();
 
@@ -43,9 +44,9 @@ const Dashboard = () => {
 			<div className="banner">
 				<Container>
 					<Row className="pt-5">
-						<Col style={{ maxHeight: 170 }}>
-							<TopHeader>Boosted Bent<br />Staking</TopHeader>
-							<TopDiagram src={DashboardDiagram1} alt="Icon" />
+						<Col style={isMobile ? {} : { maxHeight: 170 }}>
+							<TopHeader mobile={isMobile} >Boosted Bent<br />Staking</TopHeader>
+							<TopDiagram src={DashboardDiagram1} alt="Icon" mobile={isMobile} />
 						</Col>
 					</Row>
 					<Row className="pt-3">
@@ -88,22 +89,22 @@ const Dashboard = () => {
 						</Col>
 					</Row>
 					<Row className="pt-3">
-						<Col style={{ maxHeight: 130 }}>
+						<Col style={isMobile ? {} : { maxHeight: 130 }}>
 							<EarnCrvTitle>Earn CRV with a<br />better boost</EarnCrvTitle>
-							<EarnCrvDiagram src={DashboardDiagram5} alt="Icon" />
+							<EarnCrvDiagram src={DashboardDiagram5} alt="Icon" mobile={isMobile} />
 						</Col>
 					</Row>
 					<Row>
 						<Col>
-							<EarnCrvDesc>
-								Deposit your Curve LP tokens to earn<br />Curve trading fees, boosted CRV, CVX<br /> and BENT rewards.
+							<EarnCrvDesc style={{ width: isMobile ? 'inherit' : 400 }}>
+								Deposit your Curve LP tokens to earn Curve trading fees, boosted CRV, CVX and BENT rewards.
 							</EarnCrvDesc>
 						</Col>
 					</Row>
 					<Row>
 						<Col>
-							<EarnCrvDesc style={{ marginLeft: "auto", width: "fit-content" }}>
-								Boost is pooled from CVX<br /> stakers so you do not need to<br /> worry about locking yourself.
+							<EarnCrvDesc style={isMobile ? { width: 'inherit', marginTop: 10 } : { marginLeft: "auto", width: 300 }}>
+								Boost is pooled from CVX stakers so you do not need to worry about locking yourself.
 							</EarnCrvDesc>
 						</Col>
 					</Row>
@@ -112,32 +113,50 @@ const Dashboard = () => {
 			<BackgroundTop src={DashboardDiagram2} alt="BackgroundTop" />
 			<PutCrvSection>
 				<Container>
-					<Row>
-						<Col>
-							<PutCrvDiagram src={DashboardDiagram4} alt="Icon" />
-						</Col>
-						<Col>
-							<TitleSmall style={{ marginTop: 130 }}>CRV STAKERS</TitleSmall>
-							<EarnCrvTitle className="mt-4">Put your CVX<br />to work</EarnCrvTitle>
-							<EarnCrvDesc className="mt-4">
-								Stake and earn additional CRV on top of<br />CVX tokens and Curve trading fees.
-							</EarnCrvDesc>
-						</Col>
-					</Row>
+					{isMobile ?
+						<Row>
+							<Col>
+								<TitleSmall style={{ marginTop: 50 }}>CRV STAKERS</TitleSmall>
+								<EarnCrvTitle className="mt-4">Put your CVX<br />to work</EarnCrvTitle>
+								<PutCrvDiagram src={DashboardDiagram4} alt="Icon" mobile={isMobile} />
+								<EarnCrvDesc className="mt-4">
+									Stake and earn additional CRV on top of CVX tokens and Curve trading fees.
+								</EarnCrvDesc>
+							</Col>
+						</Row> :
+						<Row>
+							<Col>
+								<PutCrvDiagram src={DashboardDiagram4} alt="Icon" mobile={isMobile} />
+							</Col>
+							<Col>
+								<TitleSmall style={{ marginTop: 130 }}>CRV STAKERS</TitleSmall>
+								<EarnCrvTitle className="mt-4">Put your CVX<br />to work</EarnCrvTitle>
+								<EarnCrvDesc className="mt-4">
+									Stake and earn additional CRV on top of<br />CVX tokens and Curve trading fees.
+								</EarnCrvDesc>
+							</Col>
+						</Row>
+					}
 				</Container>
 			</PutCrvSection>
 			<BackgroundTop src={DashboardDiagram7} alt="BackgroundTop" />
 			<StakeBentSection className="d-flex">
-				<StakeBentDiagram2 src={DashboardDiagram3} alt="DashboardDiagram" />
+				{!isMobile && <StakeBentDiagram2 src={DashboardDiagram3} alt="DashboardDiagram" />}
 				<Container>
 					<Row>
 						<Col>
 							<TitleSmall style={{ marginTop: 90 }}>THE TOKEN</TitleSmall>
-							<EarnCrvTitle className="mt-4">Stake BENT, earn<br />more and vote</EarnCrvTitle>
-							<EarnCrvDesc className="mt-4">
-								Stake your BENT rewards back into the<br />
-								platform and earn platform fees and<br />
-								vote on your future yield
+							{
+								isMobile ?
+									<EarnCrvTitle className="mt-4">
+										Stake BENT, earn more and vote
+									</EarnCrvTitle> :
+									<EarnCrvTitle className="mt-4">
+										Stake BENT, earn<br />more and vote
+									</EarnCrvTitle>
+							}
+							<EarnCrvDesc className="mt-4" style={{ width: isMobile ? 'inherit' : 400 }}>
+								Stake your BENT rewards back into the platform and earn platform fees and vote on your future yield.
 							</EarnCrvDesc>
 						</Col>
 						<Col>
@@ -152,15 +171,17 @@ const Dashboard = () => {
 						<Col>
 							<AuditTitle>AUDITS</AuditTitle>
 							<div className="d-flex">
-								<AuditDesc className="mt-4">
-									Hacken is a team of experienced developers<br />
-									providing top-notch blockchain solutions, smart<br />
-									contract security audits and tech advisory.
+								<AuditDesc className="mt-4" style={{ maxWidth: 700 }}>
+									Hacken is a team of experienced developers providing top-notch blockchain solutions, smart contract security audits and tech advisory.
 								</AuditDesc>
-								<img src={DashboardDiagram8} alt="Icon" style={{ marginLeft: 28 }} />
+								{!isMobile && <img src={DashboardDiagram8} alt="Icon" style={{ marginLeft: 28 }} />}
 							</div>
-							<div>
-								<AuditButton onClick={() => window.open('https://hacken.io/audits/#bent_finance', '_blank')}>
+							<div style={isMobile ? { display: 'grid' } : {}}>
+								{isMobile && <img src={DashboardDiagram8} alt="Icon" style={{ marginLeft: 28, marginTop: 10 }} />}
+								<AuditButton
+									className={`${isMobile && 'm-auto mt-4'}`}
+									onClick={() => window.open('https://hacken.io/audits/#bent_finance', '_blank')}
+								>
 									<img src={DocIcon} alt="DocIcon" />&nbsp;
 									View Report
 								</AuditButton>
@@ -170,21 +191,23 @@ const Dashboard = () => {
 				</Container>
 			</AuditSection>
 			<BoostCrvSection>
-				<Container className="d-flex">
+				<Container className={`${isMobile ? 'text-center' : "d-flex"}`}>
 					<BoostCrvTitle className="ml-auto">
 						Boost
 						<img src={DashboardDiagram9} alt="Icon" className="mx-2" />
 						CRV Rewards
 					</BoostCrvTitle>
-					<StakeButton className="btn btnshow" onClick={onStake}>
+					<StakeButton className={`btn btnshow ${isMobile && 'mt-3'}`} onClick={onStake}>
 						<img src={StakeBlackIcon} alt="Icon" />
 						&nbsp;Stake Now
 					</StakeButton>
 				</Container>
 			</BoostCrvSection>
 			<CommunitySection>
-				<Container className="d-flex">
-					<CommunityTitle>JOIN OUR<br />COMMUNITY :</CommunityTitle>
+				<Container className={`${isMobile ? 'text-center' : "d-flex"}`}>
+					<CommunityTitle
+						style={{ width: isMobile ? 'inherit' : 150, marginBottom: isMobile ? 10 : 0 }}
+					>JOIN OUR COMMUNITY :</CommunityTitle>
 					<CommunityIcon src={DashboardTwitter} alt="CommunityIcon" onClick={() => openUrl(SOCIAL.TWITTER)} />
 					<CommunityIcon src={DashboardTelegram} alt="CommunityIcon" onClick={() => openUrl(SOCIAL.TELEGRAM)} />
 					<CommunityIcon src={DashboardGithub} alt="CommunityIcon" onClick={() => openUrl(SOCIAL.GIHUB)} />
@@ -194,20 +217,28 @@ const Dashboard = () => {
 	);
 };
 
-const TopHeader = styled.h1`
+const TopHeader = styled.h1<{ mobile: boolean }>`
 	font-style: normal;
 	font-weight: bold;
 	font-size: 83px;
 	line-height: 83px;
 	letter-spacing: -0.04em;
 	color: white;
+	${props => props.mobile && `
+	font-size: 50px;
+	line-height: 50px;
+	`};
 `;
 
-const TopDiagram = styled.img`
+const TopDiagram = styled.img<{ mobile: boolean }>`
+	${props => props.mobile ? `
+	width: inherit;
+	` : `
 	position: relative;
 	margin-left: 300px;
 	top: -120px;
 	width: 800px;
+	`}
 `;
 
 const StakeButton = styled(Button)`
@@ -239,11 +270,15 @@ const EarnCrvDesc = styled.div`
 	opacity: 0.8;
 `;
 
-const EarnCrvDiagram = styled.img`
+const EarnCrvDiagram = styled.img<{ mobile: boolean }>`
+	${props => props.mobile ? `
+	width: inherit;
+	` : `
 	position: relative;
 	margin-left: 450px;
 	top: -120px;
 	width: 600px;
+	`}
 `;
 
 const PutCrvSection = styled.div`
@@ -251,8 +286,8 @@ const PutCrvSection = styled.div`
 	padding-bottom: 20px;
 `;
 
-const PutCrvDiagram = styled.img`
-	width: 470px;
+const PutCrvDiagram = styled.img<{ mobile: boolean }>`
+	width: ${props => props.mobile ? 'inherit' : '470px'};
 `;
 
 const StakeBentSection = styled.div`
@@ -336,6 +371,9 @@ const CommunityIcon = styled.img`
 	width: 56px;
 	margin-right: 32px;
 	cursor: pointer;
+	&:last-child {
+		margin-right: 0;
+	}
 `
 
 const BackgroundTop = styled.img`
