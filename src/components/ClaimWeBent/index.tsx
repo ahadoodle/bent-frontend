@@ -48,18 +48,14 @@ export const ClaimWeBent = (): React.ReactElement => {
 	const onClaim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		if (checkAll) {
-			await weBentContract.connect(signer).claimAll();
-		} else {
-			await weBentContract.connect(signer).claim(checkedIndexes());
-		}
+		await weBentContract.connect(signer).claim(checkedIndexes());
 	}
 
 	const onClaimCheckChange = (index: number, add: boolean) => {
 		if (!add) setCheckAll(false);
-		claimChecked[index] = add;
+		claimChecked[POOLS.weBENT.ClaimIndex[index]] = add;
 		setClaimChecked(Object.assign({}, claimChecked));
-		if (checkedIndexes().length === POOLS.weBENT.RewardAssets.length) {
+		if (Object.keys(claimChecked).filter(key => claimChecked[key]).length === POOLS.weBENT.RewardAssets.length) {
 			setCheckAll(true);
 			setClaimBtnText('Claim All');
 		} else {
@@ -70,7 +66,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 	const onCheckAll = () => {
 		setCheckAll(!checkAll);
 		POOLS.weBENT.RewardAssets.forEach((key, index) => {
-			claimChecked[index] = !checkAll;
+			claimChecked[POOLS.weBENT.ClaimIndex[index]] = !checkAll;
 		})
 		setClaimChecked(Object.assign({}, claimChecked));
 		if (!checkAll) {
@@ -158,7 +154,7 @@ export const ClaimWeBent = (): React.ReactElement => {
 																apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}
 																rewardUsd={bentRewardsUsd ? BigNumber.from(bentRewardsUsd[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
 																reward={bentRewards ? BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
-																checked={claimChecked[index] || false}
+																checked={claimChecked[POOLS.weBENT.ClaimIndex[index]] || false}
 																onChange={onClaimCheckChange}
 															/>
 														)}
