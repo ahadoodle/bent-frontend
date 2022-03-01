@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { withRouter } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { Button, Col, Container, Row } from "reactstrap";
 import DashboardDiagram1 from 'assets/images/dashboard-diagram-1.png';
@@ -20,9 +20,20 @@ import StakeIcon from 'assets/images/stake-icon.svg';
 import StakeBlackIcon from 'assets/images/stake-black.svg';
 import { DecimalSpan } from "components/DecimalSpan";
 import { useTotalTvl } from "hooks";
+import { formatBigNumber } from "utils";
+import { SOCIAL } from "constant";
 
 const Dashboard = () => {
 	const totalTvl = useTotalTvl();
+	const history = useHistory();
+
+	const onStake = () => {
+		history.push('/stake');
+	}
+
+	const openUrl = (url) => {
+		window.open(url, '_blank');
+	}
 
 	return (
 		<React.Fragment>
@@ -44,7 +55,7 @@ const Dashboard = () => {
 					</Row>
 					<Row className="pt-4">
 						<Col>
-							<StakeButton className="transBtn p-2 px-4">
+							<StakeButton className="transBtn p-2 px-4" onClick={onStake}>
 								<img src={StakeIcon} alt="Icon" />
 								&nbsp;Stake
 							</StakeButton>
@@ -56,36 +67,15 @@ const Dashboard = () => {
 								<span className="small">TVL</span><br />
 								<b>
 									<span className="small">$</span>
-									<DecimalSpan value={totalTvl} />
+									<DecimalSpan value={formatBigNumber(totalTvl, 18, 2)} />
 								</b>
 							</div>
 						</Col>
 						<Col>
-							<div className="text-white">
-								<span className="small">Revenue Earned</span><br />
-								<b>
-									<span className="small">$</span>
-									<DecimalSpan value={totalTvl} />
-								</b>
-							</div>
 						</Col>
 						<Col>
-							<div className="text-white">
-								<span className="small">Total CRV</span><br />
-								<b>
-									<span className="small">$</span>
-									<DecimalSpan value={totalTvl} />
-								</b>
-							</div>
 						</Col>
 						<Col>
-							<div className="text-white">
-								<span className="small">Airdrops</span><br />
-								<b>
-									<span className="small">$</span>
-									<DecimalSpan value={totalTvl} />
-								</b>
-							</div>
 						</Col>
 					</Row>
 				</Container>
@@ -186,7 +176,7 @@ const Dashboard = () => {
 						<img src={DashboardDiagram9} alt="Icon" className="mx-2" />
 						CRV Rewards
 					</BoostCrvTitle>
-					<StakeButton className="btn btnshow">
+					<StakeButton className="btn btnshow" onClick={onStake}>
 						<img src={StakeBlackIcon} alt="Icon" />
 						&nbsp;Stake Now
 					</StakeButton>
@@ -195,9 +185,9 @@ const Dashboard = () => {
 			<CommunitySection>
 				<Container className="d-flex">
 					<CommunityTitle>JOIN OUR<br />COMMUNITY :</CommunityTitle>
-					<CommunityIcon src={DashboardTwitter} alt="CommunityIcon" />
-					<CommunityIcon src={DashboardTelegram} alt="CommunityIcon" />
-					<CommunityIcon src={DashboardGithub} alt="CommunityIcon" />
+					<CommunityIcon src={DashboardTwitter} alt="CommunityIcon" onClick={() => openUrl(SOCIAL.TWITTER)} />
+					<CommunityIcon src={DashboardTelegram} alt="CommunityIcon" onClick={() => openUrl(SOCIAL.TELEGRAM)} />
+					<CommunityIcon src={DashboardGithub} alt="CommunityIcon" onClick={() => openUrl(SOCIAL.GIHUB)} />
 				</Container>
 			</CommunitySection>
 		</React.Fragment>
@@ -345,6 +335,7 @@ const CommunityTitle = styled.div`
 const CommunityIcon = styled.img`
 	width: 56px;
 	margin-right: 32px;
+	cursor: pointer;
 `
 
 const BackgroundTop = styled.img`
