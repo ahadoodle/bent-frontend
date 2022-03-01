@@ -17,7 +17,7 @@ interface Props {
 export const ClaimWeBentRewardItem = (props: Props): React.ReactElement => {
 	const { tokenKey } = props
 	return (
-		<div className={`imgText bent-rewards-item ${props.apr < 0.01 && !props.rewardUsd.gte(BigNumber.from(10).pow(16)) ? 'd-none' : ''}`}>
+		<div className={`imgText bent-rewards-item ${tokenKey === 'SPELL' || (props.apr < 0.01 && !props.rewardUsd.gte(BigNumber.from(10).pow(16))) ? 'd-none' : ''}`}>
 			<img src={TOKENS[tokenKey].LOGO} alt="Icon" width="28" />
 			<div style={{ minWidth: 100 }}>
 				<h4 className="mb-0">{TOKENS[tokenKey].SYMBOL}</h4>

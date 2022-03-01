@@ -160,7 +160,7 @@ export default function Updater(): null {
 			contractCalls.push(weBentMC.epochLength());
 			contractCalls.push(weBentMC.pendingReward(accAddr));
 			POOLS.weBENT.RewardAssets.forEach((rewardToken, index) => {
-				contractCalls.push(weBentMC.rewardPools(index));
+				contractCalls.push(weBentMC.rewardPools(POOLS.weBENT.ClaimIndex[index]));
 			})
 
 			// Add Sushi contract calls
@@ -291,11 +291,11 @@ export default function Updater(): null {
 					weBentAprs[tokenAddr] = (weBentTvl.isZero() ? 0 : rewardUsd.mul(10000).div(weBentTvl).toNumber()) / 100;
 					weBentTokenRewardsUsd = weBentTokenRewardsUsd.add(rewardUsd);
 
-					const earnedUsd = utils.parseEther(tokenPrice.toString()).mul(weBentPendingRewards[index])
+					const earnedUsd = utils.parseEther(tokenPrice.toString()).mul(weBentPendingRewards[POOLS.weBENT.ClaimIndex[index]])
 						.div(BigNumber.from(10).pow(getTokenDecimals(tokenAddr)));
 					weBentEarnedUsd = weBentEarnedUsd.add(earnedUsd);
 					weBentRewardsUsd[tokenAddr] = earnedUsd;
-					weBentRewards[tokenAddr] = weBentPendingRewards[index];
+					weBentRewards[tokenAddr] = weBentPendingRewards[POOLS.weBENT.ClaimIndex[index]];
 				})
 				weBentAvgApr = (weBentTvl.isZero() ? 0 : weBentTokenRewardsUsd.mul(10000).div(weBentTvl).toNumber()) / 100 + weBentApr;
 				weBentAvgApr = parseFloat(weBentAvgApr.toFixed(2));
