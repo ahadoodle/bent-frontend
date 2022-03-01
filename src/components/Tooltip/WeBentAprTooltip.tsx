@@ -33,7 +33,13 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 				APR breakdown:<br />
 				- weBENT APR: {utils.commify(weBentApr.toFixed(2))}%<br />
 				- bentCVX APR: {utils.commify(bentCvxApr().toFixed(2))}%<br />
-				- Extras APR: {utils.commify(extraApr().toFixed(2))}%<br />
+				- Extras APR: {utils.commify(extraApr().toFixed(2))}%<br /><br />
+				Extras APR breakdown:<br />
+				{POOLS.weBENT.RewardAssets.map(key =>
+					key !== 'BENTCVX' && (<div key={key}>
+						- {TOKENS[key].SYMBOL} APR: {utils.commify(parseFloat((bentAprs[TOKENS[key].ADDR.toLowerCase()] || 0).toFixed(2)))}%<br />
+					</div>)
+				)}
 			</div>
 		</UncontrolledTooltip>
 	)
