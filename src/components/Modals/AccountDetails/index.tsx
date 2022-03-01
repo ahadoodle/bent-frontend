@@ -52,7 +52,7 @@ export const AccountDetailsModal = (props: Props): React.ReactElement => {
 						</div>
 						<div style={{ textAlign: 'left' }}>
 							{ensName}
-							<Address address={account} length={20}></Address>
+							<Address address={account} length={20} color="white" />
 						</div>
 					</AccountAddress>
 				</FlexRow>

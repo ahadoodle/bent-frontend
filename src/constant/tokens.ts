@@ -2,6 +2,7 @@ import { TOKEN_LOGO } from 'constant';
 
 interface TokenInfo {
 	LOGO: string;
+	EXT_LOGO?: string;
 	ADDR: string;
 	DECIMALS: number;
 	SYMBOL?: string;
@@ -21,6 +22,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 	},
 	BENT: {
 		LOGO: TOKEN_LOGO.BENT,
+		EXT_LOGO: 'https://assets.coingecko.com/coins/images/21274/small/bent-logo-200x200.png?1638861325',
 		ADDR: '0x01597e397605bf280674bf292623460b4204c375',
 		DECIMALS: 18,
 	},
@@ -42,6 +44,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 	},
 	CVX: {
 		LOGO: TOKEN_LOGO.CVX,
+		EXT_LOGO: 'https://assets.coingecko.com/coins/images/15585/small/convex.png?1621256328',
 		ADDR: '0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B',
 		DECIMALS: 18,
 		SYMBOL: 'CVX'
@@ -161,5 +164,12 @@ export const TOKENS: Record<string, TokenInfo> = {
 		ADDR: '0xd2877702675e6cEb975b4A1dFf9fb7BAF4C91ea9',
 		DECIMALS: 18,
 		SYMBOL: 'LUNA'
+	},
+	YFI: {
+		LOGO: TOKEN_LOGO.YFI,
+		EXT_LOGO: 'https://assets.coingecko.com/coins/images/11849/small/yfi-192x192.png?1598325330',
+		ADDR: '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e',
+		DECIMALS: 18,
+		SYMBOL: 'YFI',
 	},
 }

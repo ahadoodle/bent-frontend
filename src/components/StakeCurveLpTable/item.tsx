@@ -366,7 +366,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														<b>BENT</b> token address:
 													</CardText>
 												</Col>
-												<Col md="9">
+												<Col md="9" >
 													<a href={getEtherscanLink(TOKENS.BENT.ADDR)} target="_blank" rel="noreferrer">
 														{TOKENS.BENT.ADDR}
 													</a>

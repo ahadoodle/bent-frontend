@@ -11,7 +11,8 @@ import {
 	useCrvPoolEarnedUsd,
 	useTokenPrices,
 	useCrvPoolRewards,
-	useCrvApr
+	useCrvApr,
+	useCrvProjectedApr
 } from "hooks";
 import {
 	formatBigNumber,
@@ -41,6 +42,11 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 	const rewards = useCrvPoolRewards(props.poolKey);
 	const apr = useCrvApr(props.poolKey);
+	const projectedApr = useCrvProjectedApr(props.poolKey);
+
+	const currentApr = () => {
+		return apr + BigNumber.from(projectedApr.baseCrvvApr).toNumber() / 100
+	}
 
 	const haveRewards = () => {
 		let enable = false;
@@ -93,7 +99,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 						<b>
 							{apr ?
 								<>
-									{utils.commify(apr.toFixed(2))}%&nbsp;
+									{utils.commify(currentApr().toFixed(2))}%&nbsp;
 									<i className="fa fa-info-circle cursor-pointer" aria-hidden="true" id={`crv-${props.poolKey}-apr-breakdown`}
 										onClick={(e) => {
 											setShowBreakdown(!showBreakdown)
@@ -104,10 +110,11 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 											<Row className="mb-3">
 												<Col>
 													<div className="text-underline">Current APR:</div>
-													<div className="green-color">{utils.commify(apr.toFixed(2))}%</div>
+													<div className="green-color">{utils.commify(currentApr().toFixed(2))}%</div>
 												</Col>
 											</Row>
 											Current APR breakdown:<br />
+											- Base Curve APR: {formatBigNumber(projectedApr.baseCrvvApr, 2, 2)}%<br />
 											- BENT APR: {utils.commify(apr.toFixed(2))}%<br />
 										</div>
 									</UncontrolledTooltip>

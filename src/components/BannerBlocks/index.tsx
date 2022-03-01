@@ -1,65 +1,27 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
+import {
+  useTotalDeposits,
+  useTotalEarnings,
+  useIsMobile
+} from "hooks";
+import { AnimNumber } from "components/AnimNumber";
 import CardCoin from "assets/images/cardCoin.png";
 import ClaimIcon from "assets/images/claimIcon.svg";
 import DollorIcon from "assets/images/dollorIcon.png";
 import DepositIcon from "assets/images/depositIcon.svg";
-import LockIcon from "assets/images/lockIcon.svg";
-import { useBentCvxStakedUSD, useBentCvxTotalEarned, useBentCvxTvl, useBentEarnedUsd, useBentStakedUsd, useBentTvl, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useIsMobile, useSushiPoolTotalDepositedUsd, useSushiPoolTotalEarned, useSushiTotalTvl, useWeBentDepositsUsd, useWeBentEarnedUsd, useWeBentTvl } from "hooks";
-import { formatBigNumber } from "utils";
+// import LockIcon from "assets/images/lockIcon.svg";
 
 const BannerBlocks = (): React.ReactElement => {
-  const crvEarnings = useCrvPoolTotalEarned();
-  const sushiEarnings = useSushiPoolTotalEarned();
-  const bentEarnings = useBentEarnedUsd();
-  const bentCvxEarned = useBentCvxTotalEarned();
-  const weBentEarned = useWeBentEarnedUsd();
-  const crvDeposits = useCrvPoolTotalDepositedUsds();
-  const sushiDeposits = useSushiPoolTotalDepositedUsd();
-  const bentDeposits = useBentStakedUsd();
-  const bentCvxDeposits = useBentCvxStakedUSD();
-  const webentDeposits = useWeBentDepositsUsd();
-  const crvTvl = useCrvTotalTvl();
-  const sushiTvl = useSushiTotalTvl();
-  const bentTvl = useBentTvl();
-  const bentCvxTvl = useBentCvxTvl();
-  const weBentTvl = useWeBentTvl();
+  const totalEarnings = useTotalEarnings();
+  const totalDeposits = useTotalDeposits();
   const isMobile = useIsMobile();
-
-  const totalTvl = (): string => {
-    return formatBigNumber(crvTvl.add(sushiTvl).add(bentTvl).add(bentCvxTvl).add(weBentTvl), 18, 2);
-  }
-
-  const totalEarnings = (): string => {
-    return formatBigNumber(crvEarnings.add(sushiEarnings).add(bentEarnings).add(bentCvxEarned).add(weBentEarned), 18, 2);
-  }
-
-  const totalDeposits = (): string => {
-    return formatBigNumber(crvDeposits.add(sushiDeposits).add(bentDeposits).add(bentCvxDeposits).add(webentDeposits), 18, 2)
-  }
 
   return (
     <React.Fragment>
       <Container>
         {isMobile ?
-          <div className="bannerBlockWrap">
-            <Row>
-              <Col xs="12" className="mb-3">
-                <div className="boxwrap third">
-                  <img className="bannerIcon" src={LockIcon} alt="Icon" />
-                  <div className="mx-3">
-                    <p>Bent TVL</p>
-                    <h2>
-                      <b>
-                        <span className="small">$</span>
-                        {totalTvl().split('.')[0]}.
-                        <span className="small">{totalTvl().split('.')[1]}</span>
-                      </b>
-                    </h2>
-                  </div>
-                </div>
-              </Col>
-            </Row>
+          <div className="bannerBlockWrap mt-5">
             <Row>
               <Col xs="12" className="mb-3">
                 <div className="boxwrap">
@@ -70,8 +32,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalEarnings().split('.')[0]}.
-                        <span className="small">{totalEarnings().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalEarnings}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>
@@ -88,8 +55,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalDeposits().split('.')[0]}.
-                        <span className="small">{totalDeposits().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalDeposits}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>
@@ -99,23 +71,6 @@ const BannerBlocks = (): React.ReactElement => {
           </div> :
           <div className="bannerBlockWrap">
             <Row>
-              <Col xs="6" className="m-auto mb-5">
-                <div className="boxwrap third">
-                  <img className="bannerIcon" src={LockIcon} alt="Icon" />
-                  <div className="mx-3">
-                    <p>Bent TVL</p>
-                    <h2>
-                      <b>
-                        <span className="small">$</span>
-                        {totalTvl().split('.')[0]}.
-                        <span className="small">{totalTvl().split('.')[1]}</span>
-                      </b>
-                    </h2>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <Row>
               <Col xs="6">
                 <div className="boxwrap">
                   <img className="cardCoin" src={CardCoin} alt="Icon" />
@@ -125,8 +80,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalEarnings().split('.')[0]}.
-                        <span className="small">{totalEarnings().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalEarnings}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>
@@ -141,8 +101,13 @@ const BannerBlocks = (): React.ReactElement => {
                     <h2>
                       <b>
                         <span className="small">$</span>
-                        {totalDeposits().split('.')[0]}.
-                        <span className="small">{totalDeposits().split('.')[1]}</span>
+                        <AnimNumber
+                          value={totalDeposits}
+                          decimals={2}
+                          precision={18}
+                          isDecimalSpan={true}
+                          invalid={'0.0'}
+                        />
                       </b>
                     </h2>
                   </div>

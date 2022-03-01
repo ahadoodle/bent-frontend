@@ -31,6 +31,8 @@ import BentLogo from 'assets/images/logo-dark.svg';
 import BentLogoLight from 'assets/images/logo-light.svg';
 import { Theme } from "state/application/reducer";
 import { SwitchSlider } from "components/Switch";
+import Address from "components/Address";
+import { AddToMetamask } from "components/AddToMetamask";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -476,10 +478,15 @@ export const StakeBentCVX = (): React.ReactElement => {
 																				<b>CVX</b> token address:
 																			</CardText>
 																		</Col>
-																		<Col md="9">
+																		<Col md="9" className="d-flex">
 																			<a href={getEtherscanLink(TOKENS.CVX.ADDR)} target="_blank" rel="noreferrer">
-																				{TOKENS.CVX.ADDR}
+																				<Address address={TOKENS.CVX.ADDR} />
 																			</a>
+																			<AddToMetamask
+																				address={TOKENS.CVX.ADDR}
+																				symbol={TOKENS.CVX.SYMBOL}
+																				img={TOKENS.CVX.EXT_LOGO}
+																			/>
 																		</Col>
 																	</Row>
 																	<Row>
@@ -490,7 +497,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																		</Col>
 																		<Col md="9">
 																			<a href={getEtherscanLink(TOKENS.BENTCVX.ADDR)} target="_blank" rel="noreferrer">
-																				{TOKENS.BENTCVX.ADDR}
+																				<Address address={TOKENS.BENTCVX.ADDR} />
 																			</a>
 																		</Col>
 																	</Row>
@@ -502,7 +509,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																		</Col>
 																		<Col md="9">
 																			<a href={getEtherscanLink(POOLS.BentCvxStaking.BentCvxStaking)} target="_blank" rel="noreferrer">
-																				{POOLS.BentCvxStaking.BentCvxStaking}
+																				<Address address={POOLS.BentCvxStaking.BentCvxStaking} />
 																			</a>
 																		</Col>
 																	</Row>
@@ -514,7 +521,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																		</Col>
 																		<Col md="9">
 																			<a href={getEtherscanLink(POOLS.BentCvxStaking.BentCvxStaking)} target="_blank" rel="noreferrer">
-																				{POOLS.BentCvxStaking.BentCvxStaking}
+																				<Address address={POOLS.BentCvxStaking.BentCvxStaking} />
 																			</a>
 																		</Col>
 																	</Row>

@@ -16,10 +16,9 @@ export const Backdrop = styled.div`
   height: 100%;
   top: 0;
   left: 0;
-  background: #141625;
-  opacity: 0.8;
+  background: #14162573;
   z-index: 500;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
 `
 export const CloseButton = styled.button`
   border: none;
