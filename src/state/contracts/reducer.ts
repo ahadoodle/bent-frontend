@@ -1,8 +1,6 @@
 import { BigNumber, ethers } from 'ethers';
 import { createReducer } from '@reduxjs/toolkit';
-import {
-	updateContractInfo,
-} from './actions';
+import { updateContractInfo } from './actions';
 
 export interface BentPoolReward {
 	rewardRate: BigNumber,
@@ -24,6 +22,8 @@ export interface WeBentLockedData {
 }
 
 export interface ContractsState {
+	gas: BigNumber,
+
 	bentCirculatingSupply: BigNumber,
 	tokenPrices: Record<string, number>
 
@@ -96,6 +96,8 @@ export interface ContractsState {
 }
 
 const initialState: ContractsState = {
+	gas: ethers.constants.Zero,
+
 	bentCirculatingSupply: ethers.constants.Zero,
 	tokenPrices: {},
 
@@ -165,6 +167,8 @@ const initialState: ContractsState = {
 export default createReducer(initialState, (builder) =>
 	builder
 		.addCase(updateContractInfo, (state, action) => {
+			state.gas = action.payload.gas;
+
 			Object.keys(action.payload.tokenPrices).forEach(tokenAddr => {
 				state.tokenPrices[tokenAddr.toLowerCase()] = action.payload.tokenPrices[tokenAddr];
 			})

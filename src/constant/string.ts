@@ -7,4 +7,5 @@ export const SOCIAL = {
 	DOC: 'https://docs.bentfinance.com/',
 	MEDIUM: 'https://bentfi.medium.com/',
 	AUDIT: 'https://hacken.io/audits/#bent_finance',
+	GIHUB: 'https://github.com/bent-protocol',
 }
