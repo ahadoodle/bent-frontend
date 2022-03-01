@@ -135,10 +135,12 @@ export default function Updater(): null {
 
 			let delegationAddr = ethers.constants.AddressZero;
 
-			console.log(`Updating contract states\nTime: ${Date.now()}\nAccount: ${account}\nBlockNumber: ${blockNumber}\nBent Price: ${bentPrice}`);
-
 			const accAddr = account || ethers.constants.AddressZero;
 			const contractCalls: any[] = [];
+
+			// bentCvx price calls
+			const bentCvxCrvPool = getMultiCrvFiLp(POOLS.BentPools.BENTCVX.DepositAsset);
+			contractCalls.push(bentCvxCrvPool.get_dy(1, 0, BigNumber.from(10).pow(18)));
 
 			// Add Snapshot Delegation calls
 			const snapshotMC = getSnapshot();
@@ -199,8 +201,6 @@ export default function Updater(): null {
 			const bentCvxRewarderCvx = getMultiBentCvxRewarderCvx();
 			const bentCvxRewarderBent = getMultiBentCvxRewarderBent();
 			const bentCvxRewarderMC = getMultiBentCvxRewarderMC();
-			const bentCvxCrvPool = getMultiCrvFiLp(POOLS.BentPools.BENTCVX.DepositAsset);
-			contractCalls.push(bentCvxCrvPool.get_dy(1, 0, BigNumber.from(10).pow(18)));
 			contractCalls.push(cvxToken.balanceOf(accAddr));
 			contractCalls.push(cvxToken.allowance(accAddr, TOKENS['BENTCVX'].ADDR));
 			contractCalls.push(bentCvxToken.balanceOf(accAddr));
@@ -266,6 +266,13 @@ export default function Updater(): null {
 				const rewardsInfo = {};
 				let startIndex = 0;
 
+				// Calculate bentCVX price from Crv pool reserves
+				const bentCvxExchangeRate = BigNumber.from(results[startIndex++]);
+				const bentCvxPrice = utils.parseEther(tokenPrices[TOKENS.CVX.ADDR.toLowerCase()].toString())
+					.mul(bentCvxExchangeRate).div(BigNumber.from(10).pow(18 + 14)).toNumber() / 10000;
+				tokenPrices[TOKENS.BENTCVX.ADDR.toLowerCase()] = bentCvxPrice;
+				console.log(`Updating contract states\nTime: ${Date.now()}\nAccount: ${account}\nBlockNumber: ${blockNumber}\nBent Price: ${bentPrice}\nbentCVX Price: ${bentCvxPrice}`);
+
 				delegationAddr = results[startIndex++];
 
 				vlCvxBalance = results[startIndex++];
@@ -286,7 +293,7 @@ export default function Updater(): null {
 				POOLS.weBENT.RewardAssets.forEach((rewardToken, index) => {
 					const rewardsInfo = results[startIndex++];
 					const tokenAddr = TOKENS[rewardToken].ADDR.toLowerCase();
-					const tokenPrice = tokenAddr === TOKENS.BENTCVX.ADDR.toLowerCase() ? bentPrice : tokenPrices[rewardsInfo.rewardToken.toLowerCase()];
+					const tokenPrice = tokenPrices[rewardsInfo.rewardToken.toLowerCase()];
 					const rewardUsd = getAnnualReward(rewardsInfo.rewardRate, rewardsInfo.rewardToken, tokenPrice);
 					weBentAprs[tokenAddr] = (weBentTvl.isZero() ? 0 : rewardUsd.mul(10000).div(weBentTvl).toNumber()) / 100;
 					weBentTokenRewardsUsd = weBentTokenRewardsUsd.add(rewardUsd);
@@ -365,12 +372,6 @@ export default function Updater(): null {
 					bentRewards[TOKENS[rewardToken].ADDR.toLowerCase()] = bentPendingRewards[index];
 				});
 
-				// Calculate bentCVX price from Crv pool reserves
-				const bentCvxExchangeRate = BigNumber.from(results[startIndex++]);
-				const bentCvxPrice = utils.parseEther(tokenPrices[TOKENS.CVX.ADDR.toLowerCase()].toString())
-					.mul(bentCvxExchangeRate).div(BigNumber.from(10).pow(18 + 14)).toNumber() / 10000;
-				tokenPrices[TOKENS.BENTCVX.ADDR.toLowerCase()] = bentCvxPrice;
-
 				// Update BentCVX Staking Pool Infos
 				balances[TOKENS['CVX'].ADDR.toLowerCase()] = results[startIndex++];
 				bentCvxAllowance = results[startIndex++];
@@ -405,7 +406,7 @@ export default function Updater(): null {
 				bentCvxPoolAprs['CVX'] = (bentCvxTvl.isZero() ? 0 : bentCvxPoolAnnualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100;
 				bentCvxPoolAnnualReward = ethers.constants.Zero;
 				POOLS.BentCvxStaking.BentCvxRewarderBent.RewardsAssets.forEach((tokenKey, index) => {
-					const tokenPrice = tokenKey === 'BENTCVX' ? tokenPrices[TOKENS.CVX.ADDR.toLowerCase()] : tokenPrices[TOKENS[tokenKey].ADDR.toLowerCase()]
+					const tokenPrice = tokenPrices[TOKENS[tokenKey].ADDR.toLowerCase()]
 					const rewardUsd = utils.parseEther(tokenPrice.toString())
 						.mul(bentCvxRewards['BENT'][index]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS[tokenKey].ADDR)));
 					bentCvxEarned['BENT'] = bentCvxEarned['BENT'].add(rewardUsd);
