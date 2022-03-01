@@ -14,7 +14,6 @@ import DepositIcon from "assets/images/depositIcon.svg";
 
 const BannerBlocks = (): React.ReactElement => {
   const isMobile = useIsMobile();
-  const totalTvl = useTotalTvl();
   const totalEarnings = useTotalEarnings();
   const totalDeposits = useTotalDeposits();
 
