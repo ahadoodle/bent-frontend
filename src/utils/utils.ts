@@ -80,8 +80,9 @@ export const getCrvApys = async (): Promise<Record<string, {
 			crvBoost: number;
 		}> = {};
 		Object.keys(res.data.apys).forEach(key => {
+			const apy = Math.floor(parseFloat(res.data.apys[key].baseApy) * 100);
 			apys[key] = {
-				baseApy: BigNumber.from(Math.floor(parseFloat(res.data.apys[key].baseApy) * 100).toString()),
+				baseApy: BigNumber.from((isNaN(apy) ? 0 : apy).toString()),
 				crvBoost: res.data.apys[key].crvBoost.toFixed(2)
 			}
 		})
