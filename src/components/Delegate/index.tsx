@@ -99,14 +99,14 @@ export const DelegateVote = (): React.ReactElement => {
 																		{delegatedAddr === POOLS.SnapshotDelegation.BentDelegator ? 'bentvote.eth (Bent Team)' : delegatedAddr}
 																	</a></span>
 															</CardText>
-															{
-																isShowChange ?
-																	<Row>
-																		<DelegateButton
-																			className="btn btnshow error"
-																			onClick={onClearDelegate}
-																			mobile={isMobile}
-																		>Clear Delegate</DelegateButton>
+															<Row>
+																<DelegateButton
+																	className="btn btnshow error"
+																	onClick={onClearDelegate}
+																	mobile={isMobile}
+																>Clear Delegate</DelegateButton>
+																{isShowChange ?
+																	<React.Fragment >
 																		<DelegateButton
 																			className="btn btnshow"
 																			onClick={onDelegateToBent}
@@ -125,20 +125,14 @@ export const DelegateVote = (): React.ReactElement => {
 																				<Button className="maxbtn" onClick={onDelegate}>Delegate</Button>
 																			</div>
 																		</Col>
-																	</Row>
-																	: <Row>
-																		<DelegateButton
-																			className="btn btnshow error"
-																			onClick={onClearDelegate}
-																			mobile={isMobile}
-																		>Clear Delegate</DelegateButton>
-																		<DelegateButton
-																			className="btn btnshow"
-																			onClick={() => showChange(true)}
-																			mobile={isMobile}
-																		>Change Delegate</DelegateButton>
-																	</Row>
-															}
+																	</React.Fragment>
+																	: <DelegateButton
+																		className="btn btnshow"
+																		onClick={() => showChange(true)}
+																		mobile={isMobile}
+																	>Change Delegate</DelegateButton>
+																}
+															</Row>
 														</Col>
 													</Row>
 											}

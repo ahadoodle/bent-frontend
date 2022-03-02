@@ -1,3 +1,7 @@
+:root {
+    --bs-color-pink: #CAB8FF;
+    --bs-color-green: #C1FFD7;
+}
 .w-0 {
     width: 0;
 }
@@ -684,10 +688,10 @@ button.approvebtn.btn.btn-secondary {
     line-height: 15px;
     text-align: center;
     letter-spacing: -0.24px;
-    background-color: #C1FFD7;
+    background: linear-gradient(90deg, var(--bs-color-green), #C1FFD7A0 100%);
     color: #10151D;
     border-radius: 20px;
-    border: 2px solid #9BA2AC;
+    border: 2px solid #393c40;
     width: 185px;
     height: 42px;
     padding: 5px 5px 8px;
@@ -699,7 +703,7 @@ button.approvebtn.btn.btn-secondary .small {
 button.approvebtn.btn.btn-secondary.disabled {
     color: #FAFAFA;
     background: #9BA2AC;
-    border: 2px solid #9BA2AC;
+    border: 2px solid #393c40;
 }
 .lineup {
     width: 65%;
@@ -1993,3 +1997,6 @@ button.approvebtn.btn.btn-secondary, .lockContent button.approvebtn.btn.btn-seco
     height: 802px !important;
     }
 /***end**/
+.spinner-border {
+    animation: 1s linear infinite spinner-border !important;
+}
