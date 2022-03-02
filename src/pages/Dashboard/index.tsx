@@ -19,13 +19,14 @@ import DocIcon from 'assets/images/doc.svg';
 import StakeIcon from 'assets/images/stake-icon.svg';
 import StakeBlackIcon from 'assets/images/stake-black.svg';
 import { DecimalSpan } from "components/DecimalSpan";
-import { useIsMobile, useTotalTvl } from "hooks";
+import { useIsMobile, useTotalTvl, useVlCvxBalance } from "hooks";
 import { formatBigNumber } from "utils";
 import { SOCIAL } from "constant";
 
 const Dashboard = () => {
 	const isMobile = useIsMobile();
 	const totalTvl = useTotalTvl();
+	const totalCvx = useVlCvxBalance();
 	const history = useHistory();
 
 	const onStake = () => {
@@ -73,6 +74,13 @@ const Dashboard = () => {
 							</div>
 						</Col>
 						<Col>
+							<div className="text-white">
+								<span className="small">Total CVX</span><br />
+								<b>
+									<span className="small"></span>
+									<DecimalSpan value={formatBigNumber(totalCvx, 18, 2)} />
+								</b>
+							</div>
 						</Col>
 						<Col>
 						</Col>
