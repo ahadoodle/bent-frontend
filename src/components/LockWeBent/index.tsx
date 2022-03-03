@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
-	Card, CardText, Input, Label, CardBody
+	Card, CardText, Input, Label, CardBody, Spinner
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
@@ -29,6 +29,8 @@ export const LockWeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
 	const [lockAmount, setLockAmount] = useState('');
 	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [isLockPending, setLockPending] = useState<boolean>(false);
+	const [isApprovePending, setApprovePending] = useState<boolean>(false);
 	const bentBalance = useBalance(TOKENS['BENT'].ADDR);
 	const allowance = useWeBentAllowance();
 	const bentTotalStaked = useWeBentBentBalance();
@@ -63,8 +65,11 @@ export const LockWeBent = (): React.ReactElement => {
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const res = await bentToken.connect(signer).approve(POOLS.weBENT.Addr, ethers.constants.MaxUint256);
-		if (res) {
+		const tx = await bentToken.connect(signer).approve(POOLS.weBENT.Addr, ethers.constants.MaxUint256);
+		setApprovePending(true);
+		await tx.wait();
+		setApprovePending(false);
+		if (tx) {
 			setIsApproved(true);
 		}
 	}
@@ -72,8 +77,11 @@ export const LockWeBent = (): React.ReactElement => {
 	const onLock = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const res = await weBentContract.connect(signer).deposit(utils.parseUnits(lockAmount, 18));
-		if (res) {
+		const tx = await weBentContract.connect(signer).deposit(utils.parseUnits(lockAmount, 18));
+		setLockPending(true);
+		await tx.wait();
+		setLockPending(false);
+		if (tx) {
 			setLockAmount('')
 			setIsApproved(false);
 		}
@@ -203,19 +211,27 @@ export const LockWeBent = (): React.ReactElement => {
 																			disabled={
 																				bentBalance.isZero() || isApproved ||
 																				parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
-																				utils.parseUnits(lockAmount, 18).gt(bentBalance)
+																				utils.parseUnits(lockAmount, 18).gt(bentBalance) ||
+																				isApprovePending
 																			}
 																			onClick={approve}
-																		>Approve</Button>
+																		>
+																			Approve&nbsp;
+																			{isApprovePending && <Spinner size="sm" />}
+																		</Button>
 																		<Button
 																			className="approvebtn mx-2"
 																			disabled={
 																				bentBalance.isZero() || !isApproved ||
 																				parseFloat(lockAmount) === 0 || isNaN(parseFloat(lockAmount)) ||
-																				utils.parseUnits(lockAmount, 18).gt(bentBalance)
+																				utils.parseUnits(lockAmount, 18).gt(bentBalance) ||
+																				isLockPending
 																			}
 																			onClick={onLock}
-																		>Lock BENT</Button>
+																		>
+																			Lock BENT&nbsp;
+																			{isLockPending && <Spinner size="sm" />}
+																		</Button>
 																	</div>
 																	<div className="btnwrapper"></div>
 																</div>

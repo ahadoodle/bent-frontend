@@ -233,6 +233,16 @@ const BentPools: Record<string, BentPool> = {
 	// 	CrvLpSYMBOL: 'yfiethCrv',
 	// 	crvPoolLink: 'https://curve.fi/factory-crypto/8/deposit',
 	// },
+	// CVXFXS: {
+	// 	LOGO: TOKEN_LOGO.FXS,
+	// 	Name: 'cvxfxs',
+	// 	POOL: '0xDb3b9Bd106B689A10895dBC9f695B6f28Da01414',
+	// 	DepositAsset: '0xF3A43307DcAFa93275993862Aae628fCB50dC768',
+	// 	CvxRewardsPool: '0xf27AFAD0142393e4b3E5510aBc5fe3743Ad669Cb',
+	// 	RewardsAssets: ['BENT', 'CRV', 'CVX', 'FXS'],
+	// 	CrvLpSYMBOL: 'cvxfxsCrv',
+	// 	crvPoolLink: 'https://curve.fi/factory-crypto/18/deposit',
+	// },
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
 		Name: 'frax',

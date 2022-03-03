@@ -44,7 +44,7 @@ export const WeBentStatus = (): React.ReactElement => {
 					</div>
 					<StatusContainer theme={theme} mobile={isMobile}>
 						<Button
-							className="transBtn px-5"
+							className="px-5"
 							onClick={() => onBent()}
 						>BENT to weBENT</Button>
 						<StatusButton
