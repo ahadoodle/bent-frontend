@@ -132,7 +132,7 @@ export const ClaimBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 						</span>
 					</Col>
 					<Col>
-						<div className="climBtn">
+						<div className="collapseBtn">
 							<Button
 								className="claimbtn"
 								onClick={claim}
@@ -199,6 +199,5 @@ const Wrapper = styled.div<{ collapsed: boolean }>`
 `;
 
 const InnerWrapper = styled(UncontrolledCollapse)`
-	background: #CAB8FF;
 	border: unset;
 `;

@@ -7,10 +7,10 @@ import {
   Button,
 } from "reactstrap";
 import ConnectWallet from "components/ConnectWallet";
-import { useGasPrice, useIsMobile, useModal, useTheme, useTotalTvl } from "hooks";
-import { useDispatch } from "react-redux";
-import { updateTheme } from "state/application/actions";
-import { Theme } from "state/application/reducer";
+import { useGasPrice, useIsMobile, useModal, useTotalTvl } from "hooks";
+// import { useDispatch } from "react-redux";
+// import { updateTheme } from "state/application/actions";
+// import { Theme } from "state/application/reducer";
 import { MobileSubHeader } from "./mobileSubHeader";
 import { MarketModal } from "components/Modals/Market";
 import { AnimNumber } from "components/AnimNumber";
@@ -19,15 +19,15 @@ import { formatMillionsBigNumber } from "utils";
 
 import LogoIcon from "assets/images/logo-light.svg";
 import MenuIcon from "assets/images/menu.svg";
-import ThemeDarkIcon from "assets/images/theme-dark.png";
-import ThemeLightIcon from "assets/images/theme-light.png";
+// import ThemeDarkIcon from "assets/images/theme-dark.png";
+// import ThemeLightIcon from "assets/images/theme-light.png";
 import BentDetails from "assets/images/bent-details.png";
 import GasIcon from "assets/images/gas.svg";
 
 const Header = (): React.ReactElement => {
   const isMobile = useIsMobile();
-  const dispatch = useDispatch();
-  const theme = useTheme();
+  // const dispatch = useDispatch();
+  // const theme = useTheme();
   const gasPrice = useGasPrice();
   const tvl = useTotalTvl();
   const { isShown, toggle } = useModal();
@@ -39,13 +39,13 @@ const Header = (): React.ReactElement => {
   const openNav = () => {
     setCustomClass("sidenavmenu");
   };
-  const selectTheme = () => {
-    if (theme === Theme.Light) {
-      dispatch(updateTheme(Theme.Dark));
-    } else {
-      dispatch(updateTheme(Theme.Light));
-    }
-  }
+  // const selectTheme = () => {
+  //   if (theme === Theme.Light) {
+  //     dispatch(updateTheme(Theme.Dark));
+  //   } else {
+  //     dispatch(updateTheme(Theme.Light));
+  //   }
+  // }
 
   return (
     <React.Fragment>
@@ -87,9 +87,9 @@ const Header = (): React.ReactElement => {
               <span className="theme-icon" onClick={toggle} >
                 <img src={BentDetails} alt="" width="40" height="40" />
               </span>
-              <span className="theme-icon" onClick={selectTheme}>
+              {/* <span className="theme-icon" onClick={selectTheme}>
                 <img src={theme === Theme.Dark ? ThemeLightIcon : ThemeDarkIcon} alt="" width="40" height="40" />
-              </span>
+              </span> */}
               {!isMobile && <GasContainer>
                 <img src={GasIcon} alt="Menu" style={{ width: 13 }} />&nbsp;
                 <AnimNumber value={gasPrice} precision={9} decimals={1} />

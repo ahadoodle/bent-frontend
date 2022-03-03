@@ -374,7 +374,6 @@ const Wrapper = styled.div`
 `;
 
 const InnerWrapper = styled(UncontrolledCollapse)`
-	background: #CAB8FF;
 	border: unset;
 `;
 

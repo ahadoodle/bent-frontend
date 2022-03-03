@@ -83,7 +83,7 @@ export const ClaimSushiLpItem = (props: Props): React.ReactElement => {
 						</span>
 					</Col>
 					<Col>
-						<div className="climBtn">
+						<div className="collapseBtn">
 							<Button
 								className="claimbtn"
 								onClick={claim}
