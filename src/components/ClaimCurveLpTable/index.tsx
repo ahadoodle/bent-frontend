@@ -73,20 +73,13 @@ export const ClaimCurveLpTable = (): React.ReactElement => {
 								</b>
 							</Col>
 							<Col>
-								<div className="clmBtn">
-									<SwitchSlider
-										label="V2 Pools"
-										className={hasOldDeposits ? '' : 'd-none'}
-										labelClassName="text-black"
-										defaultValue={true}
-										onChange={showNew => setShowNew(showNew)}
-									/>
-									{/* <Button className="claimbtn">Claim All</Button>
-										<i
-											className="fa fa-caret-down"
-											aria-hidden="true"
-										></i> */}
-								</div>
+								<SwitchSlider
+									label="V2 Pools"
+									className={hasOldDeposits ? '' : 'd-none'}
+									labelClassName="text-black"
+									defaultValue={true}
+									onChange={showNew => setShowNew(showNew)}
+								/>
 							</Col>
 						</Row>
 						<Card>
