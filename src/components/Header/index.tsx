@@ -58,28 +58,11 @@ const Header = (): React.ReactElement => {
               </Link>
               <ul className="primaryMenu">
                 <li>
-                  <NavLink to="/stake" activeStyle={{ color: '#C1FFD7' }}>Stake</NavLink>
+                  <NavLink to="/stake" activeStyle={{ color: '#C1FFD7' }}>Pools</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/claim" activeStyle={{ color: '#C1FFD7' }}>Claim</NavLink>
+                  <NavLink to="/lock" activeStyle={{ color: '#C1FFD7' }}>Lock BENT</NavLink>
                 </li>
-                <li>
-                  <NavLink to="/lock" activeStyle={{ color: '#C1FFD7' }}>Lock</NavLink>
-                </li>
-                {/* <li>
-                  <Link to="/lock-cvx">Lock CVX</Link>
-                </li>
-                <li>
-                  <Dropdown
-                    className=""
-                    onMouseOver={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    isOpen={dropdownOpen}
-                    toggle={toggleDropDown}
-                  >
-                    <DropdownToggle caret>More</DropdownToggle>
-                  </Dropdown>
-                </li> */}
               </ul>
               <div className="ml-auto text-white" style={{ marginRight: 20 }}>
                 TVL ${formatMillionsBigNumber(tvl, 18, 2)}

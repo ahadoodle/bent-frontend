@@ -485,10 +485,10 @@ tr:hover {
 .Dark .stake-bent input {
     color: white;
 }
-.bent-rewards-item {
+.bentcvx-claim-item {
     display: flex;
 }
-.bent-rewards-item img {
+.bentcvx-claim-item img {
     width: 28px;
     height: 28px;
     padding: 0;
@@ -502,10 +502,11 @@ tr:hover {
     height: 20px;
     margin: 0;
 }
-.bent-rewards-item p.apr,
-.bent-rewards-item p.rewards-token {
+.apr {
+    color: #C1FFD7;
+}
+.bentcvx-claim-item p.rewards-token {
     font-weight: normal;
-    color: #10150D;
     padding-left: 10px;
     margin-bottom: 0;
 }
@@ -515,9 +516,6 @@ tr:hover {
 .stake-bent.claim .bent-rewards-item .claim-reward {
     margin-left: auto;
     margin-right: 100px;
-}
-.Dark .bent-rewards-item p.apr {
-    color: #C1FFD7;
 }
 .Dark .bent-rewards-item h4 {
     color: white;
@@ -729,8 +727,7 @@ p.copyright {
 .Dark table.tokentable.table td, .Dark .currentText h3, .Dark .currentText p, 
 .Dark li.addreesAdd, .Dark .tableText h4, .Dark .tableText b,
 .Dark .infoWrap p, .Dark .innerWrap .imgText h4, .Dark .innerWrapother, 
-.Dark p.epsText, .Dark .innerAccordian p,
-.Dark .innerAccordian {
+.Dark p.epsText, .Dark .innerAccordian {
 	color: #fff;
 }
 .Dark .boxwrap,
@@ -1013,7 +1010,6 @@ span.count {
     line-height: 19px;
     letter-spacing: -0.24px;
     font-feature-settings: 'ss01' on;
-    color: #10151D;
     display: inline-block;
     padding-left: 10px;
 }
@@ -1027,7 +1023,7 @@ span.count {
 .checkall-container {
 	position: absolute;
 	top: 20px;
-	right: 150px;
+	right: 110px;
 }
 .collapseBtn {
     height: 38px;
