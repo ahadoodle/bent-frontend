@@ -20,17 +20,24 @@ import {
 	useWeBentEarnedUsd,
 	useWeBentAvgApr,
 	useWeBentDepositsUsd,
+	useWeBentRewardsAprs,
+	useWeBentRewards,
+	useWeBentRewardsUsd,
 } from "hooks";
-import { ethers, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import { WeBentAprTooltip } from "components/Tooltip";
+import { ClaimWeBentRewardItem } from "./item";
 
 export const LockWeBent = (): React.ReactElement => {
+	const [claimBtnText, setClaimBtnText] = useState('Claim');
 	const [activeTab, setActiveTab] = useState("1");
 	const [lockAmount, setLockAmount] = useState('');
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [isLockPending, setLockPending] = useState<boolean>(false);
 	const [isApprovePending, setApprovePending] = useState<boolean>(false);
+	const [checkAll, setCheckAll] = useState(false);
+	const [claimChecked, setClaimChecked] = useState<Record<number, boolean>>({});
 	const bentBalance = useBalance(TOKENS['BENT'].ADDR);
 	const allowance = useWeBentAllowance();
 	const bentTotalStaked = useWeBentBentBalance();
@@ -41,6 +48,9 @@ export const LockWeBent = (): React.ReactElement => {
 	const depositUsd = useWeBentDepositsUsd();
 	const earnedUsd = useWeBentEarnedUsd();
 	const avgApr = useWeBentAvgApr();
+	const rewardAprs = useWeBentRewardsAprs();
+	const bentRewards = useWeBentRewards();
+	const bentRewardsUsd = useWeBentRewardsUsd();
 
 	const { library } = useActiveWeb3React();
 	const bentToken = useERC20Contract(TOKENS['BENT'].ADDR);
@@ -84,6 +94,45 @@ export const LockWeBent = (): React.ReactElement => {
 		if (tx) {
 			setLockAmount('')
 			setIsApproved(false);
+		}
+	}
+
+	const checkedIndexes = () => {
+		const checkedIndexes: string[] = [];
+		Object.keys(claimChecked).forEach(key => {
+			if (claimChecked[key]) checkedIndexes.push(key);
+		})
+		return checkedIndexes;
+	}
+
+	const onClaim = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		await weBentContract.connect(signer).claim(checkedIndexes());
+	}
+
+	const onClaimCheckChange = (index: number, add: boolean) => {
+		if (!add) setCheckAll(false);
+		claimChecked[POOLS.weBENT.ClaimIndex[index]] = add;
+		setClaimChecked(Object.assign({}, claimChecked));
+		if (Object.keys(claimChecked).filter(key => claimChecked[key]).length === POOLS.weBENT.RewardAssets.length) {
+			setCheckAll(true);
+			setClaimBtnText('Claim All');
+		} else {
+			setClaimBtnText('Claim');
+		}
+	}
+
+	const onCheckAll = () => {
+		setCheckAll(!checkAll);
+		POOLS.weBENT.RewardAssets.forEach((key, index) => {
+			claimChecked[POOLS.weBENT.ClaimIndex[index]] = !checkAll;
+		})
+		setClaimChecked(Object.assign({}, claimChecked));
+		if (!checkAll) {
+			setClaimBtnText('Claim All');
+		} else {
+			setClaimBtnText('Claim');
 		}
 	}
 
@@ -161,8 +210,21 @@ export const LockWeBent = (): React.ReactElement => {
 													<NavLink
 														className={classnames({ active: activeTab === "2" })}
 														onClick={() => toggle("2")}
+													>Claim</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														className={classnames({ active: activeTab === "3" })}
+														onClick={() => toggle("3")}
 													>Info</NavLink>
 												</NavItem>
+												{activeTab === '2' && <NavItem className="ml-auto">
+													<Button
+														className="approvebtn"
+														onClick={onClaim}
+														disabled={checkedIndexes().length === 0}
+													>{claimBtnText}</Button>
+												</NavItem>}
 											</Nav>
 											<TabContent activeTab={activeTab}>
 												<TabPane tabId="1">
@@ -240,6 +302,35 @@ export const LockWeBent = (): React.ReactElement => {
 													</Row>
 												</TabPane>
 												<TabPane tabId="2">
+													<Row>
+														<Col md="12" className="inverse">
+															<Row className="align-items-center">
+																<Col sm={12}>
+																	<CardText className="mt-0 mb-2">
+																		<span className="small">Breakdown of claimable earnings:</span>
+																		<Input type="checkbox" className="mx-3" checked={checkAll} onChange={onCheckAll} />
+																		<span className="small">Select All</span>
+																	</CardText>
+																</Col>
+															</Row>
+															<div className="bent-rewards-container">
+																{POOLS.weBENT.RewardAssets.map((key, index) =>
+																	<ClaimWeBentRewardItem
+																		key={key}
+																		index={index}
+																		tokenKey={key}
+																		apr={rewardAprs[TOKENS[key].ADDR.toLowerCase()] || 0}
+																		rewardUsd={bentRewardsUsd ? BigNumber.from(bentRewardsUsd[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
+																		reward={bentRewards ? BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero) : ethers.constants.Zero}
+																		checked={claimChecked[POOLS.weBENT.ClaimIndex[index]] || false}
+																		onChange={onClaimCheckChange}
+																	/>
+																)}
+															</div>
+														</Col>
+													</Row>
+												</TabPane>
+												<TabPane tabId="3">
 													<Row>
 														<Col sm="12">
 															<Card body>
