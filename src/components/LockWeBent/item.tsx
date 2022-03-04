@@ -14,18 +14,18 @@ interface Props {
 	onChange: (index, add) => void
 }
 
-export const ClaimBentRewardItem = (props: Props): React.ReactElement => {
+export const ClaimWeBentRewardItem = (props: Props): React.ReactElement => {
 	const { tokenKey } = props
 	return (
-		<div className={`imgText bent-rewards-item ${props.apr < 0.01 && !props.rewardUsd.gte(BigNumber.from(10).pow(16)) ? 'd-none' : ''}`}>
+		<div className={`imgText bentcvx-claim-item ${tokenKey === 'SPELL' || (props.apr < 0.01 && !props.rewardUsd.gte(BigNumber.from(10).pow(16))) ? 'd-none' : ''}`}>
 			<img src={TOKENS[tokenKey].LOGO} alt="Icon" width="28" />
 			<div style={{ minWidth: 100 }}>
-				<h4 className="mb-0">{tokenKey}</h4>
-				<p className="apr">{props.apr}% APR</p>
+				<h4 className="mb-0 px-2">{TOKENS[tokenKey].SYMBOL}</h4>
+				<p className="apr px-2">{props.apr}% APR</p>
 			</div>
 			<div style={{ minWidth: 100 }}>
 				<h4 className="mb-0"><span className="small">$</span>{formatBigNumber(props.rewardUsd, 18, 2)}</h4>
-				<p className="rewards-token">{formatBigNumber(props.reward, TOKENS[tokenKey].DECIMALS)} {tokenKey}</p>
+				<p className="rewards-token">{formatBigNumber(props.reward, TOKENS[tokenKey].DECIMALS)} {TOKENS[tokenKey].SYMBOL}</p>
 			</div>
 			<div className="claim-reward">
 				<Input type="checkbox" checked={props.checked} onChange={e => props.onChange(props.index, e.target.checked)} />

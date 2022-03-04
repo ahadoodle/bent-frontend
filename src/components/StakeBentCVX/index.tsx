@@ -22,6 +22,9 @@ import {
 	useBentCvxTotalEarned,
 	useTheme,
 	useBentCvxPoolApr,
+	useBentCvxRewarderCvxContract,
+	useBentCvxRewarderBentContract,
+	useBentCvxRewarderMCContract,
 } from "hooks";
 import { ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -33,6 +36,9 @@ import { Theme } from "state/application/reducer";
 import { SwitchSlider } from "components/Switch";
 import Address from "components/Address";
 import { AddToMetamask } from "components/AddToMetamask";
+import { ClaimBentCvxRewarderCvx } from "./rewarderCvx";
+import { ClaimBentCvxRewarderMasterChef } from "./rewarderMasterchef";
+import styled from "styled-components";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -41,6 +47,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [isConvertApproved, setIsConvertApproved] = useState<boolean>(false);
 	const [isStakeApproved, setIsStakeApproved] = useState<boolean>(false);
+	const [claimChecked, setClaimChecked] = useState<Record<string, Record<string, boolean>>>({
+		CVX: {}, BENT: {}, MC: {}
+	});
 	const theme = useTheme();
 	const cvxBalance = useBalance(TOKENS['CVX'].ADDR);
 	const cvxAllowance = useBentCvxAllowance();
@@ -59,6 +68,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
 	const bentCVX = useBentCVXContract();
 	const bentCvxStaking = useBentCvxStakingContract();
+	const bentCvxRewarderCVX = useBentCvxRewarderCvxContract();
+	const bentCvxRewarderBent = useBentCvxRewarderBentContract();
+	const bentCvxRewarderMC = useBentCvxRewarderMCContract();
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
@@ -149,12 +161,54 @@ export const StakeBentCVX = (): React.ReactElement => {
 	}
 
 	const onOpen = () => {
-		// $('html,body').animate({
-		// 	scrollTop: $('#toggleInner-stake-curve-lp-bentcvx').offset()?.top
-		// }, 'fast', function () {
-		// 	$('#toggleInner-stake-curve-lp-bentcvx').trigger('collapse');
-		// });
 		window.open('https://curve.fi/factory/76/deposit', '_blank');
+	}
+
+	const checkedIndexes = () => {
+		const checkedIndexes: string[][] = [];
+		Object.keys(claimChecked).forEach(key => {
+			const indexes: string[] = [];
+			Object.keys(claimChecked[key]).forEach(index => {
+				if (claimChecked[key][index]) indexes.push(index);
+			})
+			checkedIndexes.push(indexes);
+		})
+		return checkedIndexes;
+	}
+
+	const onClaimCheckChange = (key: string, indexes: Record<number, boolean>) => {
+		claimChecked[key] = indexes;
+		setClaimChecked(Object.assign({}, claimChecked));
+	}
+
+	const onClaim = async () => {
+		if (!library) return;
+		const indexes = checkedIndexes();
+		console.log(indexes);
+		const signer = await library.getSigner();
+		const address = await signer.getAddress();
+		if (indexes[0].length === 0 && indexes[1].length === 0 && indexes[2].length === 0) {
+			return;
+		} else if (indexes[0].length > 0 && indexes[1].length === 0 && indexes[2].length === 0) {
+			await bentCvxRewarderCVX.connect(signer).claim(address, indexes[0]);
+		} else if (indexes[0].length === 0 && indexes[1].length > 0 && indexes[2].length === 0) {
+			console.log(indexes[1])
+			await bentCvxRewarderBent.connect(signer).claim(address, indexes[1]);
+		} else if (indexes[0].length === 0 && indexes[1].length === 0 && indexes[2].length > 0) {
+			await bentCvxRewarderMC.connect(signer).claim(address, [0]);
+		} else {
+			await bentCvxStaking.connect(signer).claim(indexes);
+		}
+	}
+
+	const onClaimAll = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		await bentCvxStaking.connect(signer).claim([
+			POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex,
+			POOLS.BentCvxStaking.BentCvxRewarderBent.ClaimIndex,
+			[0]
+		]);
 	}
 
 	return (
@@ -234,14 +288,29 @@ export const StakeBentCVX = (): React.ReactElement => {
 													<NavLink
 														className={classnames({ active: activeTab === "3" })}
 														onClick={() => toggle("3")}
-													>Unstake</NavLink>
+													>Claim</NavLink>
 												</NavItem>
 												<NavItem>
 													<NavLink
 														className={classnames({ active: activeTab === "4" })}
 														onClick={() => toggle("4")}
+													>Unstake</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														className={classnames({ active: activeTab === "5" })}
+														onClick={() => toggle("5")}
 													>Info</NavLink>
 												</NavItem>
+												{activeTab === '3' && <NavItem className="ml-auto">
+													<ClaimButton
+														onClick={onClaim}
+														disabled={checkedIndexes().length === 0}
+													>Claim</ClaimButton>
+													<ClaimButton
+														onClick={onClaimAll}
+													>Claim All</ClaimButton>
+												</NavItem>}
 											</Nav>
 											<TabContent activeTab={activeTab}>
 												<TabPane tabId="1">
@@ -420,6 +489,25 @@ export const StakeBentCVX = (): React.ReactElement => {
 												</TabPane>
 												<TabPane tabId="3">
 													<Row>
+														<ClaimBentCvxRewarderCvx
+															poolKey="CVX"
+															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderCvx}
+															onClaimCheckChange={onClaimCheckChange}
+														/>
+														<ClaimBentCvxRewarderCvx
+															poolKey="BENT"
+															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderBent}
+															onClaimCheckChange={onClaimCheckChange}
+														/>
+														<ClaimBentCvxRewarderMasterChef
+															poolKey="MC"
+															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderMasterchef}
+															onClaimCheckChange={onClaimCheckChange}
+														/>
+													</Row>
+												</TabPane>
+												<TabPane tabId="4">
+													<Row>
 														<Col md="12" className="inverse">
 															<Card body>
 																<SwitchSlider
@@ -467,7 +555,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 														</Col>
 													</Row>
 												</TabPane>
-												<TabPane tabId="4">
+												<TabPane tabId="5">
 													<Row>
 														<Col sm="12">
 															<Card body>
@@ -542,3 +630,10 @@ export const StakeBentCVX = (): React.ReactElement => {
 		</Container>
 	)
 }
+
+
+const ClaimButton = styled(Button)`
+	margin-left: 20px;
+	height: 42px;
+	width: 150px;
+`
