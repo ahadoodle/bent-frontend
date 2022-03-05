@@ -362,7 +362,7 @@ export const POOLS = {
 	SushiPools,
 	BentStaking,
 	BentCvxStaking,
-	VlCvxLocker: '0xD18140b4B819b895A3dba5442F959fA44994AF50',
+	VlCvxLocker: '0x72a19342e8f1838460ebfccef09f6585e32db86e',
 	Multisig: '0xe001452BeC9e7AC34CA4ecaC56e7e95eD9C9aa3b',
 	weBENT,
 	SnapshotDelegation,
