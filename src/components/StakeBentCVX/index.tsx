@@ -33,7 +33,6 @@ import CvxLogoLight from 'assets/images/cvx-logo-color.svg';
 import BentLogo from 'assets/images/logo-dark.svg';
 import BentLogoLight from 'assets/images/logo-light.svg';
 import { Theme } from "state/application/reducer";
-import { SwitchSlider } from "components/Switch";
 import Address from "components/Address";
 import { AddToMetamask } from "components/AddToMetamask";
 import { ClaimBentCvxRewarderCvx } from "./rewarderCvx";
@@ -510,13 +509,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 													<Row>
 														<Col md="12" className="inverse">
 															<Card body>
-																<SwitchSlider
-																	label="Advanced"
-																	onChange={() => {
-																		// 
-																	}}
-																/>
-																<div className="card-text mt-4 d-flex row">
+																<div className="card-text d-flex row">
 																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>

@@ -21,7 +21,6 @@ import {
 import { utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import { StakeBentRewardItem } from "./rewardsItem";
-import { SwitchSlider } from "components/Switch";
 
 export const StakeBent = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -220,13 +219,7 @@ export const StakeBent = (): React.ReactElement => {
 													<Row>
 														<Col md="12" className="inverse">
 															<Card body>
-																<SwitchSlider
-																	label="Advanced"
-																	onChange={() => {
-																		// 
-																	}}
-																/>
-																<div className="card-text mt-4 d-flex row">
+																<div className="card-text d-flex row">
 																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>
