@@ -208,12 +208,11 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 									<Col md="6" className="inverse">
 										<Card body>
 											<CardText>
-												Deposit liquidity into the &nbsp;
+												Deposit liquidity into the&nbsp;
 												<OutterLink href={props.poolInfo.DepositLink} target="_blank">
 													SushiSwap {props.poolInfo.Name} pool
 												</OutterLink>
-												&nbsp;
-												and then stake your SushiSwap {props.poolInfo.Name} LP tokens here
+												&nbsp;and then stake your SushiSwap {props.poolInfo.Name} LP tokens here
 												to earn BENT on top of SushiSwap trading fees.
 											</CardText>
 										</Card>

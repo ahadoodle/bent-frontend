@@ -252,7 +252,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 									<Col md="6" className="inverse">
 										<Card body>
 											<CardText>
-												Deposit liquidity into the &nbsp;
+												Deposit liquidity into the&nbsp;
 												<OutterLink href={props.poolInfo.crvPoolLink} target="_blank">
 													Curve {props.poolInfo.Name} pool
 												</OutterLink>
