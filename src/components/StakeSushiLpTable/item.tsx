@@ -42,7 +42,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 
-	const { library } = useActiveWeb3React();
+	const { library, account } = useActiveWeb3React();
 	const sushiLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const masterChef = useBentMasterChefContract();
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
@@ -79,7 +79,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		setWithdrawAmount(formatBigNumber(BigNumber.from(depositedLp), 18, 18).replaceAll(',', ''));
 	}
 
-	const approve = async () => {
+	const onApprove = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
@@ -89,7 +89,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		}
 	}
 
-	const stake = async () => {
+	const onStake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
@@ -100,7 +100,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		}
 	}
 
-	const withdraw = async () => {
+	const onWithdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
@@ -108,6 +108,16 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		if (res) {
 			setWithdrawAmount('')
 		}
+	}
+
+	const onClaim = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account);
+	}
+
+	const haveRewards = () => {
+		return !rewards.isZero();
 	}
 
 	return (
@@ -178,12 +188,18 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 								<NavLink
 									className={classnames({ active: currentActiveTab === "2" })}
 									onClick={() => toggle("2")}
-								>Withdraw</NavLink>
+								>Claim</NavLink>
 							</NavItem>
 							<NavItem>
 								<NavLink
 									className={classnames({ active: currentActiveTab === "3" })}
 									onClick={() => toggle("3")}
+								>Withdraw</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink
+									className={classnames({ active: currentActiveTab === "4" })}
+									onClick={() => toggle("4")}
 								>Info</NavLink>
 							</NavItem>
 						</Nav>
@@ -241,7 +257,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
 																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
 																}
-																onClick={approve}
+																onClick={onApprove}
 															>Approve</Button>
 															<Button
 																className="approvebtn"
@@ -250,7 +266,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
 																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
 																}
-																onClick={stake}
+																onClick={onStake}
 															>Stake</Button>
 														</div>
 													</div>
@@ -261,6 +277,44 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 								</Row>
 							</TabPane>
 							<TabPane tabId="2">
+								<Row>
+									<Col md="6" className="inverse">
+										<Row className="align-items-center">
+											<Col sm={12}>
+												<CardText className="mt-0 mb-2">
+													<span className="small">Breakdown of claimable earnings:</span>
+												</CardText>
+											</Col>
+										</Row>
+										{props.poolInfo.RewardsAssets.map((tokenKey, index) =>
+											<Row className="align-items-center mb-1" key={tokenKey} >
+												<Col>
+													<div className="imgText">
+														<img src={TOKENS[tokenKey].LOGO} alt="" width="28" />
+														<h4 className="rewards-breakdown">{tokenKey}</h4>
+													</div>
+												</Col>
+												<Col>
+													<b>
+														{formatBigNumber(BigNumber.from(rewards), TOKENS[tokenKey].DECIMALS, 2)}
+														<span className="small text-bold"> {tokenKey}</span>
+													</b>
+													<span className="small text-muted"> ≈ ${formatBigNumber(earned, 18, 2)}</span>
+												</Col>
+												<Col></Col>
+											</Row>
+										)}
+									</Col>
+									<Col md="6">
+										<Button
+											className="approvebtn"
+											onClick={onClaim}
+											disabled={!haveRewards()}
+										>Claim</Button>
+									</Col>
+								</Row>
+							</TabPane>
+							<TabPane tabId="3">
 								<Row>
 									<Col md="12" className="inverse">
 										<Card body>
@@ -304,7 +358,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 															parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
 															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
 														}
-														onClick={withdraw}
+														onClick={onWithdraw}
 													>Withdraw</Button>
 												</div>
 											</div>
@@ -312,7 +366,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 									</Col>
 								</Row>
 							</TabPane>
-							<TabPane tabId="3">
+							<TabPane tabId="4">
 								<Row>
 									<Col sm="12">
 										<Card body className="infoWrap">
@@ -374,7 +428,6 @@ const Wrapper = styled.div`
 `;
 
 const InnerWrapper = styled(UncontrolledCollapse)`
-	background: #CAB8FF;
 	border: unset;
 `;
 

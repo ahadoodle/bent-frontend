@@ -1,12 +1,10 @@
-// Dashboard
-import Dashboard from "../pages/Dashboard";
-import Claim from "../pages/Claim";
+import Dashboard from "pages/Dashboard";
+import Stake from "../pages/Stake";
 import Lock from "pages/Lock";
 
 // Pages
 const authRoutes = [
-  { path: "/stake", component: Dashboard },
-  { path: "/claim", component: Claim },
+  { path: "/stake", component: Stake },
   { path: "/lock", component: Lock },
   { path: "/", component: Dashboard },
 ];

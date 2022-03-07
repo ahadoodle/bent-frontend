@@ -33,6 +33,7 @@ import {
 	bentFinanceHex,
 	getMultiCrvFiLp,
 	getBentCvxApy,
+	simpleRpcProvider,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -56,6 +57,7 @@ export default function Updater(): null {
 		setCrvApysCount(crvApysCount + 1);
 		const tokenAddrs = Object.keys(TOKENS).map(token => TOKENS[token].ADDR);
 		Promise.all([
+			simpleRpcProvider.getGasPrice(),
 			getPrice(tokenAddrs),
 			getCirculatingSupply(),
 			getCrvFactoryInfo(),
@@ -64,6 +66,7 @@ export default function Updater(): null {
 			getWeBentApr(),
 			getBentCvxApy(),
 		]).then(([
+			gas,
 			tokenPrices,
 			bentCirculatingSupply,
 			crvPoolsInfo,
@@ -585,6 +588,7 @@ export default function Updater(): null {
 				})
 
 				dispatch(updateContractInfo({
+					gas,
 					tokenPrices,
 					bentCirculatingSupply,
 					totalSupplies,

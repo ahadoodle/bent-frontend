@@ -62,7 +62,7 @@ export const ClaimBentCvxRewarderMasterChef = (props: Props): React.ReactElement
 					<Col></Col>
 				</Row>
 			</Wrapper>
-			<div className="claimbtn-container">
+			<div className="checkall-container">
 				<Input type="checkbox" checked={claimChecked} onChange={onClaimCheckChange} />
 			</div>
 		</div>

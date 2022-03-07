@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
@@ -10,6 +10,7 @@ import {
 	getEtherscanLink,
 	formatMillionsBigNumber,
 	increaseGasLimit,
+	getTokenDecimals,
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
@@ -26,6 +27,8 @@ import {
 	useCrvProjectedApr,
 	useCrvEndRewardBlock,
 	useBlockNumber,
+	useCrvPoolRewards,
+	useTokenPrices,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -45,6 +48,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
+	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
+	const tokenPrices = useTokenPrices();
 	const { library } = useActiveWeb3React();
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentPoolContract(props.poolKey);
@@ -58,7 +63,19 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
 	const endRewardBlock = useCrvEndRewardBlock(props.poolKey);
+	const rewards = useCrvPoolRewards(props.poolKey);
 	const blockNumber = useBlockNumber();
+
+	useEffect(() => {
+		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
+			const addr = TOKENS[key].ADDR.toLowerCase();
+			if (tokenPrices[addr] && rewards[index]) {
+				return utils.parseUnits((tokenPrices[addr].toString()))
+					.mul(rewards[index]).div(BigNumber.from(10).pow(getTokenDecimals(addr)));
+			} else
+				return ethers.constants.Zero;
+		}));
+	}, [props, tokenPrices, rewards])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
@@ -68,6 +85,12 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		if (!props.visible) return 'd-none';
 		if (props.poolInfo.isLegacy && depositedLp.isZero()) return 'd-none'
 		return '';
+	}
+
+	const haveRewards = () => {
+		let enable = false;
+		rewards.forEach(reward => enable = enable || reward.toString() !== '0');
+		return enable;
 	}
 
 	const onStakeAmountChange = (value) => {
@@ -90,7 +113,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		setWithdrawAmount(formatBigNumber(depositedLp, 18, 18).replaceAll(',', ''));
 	}
 
-	const approve = async () => {
+	const onApprove = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
@@ -101,7 +124,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		}
 	}
 
-	const stake = async () => {
+	const onStake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await bentPool.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
@@ -113,7 +136,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		}
 	}
 
-	const withdraw = async () => {
+	const onWithdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await bentPool.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18))
@@ -128,6 +151,13 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		await bentPool.connect(signer).harvestFromConvex();
+	}
+
+	const onClaim = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		const gasLimit = await bentPool.connect(signer).estimateGas.harvest();
+		await bentPool.connect(signer).harvest({ gasLimit: increaseGasLimit(gasLimit) });
 	}
 
 	return (
@@ -170,7 +200,6 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									/>
 								</> : (endRewardBlock.toNumber() < blockNumber ?
 									<Button
-										className="claimbtn"
 										onClick={onHarvest}
 										style={{ width: 100 }}
 									>Harvest</Button>
@@ -217,12 +246,18 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								<NavLink
 									className={classnames({ active: currentActiveTab === "2" })}
 									onClick={() => toggle("2")}
-								>Withdraw</NavLink>
+								>Claim</NavLink>
 							</NavItem>
 							<NavItem>
 								<NavLink
 									className={classnames({ active: currentActiveTab === "3" })}
 									onClick={() => toggle("3")}
+								>Withdraw</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink
+									className={classnames({ active: currentActiveTab === "4" })}
+									onClick={() => toggle("4")}
 								>Info</NavLink>
 							</NavItem>
 						</Nav>
@@ -278,7 +313,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
 																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 																}
-																onClick={approve}
+																onClick={onApprove}
 															>Approve</Button>
 															<Button
 																className="approvebtn"
@@ -288,7 +323,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
 																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
 																}
-																onClick={stake}
+																onClick={onStake}
 															>{props.poolInfo.isLegacy ? (
 																<>
 																	Stake<br />
@@ -306,6 +341,46 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								</Row>
 							</TabPane>
 							<TabPane tabId="2">
+								<Row>
+									<Col md="6" className="inverse">
+										<Row className="align-items-center">
+											<Col sm={12}>
+												<CardText className="mt-0 mb-2">
+													<span className="small">Breakdown of claimable earnings:</span>
+												</CardText>
+											</Col>
+										</Row>
+										{props.poolInfo.RewardsAssets.map((tokenKey, index) =>
+											<Row className="align-items-center mb-1" key={tokenKey} >
+												<Col>
+													<div className="imgText">
+														<img src={TOKENS[tokenKey].LOGO} alt="" width="28" />
+														<h4 className="rewards-breakdown">{tokenKey}</h4>
+													</div>
+												</Col>
+												<Col>
+													<b>
+														{formatBigNumber(BigNumber.from(rewards[index] || 0), TOKENS[tokenKey].DECIMALS)}
+														<span className="small text-bold"> {tokenKey}</span>
+													</b>
+													<span className="small text-muted"> ≈ ${
+														usdRewards[index] ? formatBigNumber(usdRewards[index]) : 0
+													}</span>
+												</Col>
+												<Col></Col>
+											</Row>
+										)}
+									</Col>
+									<Col md="6">
+										<Button
+											className="approvebtn"
+											onClick={onClaim}
+											disabled={!haveRewards()}
+										>Claim</Button>
+									</Col>
+								</Row>
+							</TabPane>
+							<TabPane tabId="3">
 								<Row>
 									<Col md="12" className="inverse">
 										<Card body>
@@ -348,7 +423,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 															parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
 															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
 														}
-														onClick={withdraw}
+														onClick={onWithdraw}
 													>Withdraw</Button>
 												</div>
 											</div>
@@ -356,7 +431,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 									</Col>
 								</Row>
 							</TabPane>
-							<TabPane tabId="3">
+							<TabPane tabId="4">
 								<Row>
 									<Col sm="12">
 										<Card body className="infoWrap">
