@@ -13,6 +13,7 @@ export interface BentPool {
 	crvPoolLink: string;
 	isLegacy?: boolean;
 	isCryptoPool?: boolean;
+	isExternal?: boolean;
 }
 
 const BentPools: Record<string, BentPool> = {
@@ -181,58 +182,71 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'stethCrv',
 		crvPoolLink: 'https://curve.fi/steth/deposit',
 	},
-	// SPELLETH: {
-	// 	LOGO: TOKEN_LOGO.SPELL,
-	// 	Name: 'spelleth',
-	// 	POOL: '0xb8fbf1ecCDbB50a3E8838C5b4Cbb5575f1ee8288',
-	// 	DepositAsset: '0x8282BD15dcA2EA2bDf24163E8f2781B30C43A2ef', // Curve.fi SPELL-ETH
-	// 	CvxRewardsPool: '0xb2f0bB6352417c1Bf017862aC165E67623611aF3',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
-	// 	CrvLpSYMBOL: 'spellethCrv',
-	// 	crvPoolLink: 'https://curve.fi/spelleth/deposit',
-	// 	isCryptoPool: true,
-	// },
-	// TETH: {
-	// 	LOGO: TOKEN_LOGO.T,
-	// 	Name: 'teth',
-	// 	POOL: '0x5Ac451D745EFb91683090Fa9aEFf12fe22202C5A',
-	// 	DepositAsset: '0xCb08717451aaE9EF950a2524E33B6DCaBA60147B',
-	// 	CvxRewardsPool: '0x3E91E7c822AC8b4b7905d108c3faCF22A3ee5d2c',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
-	// 	CrvLpSYMBOL: 'tethCrv',
-	// 	crvPoolLink: 'https://curve.fi/teth/deposit',
-	// 	isCryptoPool: true,
-	// },
-	// ALETH: {
-	// 	LOGO: TOKEN_LOGO.ALUSD,
-	// 	Name: 'aleth',
-	// 	POOL: '0x6CD14B515Ed53bA4d007EeacB37D27cB61A2EfbB',
-	// 	DepositAsset: '0xC4C319E2D4d66CcA4464C0c2B32c9Bd23ebe784e',
-	// 	CvxRewardsPool: '0x48Bc302d8295FeA1f8c3e7F57D4dDC9981FEE410',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
-	// 	CrvLpSYMBOL: 'alethCrv',
-	// 	crvPoolLink: 'https://curve.fi/factory/38/deposit',
-	// },
-	// FXSETH: {
-	// 	LOGO: TOKEN_LOGO.FXS,
-	// 	Name: 'fxseth',
-	// 	POOL: '0x7Baef5C4a3915CEc12e520DBda95798b3BF7A9ea',
-	// 	DepositAsset: '0x90244F43D548a4f8dFecfAD91a193465B1fad6F7',
-	// 	CvxRewardsPool: '0xAA0e8Ef60BaBda02Ef11c89a061D82b1D61a462C',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
-	// 	CrvLpSYMBOL: 'fxsethCrv',
-	// 	crvPoolLink: 'https://curve.fi/factory-crypto/3/deposit',
-	// },
-	// YFIETH: {
-	// 	LOGO: TOKEN_LOGO.YFI,
-	// 	Name: 'yfieth',
-	// 	POOL: '0x49597e73FD372aC6195c6B0D035E5aA5D0ecA7d9',
-	// 	DepositAsset: '0x29059568bB40344487d62f7450E78b8E6C74e0e5',
-	// 	CvxRewardsPool: '0x3207bDc327aB67f182B82948fd3DF757F8771324',
-	// 	RewardsAssets: ['BENT', 'CRV', 'CVX'],
-	// 	CrvLpSYMBOL: 'yfiethCrv',
-	// 	crvPoolLink: 'https://curve.fi/factory-crypto/8/deposit',
-	// },
+	SPELLETH: {
+		LOGO: TOKEN_LOGO.SPELL,
+		Name: 'spelleth',
+		POOL: '0xb8fbf1ecCDbB50a3E8838C5b4Cbb5575f1ee8288',
+		DepositAsset: '0x8282BD15dcA2EA2bDf24163E8f2781B30C43A2ef', // Curve.fi SPELL-ETH
+		CvxRewardsPool: '0xb2f0bB6352417c1Bf017862aC165E67623611aF3',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'spellethCrv',
+		crvPoolLink: 'https://curve.fi/spelleth/deposit',
+		isCryptoPool: true,
+	},
+	TETH: {
+		LOGO: TOKEN_LOGO.T,
+		Name: 'teth',
+		POOL: '0x5Ac451D745EFb91683090Fa9aEFf12fe22202C5A',
+		DepositAsset: '0xCb08717451aaE9EF950a2524E33B6DCaBA60147B',
+		CvxRewardsPool: '0x3E91E7c822AC8b4b7905d108c3faCF22A3ee5d2c',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'tethCrv',
+		crvPoolLink: 'https://curve.fi/teth/deposit',
+		isCryptoPool: true,
+	},
+	ALETH: {
+		LOGO: TOKEN_LOGO.ALUSD,
+		Name: 'aleth',
+		POOL: '0x6CD14B515Ed53bA4d007EeacB37D27cB61A2EfbB',
+		DepositAsset: '0xC4C319E2D4d66CcA4464C0c2B32c9Bd23ebe784e',
+		CvxRewardsPool: '0x48Bc302d8295FeA1f8c3e7F57D4dDC9981FEE410',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'alethCrv',
+		crvPoolLink: 'https://curve.fi/factory/38/deposit',
+	},
+	FXSETH: {
+		LOGO: TOKEN_LOGO.FXS,
+		Name: 'fxseth',
+		POOL: '0x7Baef5C4a3915CEc12e520DBda95798b3BF7A9ea',
+		DepositAsset: '0x90244F43D548a4f8dFecfAD91a193465B1fad6F7',
+		CvxRewardsPool: '0xAA0e8Ef60BaBda02Ef11c89a061D82b1D61a462C',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'fxsethCrv',
+		crvPoolLink: 'https://curve.fi/factory-crypto/3/deposit',
+		isExternal: true,
+	},
+	YFIETH: {
+		LOGO: TOKEN_LOGO.YFI,
+		Name: 'yfieth',
+		POOL: '0x49597e73FD372aC6195c6B0D035E5aA5D0ecA7d9',
+		DepositAsset: '0x29059568bB40344487d62f7450E78b8E6C74e0e5',
+		CvxRewardsPool: '0x3207bDc327aB67f182B82948fd3DF757F8771324',
+		RewardsAssets: ['BENT', 'CRV', 'CVX'],
+		CrvLpSYMBOL: 'yfiethCrv',
+		crvPoolLink: 'https://curve.fi/factory-crypto/8/deposit',
+		isExternal: true,
+	},
+	CVXFXS: {
+		LOGO: TOKEN_LOGO.FXS,
+		Name: 'cvxfxs',
+		POOL: '0xDb3b9Bd106B689A10895dBC9f695B6f28Da01414',
+		DepositAsset: '0xF3A43307DcAFa93275993862Aae628fCB50dC768',
+		CvxRewardsPool: '0xf27AFAD0142393e4b3E5510aBc5fe3743Ad669Cb',
+		RewardsAssets: ['BENT', 'CRV', 'CVX', 'FXS'],
+		CrvLpSYMBOL: 'cvxfxsCrv',
+		crvPoolLink: 'https://curve.fi/factory-crypto/18/deposit',
+		isExternal: true,
+	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
 		Name: 'frax',
@@ -348,8 +362,8 @@ const BentCvxStaking = {
 
 const weBENT = {
 	Addr: '0x04637d61F538911929ff96E755B589C014fD9ce2',
-	RewardAssets: ['BENTCVX', 'FXS', 'CVX', 'LUNAWORM', 'LDO', 'ALCX', 'TRIBE'],
-	ClaimIndex: [0, 2, 3, 4, 5, 6, 7]
+	RewardAssets: ['BENTCVX', 'SPELL', 'FXS', 'CVX', 'LUNAWORM', 'LDO', 'ALCX', 'TRIBE'],
+	ClaimIndex: [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
 const SnapshotDelegation = {
