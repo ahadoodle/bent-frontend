@@ -58,6 +58,10 @@ export const getMultiCvxRewardPool = (address: string): Contract => {
 	return new Contract(address, ABIS.CvxBaseRewardPool);
 }
 
+export const getMultiCvxVBalanceRewardPool = (address: string): Contract => {
+	return new Contract(address, ABIS.CvxVirtualBalanceRewardPool);
+}
+
 export const getMultiweBent = (): Contract => {
 	return new Contract(POOLS.weBENT.Addr, ABIS.weBENT);
 }

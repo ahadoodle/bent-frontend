@@ -34,6 +34,7 @@ import {
 	getMultiCrvFiLp,
 	getBentCvxApy,
 	getCrvCryptoInfoFromBent,
+	getMultiCvxVBalanceRewardPool,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -246,6 +247,10 @@ export default function Updater(): null {
 					contractCalls.push(cvxRewardPool.rewardToken());
 					contractCalls.push(cvxRewardPool.totalSupply());
 					contractCalls.push(cvxRewardPool.periodFinish());
+					if (POOLS.BentPools[poolKey].CvxExtraReward) {
+						const extraRewardPool = getMultiCvxVBalanceRewardPool(POOLS.BentPools[poolKey].CvxExtraReward || '');
+						contractCalls.push(extraRewardPool.rewardRate());
+					}
 					if (POOLS.BentPools[poolKey].ExtCvxRewardPool) {
 						const cvxExtRewardPool = getMultiCvxRewardPool(POOLS.BentPools[poolKey].ExtCvxRewardPool || '');
 						contractCalls.push(cvxExtRewardPool.rewardRate());
@@ -442,6 +447,7 @@ export default function Updater(): null {
 				const bentCvxChefRewardPerBlock = {};
 				const bentCvxChefPoolInfo = {};
 				const cvxPoolRewardRate = {};
+				const cvxPoolExtraRewardRate = {};
 				const cvxPoolRewardToken = {};
 				const cvxPoolTotalSupply = {};
 				const cvxPoolPeriodFinish = {};
@@ -475,6 +481,9 @@ export default function Updater(): null {
 						cvxPoolRewardToken[poolKey] = results[startIndex++];
 						cvxPoolTotalSupply[poolKey] = results[startIndex++];
 						cvxPoolPeriodFinish[poolKey] = results[startIndex++];
+						if (POOLS.BentPools[poolKey].CvxExtraReward) {
+							cvxPoolExtraRewardRate[poolKey] = results[startIndex++]
+						}
 						if (POOLS.BentPools[poolKey].ExtCvxRewardPool) {
 							cvxExtPoolRewardRate[poolKey] = results[startIndex++];
 							cvxExtPoolRewardToken[poolKey] = results[startIndex++];
@@ -556,17 +565,17 @@ export default function Updater(): null {
 						const crv_vApr = cvxPoolTvl.isZero() ? ethers.constants.Zero : getTokenPrice(tokenPrices, cvxPoolRewardToken[poolKey].toLowerCase()).mul(cvxPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl);
 
 						const cvxRewardRate = BigNumber.from(cvxPoolRewardRate[poolKey]).mul(BigNumber.from(cvxMaxSupply).sub(cvxTotalSupply)).div(cvxMaxSupply);
-						let cvx_vApr = cvxPoolTvl.isZero() ? ethers.constants.Zero : getTokenPrice(tokenPrices, TOKENS['CVX'].ADDR).mul(cvxRewardRate).mul(86400).mul(3650000)
-							.div(cvxPoolTvl);
+						let rewardsUsd = getTokenPrice(tokenPrices, TOKENS.CVX.ADDR).mul(cvxRewardRate).mul(86400).mul(3650000);
+						if (POOLS.BentPools[poolKey].CvxExtraReward) {
+							rewardsUsd = getTokenPrice(tokenPrices, TOKENS.CVX.ADDR)
+								.mul(cvxPoolExtraRewardRate[poolKey]).mul(86400).mul(3650000).add(rewardsUsd);
+						}
+						const cvx_vApr = cvxPoolTvl.isZero() ? ethers.constants.Zero : rewardsUsd.div(cvxPoolTvl);
 						let ext_vApr = POOLS.BentPools[poolKey].ExtCvxRewardPool ?
 							(cvxPoolTvl.isZero() ? ethers.constants.Zero : getTokenPrice(tokenPrices, cvxExtPoolRewardToken[poolKey].toLowerCase()).mul(cvxExtPoolRewardRate[poolKey]).mul(86400).mul(3650000).div(cvxPoolTvl))
 							: ethers.constants.Zero;
 						if (currentTimestamp > cvxExtPoolPeriodFinish[poolKey]) ext_vApr = ethers.constants.Zero;
 						// if (currentTimestamp > cvxPoolPeriodFinish[poolKey]) cvx_vApr = ethers.constants.Zero;
-						if (POOLS.BentPools[poolKey].RewardsAssets.length <= 3) {
-							cvx_vApr = cvx_vApr.add(ext_vApr);
-							ext_vApr = ethers.constants.Zero;
-						}
 						const bentApr = cvx_vApr.mul(20).mul(bentMaxSupply.sub(bentSupply))
 							.mul(getTokenPrice(tokenPrices, TOKENS['BENT'].ADDR))
 							.div(getTokenPrice(tokenPrices, TOKENS['CVX'].ADDR))
