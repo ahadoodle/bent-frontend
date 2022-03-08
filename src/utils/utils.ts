@@ -164,6 +164,23 @@ export const getCrvCryptoFactoryInfo = async (): Promise<Record<string, CrvCrypt
 	}
 }
 
+export const getCrvCryptoInfoFromBent = async (): Promise<Record<string, CrvCryptoFactoryPool>> => {
+	const url = 'https://getbent-api-supply.bentfinance.com/api/get-crv-tvl';
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const res: any = await axios.get(url);
+		const poolData = res.data;
+		const result: Record<string, CrvCryptoFactoryPool> = {};
+		Object.keys(poolData).forEach(key => {
+			result[poolData[key].token.toLowerCase()] = poolData[key];
+		})
+		return result;
+	} catch (error) {
+		console.error(error);
+		return {}
+	}
+}
+
 export const getBentCvxApy = async (): Promise<number> => {
 	const url = 'https://api.curve.fi/api/getFactoryAPYs?version=2';
 	try {
@@ -183,7 +200,7 @@ export const getCirculatingSupply = async (): Promise<BigNumber> => {
 	const url = 'https://getbent-api-supply.bentfinance.com/api/bent/circulatingSupply';
 	try {
 		const res = await axios.get(url);
-		return BigNumber.from(res.data);
+		return BigNumber.from(String(res.data).toString());
 	} catch (error) {
 		return ethers.constants.Zero;
 	}
