@@ -13,6 +13,7 @@ export interface BentPool {
 	crvPoolLink: string;
 	isLegacy?: boolean;
 	isCryptoPool?: boolean;
+	isExternal?: boolean;
 }
 
 const BentPools: Record<string, BentPool> = {
@@ -222,6 +223,7 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvLpSYMBOL: 'fxsethCrv',
 		crvPoolLink: 'https://curve.fi/factory-crypto/3/deposit',
+		isExternal: true,
 	},
 	YFIETH: {
 		LOGO: TOKEN_LOGO.YFI,
@@ -232,6 +234,7 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvLpSYMBOL: 'yfiethCrv',
 		crvPoolLink: 'https://curve.fi/factory-crypto/8/deposit',
+		isExternal: true,
 	},
 	CVXFXS: {
 		LOGO: TOKEN_LOGO.FXS,
@@ -242,6 +245,7 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX', 'FXS'],
 		CrvLpSYMBOL: 'cvxfxsCrv',
 		crvPoolLink: 'https://curve.fi/factory-crypto/18/deposit',
+		isExternal: true,
 	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,
