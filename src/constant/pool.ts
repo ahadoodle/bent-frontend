@@ -356,8 +356,8 @@ const BentCvxStaking = {
 	},
 	BentCvxRewarderBent: {
 		Pool: '0x6c4F65d3e7DA3bc1F00194AA81FC00Fc4916f229',
-		RewardsAssets: ['CRV', 'BENTCVX', 'SPELL', 'ALCX', 'LDO'],
-		ClaimIndex: [0, 1, 2, 3, 4]
+		RewardsAssets: ['CRV', 'BENTCVX', 'SPELL', 'ALCX', 'LDO', 'FXS'],
+		ClaimIndex: [0, 1, 2, 3, 4, 5]
 	},
 	BentCvxRewarderMasterchef: {
 		Pool: '0xE644710aAc3c23bFE8cD22fFef003792e4b1c15d',

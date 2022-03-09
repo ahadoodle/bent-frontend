@@ -7,7 +7,7 @@ export const MaintainHeader = (): React.ReactElement => {
 	console.log(process.env.REACT_APP_MAINTENANCE);
 	const isMobile = useIsMobile();
 	return (
-		<div className={`maintain-header ${process.env.REACT_APP_MAINTENANCE === 'false' && 'd-none'}`} style={isMobile ? { top: 131 } : {}}>
+		<div className={`maintain-header ${process.env.REACT_APP_MAINTENANCE !== 'true' && 'd-none'}`} style={isMobile ? { top: 131 } : {}}>
 			<Container>
 				<Navbar light expand="md">
 					<img src={MaintainIcon} alt="" width={30} />
