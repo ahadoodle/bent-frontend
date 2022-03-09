@@ -253,9 +253,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 										<Card body>
 											<CardText>
 												Deposit liquidity into the&nbsp;
-												<OutterLink href={props.poolInfo.crvPoolLink} target="_blank">
+												<a href={props.poolInfo.crvPoolLink} target="_blank" className="contract-address" rel="noreferrer">
 													Curve {props.poolInfo.Name} pool
-												</OutterLink>
+												</a>
 												&nbsp;(without staking in the Curve gauge),
 												and then stake  your {symbol} tokens here to earn Bent.
 											</CardText>
@@ -454,12 +454,4 @@ const Wrapper = styled.div`
 
 const InnerWrapper = styled(UncontrolledCollapse)`
 	border: unset;
-`;
-
-const OutterLink = styled.a`
-	color: #703FFF;
-	&:hover {
-		color: #703FFF;
-	}
-	text-decoration: unset;
 `;

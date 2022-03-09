@@ -209,9 +209,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 										<Card body>
 											<CardText>
 												Deposit liquidity into the&nbsp;
-												<OutterLink href={props.poolInfo.DepositLink} target="_blank">
+												<a href={props.poolInfo.DepositLink} target="_blank" className="contract-address" rel="noreferrer">
 													SushiSwap {props.poolInfo.Name} pool
-												</OutterLink>
+												</a>
 												&nbsp;and then stake your SushiSwap {props.poolInfo.Name} LP tokens here
 												to earn BENT on top of SushiSwap trading fees.
 											</CardText>
@@ -411,12 +411,4 @@ const Wrapper = styled.div`
 
 const InnerWrapper = styled(UncontrolledCollapse)`
 	border: unset;
-`;
-
-const OutterLink = styled.a`
-	color: #703FFF;
-	&:hover {
-		color: #703FFF;
-	}
-	text-decoration: unset;
 `;

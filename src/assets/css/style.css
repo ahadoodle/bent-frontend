@@ -3,6 +3,7 @@
     --bs-color-green: #C1FFD7;
     --bs-color-splitter: #414C5C;
     --bs-color-error: #E98D9F;
+    --bs-color-link: #E63FFF;
 }
 .w-0 {
     width: 0;
@@ -260,15 +261,16 @@ h2.white {
     font-feature-settings: 'ss01' on;
     color: #10151D;
 }
-.contract-address {
-    color: #703FFF;
-    text-decoration: none;
-    font-style: italic;
-}
+.contract-address,
 .infoWrap a {
-    color: #703FFF;
+    color: var(--bs-color-link);
     text-decoration: none;
-    font-style: italic;
+    font-style: normal;
+}
+.contract-address:hover,
+.infoWrap a:hover {
+    color: var(--bs-color-link);
+    opacity: 0.8;
 }
 h2.section-header.white {
     color: white;
