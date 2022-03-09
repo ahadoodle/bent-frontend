@@ -33,6 +33,16 @@ a,button {
 .mobileHeader {
     display: none;
 }
+.maintain-header {
+    z-index: 100;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 61px;
+    backdrop-filter: blur(20px);
+    background: #ffb8d0e2;
+    border-bottom: 1px solid var(--bs-color-splitter);
+}
 .sidenavmenu{
     width:100%;
 }
