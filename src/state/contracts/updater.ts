@@ -515,6 +515,7 @@ export default function Updater(): null {
 							ethers.constants.Zero :
 							utils.parseEther(crvCryptoInfoBent[POOLS.BentPools[poolKey].DepositAsset.toLowerCase()].lpPrice.toString());
 						tvl = lpPrice.mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
+						crvDepositedUsd[poolKey] = lpPrice.mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
 					} else if (POOLS.BentPools[poolKey].isBentCvx) {
 						// bentCvx pool (calculating tvl info here because bentCvx price is zero on crv api)
 						tvl = BigNumber.from(poolData.coins[0].poolBalance).add(BigNumber.from(poolData.coins[1].poolBalance))
