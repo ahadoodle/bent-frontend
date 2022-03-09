@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components";
 import {
-	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
+	Row, Col, Card, UncontrolledCollapse, CardText,
 	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
 } from "reactstrap";
 import { BigNumber, ethers, utils } from 'ethers';
@@ -26,7 +26,6 @@ import {
 	getEtherscanLink,
 } from "utils";
 import { DecimalSpan } from "components/DecimalSpan";
-import { SwitchSlider } from "components/Switch";
 
 
 interface Props {
@@ -209,27 +208,18 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 									<Col md="6" className="inverse">
 										<Card body>
 											<CardText>
-												Deposit liquidity into the &nbsp;
-												<OutterLink href={props.poolInfo.DepositLink} target="_blank">
+												Deposit liquidity into the&nbsp;
+												<a href={props.poolInfo.DepositLink} target="_blank" className="contract-address" rel="noreferrer">
 													SushiSwap {props.poolInfo.Name} pool
-												</OutterLink>
-												&nbsp;
-												and then stake your SushiSwap {props.poolInfo.Name} LP tokens here
+												</a>
+												&nbsp;and then stake your SushiSwap {props.poolInfo.Name} LP tokens here
 												to earn BENT on top of SushiSwap trading fees.
 											</CardText>
 										</Card>
 									</Col>
 									<Col md="6" className="divider-left">
 										<Card body>
-											<CardTitle>
-												<SwitchSlider
-													label="Advanced"
-													onChange={() => {
-														// 
-													}}
-												/>
-											</CardTitle>
-											<div className="card-text mt-4">
+											<div className="card-text">
 												<div className="amount-crv">
 													<p className="labeltext">
 														<Label>
@@ -318,15 +308,7 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 								<Row>
 									<Col md="12" className="inverse">
 										<Card body>
-											<CardTitle>
-												<SwitchSlider
-													label="Advanced"
-													onChange={() => {
-														// 
-													}}
-												/>
-											</CardTitle>
-											<div className="card-text mt-4 d-flex">
+											<div className="card-text d-flex">
 												<div className="amount-crv col-md-5">
 													<p className="labeltext">
 														<Label>
@@ -429,12 +411,4 @@ const Wrapper = styled.div`
 
 const InnerWrapper = styled(UncontrolledCollapse)`
 	border: unset;
-`;
-
-const OutterLink = styled.a`
-	color: #703FFF;
-	&:hover {
-		color: #703FFF;
-	}
-	text-decoration: unset;
 `;

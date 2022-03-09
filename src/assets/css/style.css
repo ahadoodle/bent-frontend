@@ -3,6 +3,7 @@
     --bs-color-green: #C1FFD7;
     --bs-color-splitter: #414C5C;
     --bs-color-error: #E98D9F;
+    --bs-color-link: #E63FFF;
 }
 .w-0 {
     width: 0;
@@ -19,9 +20,6 @@
 a,button {
     transition: 0.5s all ease;
 }
-.Wrapper {
-    position: relative;
-}
 .header {
     z-index: 100;
     position: fixed;
@@ -30,10 +28,20 @@ a,button {
     top: 0;
     backdrop-filter: blur(20px);
     background: #353C49A0;
-    border-bottom: 1px solid #414C5C;
+    border-bottom: 1px solid var(--bs-color-splitter);
 }
 .mobileHeader {
     display: none;
+}
+.maintain-header {
+    z-index: 100;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 61px;
+    backdrop-filter: blur(20px);
+    background: #ffb8d0e2;
+    border-bottom: 1px solid var(--bs-color-splitter);
 }
 .sidenavmenu{
     width:100%;
@@ -54,29 +62,16 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light {
 .header nav.navbar.navbar-expand-md {
     justify-content: space-between;
 }
-ul.primaryMenu li {
-    margin: 10px 25px;
-}
 ul.primaryMenu {
-    border-left: 1.5px solid #3A3F45;
+    border-left: 1.5px solid var(--bs-color-splitter);
     display: flex;
     margin-left: 50px;
     margin-bottom: 0;
     padding: 0px;
     list-style: none; 
 }
-.theme-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 20px;
-    cursor: pointer;
-}
-.tokentable.table tr:hover .fa-info-circle,
-.tokentable.table tr:hover .tvlText i.fa.fa-caret-down {
-    opacity: 1;
-}
-.wallet-connect .dropdown-menu {
-    background-color: rgb(23, 23, 23, 0);
+ul.primaryMenu li {
+    margin: 10px 25px;
 }
 ul.primaryMenu li a {
     color: white;
@@ -86,11 +81,17 @@ ul.primaryMenu li a {
     line-height: 19px;
     text-decoration: none;
 }
-a.navbar-brand:hover {
-    opacity: 0.5;
-}
 ul.primaryMenu li a:hover {
     color: #C1FFD7;
+}
+.theme-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+a.navbar-brand:hover {
+    opacity: 0.5;
 }
 .bannerboxes {
     padding-right: 12px;
@@ -270,15 +271,16 @@ h2.white {
     font-feature-settings: 'ss01' on;
     color: #10151D;
 }
-.contract-address {
-    color: #703FFF;
-    text-decoration: none;
-    font-style: italic;
-}
+.contract-address,
 .infoWrap a {
-    color: #703FFF;
+    color: var(--bs-color-link);
     text-decoration: none;
-    font-style: italic;
+    font-style: normal;
+}
+.contract-address:hover,
+.infoWrap a:hover {
+    color: var(--bs-color-link);
+    opacity: 0.8;
 }
 h2.section-header.white {
     color: white;

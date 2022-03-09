@@ -13,7 +13,7 @@ const Page = (props: Props): React.ReactElement => {
 
   return (
     <React.Fragment>
-      <div className={"Wrapper " + (theme === Theme.Dark ? 'Dark' : '')}>
+      <div className={"position-relative " + (theme === Theme.Dark ? 'Dark' : '')}>
         <Header />
         {props.children}
         <Footer />
