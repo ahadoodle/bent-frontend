@@ -80,6 +80,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
 
+	const isNewPool = () => {
+		const showPeriod = 60 * 60 * 24 * 7; // one week
+		return ((Date.now() / 1000) - showPeriod) <= (POOLS.BentPools[props.poolKey].liveTime || 0);
+	}
+
 	const visible = () => {
 		if (!props.visible) return 'd-none';
 		if (props.poolInfo.isLegacy && depositedLp.isZero()) return 'd-none'
@@ -172,6 +177,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO} alt="" />
 							<h4>{props.poolInfo.Name}</h4>
+							{isNewPool() && <span className="new-pool-tag">new</span>}
 						</div>
 					</Col>
 					<Col>

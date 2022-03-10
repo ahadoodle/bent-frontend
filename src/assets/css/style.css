@@ -11,6 +11,9 @@
 .ml-auto {
     margin-left: auto;
 }
+.pl-0 {
+    padding-left: 0 !important;
+}
 .text-right {
     text-align: right;
 }
@@ -1531,4 +1534,11 @@ table.tokentable.table {
 /***end**/
 .spinner-border {
     animation: 1s linear infinite spinner-border !important;
+}
+.new-pool-tag {
+    margin-left: 10px;
+    padding: 0 5px;
+    border-radius: 20px;
+    color: var(--bs-color-link);
+    border: 2px solid var(--bs-color-splitter);
 }

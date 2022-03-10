@@ -2,7 +2,7 @@ import React from "react";
 import {
 	Container, Row, Col, Card, CardBody
 } from "reactstrap";
-import { POOLS } from "constant";
+import { POOLS, TOKEN_LOGO } from "constant";
 import { StakeSushiLpItem } from "./item";
 
 export const StakeSushiLpTable = (): React.ReactElement => {
@@ -13,8 +13,11 @@ export const StakeSushiLpTable = (): React.ReactElement => {
 					<h2 className="section-header">Provide liquidity on SushiSwap</h2>
 					<div className="toggleWrap tokentable table">
 						<Row className="align-items-center thead">
-							<Col>
-								Pool Name
+							<Col className="pl-0">
+								<div className="imgText">
+									<img src={TOKEN_LOGO.SUSHI} alt="" width="28" />
+									<h2>Pool Name</h2>
+								</div>
 							</Col>
 							<Col>
 								Earned
