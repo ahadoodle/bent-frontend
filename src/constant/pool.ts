@@ -15,6 +15,7 @@ export interface BentPool {
 	isLegacy?: boolean;
 	isCryptoPool?: boolean;
 	isExternal?: boolean;
+	liveTime?: number;
 }
 
 const BentPools: Record<string, BentPool> = {
@@ -194,6 +195,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'spellethCrv',
 		crvPoolLink: 'https://curve.fi/spelleth/deposit',
 		isCryptoPool: true,
+		liveTime: 1646872641,
 	},
 	TETH: {
 		LOGO: TOKEN_LOGO.T,
@@ -205,6 +207,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'tethCrv',
 		crvPoolLink: 'https://curve.fi/teth/deposit',
 		isCryptoPool: true,
+		liveTime: 1646872641,
 	},
 	ALETH: {
 		LOGO: TOKEN_LOGO.ALUSD,
@@ -216,6 +219,7 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvLpSYMBOL: 'alethCrv',
 		crvPoolLink: 'https://curve.fi/factory/38/deposit',
+		liveTime: 1646872641,
 	},
 	FXSETH: {
 		LOGO: TOKEN_LOGO.FXS,
@@ -227,6 +231,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'fxsethCrv',
 		crvPoolLink: 'https://curve.fi/factory-crypto/3/deposit',
 		isExternal: true,
+		liveTime: 1646872641,
 	},
 	YFIETH: {
 		LOGO: TOKEN_LOGO.YFI,
@@ -238,6 +243,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'yfiethCrv',
 		crvPoolLink: 'https://curve.fi/factory-crypto/8/deposit',
 		isExternal: true,
+		liveTime: 1646872641,
 	},
 	CVXFXS: {
 		LOGO: TOKEN_LOGO.FXS,
@@ -251,6 +257,7 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'cvxfxsCrv',
 		crvPoolLink: 'https://curve.fi/factory-crypto/18/deposit',
 		isExternal: true,
+		liveTime: 1646872641,
 	},
 	FRAX: {
 		LOGO: TOKEN_LOGO.FRAX,

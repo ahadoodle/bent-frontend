@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
-import { POOLS } from "constant";
+import { POOLS, TOKEN_LOGO } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber } from "utils";
 import { useCrvAverageApr, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useHasLegacyCrvDeposit, useSortedCrvPoolKeys } from "hooks";
@@ -50,9 +50,14 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 					</div>
 					<div className="toggleWrap tokentable table sortable">
 						<Row className="align-items-center thead">
-							<Col onClick={() => onSort('name')} className={sortOrderClass('name')}>
-								Pool Name&nbsp;
-								<i className="fa fa-caret-down" aria-hidden="true" />
+							<Col onClick={() => onSort('name')} className={`${sortOrderClass('name')} pl-0`}>
+								<div className="imgText">
+									<img src={TOKEN_LOGO.CRV} alt="" width="28" />
+									<h2>
+										Pool Name&nbsp;
+										<i className="fa fa-caret-down" aria-hidden="true" />
+									</h2>
+								</div>
 							</Col>
 							<Col onClick={() => onSort('earned')} className={sortOrderClass('earned')}>
 								<div>
