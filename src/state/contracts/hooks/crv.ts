@@ -119,8 +119,14 @@ export const useCrvPoolTotalEarned = (): BigNumber => {
 	return total;
 }
 
-export const useSortedCrvPoolKeys = (field: string, order: number): string[] => {
-	const keys = Object.keys(POOLS.BentPools);
+export const useSortedCrvPoolKeys = (
+	field: string,
+	order: number,
+	searchField: string
+): string[] => {
+	const keys = Object.keys(POOLS.BentPools).filter(key => {
+		return POOLS.BentPools[key].Name.includes(searchField);
+	});
 	const earns = useSelector((state: AppState) => state.contracts.crvEarnedUsd || {});
 	const aprs = useSelector((state: AppState) => state.contracts.crvApr || {});
 	const deposits = useSelector((state: AppState) => state.contracts.crvDepositedUsd || {});
