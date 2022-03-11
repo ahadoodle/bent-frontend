@@ -9,17 +9,20 @@ import { SwitchSlider } from "components/Switch";
 import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
 import { utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
+import { SearchBox } from "components/SearchBox";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
 	const [showNew, setShowNew] = useState(true);
+	const [searchField, setSearchField] = useState('');
+
 	const [sortField, setSortField] = useState('apr');
 	const [sortOrder, setSortOrder] = useState(-1);
 	const tvl = useCrvTotalTvl();
 	const earn = useCrvPoolTotalEarned();
 	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();
-	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
+	const keys = useSortedCrvPoolKeys(sortField, sortOrder, searchField);
 	const hasOldDeposits = useHasLegacyCrvDeposit();
 
 	const onSort = (field: string) => {
@@ -41,9 +44,10 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 				<Col md="12">
 					<div className="d-flex">
 						<h2 className="section-header">Stake Curve LP Tokens</h2>
+						<SearchBox className="ml-auto" onChange={value => setSearchField(value)} />
 						<SwitchSlider
 							label="V2 Pools"
-							className={`ml-auto ${hasOldDeposits ? '' : 'd-none'}`}
+							className={`mx-2 mr-0 ${hasOldDeposits ? '' : 'd-none'}`}
 							defaultValue={true}
 							onChange={showNew => setShowNew(showNew)}
 						/>
@@ -115,6 +119,11 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 											key={poolName}
 											visible={index < 5 || showAll}
 										/>)
+								}
+								{
+									keys.length === 0 && <div className="text-white text-center p-3">
+										No results for "{searchField}"
+									</div>
 								}
 								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} title="More Pools" />
 							</CardBody>
