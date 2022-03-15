@@ -5,6 +5,9 @@
     --bs-color-error: #E98D9F;
     --bs-color-link: #E63FFF;
 }
+body {
+    background-color: #253143;
+}
 .w-0 {
     width: 0;
 }
@@ -59,7 +62,8 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light {
     display: flex;
 }
 .banner {
-    background-image: url(../images/banner.jpg);
+    background-image: url(../images/Group_578.png), url(../images/bg_bent.svg);
+    background-color: #10151D;
     background-repeat: no-repeat;
     background-size: cover;
     padding-top: 120px;
@@ -180,7 +184,10 @@ a.navbar-brand:hover {
     letter-spacing: 3px;
 }
 .contentSection {
-    background: #cab8ff;
+    background: url(../images/Group_578.png);
+    background-repeat: repeat;
+    background-size: contain;
+    background-color: #253143;
     padding-bottom: 90px;
 }
 .tableTitle p {
@@ -715,9 +722,6 @@ p.copyright {
 }
 .text-underline {
     text-decoration: underline;
-}
-.Dark .contentSection {
-    background: #253143;
 }
 /* .Dark .tokentable.table .card-body .bentInner:hover,
 .Dark .tokentable.table .card-body .bentInner.open,
