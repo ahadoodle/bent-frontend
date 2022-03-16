@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
 	Row, Col, Card, UncontrolledCollapse, CardText,
-	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
+	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, Spinner,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
@@ -43,6 +43,11 @@ interface Props {
 export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [isApprPending, setApprPending] = useState<boolean>(false);
+	const [isStakePending, setStakePending] = useState<boolean>(false);
+	const [isUnstakePending, setUnstakePending] = useState<boolean>(false);
+	const [isClaimPending, setClaimPending] = useState<boolean>(false);
+	const [isHarvestPending, setHarvestPending] = useState<boolean>(false);
 	const [showBreakdown, setShowBreakdown] = useState(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
@@ -122,7 +127,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gasLimit = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
 		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, { gasLimit: increaseGasLimit(gasLimit) });
+		setApprPending(true);
 		const res = await tx.wait();
+		setApprPending(false);
 		if (res) {
 			setIsApproved(true);
 		}
@@ -133,7 +140,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gasLimit = await bentPool.connect(signer).estimateGas.deposit(utils.parseUnits(stakeAmount, 18));
 		const tx = await bentPool.connect(signer).deposit(utils.parseUnits(stakeAmount, 18), { gasLimit: increaseGasLimit(gasLimit) })
+		setStakePending(true);
 		const res = await tx.wait();
+		setStakePending(false);
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -145,7 +154,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 		const signer = await library.getSigner();
 		const gasLimit = await bentPool.connect(signer).estimateGas.withdraw(utils.parseUnits(withdrawAmount, 18))
 		const tx = await bentPool.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18), { gasLimit: increaseGasLimit(gasLimit) })
+		setUnstakePending(true);
 		const res = await tx.wait();
+		setUnstakePending(false);
 		if (res) {
 			setWithdrawAmount('')
 		}
@@ -154,14 +165,29 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 	const onHarvest = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		await bentPool.connect(signer).harvestFromConvex();
+		const tx = await bentPool.connect(signer).harvestFromConvex();
+		setHarvestPending(true);
+		await tx.wait();
+		setHarvestPending(false);
 	}
 
 	const onClaim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await bentPool.connect(signer).estimateGas.harvest();
-		await bentPool.connect(signer).harvest({ gasLimit: increaseGasLimit(gasLimit) });
+		const tx = await bentPool.connect(signer).harvest({ gasLimit: increaseGasLimit(gasLimit) });
+		setClaimPending(true);
+		await tx.wait();
+		setClaimPending(false);
+	}
+
+	const TxSpinner = () => {
+		return (
+			<React.Fragment>
+				&nbsp;
+				<Spinner size="sm" />
+			</React.Fragment>
+		)
 	}
 
 	return (
@@ -206,8 +232,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 								</> : (endRewardBlock.toNumber() < blockNumber ?
 									<Button
 										onClick={onHarvest}
-										style={{ width: 100 }}
-									>Harvest</Button>
+										style={{ width: isHarvestPending ? 110 : 100 }}
+										disabled={isHarvestPending}
+									>Harvest{isHarvestPending && <TxSpinner />}</Button>
 									: 'TBC')}
 						</b>
 					</Col>
@@ -308,17 +335,19 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 																disabled={
 																	lpBalance.isZero() || isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance) ||
+																	isApprPending
 																}
 																onClick={onApprove}
-															>Approve</Button>
+															>Approve{isApprPending && <TxSpinner />}</Button>
 															<Button
 																className="approvebtn"
 																disabled={
 																	props.poolInfo.isLegacy ||
 																	lpBalance.isZero() || !isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance) ||
+																	isStakePending
 																}
 																onClick={onStake}
 															>{props.poolInfo.isLegacy ? (
@@ -326,7 +355,9 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 																	Stake<br />
 																	<span className="small">(temp. paused)</span>
 																</>) :
-																"Stake"
+																<React.Fragment>
+																	Stake{isStakePending && <TxSpinner />}
+																</React.Fragment>
 																}
 															</Button>
 														</div>
@@ -372,8 +403,8 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 										<Button
 											className="approvebtn"
 											onClick={onClaim}
-											disabled={!haveRewards()}
-										>Claim</Button>
+											disabled={!haveRewards() || isClaimPending}
+										>Claim{isClaimPending && <TxSpinner />}</Button>
 									</Col>
 								</Row>
 							</TabPane>
@@ -410,10 +441,11 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														disabled={
 															BigNumber.from(depositedLp).isZero() ||
 															parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
+															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp)) ||
+															isUnstakePending
 														}
 														onClick={onWithdraw}
-													>Withdraw</Button>
+													>Withdraw{isUnstakePending && <TxSpinner />}</Button>
 												</div>
 											</div>
 										</Card>

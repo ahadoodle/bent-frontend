@@ -35,6 +35,7 @@ export const LockWeBent = (): React.ReactElement => {
 	const [lockAmount, setLockAmount] = useState('');
 	const [isApproved, setIsApproved] = useState<boolean>(false);
 	const [isLockPending, setLockPending] = useState<boolean>(false);
+	const [isClaimPending, setClaimPending] = useState<boolean>(false);
 	const [isApprovePending, setApprovePending] = useState<boolean>(false);
 	const [checkAll, setCheckAll] = useState(false);
 	const [claimChecked, setClaimChecked] = useState<Record<number, boolean>>({});
@@ -108,7 +109,10 @@ export const LockWeBent = (): React.ReactElement => {
 	const onClaim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		await weBentContract.connect(signer).claim(checkedIndexes());
+		const tx = await weBentContract.connect(signer).claim(checkedIndexes());
+		setClaimPending(true);
+		await tx.wait();
+		setClaimPending(false);
 	}
 
 	const onClaimCheckChange = (index: number, add: boolean) => {
@@ -222,8 +226,8 @@ export const LockWeBent = (): React.ReactElement => {
 													<Button
 														className="approvebtn"
 														onClick={onClaim}
-														disabled={checkedIndexes().length === 0}
-													>{claimBtnText}</Button>
+														disabled={checkedIndexes().length === 0 || isClaimPending}
+													>{claimBtnText} {isClaimPending && <Spinner size="sm" />}</Button>
 												</NavItem>}
 											</Nav>
 											<TabContent activeTab={activeTab}>

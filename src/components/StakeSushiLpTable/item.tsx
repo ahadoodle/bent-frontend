@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components";
 import {
 	Row, Col, Card, UncontrolledCollapse, CardText,
-	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input,
+	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, Spinner,
 } from "reactstrap";
 import { BigNumber, ethers, utils } from 'ethers';
 import { POOLS, SushiPool, TOKENS } from "constant"
@@ -37,6 +37,10 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const symbol = props.poolInfo.Name + ' SLP';
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [isApprPending, setApprPending] = useState<boolean>(false);
+	const [isStakePending, setStakePending] = useState<boolean>(false);
+	const [isUnstakePending, setUnstakePending] = useState<boolean>(false);
+	const [isClaimPending, setClaimPending] = useState<boolean>(false);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -82,7 +86,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await sushiLpToken.connect(signer).approve(POOLS.SushiPools.MasterChef, ethers.constants.MaxUint256);
+		setApprPending(true);
 		const res = await tx.wait();
+		setApprPending(false);
 		if (res) {
 			setIsApproved(true);
 		}
@@ -92,7 +98,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await masterChef.connect(signer).deposit(props.poolInfo.PoolId, utils.parseUnits(stakeAmount, 18));
+		setStakePending(true);
 		const res = await tx.wait();
+		setStakePending(false);
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
@@ -103,7 +111,9 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await masterChef.connect(signer).withdraw(props.poolInfo.PoolId, utils.parseUnits(withdrawAmount, 18));
+		setUnstakePending(true);
 		const res = await tx.wait();
+		setUnstakePending(false);
 		if (res) {
 			setWithdrawAmount('')
 		}
@@ -112,11 +122,23 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 	const onClaim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		await masterChef.connect(signer).claim(props.poolInfo.PoolId, account);
+		const tx = await masterChef.connect(signer).claim(props.poolInfo.PoolId, account);
+		setClaimPending(true);
+		await tx.wait();
+		setClaimPending(false);
 	}
 
 	const haveRewards = () => {
 		return !rewards.isZero();
+	}
+
+	const TxSpinner = () => {
+		return (
+			<React.Fragment>
+				&nbsp;
+				<Spinner size="sm" />
+			</React.Fragment>
+		)
 	}
 
 	return (
@@ -245,19 +267,21 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 																disabled={
 																	BigNumber.from(lpBalance).isZero() || isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
+																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance)) ||
+																	isApprPending
 																}
 																onClick={onApprove}
-															>Approve</Button>
+															>Approve{isApprPending && <TxSpinner />}</Button>
 															<Button
 																className="approvebtn"
 																disabled={
 																	BigNumber.from(lpBalance).isZero() || !isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance))
+																	utils.parseUnits(stakeAmount, 18).gt(BigNumber.from(lpBalance)) ||
+																	isStakePending
 																}
 																onClick={onStake}
-															>Stake</Button>
+															>Stake{isStakePending && <TxSpinner />}</Button>
 														</div>
 													</div>
 												</div>
@@ -299,8 +323,8 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 										<Button
 											className="approvebtn"
 											onClick={onClaim}
-											disabled={!haveRewards()}
-										>Claim</Button>
+											disabled={!haveRewards() || isClaimPending}
+										>Claim{isClaimPending && <TxSpinner />}</Button>
 									</Col>
 								</Row>
 							</TabPane>
@@ -338,10 +362,11 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 														disabled={
 															BigNumber.from(depositedLp).isZero() ||
 															parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
+															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp)) ||
+															isUnstakePending
 														}
 														onClick={onWithdraw}
-													>Withdraw</Button>
+													>Withdraw{isUnstakePending && <TxSpinner />}</Button>
 												</div>
 											</div>
 										</Card>
