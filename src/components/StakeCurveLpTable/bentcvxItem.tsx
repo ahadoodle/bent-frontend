@@ -152,8 +152,9 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const onClaim = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
-		const gasLimit = await bentPool.connect(signer).estimateGas.harvest();
-		const tx = await bentPool.connect(signer).harvest({ gasLimit: increaseGasLimit(gasLimit) });
+		const account = await signer.getAddress();
+		const gasLimit = await bentPool.connect(signer).estimateGas.claim(0, account);
+		const tx = await bentPool.connect(signer).harvest(0, account, { gasLimit: increaseGasLimit(gasLimit) });
 		setClaimPending(true);
 		await tx.wait();
 		setClaimPending(false);
