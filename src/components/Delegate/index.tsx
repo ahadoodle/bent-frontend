@@ -15,7 +15,7 @@ export const DelegateVote = (): React.ReactElement => {
 	const [isDelegatePending, setDelegatePending] = useState<boolean>(false);
 	const [delegateAddr, setDelegateAddr] = useState('');
 	const delegatedAddr = useDelegationAddr();
-	const { library } = useActiveWeb3React();
+	const { library, account } = useActiveWeb3React();
 	const snapshot = useSnapshot();
 
 	const onDelegateToBent = async () => {
@@ -82,7 +82,7 @@ export const DelegateVote = (): React.ReactElement => {
 																	className="btn btnshow"
 																	onClick={onDelegateToBent}
 																	mobile={isMobile}
-																	disabled={isDelegatePending}
+																	disabled={isDelegatePending || !account}
 																>
 																	Delegate to Bent&nbsp;
 																	{isDelegatePending && <Spinner size="sm" />}
@@ -96,7 +96,11 @@ export const DelegateVote = (): React.ReactElement => {
 																			onChange={(e) => setDelegateAddr(e.target.value)}
 																			value={delegateAddr}
 																		/>
-																		<Button className="maxbtn" >Delegate</Button>
+																		<Button
+																			className="maxbtn"
+																			onClick={onDelegate}
+																			disabled={isDelegatePending || !account}
+																		>Delegate&nbsp;{isDelegatePending && <Spinner size="sm" />}</Button>
 																	</div>
 																</Col>
 															</Row>
@@ -126,7 +130,10 @@ export const DelegateVote = (): React.ReactElement => {
 																		<DelegateButton
 																			className="btn btnshow"
 																			onClick={onDelegateToBent}
-																			disabled={delegatedAddr === POOLS.SnapshotDelegation.BentDelegator || isDelegatePending}
+																			disabled={
+																				delegatedAddr === POOLS.SnapshotDelegation.BentDelegator ||
+																				isDelegatePending || !account
+																			}
 																			mobile={isMobile}
 																		>
 																			Delegate to Bent&nbsp;
@@ -141,10 +148,11 @@ export const DelegateVote = (): React.ReactElement => {
 																					onChange={(e) => setDelegateAddr(e.target.value)}
 																					value={delegateAddr}
 																				/>
-																				<Button className="maxbtn" onClick={onDelegate} disabled={isDelegatePending}>
-																					Delegate&nbsp;
-																					{isDelegatePending && <Spinner size="sm" />}
-																				</Button>
+																				<Button
+																					className="maxbtn"
+																					onClick={onDelegate}
+																					disabled={isDelegatePending || !account}
+																				>Delegate&nbsp;{isDelegatePending && <Spinner size="sm" />}</Button>
 																			</div>
 																		</Col>
 																	</React.Fragment>
