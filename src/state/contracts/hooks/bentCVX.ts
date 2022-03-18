@@ -35,6 +35,10 @@ export const useBentCvxStakedUSD = (): BigNumber => {
 	return utils.parseEther(cvxPrice.toString()).mul(bentCvxStaked).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENTCVX.ADDR)));
 }
 
+export const useBentCvxAllRewards = (): Record<string, BigNumber[]> => {
+	return useSelector((state: AppState) => state.contracts.bentCvxRewards ?? {});
+}
+
 export const useBentCvxRewards = (poolKey: string): BigNumber[] => {
 	return useSelector((state: AppState) => state.contracts.bentCvxRewards ? state.contracts.bentCvxRewards[poolKey] || [] : []);
 }

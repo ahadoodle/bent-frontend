@@ -25,8 +25,9 @@ import {
 	useBentCvxRewarderCvxContract,
 	useBentCvxRewarderBentContract,
 	useBentCvxRewarderMCContract,
+	useBentCvxAllRewards,
 } from "hooks";
-import { ethers, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import CvxLogo from 'assets/images/cvx-logo-color-black.svg';
 import CvxLogoLight from 'assets/images/cvx-logo-color.svg';
@@ -70,6 +71,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const cvxPoolApr = useBentCvxPoolApr('CVX');
 	const bentPoolApr = useBentCvxPoolApr('BENT');
 	const mcPoolApr = useBentCvxPoolApr('MC');
+	const allRewards = useBentCvxAllRewards();
 	const { library } = useActiveWeb3React();
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
 	const bentCVX = useBentCVXContract();
@@ -178,6 +180,30 @@ export const StakeBentCVX = (): React.ReactElement => {
 
 	const onOpen = () => {
 		window.open('https://curve.fi/factory/76/deposit', '_blank');
+	}
+
+	const haveRewards = () => {
+		let enable = false;
+		POOLS.BentCvxStaking.BentCvxRewarderCvx.RewardsAssets.forEach((key, index) => {
+			if (allRewards['CVX'].length > 0 &&
+				!BigNumber.from(allRewards['CVX'][POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex[index]]).isZero()
+			) {
+				enable = true;
+			}
+		})
+		POOLS.BentCvxStaking.BentCvxRewarderBent.RewardsAssets.forEach((key, index) => {
+			if (allRewards['BENT'].length > 0 &&
+				!BigNumber.from(allRewards['BENT'][POOLS.BentCvxStaking.BentCvxRewarderBent.ClaimIndex[index]]).isZero()
+			) {
+				enable = true;
+			}
+		})
+		if (allRewards['MC'].length > 0 &&
+			!BigNumber.from(allRewards['MC'][0]).isZero()
+		) {
+			enable = true;
+		}
+		return enable;
 	}
 
 	const checkedIndexes = () => {
@@ -336,12 +362,12 @@ export const StakeBentCVX = (): React.ReactElement => {
 												{activeTab === '3' && <NavItem className="ml-auto">
 													<ClaimButton
 														onClick={onClaim}
-														disabled={checkedIndexes().length === 0 || isClaimPending}
+														disabled={checkedIndexes().length === 0 || isClaimPending || !haveRewards()}
 														className="approvebtn"
 													>Claim{isClaimPending && <TxSpinner />}</ClaimButton>
 													<ClaimButton
 														onClick={onClaimAll}
-														disabled={isClaimAllPending}
+														disabled={isClaimAllPending || !haveRewards()}
 														className="approvebtn"
 													>Claim All{isClaimAllPending && <TxSpinner />}</ClaimButton>
 												</NavItem>}

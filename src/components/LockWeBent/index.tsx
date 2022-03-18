@@ -73,6 +73,17 @@ export const LockWeBent = (): React.ReactElement => {
 		setIsApproved(allowance.gte(amountBN) && !amountBN.isZero());
 	}
 
+	const haveRewards = () => {
+		let enable = false;
+		POOLS.weBENT.RewardAssets.forEach(key => {
+			if (bentRewards &&
+				!BigNumber.from(bentRewards[TOKENS[key].ADDR.toLowerCase()] || ethers.constants.Zero).isZero()) {
+				enable = true;
+			}
+		})
+		return enable;
+	}
+
 	const approve = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
@@ -226,7 +237,7 @@ export const LockWeBent = (): React.ReactElement => {
 													<Button
 														className="approvebtn"
 														onClick={onClaim}
-														disabled={checkedIndexes().length === 0 || isClaimPending}
+														disabled={checkedIndexes().length === 0 || isClaimPending || !haveRewards()}
 													>{claimBtnText} {isClaimPending && <Spinner size="sm" />}</Button>
 												</NavItem>}
 											</Nav>
