@@ -103,8 +103,7 @@ const BentPools: Record<string, BentPool> = {
 		Name: 'mim-ust',
 		POOL: '0x5D551CE7564b6D9B95559a70A5648af908a8AD09',
 		DepositAsset: '0x55a8a39bc9694714e2874c1ce77aa1e599461e18', // Curve.fi mim-ust
-		CvxRewardsPool: '0xc62de533ea77d46f3172516ab6b1000daf577e89',
-		CvxExtraReward: '0x27801399D60594BFeDe955D54c3e85B2f00179c5',
+		CvxRewardsPool: '0xC62DE533ea77D46f3172516aB6b1000dAf577E89',
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvLpSYMBOL: 'mimustCrv',
 		crvPoolLink: 'https://curve.fi/factory/48/deposit',
