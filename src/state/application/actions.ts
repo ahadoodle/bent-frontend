@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit';
-import { BigNumber } from 'ethers';
 import { Theme } from './reducer';
 
 export type PopupContent = {
@@ -30,4 +29,3 @@ export const removePopup = createAction<{ key: string }>('app/removePopup');
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('app/updateBlockNumber');
 export const updateTheme = createAction<Theme>('app/updateTheme');
 export const updateEnsName = createAction<string>('app/updateEnsName');
-export const updateGas = createAction<BigNumber>('app/updateGas');

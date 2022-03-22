@@ -13,9 +13,9 @@ import DepositIcon from "assets/images/depositIcon.svg";
 // import LockIcon from "assets/images/lockIcon.svg";
 
 const BannerBlocks = (): React.ReactElement => {
+  const isMobile = useIsMobile();
   const totalEarnings = useTotalEarnings();
   const totalDeposits = useTotalDeposits();
-  const isMobile = useIsMobile();
 
   return (
     <React.Fragment>

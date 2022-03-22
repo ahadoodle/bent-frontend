@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-	Container, Row, Col, Card, CardBody, CardText, Input, Button, UncontrolledTooltip
+	Container, Row, Col, Card, CardBody, CardText, Input, Button, UncontrolledTooltip, Spinner
 } from "reactstrap";
 import { ethers, utils } from "ethers";
 import { bentFinanceHex, getEtherscanLink } from "utils";
@@ -11,30 +11,38 @@ import { POOLS } from "constant";
 export const DelegateVote = (): React.ReactElement => {
 	const isMobile = useIsMobile();
 	const [isShowChange, showChange] = useState<boolean>(false);
+	const [isClearPending, setClearPending] = useState<boolean>(false);
+	const [isDelegatePending, setDelegatePending] = useState<boolean>(false);
 	const [delegateAddr, setDelegateAddr] = useState('');
 	const delegatedAddr = useDelegationAddr();
-	const { library } = useActiveWeb3React();
+	const { library, account } = useActiveWeb3React();
 	const snapshot = useSnapshot();
 
 	const onDelegateToBent = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await snapshot.connect(signer).setDelegate(bentFinanceHex, POOLS.SnapshotDelegation.BentDelegator);
+		setDelegatePending(true);
 		await tx.wait();
+		setDelegatePending(false);
 	}
 
 	const onDelegate = async () => {
 		if (!library || !utils.isAddress(delegateAddr)) return;
 		const signer = await library.getSigner();
 		const tx = await snapshot.connect(signer).setDelegate(bentFinanceHex, delegateAddr);
+		setDelegatePending(true);
 		await tx.wait();
+		setDelegatePending(false);
 	}
 
 	const onClearDelegate = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await snapshot.connect(signer).clearDelegate(bentFinanceHex);
+		setClearPending(true);
 		await tx.wait();
+		setClearPending(false);
 	}
 
 	return (
@@ -74,7 +82,11 @@ export const DelegateVote = (): React.ReactElement => {
 																	className="btn btnshow"
 																	onClick={onDelegateToBent}
 																	mobile={isMobile}
-																>Delegate to Bent</DelegateButton>
+																	disabled={isDelegatePending || !account}
+																>
+																	Delegate to Bent&nbsp;
+																	{isDelegatePending && <Spinner size="sm" />}
+																</DelegateButton>
 																{!isMobile && <Splitter />}
 																<Col className={`${isMobile && 'mt-2'}`}>
 																	<div className="amountinput">
@@ -84,7 +96,11 @@ export const DelegateVote = (): React.ReactElement => {
 																			onChange={(e) => setDelegateAddr(e.target.value)}
 																			value={delegateAddr}
 																		/>
-																		<Button className="maxbtn" >Delegate</Button>
+																		<Button
+																			className="maxbtn"
+																			onClick={onDelegate}
+																			disabled={isDelegatePending || !account}
+																		>Delegate&nbsp;{isDelegatePending && <Spinner size="sm" />}</Button>
 																	</div>
 																</Col>
 															</Row>
@@ -99,20 +115,30 @@ export const DelegateVote = (): React.ReactElement => {
 																		{delegatedAddr === POOLS.SnapshotDelegation.BentDelegator ? 'bentvote.eth (Bent Team)' : delegatedAddr}
 																	</a></span>
 															</CardText>
-															{
-																isShowChange ?
-																	<Row>
-																		<DelegateButton
-																			className="btn btnshow error"
-																			onClick={onClearDelegate}
-																			mobile={isMobile}
-																		>Clear Delegate</DelegateButton>
+															<Row>
+																<DelegateButton
+																	className="btn btnshow error"
+																	onClick={onClearDelegate}
+																	mobile={isMobile}
+																	disabled={isClearPending}
+																>
+																	Clear Delegate&nbsp;
+																	{isClearPending && <Spinner size="sm" />}
+																</DelegateButton>
+																{isShowChange ?
+																	<React.Fragment >
 																		<DelegateButton
 																			className="btn btnshow"
 																			onClick={onDelegateToBent}
-																			disabled={delegatedAddr === POOLS.SnapshotDelegation.BentDelegator}
+																			disabled={
+																				delegatedAddr === POOLS.SnapshotDelegation.BentDelegator ||
+																				isDelegatePending || !account
+																			}
 																			mobile={isMobile}
-																		>Delegate to Bent</DelegateButton>
+																		>
+																			Delegate to Bent&nbsp;
+																			{isDelegatePending && <Spinner size="sm" />}
+																		</DelegateButton>
 																		{!isMobile && <Splitter />}
 																		<Col className={`${isMobile && 'mt-2'}`}>
 																			<div className="amountinput">
@@ -122,23 +148,21 @@ export const DelegateVote = (): React.ReactElement => {
 																					onChange={(e) => setDelegateAddr(e.target.value)}
 																					value={delegateAddr}
 																				/>
-																				<Button className="maxbtn" onClick={onDelegate}>Delegate</Button>
+																				<Button
+																					className="maxbtn"
+																					onClick={onDelegate}
+																					disabled={isDelegatePending || !account}
+																				>Delegate&nbsp;{isDelegatePending && <Spinner size="sm" />}</Button>
 																			</div>
 																		</Col>
-																	</Row>
-																	: <Row>
-																		<DelegateButton
-																			className="btn btnshow error"
-																			onClick={onClearDelegate}
-																			mobile={isMobile}
-																		>Clear Delegate</DelegateButton>
-																		<DelegateButton
-																			className="btn btnshow"
-																			onClick={() => showChange(true)}
-																			mobile={isMobile}
-																		>Change Delegate</DelegateButton>
-																	</Row>
-															}
+																	</React.Fragment>
+																	: <DelegateButton
+																		className="btn btnshow"
+																		onClick={() => showChange(true)}
+																		mobile={isMobile}
+																	>Change Delegate</DelegateButton>
+																}
+															</Row>
 														</Col>
 													</Row>
 											}

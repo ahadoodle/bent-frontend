@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-	Row, Col, Card, CardTitle, UncontrolledCollapse, CardText,
-	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, UncontrolledTooltip,
+	Row, Col, Card, UncontrolledCollapse, CardText,
+	Nav, NavLink, NavItem, TabPane, TabContent, Button, Label, Input, UncontrolledTooltip, Spinner,
 } from "reactstrap";
 import classnames from "classnames";
 import styled from "styled-components";
@@ -10,6 +10,7 @@ import {
 	getEtherscanLink,
 	formatMillionsBigNumber,
 	increaseGasLimit,
+	getTokenDecimals,
 } from "utils";
 import { BigNumber, ethers, utils } from 'ethers';
 import {
@@ -24,10 +25,11 @@ import {
 	useCrvTvl,
 	useERC20Contract,
 	useCrvProjectedApr,
+	useCrvPoolRewards,
+	useTokenPrices,
 } from "hooks";
 import { BentPool, POOLS, TOKENS } from "constant";
 import { DecimalSpan } from "components/DecimalSpan";
-import { SwitchSlider } from "components/Switch";
 
 interface Props {
 	poolInfo: BentPool
@@ -38,10 +40,16 @@ interface Props {
 export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isApproved, setIsApproved] = useState<boolean>(false);
+	const [isApprPending, setApprPending] = useState<boolean>(false);
+	const [isStakePending, setStakePending] = useState<boolean>(false);
+	const [isUnstakePending, setUnstakePending] = useState<boolean>(false);
+	const [isClaimPending, setClaimPending] = useState<boolean>(false);
 	const [showBreakdown, setShowBreakdown] = useState(false);
+	const [usdRewards, setUsdRewards] = useState<BigNumber[]>([]);
 	const [currentActiveTab, setCurrentActiveTab] = useState('1');
 	const [stakeAmount, setStakeAmount] = useState('');
 	const [withdrawAmount, setWithdrawAmount] = useState('');
+	const tokenPrices = useTokenPrices();
 	const { library } = useActiveWeb3React();
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
 	const bentPool = useBentCvxMasterChefContract();
@@ -53,10 +61,28 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const apr = useCrvApr(props.poolKey);
 	const earnedUsd = useCrvPoolEarnedUsd(props.poolKey);
 	const stakedUsd = useCrvPoolDepositedUsd(props.poolKey);
+	const rewards = useCrvPoolRewards(props.poolKey);
 	const projectedApr = useCrvProjectedApr(props.poolKey);
+
+	useEffect(() => {
+		setUsdRewards(props.poolInfo.RewardsAssets.map((key, index) => {
+			const addr = TOKENS[key].ADDR.toLowerCase();
+			if (tokenPrices[addr] && rewards[index]) {
+				return utils.parseUnits((tokenPrices[addr].toString()))
+					.mul(rewards[index]).div(BigNumber.from(10).pow(getTokenDecimals(addr)));
+			} else
+				return ethers.constants.Zero;
+		}));
+	}, [props, tokenPrices, rewards])
 
 	const toggle = tab => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
+	}
+
+	const haveRewards = () => {
+		let enable = false;
+		rewards.forEach(reward => enable = enable || reward.toString() !== '0');
+		return enable;
 	}
 
 	const currentApr = () => {
@@ -83,38 +109,64 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		setWithdrawAmount(formatBigNumber(depositedLp, 18, 18).replaceAll(',', ''));
 	}
 
-	const approve = async () => {
+	const onApprove = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await crvLpToken.connect(signer).estimateGas.approve(props.poolInfo.POOL, ethers.constants.MaxUint256);
 		const tx = await crvLpToken.connect(signer).approve(props.poolInfo.POOL, ethers.constants.MaxUint256, { gasLimit: increaseGasLimit(gasLimit) });
+		setApprPending(true);
 		const res = await tx.wait();
+		setApprPending(false);
 		if (res) {
 			setIsApproved(true);
 		}
 	}
 
-	const stake = async () => {
+	const onStake = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await bentPool.connect(signer).estimateGas.deposit(0, utils.parseUnits(stakeAmount, 18))
 		const tx = await bentPool.connect(signer).deposit(0, utils.parseUnits(stakeAmount, 18), { gasLimit: increaseGasLimit(gasLimit) })
+		setStakePending(true);
 		const res = await tx.wait();
+		setStakePending(false);
 		if (res) {
 			setStakeAmount('')
 			setIsApproved(false);
 		}
 	}
 
-	const withdraw = async () => {
+	const onWithdraw = async () => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const gasLimit = await bentPool.connect(signer).estimateGas.withdraw(0, utils.parseUnits(withdrawAmount, 18))
 		const tx = await bentPool.connect(signer).withdraw(0, utils.parseUnits(withdrawAmount, 18), { gasLimit: increaseGasLimit(gasLimit) })
+		setUnstakePending(true);
 		const res = await tx.wait();
+		setUnstakePending(false);
 		if (res) {
 			setWithdrawAmount('')
 		}
+	}
+
+	const onClaim = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		const account = await signer.getAddress();
+		const gasLimit = await bentPool.connect(signer).estimateGas.claim(0, account);
+		const tx = await bentPool.connect(signer).harvest(0, account, { gasLimit: increaseGasLimit(gasLimit) });
+		setClaimPending(true);
+		await tx.wait();
+		setClaimPending(false);
+	}
+
+	const TxSpinner = () => {
+		return (
+			<React.Fragment>
+				&nbsp;
+				<Spinner size="sm" />
+			</React.Fragment>
+		)
 	}
 
 	return (
@@ -202,12 +254,18 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 								<NavLink
 									className={classnames({ active: currentActiveTab === "2" })}
 									onClick={() => toggle("2")}
-								>Withdraw</NavLink>
+								>Claim</NavLink>
 							</NavItem>
 							<NavItem>
 								<NavLink
 									className={classnames({ active: currentActiveTab === "3" })}
 									onClick={() => toggle("3")}
+								>Withdraw</NavLink>
+							</NavItem>
+							<NavItem>
+								<NavLink
+									className={classnames({ active: currentActiveTab === "4" })}
+									onClick={() => toggle("4")}
 								>Info</NavLink>
 							</NavItem>
 						</Nav>
@@ -217,10 +275,10 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 									<Col md="6" className="inverse">
 										<Card body>
 											<CardText>
-												Deposit liquidity into the &nbsp;
-												<OutterLink href={props.poolInfo.crvPoolLink} target="_blank">
+												Deposit liquidity into the&nbsp;
+												<a href={props.poolInfo.crvPoolLink} target="_blank" className="contract-address" rel="noreferrer">
 													Curve {props.poolInfo.Name} pool
-												</OutterLink>
+												</a>
 												&nbsp;(without staking in the Curve gauge),
 												and then stake  your {symbol} tokens here to earn Bent.
 											</CardText>
@@ -228,15 +286,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 									</Col>
 									<Col md="6" className="divider-left">
 										<Card body>
-											<CardTitle>
-												<SwitchSlider
-													label="Advanced"
-													onChange={() => {
-														// 
-													}}
-												/>
-											</CardTitle>
-											<div className="card-text mt-4">
+											<div className="card-text">
 												<div className="amount-crv">
 													<p className="labeltext">
 														<Label>
@@ -261,19 +311,21 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 																disabled={
 																	lpBalance.isZero() || isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance) ||
+																	isApprPending
 																}
-																onClick={approve}
-															>Approve</Button>
+																onClick={onApprove}
+															>Approve{isApprPending && <TxSpinner />}</Button>
 															<Button
 																className="approvebtn"
 																disabled={
 																	lpBalance.isZero() || !isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																	utils.parseUnits(stakeAmount, 18).gt(lpBalance)
+																	utils.parseUnits(stakeAmount, 18).gt(lpBalance) ||
+																	isStakePending
 																}
-																onClick={stake}
-															>Stake</Button>
+																onClick={onStake}
+															>Stake{isStakePending && <TxSpinner />}</Button>
 														</div>
 													</div>
 												</div>
@@ -284,17 +336,48 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 							</TabPane>
 							<TabPane tabId="2">
 								<Row>
+									<Col md="6" className="inverse">
+										<Row className="align-items-center">
+											<Col sm={12}>
+												<CardText className="mt-0 mb-2">
+													<span className="small">Breakdown of claimable earnings:</span>
+												</CardText>
+											</Col>
+										</Row>
+										{props.poolInfo.RewardsAssets.map((tokenKey, index) =>
+											<Row className="align-items-center mb-1" key={tokenKey} >
+												<Col>
+													<div className="imgText">
+														<img src={TOKENS[tokenKey].LOGO} alt="" width="28" />
+														<h4 className="rewards-breakdown">{tokenKey}</h4>
+													</div>
+												</Col>
+												<Col style={{ flex: '2 0' }}>
+													<b>
+														{formatBigNumber(BigNumber.from(rewards[index] || 0), TOKENS[tokenKey].DECIMALS)}
+														<span className="small text-bold"> {tokenKey}</span>
+													</b>
+													<span className="small text-muted"> ≈ ${
+														usdRewards[index] ? formatBigNumber(usdRewards[index]) : 0
+													}</span>
+												</Col>
+											</Row>
+										)}
+									</Col>
+									<Col md="6">
+										<Button
+											className="approvebtn"
+											onClick={onClaim}
+											disabled={!haveRewards() || isClaimPending}
+										>Claim{isClaimPending && <TxSpinner />}</Button>
+									</Col>
+								</Row>
+							</TabPane>
+							<TabPane tabId="3">
+								<Row>
 									<Col md="12" className="inverse">
 										<Card body>
-											<CardTitle>
-												<SwitchSlider
-													label="Advanced"
-													onChange={() => {
-														// 
-													}}
-												/>
-											</CardTitle>
-											<div className="card-text mt-4 d-flex">
+											<div className="card-text d-flex">
 												<div className="amount-crv col-md-5">
 													<p className="labeltext">
 														<Label>
@@ -323,17 +406,18 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 														disabled={
 															BigNumber.from(depositedLp).isZero() ||
 															parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp))
+															utils.parseUnits(withdrawAmount, 18).gt(BigNumber.from(depositedLp)) ||
+															isUnstakePending
 														}
-														onClick={withdraw}
-													>Withdraw</Button>
+														onClick={onWithdraw}
+													>Withdraw{isUnstakePending && <TxSpinner />}</Button>
 												</div>
 											</div>
 										</Card>
 									</Col>
 								</Row>
 							</TabPane>
-							<TabPane tabId="3">
+							<TabPane tabId="4">
 								<Row>
 									<Col sm="12">
 										<Card body className="infoWrap">
@@ -395,12 +479,4 @@ const Wrapper = styled.div`
 
 const InnerWrapper = styled(UncontrolledCollapse)`
 	border: unset;
-`;
-
-const OutterLink = styled.a`
-	color: #703FFF;
-	&:hover {
-		color: #703FFF;
-	}
-	text-decoration: unset;
 `;

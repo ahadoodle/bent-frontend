@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody } from "reactstrap";
-import { POOLS } from "constant";
+import { POOLS, TOKEN_LOGO } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber } from "utils";
 import { useCrvAverageApr, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useHasLegacyCrvDeposit, useSortedCrvPoolKeys } from "hooks";
@@ -9,17 +9,20 @@ import { SwitchSlider } from "components/Switch";
 import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
 import { utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
+import { SearchBox } from "components/SearchBox";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
 	const [showNew, setShowNew] = useState(true);
+	const [searchField, setSearchField] = useState('');
+
 	const [sortField, setSortField] = useState('apr');
 	const [sortOrder, setSortOrder] = useState(-1);
 	const tvl = useCrvTotalTvl();
 	const earn = useCrvPoolTotalEarned();
 	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();
-	const keys = useSortedCrvPoolKeys(sortField, sortOrder);
+	const keys = useSortedCrvPoolKeys(sortField, sortOrder, searchField);
 	const hasOldDeposits = useHasLegacyCrvDeposit();
 
 	const onSort = (field: string) => {
@@ -41,18 +44,24 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 				<Col md="12">
 					<div className="d-flex">
 						<h2 className="section-header">Stake Curve LP Tokens</h2>
+						<SearchBox className="ml-auto" onChange={value => setSearchField(value)} />
 						<SwitchSlider
 							label="V2 Pools"
-							className={`ml-auto ${hasOldDeposits ? '' : 'd-none'}`}
+							className={`mx-2 mr-0 ${hasOldDeposits ? '' : 'd-none'}`}
 							defaultValue={true}
 							onChange={showNew => setShowNew(showNew)}
 						/>
 					</div>
 					<div className="toggleWrap tokentable table sortable">
 						<Row className="align-items-center thead">
-							<Col onClick={() => onSort('name')} className={sortOrderClass('name')}>
-								Pool Name&nbsp;
-								<i className="fa fa-caret-down" aria-hidden="true" />
+							<Col onClick={() => onSort('name')} className={`${sortOrderClass('name')} pl-0`}>
+								<div className="imgText">
+									<img src={TOKEN_LOGO.CRV} alt="" width="28" />
+									<h2>
+										Pool Name&nbsp;
+										<i className="fa fa-caret-down" aria-hidden="true" />
+									</h2>
+								</div>
 							</Col>
 							<Col onClick={() => onSort('earned')} className={sortOrderClass('earned')}>
 								<div>
@@ -110,6 +119,11 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 											key={poolName}
 											visible={index < 5 || showAll}
 										/>)
+								}
+								{
+									keys.length === 0 && <div className="text-white text-center p-3">
+										No results for "{searchField}"
+									</div>
 								}
 								<MorePoolsRow onShowMore={() => setShowAll(true)} visible={!showAll} title="More Pools" />
 							</CardBody>

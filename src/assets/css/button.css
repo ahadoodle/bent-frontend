@@ -1,0 +1,106 @@
+button.btn {
+	font-style: normal;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 15px;
+	text-align: center;
+	letter-spacing: -0.24px;
+	background: linear-gradient(102.05deg, #C1FFD722 -0.64%, #00000000 98.13%);
+	color: var(--bs-color-green);
+	border-radius: 20px;
+	border: 2px solid var(--bs-color-green);
+}
+/* ' : 'rgba(64, 76, 92, 0.4)'}`)}; */
+button.btn:hover {
+	background: linear-gradient(102.05deg, #C1FFD722 -0.64%, #00000000 98.13%);
+	border: 2px solid var(--bs-color-green);
+	box-shadow: 0px 0px 20px rgba(193, 255, 215, 0.4);
+	color: var(--bs-color-green);
+}
+button.btn:disabled {
+	box-shadow: none;
+	opacity: 0.2;
+}
+
+button.btn.btnshow {
+	padding: 0;
+	margin: auto;
+	line-height: 20px;
+	width: 200px;
+	height: 46px;
+}
+button.btn.btnshow.error {
+	border-color: var(--bs-color-error);
+	color: var(--bs-color-error);
+	background: linear-gradient(102.05deg, #E98D9F22 -0.64%, #00000000 98.13%);;
+}
+button.btn.btnshow.error:hover {
+	box-shadow: 0px 0px 20px #E98D9F66;
+}
+button.btn.btnshow i {
+	padding-left: 15px;
+	font-size: 20px;
+	line-height: 20px;
+}
+button.maxbtn {
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	padding: 5px 9px;
+	font-size: 10px;
+	line-height: 12px;
+	letter-spacing: -0.141818px;
+}
+.btnwrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+
+button.approvebtn.btn.btn-secondary {
+	font-style: normal;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 15px;
+	text-align: center;
+	letter-spacing: -0.24px;
+	background: linear-gradient(102.05deg, #C1FFD722 -0.64%, #00000000 98.13%);
+	color: var(--bs-color-green);
+	border-radius: 20px;
+	border: 2px solid var(--bs-color-green);
+	width: 185px;
+	height: 42px;
+	padding: 5px 5px 8px;
+}
+button.approvebtn.btn.btn-secondary .small {
+    font-weight: normal;
+    font-size: 13px;
+}
+
+/* === Claim Button === */
+button.claimbtn.btn.btn-secondary {
+	font-style: normal;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 17px;
+	text-align: center;
+	letter-spacing: -0.24px;
+	background-color: #C1FFD7;
+	color: #10151D;
+	box-shadow: 4px 4px 0px 0px #10151da3;
+	border: 2px solid #10151d;
+	border-radius: 20px;
+	padding: 8.5px 20px;
+	width: 120px;
+}
+button.claimbtn.btn.btn-secondary .small {
+	font-weight: normal;
+	font-size: 11px;
+}
+button.claimbtn:disabled {
+	color: #9BA2AC;
+	background: transparent !important;
+	border: 2px solid #9BA2AC;
+	opacity: 1;
+}

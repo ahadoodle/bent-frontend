@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
-	Card, CardText, Input, Label, CardBody
+	Card, CardText, Input, Label, CardBody, Spinner
 } from "reactstrap";
 import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
@@ -22,17 +22,23 @@ import {
 	useBentCvxTotalEarned,
 	useTheme,
 	useBentCvxPoolApr,
+	useBentCvxRewarderCvxContract,
+	useBentCvxRewarderBentContract,
+	useBentCvxRewarderMCContract,
+	useBentCvxAllRewards,
 } from "hooks";
-import { ethers, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
 import CvxLogo from 'assets/images/cvx-logo-color-black.svg';
 import CvxLogoLight from 'assets/images/cvx-logo-color.svg';
 import BentLogo from 'assets/images/logo-dark.svg';
 import BentLogoLight from 'assets/images/logo-light.svg';
 import { Theme } from "state/application/reducer";
-import { SwitchSlider } from "components/Switch";
 import Address from "components/Address";
 import { AddToMetamask } from "components/AddToMetamask";
+import { ClaimBentCvxRewarderCvx } from "./rewarderCvx";
+import { ClaimBentCvxRewarderMasterChef } from "./rewarderMasterchef";
+import styled from "styled-components";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -41,6 +47,16 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const [withdrawAmount, setWithdrawAmount] = useState('');
 	const [isConvertApproved, setIsConvertApproved] = useState<boolean>(false);
 	const [isStakeApproved, setIsStakeApproved] = useState<boolean>(false);
+	const [isConvApprPending, setConvApprPending] = useState<boolean>(false);
+	const [isConvPending, setConvPending] = useState<boolean>(false);
+	const [isStkApprPending, setStkApprPending] = useState<boolean>(false);
+	const [isStkPending, setStkPending] = useState<boolean>(false);
+	const [isClaimPending, setClaimPending] = useState<boolean>(false);
+	const [isClaimAllPending, setClaimAllPending] = useState<boolean>(false);
+	const [isUnstakePending, setUnstakePending] = useState<boolean>(false);
+	const [claimChecked, setClaimChecked] = useState<Record<string, Record<string, boolean>>>({
+		CVX: {}, BENT: {}, MC: {}
+	});
 	const theme = useTheme();
 	const cvxBalance = useBalance(TOKENS['CVX'].ADDR);
 	const cvxAllowance = useBentCvxAllowance();
@@ -55,10 +71,14 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const cvxPoolApr = useBentCvxPoolApr('CVX');
 	const bentPoolApr = useBentCvxPoolApr('BENT');
 	const mcPoolApr = useBentCvxPoolApr('MC');
+	const allRewards = useBentCvxAllRewards();
 	const { library } = useActiveWeb3React();
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
 	const bentCVX = useBentCVXContract();
 	const bentCvxStaking = useBentCvxStakingContract();
+	const bentCvxRewarderCVX = useBentCvxRewarderCvxContract();
+	const bentCvxRewarderBent = useBentCvxRewarderBentContract();
+	const bentCvxRewarderMC = useBentCvxRewarderMCContract();
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
@@ -100,7 +120,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await cvxToken.connect(signer).approve(TOKENS['BENTCVX'].ADDR, ethers.constants.MaxUint256);
+		setConvApprPending(true);
 		const res = await tx.wait();
+		setConvApprPending(false);
 		if (res) {
 			setIsConvertApproved(true);
 		}
@@ -110,7 +132,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await bentCVX.connect(signer).deposit(utils.parseUnits(convertAmount, 18));
+		setConvPending(true);
 		const res = await tx.wait();
+		setConvPending(false);
 		if (res) {
 			setConvertAmount('')
 			setIsConvertApproved(false);
@@ -121,7 +145,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await bentCVX.connect(signer).approve(POOLS.BentCvxStaking.BentCvxStaking, ethers.constants.MaxUint256);
+		setStkApprPending(true);
 		const res = await tx.wait();
+		setStkApprPending(false);
 		if (res) {
 			setIsStakeApproved(true);
 		}
@@ -131,7 +157,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await bentCvxStaking.connect(signer).deposit(utils.parseUnits(stakeAmount, 18));
+		setStkPending(true);
 		const res = await tx.wait();
+		setStkPending(false);
 		if (res) {
 			setStakeAmount('')
 			setIsStakeApproved(false);
@@ -142,19 +170,102 @@ export const StakeBentCVX = (): React.ReactElement => {
 		if (!library) return;
 		const signer = await library.getSigner();
 		const tx = await bentCvxStaking.connect(signer).withdraw(utils.parseUnits(withdrawAmount, 18));
+		setUnstakePending(true);
 		const res = await tx.wait();
+		setUnstakePending(false);
 		if (res) {
 			setWithdrawAmount('')
 		}
 	}
 
 	const onOpen = () => {
-		// $('html,body').animate({
-		// 	scrollTop: $('#toggleInner-stake-curve-lp-bentcvx').offset()?.top
-		// }, 'fast', function () {
-		// 	$('#toggleInner-stake-curve-lp-bentcvx').trigger('collapse');
-		// });
 		window.open('https://curve.fi/factory/76/deposit', '_blank');
+	}
+
+	const haveRewards = () => {
+		let enable = false;
+		POOLS.BentCvxStaking.BentCvxRewarderCvx.RewardsAssets.forEach((key, index) => {
+			if (allRewards['CVX'].length > 0 &&
+				!BigNumber.from(allRewards['CVX'][POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex[index]]).isZero()
+			) {
+				enable = true;
+			}
+		})
+		POOLS.BentCvxStaking.BentCvxRewarderBent.RewardsAssets.forEach((key, index) => {
+			if (allRewards['BENT'].length > 0 &&
+				!BigNumber.from(allRewards['BENT'][POOLS.BentCvxStaking.BentCvxRewarderBent.ClaimIndex[index]]).isZero()
+			) {
+				enable = true;
+			}
+		})
+		if (allRewards['MC'].length > 0 &&
+			!BigNumber.from(allRewards['MC'][0]).isZero()
+		) {
+			enable = true;
+		}
+		return enable;
+	}
+
+	const checkedIndexes = () => {
+		const checkedIndexes: string[][] = [];
+		Object.keys(claimChecked).forEach(key => {
+			const indexes: string[] = [];
+			Object.keys(claimChecked[key]).forEach(index => {
+				if (claimChecked[key][index]) indexes.push(index);
+			})
+			checkedIndexes.push(indexes);
+		})
+		return checkedIndexes;
+	}
+
+	const onClaimCheckChange = (key: string, indexes: Record<number, boolean>) => {
+		claimChecked[key] = indexes;
+		setClaimChecked(Object.assign({}, claimChecked));
+	}
+
+	const onClaim = async () => {
+		if (!library) return;
+		const indexes = checkedIndexes();
+		console.log(indexes);
+		const signer = await library.getSigner();
+		const address = await signer.getAddress();
+		let tx;
+		if (indexes[0].length === 0 && indexes[1].length === 0 && indexes[2].length === 0) {
+			return;
+		} else if (indexes[0].length > 0 && indexes[1].length === 0 && indexes[2].length === 0) {
+			tx = await bentCvxRewarderCVX.connect(signer).claim(address, indexes[0]);
+		} else if (indexes[0].length === 0 && indexes[1].length > 0 && indexes[2].length === 0) {
+			tx = await bentCvxRewarderBent.connect(signer).claim(address, indexes[1]);
+		} else if (indexes[0].length === 0 && indexes[1].length === 0 && indexes[2].length > 0) {
+			tx = await bentCvxRewarderMC.connect(signer).claim(address, [0]);
+		} else {
+			tx = await bentCvxStaking.connect(signer).claim(indexes);
+		}
+		setClaimPending(true);
+		await tx.wait();
+		setClaimPending(false);
+	}
+
+	const onClaimAll = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		const tx = await bentCvxStaking.connect(signer).claim([
+			POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex,
+			POOLS.BentCvxStaking.BentCvxRewarderBent.ClaimIndex,
+			[0]
+		]);
+		setClaimAllPending(true);
+		await tx.wait();
+		setClaimAllPending(false);
+	}
+
+	const TxSpinner = () => {
+		return (
+			<React.Fragment>
+				&nbsp;
+				<Spinner size="sm" />
+			</React.Fragment>
+		)
 	}
 
 	return (
@@ -234,14 +345,32 @@ export const StakeBentCVX = (): React.ReactElement => {
 													<NavLink
 														className={classnames({ active: activeTab === "3" })}
 														onClick={() => toggle("3")}
-													>Unstake</NavLink>
+													>Claim</NavLink>
 												</NavItem>
 												<NavItem>
 													<NavLink
 														className={classnames({ active: activeTab === "4" })}
 														onClick={() => toggle("4")}
+													>Unstake</NavLink>
+												</NavItem>
+												<NavItem>
+													<NavLink
+														className={classnames({ active: activeTab === "5" })}
+														onClick={() => toggle("5")}
 													>Info</NavLink>
 												</NavItem>
+												{activeTab === '3' && <NavItem className="ml-auto">
+													<ClaimButton
+														onClick={onClaim}
+														disabled={checkedIndexes().length === 0 || isClaimPending || !haveRewards()}
+														className="approvebtn"
+													>Claim{isClaimPending && <TxSpinner />}</ClaimButton>
+													<ClaimButton
+														onClick={onClaimAll}
+														disabled={isClaimAllPending || !haveRewards()}
+														className="approvebtn"
+													>Claim All{isClaimAllPending && <TxSpinner />}</ClaimButton>
+												</NavItem>}
 											</Nav>
 											<TabContent activeTab={activeTab}>
 												<TabPane tabId="1">
@@ -307,19 +436,21 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					disabled={
 																						cvxBalance.isZero() || isConvertApproved ||
 																						parseFloat(convertAmount) === 0 || isNaN(parseFloat(convertAmount)) ||
-																						utils.parseUnits(convertAmount, 18).gt(cvxBalance)
+																						utils.parseUnits(convertAmount, 18).gt(cvxBalance) ||
+																						isConvApprPending
 																					}
 																					onClick={onCvxApprove}
-																				>Approve</Button>
+																				>Approve{isConvApprPending && <TxSpinner />}</Button>
 																				<Button
 																					className="approvebtn"
 																					disabled={
 																						cvxBalance.isZero() || !isConvertApproved ||
 																						parseFloat(convertAmount) === 0 || isNaN(parseFloat(convertAmount)) ||
-																						utils.parseUnits(convertAmount, 18).gt(cvxBalance)
+																						utils.parseUnits(convertAmount, 18).gt(cvxBalance) ||
+																						isConvPending
 																					}
 																					onClick={onConvert}
-																				>Convert</Button>
+																				>Convert{isConvPending && <TxSpinner />}</Button>
 																			</div>
 																			<div className="btnwrapper">
 																				<Button
@@ -397,19 +528,21 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					disabled={
 																						bentCvxBalance.isZero() || isStakeApproved ||
 																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentCvxBalance)
+																						utils.parseUnits(stakeAmount, 18).gt(bentCvxBalance) ||
+																						isStkApprPending
 																					}
 																					onClick={onBentCvxApprove}
-																				>Approve</Button>
+																				>Approve{isStkApprPending && <TxSpinner />}</Button>
 																				<Button
 																					className="approvebtn"
 																					disabled={
 																						bentCvxBalance.isZero() || !isStakeApproved ||
 																						parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
-																						utils.parseUnits(stakeAmount, 18).gt(bentCvxBalance)
+																						utils.parseUnits(stakeAmount, 18).gt(bentCvxBalance) ||
+																						isStkPending
 																					}
 																					onClick={onStake}
-																				>Stake</Button>
+																				>Stake{isStkPending && <TxSpinner />}</Button>
 																			</div>
 																		</div>
 																	</div>
@@ -420,15 +553,28 @@ export const StakeBentCVX = (): React.ReactElement => {
 												</TabPane>
 												<TabPane tabId="3">
 													<Row>
+														<ClaimBentCvxRewarderCvx
+															poolKey="CVX"
+															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderCvx}
+															onClaimCheckChange={onClaimCheckChange}
+														/>
+														<ClaimBentCvxRewarderCvx
+															poolKey="BENT"
+															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderBent}
+															onClaimCheckChange={onClaimCheckChange}
+														/>
+														<ClaimBentCvxRewarderMasterChef
+															poolKey="MC"
+															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderMasterchef}
+															onClaimCheckChange={onClaimCheckChange}
+														/>
+													</Row>
+												</TabPane>
+												<TabPane tabId="4">
+													<Row>
 														<Col md="12" className="inverse">
 															<Card body>
-																<SwitchSlider
-																	label="Advanced"
-																	onChange={() => {
-																		// 
-																	}}
-																/>
-																<div className="card-text mt-4 d-flex row">
+																<div className="card-text d-flex row">
 																	<div className="amount-crv col-md-5">
 																		<p className="labeltext">
 																			<Label>
@@ -457,17 +603,18 @@ export const StakeBentCVX = (): React.ReactElement => {
 																			disabled={
 																				bentCvxStaked.isZero() ||
 																				parseFloat(withdrawAmount) === 0 || isNaN(parseFloat(withdrawAmount)) ||
-																				utils.parseUnits(withdrawAmount, 18).gt(bentCvxStaked)
+																				utils.parseUnits(withdrawAmount, 18).gt(bentCvxStaked) ||
+																				isUnstakePending
 																			}
 																			onClick={onWithdraw}
-																		>Withdraw</Button>
+																		>Withdraw{isUnstakePending && <TxSpinner />}</Button>
 																	</div>
 																</div>
 															</Card>
 														</Col>
 													</Row>
 												</TabPane>
-												<TabPane tabId="4">
+												<TabPane tabId="5">
 													<Row>
 														<Col sm="12">
 															<Card body>
@@ -542,3 +689,10 @@ export const StakeBentCVX = (): React.ReactElement => {
 		</Container>
 	)
 }
+
+
+const ClaimButton = styled(Button)`
+	margin-left: 20px;
+	height: 42px;
+	width: 150px;
+`

@@ -4,6 +4,7 @@ import { authRoutes } from 'routes'
 import './assets/css/style.css';
 import './assets/css/mobile.css';
 import './assets/css/custom-input.css';
+import './assets/css/button.css';
 import './App.css';
 import './assets/css/progress.css';
 import Page from 'pages/page';

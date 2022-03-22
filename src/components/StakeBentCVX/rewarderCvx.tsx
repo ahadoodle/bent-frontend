@@ -98,7 +98,7 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 					</Col>
 					<Col></Col>
 					<Col>
-						<div className="climBtn">
+						<div className="collapseBtn">
 							<i
 								className="fa fa-caret-down"
 								aria-hidden="true"
@@ -137,7 +137,7 @@ export const ClaimBentCvxRewarderCvx = (props: Props): React.ReactElement => {
 					</CardBody>
 				</Card>
 			</InnerWrapper>
-			<div className="claimbtn-container">
+			<div className="checkall-container">
 				<Input type="checkbox" checked={checkAll} onChange={onCheckAll} onClick={(e) => e.stopPropagation()} />
 			</div>
 		</div>
@@ -156,6 +156,5 @@ const Wrapper = styled.div<{ collapsed: boolean }>`
 `;
 
 const InnerWrapper = styled(UncontrolledCollapse)`
-	background: #CAB8FF;
 	border: unset;
 `;
