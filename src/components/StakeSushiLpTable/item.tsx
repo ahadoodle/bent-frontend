@@ -308,14 +308,13 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 														<h4 className="rewards-breakdown">{tokenKey}</h4>
 													</div>
 												</Col>
-												<Col>
+												<Col style={{ flex: '2 0' }}>
 													<b>
 														{formatBigNumber(BigNumber.from(rewards), TOKENS[tokenKey].DECIMALS, 2)}
 														<span className="small text-bold"> {tokenKey}</span>
 													</b>
 													<span className="small text-muted"> ≈ ${formatBigNumber(earned, 18, 2)}</span>
 												</Col>
-												<Col></Col>
 											</Row>
 										)}
 									</Col>

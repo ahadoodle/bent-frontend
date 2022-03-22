@@ -386,7 +386,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														<h4 className="rewards-breakdown">{tokenKey}</h4>
 													</div>
 												</Col>
-												<Col>
+												<Col style={{ flex: '2 0' }}>
 													<b>
 														{formatBigNumber(BigNumber.from(rewards[index] || 0), TOKENS[tokenKey].DECIMALS)}
 														<span className="small text-bold"> {tokenKey}</span>
@@ -395,7 +395,6 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 														usdRewards[index] ? formatBigNumber(usdRewards[index]) : 0
 													}</span>
 												</Col>
-												<Col></Col>
 											</Row>
 										)}
 									</Col>
