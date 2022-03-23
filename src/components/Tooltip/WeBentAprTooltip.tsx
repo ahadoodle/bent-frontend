@@ -22,10 +22,10 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 	}
 
 	const sortedKeys = () => {
-		const keys = POOLS.weBENT.RewardAssets.sort((a, b) => {
+		const keys = POOLS.weBENT.RewardAssets.slice();
+		return keys.sort((a, b) => {
 			return bentAprs[TOKENS[b].ADDR.toLowerCase()] - bentAprs[TOKENS[a].ADDR.toLowerCase()]
 		})
-		return keys;
 	}
 
 	return (
