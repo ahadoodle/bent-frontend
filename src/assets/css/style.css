@@ -4,6 +4,7 @@
     --bs-color-splitter: #414C5C;
     --bs-color-error: #E98D9F;
     --bs-color-link: #E63FFF;
+    --bs-color-blur-bg: #1E2024B5;
 }
 body {
     background-color: #253143;
@@ -36,7 +37,7 @@ a,button {
     right: 0;
     top: 0;
     backdrop-filter: blur(20px);
-    background: #353C49A0;
+    background: var(--bs-color-blur-bg);
     border-bottom: 1px solid var(--bs-color-splitter);
 }
 .mobileHeader {
