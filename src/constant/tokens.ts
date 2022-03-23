@@ -148,6 +148,7 @@ export const TOKENS: Record<string, TokenInfo> = {
 		LOGO: TOKEN_LOGO.UST,
 		ADDR: '0xa693B19d2931d498c5B318dF961919BB4aee87a5',
 		DECIMALS: 6,
+		SYMBOL: 'UST',
 	},
 	WBTC: {
 		LOGO: TOKEN_LOGO.BTC,

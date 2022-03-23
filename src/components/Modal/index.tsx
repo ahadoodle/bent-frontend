@@ -95,7 +95,7 @@ const Container = styled.div`
 	color: white;
 	width: fit-content;
 	backdrop-filter: blur(20px);
-	background: #353C4961;
+	background: #262c3540;
 	border-radius: 20px;
 	border: 1px solid #414C5C;
 	&:hover {
