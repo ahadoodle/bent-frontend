@@ -21,6 +21,13 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 		return parseFloat(apr.toFixed(2));
 	}
 
+	const sortedKeys = () => {
+		const keys = POOLS.weBENT.RewardAssets.sort((a, b) => {
+			return bentAprs[TOKENS[b].ADDR.toLowerCase()] - bentAprs[TOKENS[a].ADDR.toLowerCase()]
+		})
+		return keys;
+	}
+
 	return (
 		<UncontrolledTooltip target='webent-apr-info' className="bent-details" placement="bottom">
 			<div style={{ padding: 15, lineHeight: '18px' }}>
@@ -35,10 +42,11 @@ export const WeBentAprTooltip = (): React.ReactElement => {
 				- bentCVX APR: {utils.commify(bentCvxApr().toFixed(2))}%<br />
 				- Extras APR: {utils.commify(extraApr().toFixed(2))}%<br /><br />
 				Extras APR breakdown:<br />
-				{POOLS.weBENT.RewardAssets.map(key =>
-					key !== 'BENTCVX' && (<div key={key}>
-						- {TOKENS[key].SYMBOL} APR: {utils.commify(parseFloat((bentAprs[TOKENS[key].ADDR.toLowerCase()] || 0).toFixed(2)))}%<br />
-					</div>)
+				{sortedKeys().map(key =>
+					(key !== 'BENTCVX' && bentAprs[TOKENS[key].ADDR.toLowerCase()]) > 0 && (
+						<div key={key}>
+							- {TOKENS[key].SYMBOL} APR: {utils.commify(parseFloat((bentAprs[TOKENS[key].ADDR.toLowerCase()] || 0).toFixed(2)))}%<br />
+						</div>)
 				)}
 			</div>
 		</UncontrolledTooltip>
