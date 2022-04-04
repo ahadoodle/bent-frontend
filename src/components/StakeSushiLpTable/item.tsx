@@ -26,6 +26,7 @@ import {
 	getEtherscanLink,
 } from "utils";
 import { DecimalSpan } from "components/DecimalSpan";
+import { AnimNumber } from "components/AnimNumber";
 
 
 interface Props {
@@ -161,10 +162,22 @@ export const StakeSushiLpItem = (props: Props): React.ReactElement => {
 					<Col>
 						<b>
 							<span className="small">$</span>
-							<DecimalSpan value={formatBigNumber(earned, 18, 2)} />
+							<AnimNumber
+								value={earned}
+								decimals={4}
+								precision={18}
+								isDecimalSpan={true}
+								invalid={'0.0'}
+							/>
 						</b><br />
 						<span className="small text-muted">
-							{rewards.isZero() ? '--' : formatBigNumber(rewards, 18, 2)} BENT
+							<AnimNumber
+								value={rewards}
+								decimals={4}
+								precision={18}
+								isDecimalSpan={true}
+								invalid={'--'}
+							/> BENT
 						</span>
 					</Col>
 					<Col>
