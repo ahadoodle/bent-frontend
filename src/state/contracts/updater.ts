@@ -521,9 +521,9 @@ export default function Updater(): null {
 						crvDepositedUsd[poolKey] = lpPrice.mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
 					} else if (POOLS.BentPools[poolKey].isBentCvx) {
 						// bentCvx pool (calculating tvl info here because bentCvx price is zero on crv api)
-						tvl = BigNumber.from(poolData.coins[0].poolBalance).add(BigNumber.from(poolData.coins[1].poolBalance))
-							.mul(utils.parseEther(poolData.coins[0].usdPrice.toString())).div(BigNumber.from(10).pow(18));
-						crvDepositedUsd[poolKey] = tvl.mul(depositedLpBalance[poolKey]).div(poolData.totalSupply);
+						const lpPrice = utils.parseEther(poolData.usdTotal.toString()).mul(BigNumber.from(10).pow(18)).div(poolData.totalSupply);
+						tvl = lpPrice.mul(crvPoolLpBalances[poolKey]).div(BigNumber.from(10).pow(18));
+						crvDepositedUsd[poolKey] = lpPrice.mul(depositedLpBalance[poolKey]).div(BigNumber.from(10).pow(18));
 					} else {
 						if (POOLS.BentPools[poolKey].DepositAsset === '0x06325440d014e39736583c165c2963ba99faf14e') {
 							// STETH Pool
