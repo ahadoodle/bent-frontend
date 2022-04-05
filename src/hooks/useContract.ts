@@ -29,9 +29,9 @@ export const useBentMasterChefContract = (): Contract => {
 	return useMemo(() => new Contract(POOLS.SushiPools.MasterChef, ABIS.BentMasterChef, library), [library]);
 }
 
-export const useBentCvxMasterChefContract = (): Contract => {
+export const useBentCvxMasterChefContract = (poolKey: string): Contract => {
 	const { library } = useActiveWeb3React();
-	return useMemo(() => new Contract(POOLS.BentPools['BENTCVX'].POOL, ABIS.BentMasterChef, library), [library]);
+	return useMemo(() => new Contract(POOLS.BentPools[poolKey].POOL, ABIS.BentMasterChef, library), [library, poolKey]);
 }
 
 export const useBentStakingContract = (): Contract => {
