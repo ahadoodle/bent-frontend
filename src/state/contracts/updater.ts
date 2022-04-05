@@ -593,7 +593,7 @@ export default function Updater(): null {
 							additionalRewardvApr: ext_vApr,
 							crvBoost: crvApys[POOLS.BentPools[poolKey].Name] ? crvApys[POOLS.BentPools[poolKey].Name].crvBoost : 0
 						}
-					} else if (poolKey === 'BENTCVX') {
+					} else if (POOLS.BentPools[poolKey].isBentCvx) {
 						crvProjectedApr[poolKey] = {
 							baseCrvvApr: BigNumber.from((bentcvxCrvApy * 100).toFixed(0)),
 							crvvApr: ethers.constants.Zero,
