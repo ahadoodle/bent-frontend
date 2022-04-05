@@ -29,6 +29,19 @@ const BentPools: Record<string, BentPool> = {
 		CrvLpSYMBOL: 'bentcvxCrv',
 		isBentCvx: true,
 		crvPoolLink: 'https://curve.fi/factory/76/deposit',
+		isLegacy: true,
+	},
+	NEW_BENTCVX: {
+		LOGO: TOKEN_LOGO.CVX,
+		Name: 'bentcvx',
+		POOL: '0x0b80b9e59fb2b1262cdbe3afef5ce52cb0521653',
+		DepositAsset: '0xf083fba98ded0f9c970e5a418500bad08d8b9732', // Curve.fi bentcvx/cvx
+		CvxRewardsPool: '',
+		RewardsAssets: ['BENT'],
+		CrvLpSYMBOL: 'bentcvxCrv',
+		isBentCvx: true,
+		crvPoolLink: 'https://curve.fi/factory/76/deposit',
+		liveTime: 1649117130,
 	},
 	NEW_CRV: {
 		LOGO: TOKEN_LOGO.CRV,

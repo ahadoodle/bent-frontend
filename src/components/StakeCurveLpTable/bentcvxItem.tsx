@@ -79,6 +79,17 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 		if (currentActiveTab !== tab) setCurrentActiveTab(tab);
 	}
 
+	const isNewPool = () => {
+		const showPeriod = 60 * 60 * 24 * 7; // one week
+		return ((Date.now() / 1000) - showPeriod) <= (POOLS.BentPools[props.poolKey].liveTime || 0);
+	}
+
+	const visible = () => {
+		if (!props.visible) return 'd-none';
+		if (props.poolInfo.isLegacy && depositedLp.isZero() && !haveRewards()) return 'd-none'
+		return '';
+	}
+
 	const haveRewards = () => {
 		let enable = false;
 		rewards.forEach(reward => enable = enable || reward.toString() !== '0');
@@ -170,12 +181,12 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${props.visible ? '' : 'd-none'}`} >
+		<div className={`innerWrap p-0 rounded ${collapsed ? '' : 'open'} ${visible()}`} >
 			<Wrapper
 				onClick={() => setCollapsed(!collapsed)}
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
-				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				id={`toggleInner-stake-curve-lp-${props.poolKey}`}
 				style={{ marginBottom: "1rem" }}
 			>
 				<Row className="align-items-center" style={{ padding: '0 10px' }}>
@@ -183,6 +194,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 						<div className="imgText">
 							<PoolLogo src={props.poolInfo.LOGO} alt="" />
 							<h4>{props.poolInfo.Name}</h4>
+							{isNewPool() && <span className="new-pool-tag">new</span>}
 						</div>
 					</Col>
 					<Col>
@@ -239,7 +251,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 			</Wrapper>
 			<InnerWrapper
 				className="innerAccordian"
-				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				toggler={`#toggleInner-stake-curve-lp-${props.poolKey}`}
 			>
 				<div className="splitter-horizontal p-1">
 					<div className="converttabs" style={{ background: 'unset', borderRadius: 0 }}>
@@ -319,13 +331,22 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 															<Button
 																className="approvebtn"
 																disabled={
+																	props.poolInfo.isLegacy ||
 																	lpBalance.isZero() || !isApproved ||
 																	parseFloat(stakeAmount) === 0 || isNaN(parseFloat(stakeAmount)) ||
 																	utils.parseUnits(stakeAmount, 18).gt(lpBalance) ||
 																	isStakePending
 																}
 																onClick={onStake}
-															>Stake{isStakePending && <TxSpinner />}</Button>
+															>{props.poolInfo.isLegacy ? (
+																<>
+																	Stake<br />
+																	<span className="small">(temp. paused)</span>
+																</>) :
+																<React.Fragment>
+																	Stake{isStakePending && <TxSpinner />}
+																</React.Fragment>
+																}</Button>
 														</div>
 													</div>
 												</div>

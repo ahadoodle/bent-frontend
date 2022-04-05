@@ -195,7 +195,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			<Wrapper
 				className={`bentInner ${collapsed ? '' : 'open'}`}
 				color="primary"
-				id={`toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				id={`toggleInner-stake-curve-lp-${props.poolKey}`}
 				style={{ marginBottom: "1rem" }}
 			>
 				<Row className="align-items-center" style={{ padding: '0 10px' }}>
@@ -261,7 +261,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 			</Wrapper>
 			<InnerWrapper
 				className="innerAccordian"
-				toggler={`#toggleInner-stake-curve-lp-${props.poolInfo.Name}`}
+				toggler={`#toggleInner-stake-curve-lp-${props.poolKey}`}
 				onEntering={() => setCollapsed(false)}
 				onExit={() => setCollapsed(true)}
 			>
