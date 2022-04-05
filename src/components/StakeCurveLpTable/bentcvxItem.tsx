@@ -52,7 +52,7 @@ export const StakeBentCvxCurveLpItem = (props: Props): React.ReactElement => {
 	const tokenPrices = useTokenPrices();
 	const { library } = useActiveWeb3React();
 	const crvLpToken = useERC20Contract(props.poolInfo.DepositAsset);
-	const bentPool = useBentCvxMasterChefContract();
+	const bentPool = useBentCvxMasterChefContract(props.poolKey);
 	const lpBalance = useBalance(props.poolInfo.DepositAsset);
 	const depositedLp = useCrvDeposit(props.poolKey);
 	const symbol = props.poolInfo.CrvLpSYMBOL;
