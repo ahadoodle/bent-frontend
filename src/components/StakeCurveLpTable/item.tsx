@@ -204,6 +204,7 @@ export const StakeCurveLpItem = (props: Props): React.ReactElement => {
 							<PoolLogo src={props.poolInfo.LOGO} alt="" />
 							<h4>{props.poolInfo.Name}</h4>
 							{isNewPool() && <span className="new-pool-tag">new</span>}
+							{props.poolInfo.isLegacy && <span className="old-pool-tag">old</span>}
 						</div>
 					</Col>
 					<Col>

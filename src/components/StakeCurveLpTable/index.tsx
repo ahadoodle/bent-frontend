@@ -3,9 +3,8 @@ import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import { POOLS, TOKEN_LOGO } from "constant";
 import { StakeCurveLpItem } from "./item";
 import { formatBigNumber, formatMillionsBigNumber } from "utils";
-import { useCrvAverageApr, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useHasLegacyCrvDeposit, useSortedCrvPoolKeys } from "hooks";
+import { useCrvAverageApr, useCrvPoolTotalDepositedUsds, useCrvPoolTotalEarned, useCrvTotalTvl, useSortedCrvPoolKeys } from "hooks";
 import { MorePoolsRow } from "components/MorePoolsRow";
-import { SwitchSlider } from "components/Switch";
 import { StakeBentCvxCurveLpItem } from "./bentcvxItem";
 import { utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
@@ -13,7 +12,6 @@ import { SearchBox } from "components/SearchBox";
 
 export const StakeCurveLpTable = (): React.ReactElement => {
 	const [showAll, setShowAll] = useState(false);
-	const [showNew, setShowNew] = useState(true);
 	const [searchField, setSearchField] = useState('');
 
 	const [sortField, setSortField] = useState('apr');
@@ -23,7 +21,6 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 	const depostedUsd = useCrvPoolTotalDepositedUsds();
 	const avgApr = useCrvAverageApr();
 	const keys = useSortedCrvPoolKeys(sortField, sortOrder, searchField);
-	const hasOldDeposits = useHasLegacyCrvDeposit();
 
 	const onSort = (field: string) => {
 		if (field === sortField) {
@@ -45,12 +42,6 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 					<div className="d-flex">
 						<h2 className="section-header">Stake Curve LP Tokens</h2>
 						<SearchBox className="ml-auto" onChange={value => setSearchField(value)} />
-						<SwitchSlider
-							label="V2 Pools"
-							className={`mx-2 mr-0 ${hasOldDeposits ? '' : 'd-none'}`}
-							defaultValue={true}
-							onChange={showNew => setShowNew(showNew)}
-						/>
 					</div>
 					<div className="toggleWrap tokentable table sortable">
 						<Row className="align-items-center thead">
@@ -105,7 +96,7 @@ export const StakeCurveLpTable = (): React.ReactElement => {
 						</Row>
 						<Card>
 							<CardBody>
-								{keys.filter(key => (showNew || !hasOldDeposits) ? !POOLS.BentPools[key].isLegacy : POOLS.BentPools[key].isLegacy).map((poolName, index) =>
+								{keys.map((poolName, index) =>
 									POOLS.BentPools[poolName].isBentCvx ?
 										<StakeBentCvxCurveLpItem
 											poolInfo={POOLS.BentPools[poolName]}
