@@ -71,7 +71,7 @@ export const useHasLegacyCrvDeposit = (): boolean => {
 	})
 	Object.keys(POOLS.BentPools).filter(key => POOLS.BentPools[key].isLegacy).forEach(key => {
 		let hasRewards = false;
-		crvRewards[key].forEach(reward => hasRewards = hasRewards || reward.toString() !== '0');
+		crvRewards[key] && crvRewards[key].forEach(reward => hasRewards = hasRewards || reward.toString() !== '0');
 		hasDeposit = hasDeposit || hasRewards;
 	})
 	return hasDeposit;
