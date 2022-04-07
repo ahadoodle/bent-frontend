@@ -36,11 +36,12 @@ import {
 	getCrvCryptoInfoFromBent,
 	getMultiCvxVBalanceRewardPool,
 	simpleRpcProvider,
+	getLastVotingInfo,
 } from 'utils';
 import {
 	updateContractInfo,
 } from './actions';
-import { BentPoolReward, CrvApy, WeBentLockedData } from './reducer';
+import { BentPoolReward, CrvApy, WeBentLockedData, Voter } from './reducer';
 
 export default function Updater(): null {
 	const dispatch = useDispatch();
@@ -48,10 +49,12 @@ export default function Updater(): null {
 	const multicall = MulticallProvider;
 	const { account } = useActiveWeb3React();
 	const [crvApys, setCrvApys] = useState({});
+	const [voters, setVoters] = useState<Voter[]>([]);
 	const [crvApysCount, setCrvApysCount] = useState(0);
 	useEffect(() => {
 		if (crvApysCount % 20 === 0) {
 			getCrvApys().then(res => setCrvApys(res));
+			getLastVotingInfo().then(res => setVoters(res));
 		}
 	}, [crvApysCount])
 
@@ -666,6 +669,8 @@ export default function Updater(): null {
 					weBentRewardsUsd,
 					weBentApr,
 					delegationAddr,
+					// Snapshot vote
+					voters
 				}));
 			})
 		})

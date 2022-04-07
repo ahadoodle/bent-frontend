@@ -16,6 +16,7 @@ import TricryptoLpPrice from './TricryptoLpPrice.json';
 import CvxToken from './CvxToken.json';
 import weBENT from './weBENT.json';
 import SnapshotDelegation from './SnapshotDelegation.json';
+import ENSRecord from './ENSRecords.json';
 
 export const ABIS = {
 	BentBasePool,
@@ -36,4 +37,5 @@ export const ABIS = {
 	CvxToken,
 	weBENT,
 	SnapshotDelegation,
+	ENSRecord,
 }
