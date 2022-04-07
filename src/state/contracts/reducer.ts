@@ -103,6 +103,7 @@ export interface ContractsState {
 
 	// Snapshot Voting Info
 	voters: Voter[];
+	totalVp: number;
 }
 
 const initialState: ContractsState = {
@@ -174,6 +175,7 @@ const initialState: ContractsState = {
 	sushiLpDeposited: {},
 
 	voters: [],
+	totalVp: 0,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -322,5 +324,6 @@ export default createReducer(initialState, (builder) =>
 			// Snapshot Vote Info
 			state.delegationAddr = action.payload.delegationAddr;
 			state.voters = action.payload.voters;
+			state.totalVp = action.payload.totalVp;
 		})
 );

@@ -608,6 +608,11 @@ export default function Updater(): null {
 					}
 				})
 
+				let totalVp = 0;
+				voters.forEach(vote => {
+					totalVp += vote.vp;
+				})
+
 				dispatch(updateContractInfo({
 					gas,
 					tokenPrices,
@@ -670,7 +675,8 @@ export default function Updater(): null {
 					weBentApr,
 					delegationAddr,
 					// Snapshot vote
-					voters
+					voters,
+					totalVp,
 				}));
 			})
 		})
