@@ -17,7 +17,7 @@ export const VoteInfluencerTable = (): React.ReactElement => {
 		<Row>
 			<Col md="12">
 				<div className="convert-up">
-					<h2 className="section-header">Bent DAO</h2>
+					<h2 className="section-header">Bent DAO Leaderboard</h2>
 				</div>
 				<div className="toggleWrap tokentable table sortable">
 					<Row className="align-items-center thead">
