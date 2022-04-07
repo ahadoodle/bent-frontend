@@ -4,7 +4,7 @@ import { Col, Row } from "reactstrap";
 import { Voter } from "state/contracts/reducer";
 import { formatAddress, formatBigNumber } from "utils";
 import { utils } from "ethers";
-import { useIsMobile } from "hooks";
+import { useIsMobile, useTotalVp } from "hooks";
 import { ViewOnExp } from "components/ViewOnExp";
 import { CopyAddress } from "components/CopyAddress";
 
@@ -14,6 +14,7 @@ interface Props {
 
 export const VoteInfluencerItem = (props: Props): React.ReactElement => {
 	const isMobile = useIsMobile();
+	const totalVp = useTotalVp();
 	return <div className={`innerWrap p-0 rounded `} >
 		<div
 			className={`bentInner`}
@@ -36,7 +37,8 @@ export const VoteInfluencerItem = (props: Props): React.ReactElement => {
 				</Col>
 				<Col style={{ flex: '0.7 0' }}>
 					{formatBigNumber(utils.parseEther(props.voter.vp.toString()), 18, 2)}
-					<span className="small"> weBENT</span>
+					<span className="small"> weBENT</span><br />
+					<span className="small text-muted">{(props.voter.vp * 100 / totalVp).toFixed(2)}%</span>
 				</Col>
 			</Row>
 		</div>

@@ -111,3 +111,7 @@ export const useVotingControl = (): number => {
 export const useVoters = (): Voter[] => {
 	return useSelector((state: AppState) => state.contracts.voters);
 }
+
+export const useTotalVp = (): number => {
+	return useSelector((state: AppState) => state.contracts.totalVp);
+}
