@@ -6,6 +6,7 @@ import { Icon } from 'components/Icon'
 interface Props {
 	address?: string | undefined | null,
 	showTitle?: boolean
+	style?: React.CSSProperties
 }
 
 export const CopyAddress = (props: Props): React.ReactElement => {
@@ -24,7 +25,7 @@ export const CopyAddress = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<CopyAccount onClick={copyAddress}>
+		<CopyAccount onClick={copyAddress} style={props.style}>
 			<Icon iconSrc={copySvg} borderColor="#CAB8FF" style={{ marginLeft: 0, margin: props.showTitle ? 10 : 0 }} />
 			{props.showTitle && (!copySuccess ? 'Copy address' : 'Copied!')}
 			<textarea

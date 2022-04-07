@@ -1165,6 +1165,12 @@ span.count {
     background: #B5DEFF;
 }
 
+.imgText {
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
 .imgText h2 {
     display: inline-block;
     margin-bottom: 0px !important;
@@ -1176,6 +1182,21 @@ span.count {
     letter-spacing: -0.24px;
     color: #10151D;
     padding-left: 10px;
+}
+
+.imgText h4 {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.24px;
+    display: inline-block;
+    padding-left: 10px;
+    margin-bottom: 0px;
+}
+
+.imgText p {
+    margin-bottom: 0;
 }
 
 .cliamBlockOne {
@@ -1202,16 +1223,6 @@ span.count {
 
 .cliamBlockOne .card-body {
     padding: 0px;
-}
-
-.imgText h4 {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 19px;
-    letter-spacing: -0.24px;
-    display: inline-block;
-    padding-left: 10px;
 }
 
 .earnValue p {

@@ -5,21 +5,18 @@ import {
 } from "reactstrap";
 import {
 	useIsMobile,
-	useTheme,
 	useTokenPrice,
 	useVotingPower,
 	useWeBentAvgApr,
 	useWeBentBentBalance,
 	useWeBentRatio
 } from "hooks";
-import { Theme } from "state/application/reducer";
 import { formatBigNumber } from "utils";
 import { utils } from "ethers";
 import { useHistory } from "react-router";
 import { TOKENS } from "constant";
 
 export const WeBentStatus = (): React.ReactElement => {
-	const theme = useTheme();
 	const bentTotalStaked = useWeBentBentBalance();
 	const avgApr = useWeBentAvgApr();
 	const votingPower = useVotingPower();
@@ -42,7 +39,7 @@ export const WeBentStatus = (): React.ReactElement => {
 							Stake BENT for weBENT
 						</h2>
 					</div>
-					<StatusContainer theme={theme} mobile={isMobile}>
+					<StatusContainer mobile={isMobile}>
 						<Button
 							className="px-5"
 							onClick={() => onBent()}
@@ -85,7 +82,7 @@ export const WeBentStatus = (): React.ReactElement => {
 	)
 }
 
-const StatusContainer = styled.div<{ theme: Theme, mobile: boolean }>`
+const StatusContainer = styled.div<{ mobile: boolean }>`
 	border: 3px solid #414C5C;
 	border-radius: 20px;
 	background: #18202C;
