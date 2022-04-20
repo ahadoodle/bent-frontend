@@ -414,7 +414,7 @@ export default function Updater(): null {
 					const annualReward = getAnnualReward(rewardsInfo.rewardRate, rewardsInfo.rewardToken, tokenPrice);
 					if (!bentCvxAprs['CVX']) bentCvxAprs['CVX'] = [];
 					bentCvxAprs['CVX'].push((bentCvxTvl.isZero() ? 0 : annualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100);
-					totalBentCvxAnnualReward = totalBentCvxAnnualReward.add(annualReward);
+					// totalBentCvxAnnualReward = totalBentCvxAnnualReward.add(annualReward);
 					bentCvxPoolAnnualReward = bentCvxPoolAnnualReward.add(annualReward);
 				})
 				bentCvxPoolAprs['CVX'] = (bentCvxTvl.isZero() ? 0 : bentCvxPoolAnnualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100;
