@@ -261,6 +261,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 		const tx = await bentCvxStaking.connect(signer).claim([
 			POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex,
 			POOLS.BentCvxStaking.BentCvxRewarderBent.ClaimIndex,
+			[],
 			[0]
 		]);
 		setClaimAllPending(true);
