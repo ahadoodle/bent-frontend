@@ -9,7 +9,7 @@ const Consolidate = () => {
 	return (
 		<React.Fragment>
 			<Helmet>
-				<title>Bent Finance | Consolidate</title>
+				<title>Bent Finance | DAO</title>
 			</Helmet>
 			<div className="banner">
 				<div className="bannerboxes">

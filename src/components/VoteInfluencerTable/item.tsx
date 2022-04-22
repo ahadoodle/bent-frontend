@@ -19,7 +19,7 @@ export const VoteInfluencerItem = (props: Props): React.ReactElement => {
 		<div
 			className={`bentInner`}
 			color="primary"
-			id={`toggleInner-stake-curve-lp-${props.voter.id}`}
+			id={`toggleInner-dao-voter-${props.voter.id}`}
 			style={{ marginBottom: "1rem" }}
 		>
 			<Row className="align-items-center" style={{ padding: '0 10px' }}>

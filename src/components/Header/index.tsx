@@ -45,7 +45,7 @@ const Header = (): React.ReactElement => {
             </Link>
             <ul className="primaryMenu">
               <li>
-                <NavLink to="/stake" activeStyle={{ color: '#C1FFD7' }}>Pools</NavLink>
+                <NavLink to="/pools" activeStyle={{ color: '#C1FFD7' }}>Pools</NavLink>
               </li>
               <li>
                 <NavLink to="/lock" activeStyle={{ color: '#C1FFD7' }}>Lock BENT</NavLink>
@@ -70,7 +70,7 @@ const Header = (): React.ReactElement => {
                 <Button className="closebtn" onClick={closeNav}>
                   &times;
                 </Button>
-                <Link to="/stake" onClick={closeNav}>Pools</Link>
+                <Link to="/pools" onClick={closeNav}>Pools</Link>
                 <Link to="/lock" onClick={closeNav}>Lock BENT</Link>
                 <Link to="/dao" onClick={closeNav}>DAO</Link>
                 <SplitterH />

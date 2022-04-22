@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Card, CardBody, Col, Container, Row, Spinner } from "reactstrap";
 import { TOKEN_LOGO } from "constant";
 import { useVoters } from "hooks";
 import { VoteInfluencerItem } from "./item";
@@ -49,6 +49,18 @@ export const VoteInfluencerTable = (): React.ReactElement => {
 							{voters.map(vote =>
 								<VoteInfluencerItem voter={vote} key={vote.id} />
 							)}
+							{voters.length === 0 &&
+								<div className={`innerWrap p-0 rounded `} >
+									<div
+										className={`bentInner`}
+										color="primary"
+										id={`toggleInner-dao-voter-loading`}
+										style={{ margin: 'auto', width: 'fit-content' }}
+									>
+										<Spinner size="sm" />
+									</div>
+								</div>
+							}
 						</CardBody>
 					</Card>
 				</div>
