@@ -392,21 +392,21 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	You may stake and unstake bentCVX tokens, but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container mb-4" dir="flex-row">
-																	<Col className="imgText bent-rewards-item">
+																<Row className="bent-rewards-container mb-4 justify-content-center" dir="flex-row">
+																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
-																	</Col>
-																	<Col className="imgText bent-rewards-item">
+																	</div>
+																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
 																		<div className="d-flex">
 																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
 																			<span className="small mt-1 mx-2">BENT</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
-																	</Col>
+																	</div>
 																</Row>
 															</Card>
 														</Col>
@@ -476,21 +476,21 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	You may stake and unstake bentCVX tokens, but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container mb-4" dir="flex-row">
-																	<Col className="imgText bent-rewards-item">
+																<Row className="bent-rewards-container mb-4 justify-content-center" dir="flex-row">
+																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
 																			<span className="small mt-1 mx-2">Earnings</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
-																	</Col>
-																	<Col className="imgText bent-rewards-item">
+																	</div>
+																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
 																		<div className="d-flex">
 																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
 																			<span className="small mt-1 mx-2">BENT</span>
 																		</div>
 																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
-																	</Col>
+																	</div>
 																</Row>
 															</Card>
 														</Col>
