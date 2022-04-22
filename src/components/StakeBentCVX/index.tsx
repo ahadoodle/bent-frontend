@@ -393,7 +393,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	You may stake and unstake bentCVX tokens, but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container mb-4 justify-content-center" dir="flex-row">
+																<Row className="bent-rewards-container m-auto mb-4 justify-content-center" dir="flex-row">
 																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
@@ -477,7 +477,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	You may stake and unstake bentCVX tokens, but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container mb-4 justify-content-center" dir="flex-row">
+																<Row className="bent-rewards-container m-auto mb-4 justify-content-center" dir="flex-row">
 																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
 																		<div className="d-flex">
 																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
