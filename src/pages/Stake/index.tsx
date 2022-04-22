@@ -13,7 +13,7 @@ const Stake = () => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Bent Finance | Stake</title>
+        <title>Bent Finance | Pools</title>
       </Helmet>
       <div className="banner">
         <div className="bannerboxes">
