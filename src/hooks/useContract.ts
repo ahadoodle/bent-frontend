@@ -60,7 +60,7 @@ export const useBentCvxRewarderMCContract = (isOld: boolean): Contract => {
 		isOld ? POOLS.BentCvxStaking.BentCvxRewarderMasterchef.OldPool : POOLS.BentCvxStaking.BentCvxRewarderMasterchef.Pool,
 		ABIS.BentCvxRewarderMasterchef,
 		library
-	), [library]);
+	), [library, isOld]);
 }
 
 export const useWeBentContract = (): Contract => {
