@@ -16,6 +16,13 @@ export interface CrvApy {
 	crvBoost: number;
 }
 
+export interface Voter {
+	id: string;
+	voter: string;
+	vp: number;
+	ens?: string;
+}
+
 export interface WeBentLockedData {
 	amount: BigNumber;
 	unlockAt: BigNumber;
@@ -93,6 +100,10 @@ export interface ContractsState {
 	sushiEarnedUsd: Record<string, BigNumber>;
 	sushiDepositedUsd: Record<string, BigNumber>;
 	sushiLpDeposited: Record<string, BigNumber>;
+
+	// Snapshot Voting Info
+	voters: Voter[];
+	totalVp: number;
 }
 
 const initialState: ContractsState = {
@@ -162,6 +173,9 @@ const initialState: ContractsState = {
 	sushiEarnedUsd: {},
 	sushiDepositedUsd: {},
 	sushiLpDeposited: {},
+
+	voters: [],
+	totalVp: 0,
 };
 
 export default createReducer(initialState, (builder) =>
@@ -306,6 +320,10 @@ export default createReducer(initialState, (builder) =>
 				if (!state.weBentRewardsUsd) state.weBentRewardsUsd = {};
 				state.weBentRewardsUsd[tokenAddr] = action.payload.weBentRewardsUsd[tokenAddr];
 			})
+
+			// Snapshot Vote Info
 			state.delegationAddr = action.payload.delegationAddr;
+			state.voters = action.payload.voters;
+			state.totalVp = action.payload.totalVp;
 		})
 );

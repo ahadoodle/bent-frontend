@@ -46,6 +46,10 @@ export const getMultiBentCvxRewarderMC = (): Contract => {
 	return new Contract(POOLS.BentCvxStaking.BentCvxRewarderMasterchef.Pool, ABIS.BentCvxRewarderMasterchef);
 }
 
+export const getMultiBentCvxRewarderMCOld = (): Contract => {
+	return new Contract(POOLS.BentCvxStaking.BentCvxRewarderMasterchef.OldPool, ABIS.BentCvxRewarderMasterchef);
+}
+
 export const getMultiTricryptiLpPrice = (): Contract => {
 	return new Contract('0xE8b2989276E2Ca8FDEA2268E3551b2b4B2418950', ABIS.TricryptoLpPrice);
 }

@@ -36,11 +36,13 @@ import {
 	getCrvCryptoInfoFromBent,
 	getMultiCvxVBalanceRewardPool,
 	simpleRpcProvider,
+	getLastVotingInfo,
+	getMultiBentCvxRewarderMCOld,
 } from 'utils';
 import {
 	updateContractInfo,
 } from './actions';
-import { BentPoolReward, CrvApy, WeBentLockedData } from './reducer';
+import { BentPoolReward, CrvApy, WeBentLockedData, Voter } from './reducer';
 
 export default function Updater(): null {
 	const dispatch = useDispatch();
@@ -48,10 +50,12 @@ export default function Updater(): null {
 	const multicall = MulticallProvider;
 	const { account } = useActiveWeb3React();
 	const [crvApys, setCrvApys] = useState({});
+	const [voters, setVoters] = useState<Voter[]>([]);
 	const [crvApysCount, setCrvApysCount] = useState(0);
 	useEffect(() => {
 		if (crvApysCount % 20 === 0) {
 			getCrvApys().then(res => setCrvApys(res));
+			getLastVotingInfo().then(res => setVoters(res));
 		}
 	}, [crvApysCount])
 
@@ -208,6 +212,7 @@ export default function Updater(): null {
 			const bentCvxRewarderCvx = getMultiBentCvxRewarderCvx();
 			const bentCvxRewarderBent = getMultiBentCvxRewarderBent();
 			const bentCvxRewarderMC = getMultiBentCvxRewarderMC();
+			const bentCvxRewarderMCOld = getMultiBentCvxRewarderMCOld();
 			contractCalls.push(cvxToken.balanceOf(accAddr));
 			contractCalls.push(cvxToken.allowance(accAddr, TOKENS['BENTCVX'].ADDR));
 			contractCalls.push(bentCvxToken.balanceOf(accAddr));
@@ -224,6 +229,7 @@ export default function Updater(): null {
 			})
 			contractCalls.push(bentCvxRewarderMC.pendingReward(accAddr));
 			contractCalls.push(bentCvxRewarderMC.rewardPerBlock());
+			contractCalls.push(bentCvxRewarderMCOld.pendingReward(accAddr));
 
 			// Add Curve contract calls
 			contractCalls.push(bentToken.totalSupply());
@@ -411,7 +417,7 @@ export default function Updater(): null {
 					const annualReward = getAnnualReward(rewardsInfo.rewardRate, rewardsInfo.rewardToken, tokenPrice);
 					if (!bentCvxAprs['CVX']) bentCvxAprs['CVX'] = [];
 					bentCvxAprs['CVX'].push((bentCvxTvl.isZero() ? 0 : annualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100);
-					totalBentCvxAnnualReward = totalBentCvxAnnualReward.add(annualReward);
+					// totalBentCvxAnnualReward = totalBentCvxAnnualReward.add(annualReward);
 					bentCvxPoolAnnualReward = bentCvxPoolAnnualReward.add(annualReward);
 				})
 				bentCvxPoolAprs['CVX'] = (bentCvxTvl.isZero() ? 0 : bentCvxPoolAnnualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100;
@@ -435,6 +441,8 @@ export default function Updater(): null {
 				bentCvxRewards['MC'] = results[startIndex++];
 				bentCvxEarned['MC'] = bentPriceBN.mul(bentCvxRewards['MC'][0]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
 				const bentCvxMCRewardPerBlock = results[startIndex++];
+				bentCvxRewards['MC_OLD'] = results[startIndex++];
+				bentCvxEarned['MC_OLD'] = bentPriceBN.mul(bentCvxRewards['MC_OLD'][0]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
 				const bentCvxMCAnnualReward = getAnnualReward(bentCvxMCRewardPerBlock, TOKENS.BENT.ADDR, bentPrice, false);
 				bentCvxPoolAprs['MC'] = (bentCvxTvl.isZero() ? 0 : bentCvxMCAnnualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100;
 				totalBentCvxAnnualReward = totalBentCvxAnnualReward.add(bentCvxMCAnnualReward);
@@ -605,6 +613,11 @@ export default function Updater(): null {
 					}
 				})
 
+				let totalVp = 0;
+				voters.forEach(vote => {
+					totalVp += vote.vp;
+				})
+
 				dispatch(updateContractInfo({
 					gas,
 					tokenPrices,
@@ -666,6 +679,9 @@ export default function Updater(): null {
 					weBentRewardsUsd,
 					weBentApr,
 					delegationAddr,
+					// Snapshot vote
+					voters,
+					totalVp,
 				}));
 			})
 		})

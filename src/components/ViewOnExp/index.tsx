@@ -8,6 +8,7 @@ import { ethers } from 'ethers'
 interface Props {
 	address?: string | undefined | null,
 	showTitle?: boolean
+	style?: React.CSSProperties
 }
 
 export const ViewOnExp = (props: Props): React.ReactElement => {
@@ -23,7 +24,7 @@ export const ViewOnExp = (props: Props): React.ReactElement => {
 	}
 
 	return (
-		<Container onClick={openExp}>
+		<Container onClick={openExp} style={props.style}>
 			<Icon iconSrc={linkSvg} borderColor="#CAB8FF" to={link} style={{ marginLeft: 0 }} />
 			{props.showTitle && 'View on Etherscan'}
 		</Container>

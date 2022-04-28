@@ -1,6 +1,9 @@
+import { ABIS } from 'abis';
 import axios from 'axios';
 import { CrvCryptoFactoryPool, CrvFactoryPool, POOLS, TOKENS } from 'constant';
-import { BigNumber, ethers, utils } from 'ethers'
+import { BigNumber, Contract, ethers, utils } from 'ethers'
+import { Voter } from 'state/contracts/reducer';
+import { simpleRpcProvider } from './providers';
 import web3NoAccount from './web3';
 
 export const truncateMiddle = (fullStr: string, strLen: number, separator: string): string => {
@@ -17,7 +20,7 @@ export const truncateMiddle = (fullStr: string, strLen: number, separator: strin
 };
 
 export const formatAddress = (address: string, length = 15): string => {
-	return truncateMiddle(address, length, '.....');
+	return truncateMiddle(address, length, '...');
 }
 
 export function formatNumber(value: string): string {
@@ -288,3 +291,30 @@ export const sortCrvPool = (a, b, field: string, order: number): number => {
 
 // bentfinance.eth
 export const bentFinanceHex = '0x62656e7466696e616e63652e6574680000000000000000000000000000000000';
+
+// Snapshot GraphQL
+export const getLastVotingInfo = async (): Promise<Voter[]> => {
+	try {
+		const lastVoteUrl = 'https://hub.snapshot.org/graphql?operationName=Proposals&query=query%20Proposals%20%7B%0A%20%20proposals%20(%0A%20%20%20%20first%3A%201%2C%0A%20%20%20%20skip%3A%200%2C%0A%20%20%20%20where%3A%20%7B%0A%20%20%20%20%20%20space_in%3A%20%5B%22bentfinance.eth%22%5D%2C%0A%20%20%20%20%20%20state%3A%20%22closed%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20orderBy%3A%20%22created%22%2C%0A%20%20%20%20orderDirection%3A%20desc%0A%20%20)%20%7B%0A%20%20%20%20id%0A%20%20%20%20title%0A%20%20%20%20start%0A%20%20%20%20end%0A%20%20%7D%0A%7D'
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const lastProposalInfo: any = await axios.get(lastVoteUrl);
+		const lastProposalId = lastProposalInfo.data.data.proposals[0].id;
+		const lastVotersUrl = `https://hub.snapshot.org/graphql?operationName=Votes&query=query%20Votes%20%7B%0A%20%20votes%20(%0A%20%20%20%20first%3A%201000%0A%20%20%20%20skip%3A%200%0A%20%20%20%20where%3A%20%7B%0A%20%20%20%20%20%20proposal%3A%20%22${lastProposalId}%22%0A%20%20%20%20%7D%0A%20%20%20%20orderBy%3A%20%22vp%22%2C%0A%20%20%20%20orderDirection%3A%20desc%0A%20%20)%20%7B%0A%20%20%20%20id%0A%20%20%20%20voter%0A%20%20%20%20vp%0A%20%20%20%20created%0A%20%20%20%20choice%0A%20%20%7D%0A%7D%0A`;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const lastVotersInfo: any = await axios.get(lastVotersUrl);
+		const lastVoters = lastVotersInfo.data.data.votes;
+
+		const ensContract = new Contract(
+			'0x3671ae578e63fdf66ad4f3e12cc0c0d71ac7510c',
+			ABIS.ENSRecord,
+			simpleRpcProvider
+		);
+		const ensNames = await ensContract.getNames(lastVoters.map(vote => vote.voter));
+		lastVoters.forEach((vote, index) => lastVoters[index].ens = ensNames[index]);
+
+		return lastVoters;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+}

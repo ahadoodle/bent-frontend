@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { BigNumber, ethers, utils } from 'ethers';
 import { AppState } from '../../index';
-import { WeBentLockedData } from '../reducer';
+import { Voter, WeBentLockedData } from '../reducer';
 import { useTokenPrice, useVlCvxBalance } from '.';
 import { TOKENS } from 'constant';
 
@@ -106,4 +106,12 @@ export const useVotingControl = (): number => {
 	const weBentTotalSupply = useWeBentTotalSupply();
 	return weBentTotalSupply.isZero() ? 0 :
 		parseFloat((vlCvxBalance.mul(100).div(weBentTotalSupply).toNumber() / 100).toFixed(2));
+}
+
+export const useVoters = (): Voter[] => {
+	return useSelector((state: AppState) => state.contracts.voters);
+}
+
+export const useTotalVp = (): number => {
+	return useSelector((state: AppState) => state.contracts.totalVp);
 }

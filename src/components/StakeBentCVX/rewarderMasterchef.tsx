@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import {
-	Row, Col, Input
+	Row, Col, Input, Button
 } from "reactstrap";
 import { DecimalSpan } from "components/DecimalSpan";
 import { BigNumber, ethers, utils } from 'ethers';
 import { TOKENS } from "constant";
-import { useBentCvxEarned, useBentCvxPoolApr, useBentCvxRewards } from "hooks";
+import { useActiveWeb3React, useBentCvxEarned, useBentCvxPoolApr, useBentCvxRewarderMCContract, useBentCvxRewards } from "hooks";
 import { formatBigNumber } from "utils";
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 		RewardsAssets: string[],
 	}
 	onClaimCheckChange: (key, indexes) => void
+	old?: boolean;
 }
 
 export const ClaimBentCvxRewarderMasterChef = (props: Props): React.ReactElement => {
@@ -23,10 +24,20 @@ export const ClaimBentCvxRewarderMasterChef = (props: Props): React.ReactElement
 	const earned = useBentCvxEarned(props.poolKey);
 	const rewards = useBentCvxRewards(props.poolKey);
 	const apr = useBentCvxPoolApr(props.poolKey);
+	const { library } = useActiveWeb3React();
+	const bentCvxRewarderMC = useBentCvxRewarderMCContract(true);
 
 	const onClaimCheckChange = () => {
 		setClaimChecked(!claimChecked);
 		props.onClaimCheckChange(props.poolKey, { '0': !claimChecked });
+	}
+
+	const onClaimOld = async () => {
+		if (!library) return;
+		const signer = await library.getSigner();
+		const address = await signer.getAddress();
+		const tx = await bentCvxRewarderMC.connect(signer).claim(address, [0]);
+		await tx.wait();
 	}
 
 	return (
@@ -41,7 +52,7 @@ export const ClaimBentCvxRewarderMasterChef = (props: Props): React.ReactElement
 					<Col>
 						<div className="imgText">
 							<PoolLogo src={TOKENS.BENT.LOGO} alt="" />
-							<h4>BENT</h4>
+							<h4>BENT {props.old && '(Old)'}</h4>
 						</div>
 					</Col>
 					<Col>
@@ -59,12 +70,17 @@ export const ClaimBentCvxRewarderMasterChef = (props: Props): React.ReactElement
 						</b>
 					</Col>
 					<Col></Col>
-					<Col></Col>
+					<Col>
+						{props.old && <ClaimButton
+							onClick={onClaimOld}
+							className="approvebtn"
+						>Claim</ClaimButton>}
+					</Col>
 				</Row>
 			</Wrapper>
-			<div className="checkall-container">
+			{!props.old && <div className="checkall-container">
 				<Input type="checkbox" checked={claimChecked} onChange={onClaimCheckChange} />
-			</div>
+			</div>}
 		</div>
 	)
 }
@@ -78,3 +94,9 @@ const Wrapper = styled.div<{ collapsed: boolean }>`
 	cursor: pointer;
 	padding: 10px;
 `;
+
+const ClaimButton = styled(Button)`
+	margin-left: 20px;
+	height: 42px;
+	width: 150px;
+`
