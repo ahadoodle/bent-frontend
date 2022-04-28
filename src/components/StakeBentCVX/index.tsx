@@ -156,10 +156,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 		}
 	}
 
-	const onOpen = () => {
-		window.open('https://curve.fi/factory/76/deposit', '_blank');
-	}
-
 	const haveOldCvxRewards = () => {
 		let enable = false;
 		POOLS.BentCvxStaking.BentCvxRewarderCvx.RewardsAssets.forEach((key, index) => {
@@ -429,12 +425,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 																					}
 																					onClick={onConvert}
 																				>Convert{isConvPending && <TxSpinner />}</Button>
-																			</div>
-																			<div className="btnwrapper">
-																				<Button
-																					className="approvebtn w-100 mt-3"
-																					onClick={onOpen}
-																				>bentCVX/CVX Curve LP</Button>
 																			</div>
 																		</div>
 																	</div>
