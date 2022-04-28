@@ -50,9 +50,9 @@ const Header = (): React.ReactElement => {
               <li>
                 <NavLink to="/lock" activeStyle={{ color: '#C1FFD7' }}>Lock BENT</NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink to="/dao" activeStyle={{ color: '#C1FFD7' }}>DAO</NavLink>
-              </li>
+              </li> */}
             </ul>
             <div className="ml-auto text-white" style={{ marginRight: 20 }}>
               TVL ${formatMillionsBigNumber(tvl, 18, 2)}
@@ -72,7 +72,7 @@ const Header = (): React.ReactElement => {
                 </Button>
                 <Link to="/pools" onClick={closeNav}>Pools</Link>
                 <Link to="/lock" onClick={closeNav}>Lock BENT</Link>
-                <Link to="/dao" onClick={closeNav}>DAO</Link>
+                {/* <Link to="/dao" onClick={closeNav}>DAO</Link> */}
                 <SplitterH />
                 <a href={SOCIAL.TWITTER} target="_blank" rel="noreferrer">Twitter</a>
                 <a href={SOCIAL.DISCORD} target="_blank" rel="noreferrer">Discord</a>
