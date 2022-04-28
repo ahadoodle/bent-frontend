@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import {
 	Container, Button, Row, Col, TabContent, TabPane, Nav, NavItem, NavLink,
 	Card, CardText, Input, Label, CardBody, Spinner
@@ -7,36 +8,19 @@ import classnames from "classnames";
 import { POOLS, TOKENS, TOKEN_LOGO } from "constant";
 import { formatBigNumber, formatMillionsBigNumber, getEtherscanLink } from "utils";
 import {
-	useActiveWeb3React,
-	useBalance,
-	useBentCvxAllowance,
-	useBentCVXContract,
-	useBentCvxStaked,
-	useBentCvxStakedUSD,
-	useBentCvxStakingAllowance,
-	useBentCvxStakingContract,
-	useBentCvxTotalStaked,
-	useBentCvxTvl,
-	useERC20Contract,
-	useBentCvxAvgApr,
-	useBentCvxTotalEarned,
-	useTheme,
-	useBentCvxPoolApr,
-	useBentCvxRewarderCvxContract,
-	useBentCvxRewarderBentContract,
-	useBentCvxRewarderMCContract,
-	useBentCvxAllRewards,
+	useActiveWeb3React, useBalance, useBentCvxAllowance, useBentCVXContract,
+	useBentCvxStaked, useBentCvxStakedUSD, useBentCvxStakingAllowance, useBentCvxStakingContract,
+	useBentCvxTotalStaked, useBentCvxTvl, useERC20Contract, useBentCvxAvgApr,
+	useBentCvxTotalEarned, useBentCvxRewarderCvxContract, useBentCvxRewarderBentContract,
+	useBentCvxRewarderMCContract, useBentCvxAllRewards,
 } from "hooks";
 import { BigNumber, ethers, utils } from "ethers";
 import { DecimalSpan } from "components/DecimalSpan";
-import BentLogo from 'assets/images/logo-dark.svg';
-import BentLogoLight from 'assets/images/logo-light.svg';
-import { Theme } from "state/application/reducer";
 import Address from "components/Address";
 import { AddToMetamask } from "components/AddToMetamask";
 import { ClaimBentCvxRewarderCvx } from "./rewarderCvx";
 import { ClaimBentCvxRewarderMasterChef } from "./rewarderMasterchef";
-import styled from "styled-components";
+import { BentCvxAprTooltip } from "components/Tooltip";
 
 export const StakeBentCVX = (): React.ReactElement => {
 	const [activeTab, setActiveTab] = useState("1");
@@ -55,7 +39,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const [claimChecked, setClaimChecked] = useState<Record<string, Record<string, boolean>>>({
 		CVX: {}, BENT: {}, MC: {}
 	});
-	const theme = useTheme();
 	const cvxBalance = useBalance(TOKENS['CVX'].ADDR);
 	const cvxAllowance = useBentCvxAllowance();
 	const bentCvxBalance = useBalance(TOKENS['BENTCVX'].ADDR);
@@ -66,8 +49,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const avgApr = useBentCvxAvgApr();
 	const earnedUsd = useBentCvxTotalEarned();
 	const tvl = useBentCvxTvl();
-	const bentPoolApr = useBentCvxPoolApr('BENT');
-	const mcPoolApr = useBentCvxPoolApr('MC');
 	const allRewards = useBentCvxAllRewards();
 	const { library } = useActiveWeb3React();
 	const cvxToken = useERC20Contract(TOKENS['CVX'].ADDR);
@@ -308,8 +289,9 @@ export const StakeBentCVX = (): React.ReactElement => {
 									<div>
 										<span className="small p-0">APR</span><br />
 										<b className="p-0">
-											{avgApr ? <>{utils.commify(avgApr.toFixed(2))}%</> : 'TBC'}
-											<i className="fa fa-caret-down opacity-0" aria-hidden="true" />
+											{avgApr ? <>{utils.commify(avgApr.toFixed(2))}%</> : 'TBC'}&nbsp;
+											<i className="fa fa-info-circle cursor-pointer" id="bentcvx-apr-info" aria-hidden="true" />
+											<BentCvxAprTooltip />
 										</b>
 									</div>
 								</Col>
@@ -393,22 +375,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	You may stake and unstake bentCVX tokens, but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container m-auto mb-4 justify-content-center" dir="flex-row">
-																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
-																		<div className="d-flex">
-																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
-																			<span className="small mt-1 mx-2">Earnings</span>
-																		</div>
-																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
-																	</div>
-																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
-																		<div className="d-flex">
-																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
-																			<span className="small mt-1 mx-2">BENT</span>
-																		</div>
-																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
-																	</div>
-																</Row>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">
@@ -477,22 +443,6 @@ export const StakeBentCVX = (): React.ReactElement => {
 																	You may stake and unstake bentCVX tokens, but not convert them back to CVX.
 																	Secondary markets may exist to allow the exchange of bentCVX for CVX.
 																</CardText>
-																<Row className="bent-rewards-container m-auto mb-4 justify-content-center" dir="flex-row">
-																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
-																		<div className="d-flex">
-																			<img src={theme === Theme.Dark ? BentLogoLight : BentLogo} alt="Icon" />
-																			<span className="small mt-1 mx-2">Earnings</span>
-																		</div>
-																		<p className="apr px-0 mt-1">{bentPoolApr}% APR</p>
-																	</div>
-																	<div className="imgText bent-rewards-item" style={{ width: 'unset' }}>
-																		<div className="d-flex">
-																			<img src={TOKEN_LOGO['BENT']} alt="Icon" style={{ height: 25, border: '1px solid #323F52', borderRadius: '50%' }} />
-																			<span className="small mt-1 mx-2">BENT</span>
-																		</div>
-																		<p className="apr px-0 mt-1">{mcPoolApr}% APR</p>
-																	</div>
-																</Row>
 															</Card>
 														</Col>
 														<Col sm="6" className="divider-left">
