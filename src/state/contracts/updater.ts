@@ -37,6 +37,7 @@ import {
 	getMultiCvxVBalanceRewardPool,
 	simpleRpcProvider,
 	getLastVotingInfo,
+	getMultiBentCvxRewarderMCOld,
 } from 'utils';
 import {
 	updateContractInfo,
@@ -211,6 +212,7 @@ export default function Updater(): null {
 			const bentCvxRewarderCvx = getMultiBentCvxRewarderCvx();
 			const bentCvxRewarderBent = getMultiBentCvxRewarderBent();
 			const bentCvxRewarderMC = getMultiBentCvxRewarderMC();
+			const bentCvxRewarderMCOld = getMultiBentCvxRewarderMCOld();
 			contractCalls.push(cvxToken.balanceOf(accAddr));
 			contractCalls.push(cvxToken.allowance(accAddr, TOKENS['BENTCVX'].ADDR));
 			contractCalls.push(bentCvxToken.balanceOf(accAddr));
@@ -227,6 +229,7 @@ export default function Updater(): null {
 			})
 			contractCalls.push(bentCvxRewarderMC.pendingReward(accAddr));
 			contractCalls.push(bentCvxRewarderMC.rewardPerBlock());
+			contractCalls.push(bentCvxRewarderMCOld.pendingReward(accAddr));
 
 			// Add Curve contract calls
 			contractCalls.push(bentToken.totalSupply());
@@ -438,6 +441,8 @@ export default function Updater(): null {
 				bentCvxRewards['MC'] = results[startIndex++];
 				bentCvxEarned['MC'] = bentPriceBN.mul(bentCvxRewards['MC'][0]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
 				const bentCvxMCRewardPerBlock = results[startIndex++];
+				bentCvxRewards['MC_OLD'] = results[startIndex++];
+				bentCvxEarned['MC_OLD'] = bentPriceBN.mul(bentCvxRewards['MC_OLD'][0]).div(BigNumber.from(10).pow(getTokenDecimals(TOKENS.BENT.ADDR)));
 				const bentCvxMCAnnualReward = getAnnualReward(bentCvxMCRewardPerBlock, TOKENS.BENT.ADDR, bentPrice, false);
 				bentCvxPoolAprs['MC'] = (bentCvxTvl.isZero() ? 0 : bentCvxMCAnnualReward.mul(10000).div(bentCvxTvl).toNumber()) / 100;
 				totalBentCvxAnnualReward = totalBentCvxAnnualReward.add(bentCvxMCAnnualReward);

@@ -52,7 +52,7 @@ export const useBentCvxEarned = (poolKey: string): BigNumber => {
 }
 
 export const useBentCvxTotalEarned = (): BigNumber => {
-	return useBentCvxEarned('CVX').add(useBentCvxEarned('BENT')).add(useBentCvxEarned('MC'));
+	return useBentCvxEarned('CVX').add(useBentCvxEarned('BENT')).add(useBentCvxEarned('MC')).add(useBentCvxEarned('MC_OLD'));
 }
 
 export const useBentCvxAvgApr = (): number => {

@@ -56,7 +56,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const bentCvxStaking = useBentCvxStakingContract();
 	const bentCvxRewarderCVX = useBentCvxRewarderCvxContract();
 	const bentCvxRewarderBent = useBentCvxRewarderBentContract();
-	const bentCvxRewarderMC = useBentCvxRewarderMCContract();
+	const bentCvxRewarderMC = useBentCvxRewarderMCContract(false);
 
 	const toggle = (tab) => {
 		if (activeTab !== tab) setActiveTab(tab);
@@ -163,7 +163,7 @@ export const StakeBentCVX = (): React.ReactElement => {
 	const haveOldCvxRewards = () => {
 		let enable = false;
 		POOLS.BentCvxStaking.BentCvxRewarderCvx.RewardsAssets.forEach((key, index) => {
-			if (allRewards['CVX'].length > 0 &&
+			if (allRewards['CVX'] && allRewards['CVX'].length > 0 &&
 				!BigNumber.from(allRewards['CVX'][POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex[index]]).isZero()
 			) {
 				enable = true;
@@ -172,23 +172,33 @@ export const StakeBentCVX = (): React.ReactElement => {
 		return enable;
 	}
 
+	const haveOldMcRewards = () => {
+		let enable = false;
+		if (allRewards['MC_OLD'] && allRewards['MC_OLD'].length > 0 &&
+			!BigNumber.from(allRewards['MC_OLD'][0]).isZero()
+		) {
+			enable = true;
+		}
+		return enable;
+	}
+
 	const haveRewards = () => {
 		let enable = false;
 		POOLS.BentCvxStaking.BentCvxRewarderCvx.RewardsAssets.forEach((key, index) => {
-			if (allRewards['CVX'].length > 0 &&
+			if (allRewards['CVX'] && allRewards['CVX'].length > 0 &&
 				!BigNumber.from(allRewards['CVX'][POOLS.BentCvxStaking.BentCvxRewarderCvx.ClaimIndex[index]]).isZero()
 			) {
 				enable = true;
 			}
 		})
 		POOLS.BentCvxStaking.BentCvxRewarderBent.RewardsAssets.forEach((key, index) => {
-			if (allRewards['BENT'].length > 0 &&
+			if (allRewards['BENT'] && allRewards['BENT'].length > 0 &&
 				!BigNumber.from(allRewards['BENT'][POOLS.BentCvxStaking.BentCvxRewarderBent.ClaimIndex[index]]).isZero()
 			) {
 				enable = true;
 			}
 		})
-		if (allRewards['MC'].length > 0 &&
+		if (allRewards['MC'] && allRewards['MC'].length > 0 &&
 			!BigNumber.from(allRewards['MC'][0]).isZero()
 		) {
 			enable = true;
@@ -512,6 +522,12 @@ export const StakeBentCVX = (): React.ReactElement => {
 															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderMasterchef}
 															onClaimCheckChange={onClaimCheckChange}
 														/>
+														{haveOldMcRewards() && <ClaimBentCvxRewarderMasterChef
+															poolKey="MC_OLD"
+															poolInfo={POOLS.BentCvxStaking.BentCvxRewarderMasterchef}
+															onClaimCheckChange={onClaimCheckChange}
+															old={true}
+														/>}
 													</Row>
 												</TabPane>
 												<TabPane tabId="4">

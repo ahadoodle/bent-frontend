@@ -380,8 +380,9 @@ const BentCvxStaking = {
 	},
 	BentCvxRewarderMasterchef: {
 		Pool: '0xb79C5FAeB7E441C62099dEBd4801cEe1FefB2AC1',
+		OldPool: '0xE644710aAc3c23bFE8cD22fFef003792e4b1c15d',
 		RewardsAssets: ['BENT']
-	}
+	},
 }
 
 const weBENT = {
