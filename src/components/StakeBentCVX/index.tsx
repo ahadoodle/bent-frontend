@@ -235,7 +235,12 @@ export const StakeBentCVX = (): React.ReactElement => {
 		} else if (indexes[0].length === 0 && indexes[1].length === 0 && indexes[2].length > 0) {
 			tx = await bentCvxRewarderMC.connect(signer).claim(address, [0]);
 		} else {
-			tx = await bentCvxStaking.connect(signer).claim(indexes);
+			tx = await bentCvxStaking.connect(signer).claim([
+				indexes[0],
+				indexes[1],
+				[0],
+				indexes[2]
+			]);
 		}
 		setClaimPending(true);
 		await tx.wait();
