@@ -120,6 +120,7 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvLpSYMBOL: 'mimustCrv',
 		crvPoolLink: 'https://curve.fi/factory/48/deposit',
+		isLegacy: true,
 	},
 	DOLA: {
 		LOGO: TOKEN_LOGO.DOLA,
@@ -185,6 +186,7 @@ const BentPools: Record<string, BentPool> = {
 		RewardsAssets: ['BENT', 'CRV', 'CVX'],
 		CrvLpSYMBOL: 'ustwCrv',
 		crvPoolLink: 'https://curve.fi/factory/53/deposit',
+		isLegacy: true,
 	},
 	NEW_STETH: {
 		LOGO: TOKEN_LOGO.STETH,
